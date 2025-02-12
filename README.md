@@ -1,1 +1,1 @@
-# rails_fast_epost
+# rails_fast_epost first install
