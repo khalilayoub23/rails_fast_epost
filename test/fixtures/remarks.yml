@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  task: one
+  remarkable: one
+  remarkable_type: Remarkable
+  content: MyText
+
+two:
+  task: two
+  remarkable: two
+  remarkable_type: Remarkable
+  content: MyText

@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  customer: one
+  carrier: one
+  package_type: MyString
+  start: MyString
+  target: MyString
+  failure_code: 1
+  delivery_time: 2025-02-19 19:32:45
+  status: 1
+  barcode: MyString
+  filled_form_url: MyString
+
+two:
+  customer: two
+  carrier: two
+  package_type: MyString
+  start: MyString
+  target: MyString
+  failure_code: 1
+  delivery_time: 2025-02-19 19:32:45
+  status: 1
+  barcode: MyString
+  filled_form_url: MyString
