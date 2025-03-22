@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  category: 1
+  task: one
+  payable: one
+  payable_type: Payable
+  payment_type: 1
+  interval_start: 2025-02-19
+  interval_end: 2025-02-19
+
+two:
+  category: 1
+  task: two
+  payable: two
+  payable_type: Payable
+  payment_type: 1
+  interval_start: 2025-02-19
+  interval_end: 2025-02-19
