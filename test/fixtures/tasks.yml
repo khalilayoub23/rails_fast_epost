@@ -1,25 +1,21 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  customer: one
-  carrier: one
-  package_type: MyString
-  start: MyString
-  target: MyString
-  failure_code: 1
-  delivery_time: 2025-02-19 19:32:45
+  customer_id: 1
+  carrier_id: 1
+  package_type: 'small'
+  start: 'Start Address 1'
+  target: 'Target Address 1'
   status: 1
-  barcode: MyString
-  filled_form_url: MyString
+  barcode: 'BARCODE1'
+  delivery_time: <%= Time.current %>
 
 two:
-  customer: two
-  carrier: two
-  package_type: MyString
-  start: MyString
-  target: MyString
-  failure_code: 1
-  delivery_time: 2025-02-19 19:32:45
-  status: 1
-  barcode: MyString
-  filled_form_url: MyString
+  customer_id: 2
+  carrier_id: 2
+  package_type: 'medium'
+  start: 'Start Address 2'
+  target: 'Target Address 2'
+  status: 2
+  barcode: 'BARCODE2'
+  delivery_time: <%= Time.current %>
