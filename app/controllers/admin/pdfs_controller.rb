@@ -20,7 +20,7 @@ module Admin
     def stamp
       file = params[:file]
       text = params[:text].to_s
-      at   = [params[:x].to_f, params[:y].to_f]
+      at   = [ params[:x].to_f, params[:y].to_f ]
       size = params[:size].to_i
       size = 12 if size <= 0
       pdf_bytes = file.read
@@ -52,7 +52,7 @@ module Admin
       urx = params[:urx].to_f
       ury = params[:ury].to_f
       pdf_bytes = file.read
-      result = Pdf::Editor.crop_pages(pdf_bytes: pdf_bytes, box: [llx, lly, urx, ury])
+      result = Pdf::Editor.crop_pages(pdf_bytes: pdf_bytes, box: [ llx, lly, urx, ury ])
       send_data result, filename: "cropped.pdf", type: "application/pdf"
     end
   end

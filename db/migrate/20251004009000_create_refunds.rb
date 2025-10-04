@@ -15,7 +15,7 @@ class CreateRefunds < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :refunds, [:provider, :refund_id], unique: true, where: "refund_id IS NOT NULL"
+    add_index :refunds, [ :provider, :refund_id ], unique: true, where: "refund_id IS NOT NULL"
     unless index_exists?(:refunds, :payment_id)
       add_index :refunds, :payment_id
     end

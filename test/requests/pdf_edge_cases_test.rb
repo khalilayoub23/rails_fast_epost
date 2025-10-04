@@ -16,7 +16,7 @@ class PdfEdgeCasesTest < ActionDispatch::IntegrationTest
   end
 
   test "template pdf preview returns non-empty body" do
-    template = FormTemplate.create!(carrier: carriers(:one), customer: @customer, schema: {"title"=>"T","fields"=>[{"name"=>"x","x"=>10,"y"=>10}]})
+    template = FormTemplate.create!(carrier: carriers(:one), customer: @customer, schema: { "title"=>"T", "fields"=>[ { "name"=>"x", "x"=>10, "y"=>10 } ] })
     get form_template_path(template, format: :pdf)
     assert_response :success
     assert_equal "application/pdf", @response.media_type

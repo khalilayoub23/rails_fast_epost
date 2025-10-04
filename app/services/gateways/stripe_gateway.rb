@@ -2,7 +2,7 @@ module Gateways
   class StripeGateway < BaseGateway
     PROVIDER = "stripe".freeze
 
-    # For this scaffold, we assume payment creation happens on Stripe Checkout and our app records a pending Payment
+  # For this scaffold, we assume payment creation happens on Stripe Checkout and our app records a pending Payment
   def self.create_payment!(amount_cents:, currency:, task:, payable:, metadata: {})
       # If STRIPE_SECRET_KEY is set and metadata doesn't include an external ID, create a Checkout Session server-side
       external_id = metadata["checkout_session_id"].presence || metadata["payment_intent_id"].presence || metadata["stripe_id"].presence

@@ -1,5 +1,23 @@
 # Changelog - Database Schema Updates
 
+## [2025-10-04] - Payments Refunds Audit Trail and UI/API
+
+### Added
+- Refund model and migration with fields: provider, refund_id, amount_cents, currency, reason, status, balance_transaction_id, raw (JSONB), occurred_at
+- Persistence of refunds from Stripe webhooks (charge.refunded, charge.refund.updated) with idempotency guards
+- Management endpoints wiring for refund/capture/cancel/sync and background sync job for pending payments
+- PaymentSerializer now includes refunds array and total_refunded_cents
+- UI: Refunds history panel on payment show and Total Refunded summary
+
+### Changed
+- Consolidated Stripe lifecycle handling in StripeGateway (create, webhook verification, sync, capture, cancel, refund)
+- Deterministic PDF rendering enforced in tests/dev for stable outputs
+- RuboCop autocorrect for consistent style (no functional changes)
+
+### Notes
+- Ensure STRIPE_WEBHOOK_SECRET and STRIPE_API_KEY are set in environment
+- Run database migrations: bin/rails db:migrate
+
 ## [2025-09-02] - Database Schema Enhancements
 
 ### Added

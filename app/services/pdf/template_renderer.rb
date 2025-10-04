@@ -12,7 +12,7 @@ module Pdf
       # Enable deterministic output for testing/snapshots
       if ENV["PDF_DETERMINISTIC"].to_s == "1"
         # Fixed seed for trailer ID
-        doc.config['document.id_seed'] = 'fixed-seed'
+        doc.config["document.id_seed"] = "fixed-seed"
       end
       page = doc.pages.add
       canvas = page.canvas

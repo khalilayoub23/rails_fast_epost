@@ -89,7 +89,7 @@ class PaymentsFlowTest < ActionDispatch::IntegrationTest
       data: { object: { id: external_id } }
     }.to_json
 
-    # Stripe signature: v1 HMAC over "t=TS.payload"
+  # Stripe signature: v1 HMAC over "t=TS.payload"
   secret = ENV["STRIPE_WEBHOOK_SECRET"].presence || "whsec_test"
     ts = Time.now.to_i
     signed_payload = "t=#{ts}.#{event}"

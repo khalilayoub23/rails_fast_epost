@@ -86,7 +86,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resource :pdfs, only: [:new] do
+    resource :pdfs, only: [ :new ] do
       post :merge
       post :stamp
       post :insert

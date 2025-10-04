@@ -20,7 +20,7 @@ module Pdf
 
       io = StringIO.new
       if ENV["PDF_DETERMINISTIC"].to_s == "1"
-        target.config['document.id_seed'] = 'fixed-seed-merge'
+        target.config["document.id_seed"] = "fixed-seed-merge"
         info = target.trailer.info
         info[:Producer] = "FastEpost"
         info[:Creator] = "FastEpost"
@@ -33,7 +33,7 @@ module Pdf
 
     # Stamp simple text onto all pages of the provided PDF bytes
     # at: [x, y] coordinates; size: font size
-    def self.stamp_text(pdf_bytes:, text:, at: [50, 50], size: 12)
+    def self.stamp_text(pdf_bytes:, text:, at: [ 50, 50 ], size: 12)
       require "hexapdf"
   io_in = StringIO.new(pdf_bytes)
   doc = HexaPDF::Document.new(io: io_in)
@@ -47,7 +47,7 @@ module Pdf
 
       io_out = StringIO.new
       if ENV["PDF_DETERMINISTIC"].to_s == "1"
-        doc.config['document.id_seed'] = 'fixed-seed-stamp'
+        doc.config["document.id_seed"] = "fixed-seed-stamp"
         info = doc.trailer.info
         info[:Producer] = "FastEpost"
         info[:Creator] = "FastEpost"
@@ -82,7 +82,7 @@ module Pdf
     end
 
     # Crop all pages to the specified rectangle [llx, lly, urx, ury]
-    def self.crop_pages(pdf_bytes:, box: [0, 0, 400, 600])
+    def self.crop_pages(pdf_bytes:, box: [ 0, 0, 400, 600 ])
       require "hexapdf"
       doc = HexaPDF::Document.new(io: StringIO.new(pdf_bytes))
       doc.pages.each do |page|

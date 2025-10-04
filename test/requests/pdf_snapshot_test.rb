@@ -4,7 +4,7 @@ require "digest"
 class PdfSnapshotTest < ActionDispatch::IntegrationTest
   setup do
     @customer = customers(:one)
-    @schema = { "title" => "Snapshot", "fields" => [ {"name"=>"a","x"=>10,"y"=>10}, {"name"=>"b","x"=>20,"y"=>20} ] }
+    @schema = { "title" => "Snapshot", "fields" => [ { "name"=>"a", "x"=>10, "y"=>10 }, { "name"=>"b", "x"=>20, "y"=>20 } ] }
     @data   = { "a"=>"1", "b"=>"2" }
   end
 
