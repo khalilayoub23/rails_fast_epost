@@ -17,12 +17,23 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%# Tailwind v4 base stylesheet (tailwindcss-rails builds into app/assets/builds) %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <!-- Flowbite JS (enhanced Tailwind components via CDN) -->
+    <script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.js" defer></script>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-gray-50 text-gray-900">
+    <div class="flex h-screen overflow-hidden" data-controller="sidebar">
+      <%= render "shared/sidebar" %>
+      <div class="relative flex flex-1 flex-col overflow-y-auto">
+        <%= render "shared/topbar" %>
+        <main class="p-6">
+          <%= render "shared/flash" %>
+          <%= yield %>
+        </main>
+      </div>
+    </div>
   </body>
 </html>

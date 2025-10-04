@@ -1,0 +1,12 @@
+<aside id="sidebar" class="hidden md:flex md:w-64 flex-col bg-white border-r">
+  <div class="h-16 flex items-center px-4 border-b">
+    <span class="font-semibold text-lg">Fast Epost</span>
+  </div>
+  <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+    <%= link_to "Dashboard", root_path, class: "block px-3 py-2 rounded hover:bg-gray-100" %>
+    <%= link_to "Payments", payments_path, class: "block px-3 py-2 rounded hover:bg-gray-100" %>
+    <%= link_to "Customers", customers_path, class: "block px-3 py-2 rounded hover:bg-gray-100" %>
+    <%= link_to "Tasks", tasks_path, class: "block px-3 py-2 rounded hover:bg-gray-100" %>
+    <%= link_to "Admin PDFs", new_admin_pdfs_path, class: "block px-3 py-2 rounded hover:bg-gray-100" %>
+  </nav>
+</aside>

@@ -1,0 +1,25 @@
+<header class="sticky top-0 z-10 bg-white border-b">
+  <div class="h-16 flex items-center justify-between px-4">
+    <button class="md:hidden inline-flex items-center justify-center p-2 rounded hover:bg-gray-100"
+            data-action="click->sidebar#toggle" aria-label="Open sidebar">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+    <div class="flex-1"></div>
+    <div class="flex items-center gap-3">
+      <button id="userMenuButton" data-dropdown-toggle="userMenu"
+              class="inline-flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100">
+        <span class="font-medium">Account</span>
+        <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 7l4.5 4.5L14.5 7"/></svg>
+      </button>
+      <div id="userMenu" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+        <ul class="py-2 text-sm text-gray-700">
+          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Profile</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Settings</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>

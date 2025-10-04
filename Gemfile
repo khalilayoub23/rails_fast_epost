@@ -20,6 +20,9 @@ gem "jbuilder"
 # Payments: Stripe SDK for Checkout/Intents and webhook helpers
 gem "stripe"
 
+# Tailwind CSS with no Node runtime (Rails integration)
+gem "tailwindcss-rails"
+
 # PDF generation
 gem "prawn"
 

@@ -1,0 +1,2 @@
+<% status = (local_assigns[:status] || "").to_s %>
+<span class="badge badge-<%= status %>"><%= status.present? ? status.humanize : "unknown" %></span>

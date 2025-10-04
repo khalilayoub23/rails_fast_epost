@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Root route
-  root "home#index"
+  root "dashboard#index"
 
   get "up" => "rails/health#show", as: :rails_health_check
 
