@@ -17,6 +17,18 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# Payments: Stripe SDK for Checkout/Intents and webhook helpers
+gem "stripe"
+
+# PDF generation
+gem "prawn"
+
+# PDF with form fields (AcroForms) and advanced operations
+gem "hexapdf"
+
+# Forms helper (optional; improves form builders)
+gem "simple_form"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 

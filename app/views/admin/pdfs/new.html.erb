@@ -1,0 +1,46 @@
+<h1>PDF Tools</h1>
+
+<h2>Merge PDFs</h2>
+<form action="<%= merge_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
+  <%= csrf_meta_tags %>
+  <input type="file" name="files[]" multiple accept="application/pdf" />
+  <button type="submit">Merge</button>
+</form>
+
+<h2>Stamp PDF</h2>
+<form action="<%= stamp_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
+  <%= csrf_meta_tags %>
+  <input type="file" name="file" accept="application/pdf" />
+  <input type="text" name="text" placeholder="Text" />
+  <input type="number" name="x" placeholder="x" value="100" />
+  <input type="number" name="y" placeholder="y" value="100" />
+  <input type="number" name="size" placeholder="size" value="14" />
+  <button type="submit">Stamp</button>
+</form>
+
+<h2>Insert Page</h2>
+<form action="<%= insert_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
+  <%= csrf_meta_tags %>
+  <input type="file" name="file" accept="application/pdf" />
+  <input type="number" name="index" placeholder="index" value="0" />
+  <button type="submit">Insert</button>
+  </form>
+
+<h2>Rotate Pages</h2>
+<form action="<%= rotate_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
+  <%= csrf_meta_tags %>
+  <input type="file" name="file" accept="application/pdf" />
+  <input type="number" name="degrees" placeholder="degrees (multiple of 90)" value="90" />
+  <button type="submit">Rotate</button>
+</form>
+
+<h2>Crop Pages</h2>
+<form action="<%= crop_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
+  <%= csrf_meta_tags %>
+  <input type="file" name="file" accept="application/pdf" />
+  <input type="number" name="llx" placeholder="llx" value="0" />
+  <input type="number" name="lly" placeholder="lly" value="0" />
+  <input type="number" name="urx" placeholder="urx" value="400" />
+  <input type="number" name="ury" placeholder="ury" value="600" />
+  <button type="submit">Crop</button>
+</form>

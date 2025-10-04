@@ -1,10 +1,18 @@
 class CarriersController < ApplicationController
   def index
     @carriers = Carrier.all
+    respond_to do |format|
+      format.html
+      format.json { render json: @carriers }
+    end
   end
 
   def show
     @carrier = Carrier.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.json { render json: @carrier }
+    end
   end
 
   def new
@@ -14,10 +22,15 @@ class CarriersController < ApplicationController
   def create
     @carrier = Carrier.new(carrier_params)
     if @carrier.save
-      redirect_to @carrier, notice: "Carrier successfully created."
+      respond_to do |format|
+        format.html { redirect_to @carrier, notice: "Carrier successfully created." }
+        format.json { render json: @carrier, status: :created }
+      end
     else
-      notice = "Carrier could not be created."
-      render :new
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: { errors: @carrier.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -28,22 +41,26 @@ class CarriersController < ApplicationController
   def update
     @carrier = Carrier.find(params[:id])
     if @carrier.update(carrier_params)
-      redirect_to @carrier, notice: "Carrier successfully updated."
+      respond_to do |format|
+        format.html { redirect_to @carrier, notice: "Carrier successfully updated." }
+        format.json { render json: @carrier }
+      end
     else
-      render :edit
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: { errors: @carrier.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @carrier = Carrier.find(params[:id])
-    # Ensure payments referencing this carrier's tasks are removed first to
-    # avoid foreign key constraint violations in tests/environments without
-    # cascading deletes set at the DB level.
-    ActiveRecord::Base.transaction do
-      Payment.where(task_id: @carrier.tasks.select(:id)).find_each(&:destroy)
-      @carrier.destroy
+    # DB-level ON DELETE CASCADE handles dependent records
+    @carrier.destroy
+    respond_to do |format|
+      format.html { redirect_to carriers_path, notice: "Carrier successfully deleted." }
+      format.json { head :no_content }
     end
-    redirect_to carriers_path, notice: "Carrier successfully deleted."
   end
 
   private

@@ -32,3 +32,10 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore bundler-installed gems
+/vendor/bundle
+/vendor/cache
+
+# Node (if added later)
+/node_modules

@@ -1,12 +1,21 @@
 
 class PaymentsController < ApplicationController
-  before_action :set_payment, only: %i[show edit update destroy]
+  before_action :set_payment, only: %i[show edit update destroy refund capture cancel sync]
 
   def index
     @payments = Payment.all
+    respond_to do |format|
+      format.html
+      format.json { render json: @payments }
+    end
   end
 
-  def show; end
+  def show
+    respond_to do |format|
+      format.html
+      format.json { render json: @payment }
+    end
+  end
 
   def new
     @payment = Payment.new
@@ -15,10 +24,16 @@ class PaymentsController < ApplicationController
   def create
     @payment = Payment.new(payment_params)
     if @payment.save
-      redirect_to @payment, notice: "Payment successfully created."
+      respond_to do |format|
+        format.html { redirect_to @payment, notice: "Payment successfully created." }
+        format.json { render json: @payment, status: :created }
+      end
     else
       # In test runs we want to see validation errors instead of failing silently
-      render plain: @payment.errors.full_messages.join(', '), status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render plain: @payment.errors.full_messages.join(", "), status: :unprocessable_entity }
+        format.json { render json: { errors: @payment.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -26,15 +41,71 @@ class PaymentsController < ApplicationController
 
   def update
     if @payment.update(payment_params)
-      redirect_to @payment, notice: "Payment successfully updated."
+      respond_to do |format|
+        format.html { redirect_to @payment, notice: "Payment successfully updated." }
+        format.json { render json: @payment }
+      end
     else
-      render :edit
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: { errors: @payment.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @payment.destroy
-    redirect_to payments_path, notice: "Payment successfully deleted."
+    respond_to do |format|
+      format.html { redirect_to payments_path, notice: "Payment successfully deleted." }
+      format.json { head :no_content }
+    end
+  end
+
+  # UI: POST /payments/:id/refund
+  def refund
+    if @payment.provider == "stripe"
+      amount_cents = params[:amount_cents]
+      reason = params[:reason]
+      Gateways::StripeGateway.refund!(payment: @payment, amount_cents: amount_cents&.to_i, reason: reason)
+      redirect_to @payment, notice: "Refund initiated"
+    else
+      redirect_to @payment, alert: "Unsupported provider"
+    end
+  rescue => e
+    redirect_to @payment, alert: e.message
+  end
+
+  def capture
+    if @payment.provider == "stripe"
+      Gateways::StripeGateway.capture!(payment: @payment)
+      redirect_to @payment, notice: "Capture succeeded"
+    else
+      redirect_to @payment, alert: "Unsupported provider"
+    end
+  rescue => e
+    redirect_to @payment, alert: e.message
+  end
+
+  def cancel
+    if @payment.provider == "stripe"
+      Gateways::StripeGateway.cancel!(payment: @payment)
+      redirect_to @payment, notice: "Payment canceled"
+    else
+      redirect_to @payment, alert: "Unsupported provider"
+    end
+  rescue => e
+    redirect_to @payment, alert: e.message
+  end
+
+  def sync
+    if @payment.provider == "stripe"
+      Gateways::StripeGateway.sync!(payment: @payment)
+      redirect_to @payment, notice: "Payment synced"
+    else
+      redirect_to @payment, alert: "Unsupported provider"
+    end
+  rescue => e
+    redirect_to @payment, alert: e.message
   end
 
   private
@@ -44,6 +115,7 @@ class PaymentsController < ApplicationController
   end
 
   def payment_params
-    params.require(:payment).permit(:category, :task_id, :payable_type, :payable_id, :payment_type, :interval_start, :interval_end)
+    params.require(:payment).permit(:category, :task_id, :payable_type, :payable_id, :payment_type, :interval_start, :interval_end,
+                                    :provider, :gateway_status, :amount_cents, :currency)
   end
 end

@@ -1,0 +1,7 @@
+<div data-controller="schema-editor" style="margin: 1rem 0;">
+  <div data-schema-editor-target="canvas" style="position: relative; width: 600px; height: 800px; border: 1px dashed #bbb; background: #fafafa;">
+    <!-- click to add fields; drag to move -->
+  </div>
+  <label for="form_template_schema">Schema (JSON)</label>
+  <textarea name="form_template[schema]" id="form_template_schema" data-schema-editor-target="output" rows="8" style="width: 100%;"><%= (@form_template.schema || {}).to_json %></textarea>
+</div>

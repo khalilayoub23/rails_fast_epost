@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_02_160001) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_05_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,6 +54,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_160001) do
     t.bigint "customer_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "schema", default: {}, null: false
     t.index ["carrier_id"], name: "index_form_templates_on_carrier_id"
     t.index ["customer_id"], name: "index_form_templates_on_customer_id"
   end
@@ -64,7 +65,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_160001) do
     t.string "form_default_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "data", default: {}, null: false
+    t.bigint "form_template_id"
     t.index ["customer_id"], name: "index_forms_on_customer_id"
+    t.index ["form_template_id"], name: "index_forms_on_form_template_id"
+  end
+
+  create_table "integration_events", force: :cascade do |t|
+    t.string "provider", null: false
+    t.jsonb "headers", default: {}, null: false
+    t.jsonb "body", default: {}, null: false
+    t.boolean "signature_valid", default: false, null: false
+    t.string "status", default: "received", null: false
+    t.datetime "processed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "external_id"
+    t.index ["provider", "created_at"], name: "index_integration_events_on_provider_and_created_at"
+    t.index ["provider", "external_id"], name: "index_integration_events_on_provider_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -77,7 +95,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_160001) do
     t.date "interval_end"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "provider"
+    t.string "external_id"
+    t.string "gateway_status", default: "created", null: false
+    t.integer "amount_cents"
+    t.string "currency", default: "USD"
+    t.string "payment_url"
+    t.jsonb "metadata", default: {}, null: false
+    t.string "stripe_customer_id"
+    t.string "payment_intent_id"
+    t.string "checkout_session_id"
+    t.string "charge_id"
+    t.integer "refunded_amount_cents"
+    t.string "refund_reason"
+    t.string "refund_id"
+    t.string "refund_status"
+    t.string "refund_balance_transaction_id"
+    t.datetime "refunded_at"
+    t.index ["charge_id"], name: "index_payments_on_charge_id"
+    t.index ["checkout_session_id"], name: "index_payments_on_checkout_session_id"
     t.index ["payable_type", "payable_id"], name: "index_payments_on_payable"
+    t.index ["payment_intent_id"], name: "index_payments_on_payment_intent_id"
+    t.index ["provider", "external_id"], name: "index_payments_on_provider_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
+    t.index ["refund_id"], name: "index_payments_on_refund_id"
     t.index ["task_id"], name: "index_payments_on_task_id"
   end
 
@@ -109,6 +149,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_160001) do
     t.index ["carrier_id"], name: "index_preferences_on_carrier_id"
   end
 
+  create_table "refunds", force: :cascade do |t|
+    t.bigint "payment_id", null: false
+    t.string "provider", null: false
+    t.string "refund_id"
+    t.integer "amount_cents"
+    t.string "currency"
+    t.string "reason"
+    t.string "status"
+    t.string "balance_transaction_id"
+    t.jsonb "raw", default: {}, null: false
+    t.datetime "occurred_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payment_id"], name: "index_refunds_on_payment_id"
+    t.index ["provider", "refund_id"], name: "index_refunds_on_provider_and_refund_id", unique: true, where: "(refund_id IS NOT NULL)"
+  end
+
   create_table "remarks", force: :cascade do |t|
     t.bigint "task_id", null: false
     t.string "remarkable_type", null: false
@@ -137,17 +194,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_02_160001) do
     t.index ["customer_id"], name: "index_tasks_on_customer_id"
   end
 
-  add_foreign_key "cost_calcs", "tasks"
-  add_foreign_key "documents", "carriers"
-  add_foreign_key "form_templates", "carriers"
-  add_foreign_key "form_templates", "customers"
-  add_foreign_key "forms", "customers"
-  add_foreign_key "payments", "tasks"
-  add_foreign_key "payments_tasks", "payments"
-  add_foreign_key "payments_tasks", "tasks"
-  add_foreign_key "phones", "carriers"
-  add_foreign_key "preferences", "carriers"
-  add_foreign_key "remarks", "tasks"
-  add_foreign_key "tasks", "carriers"
-  add_foreign_key "tasks", "customers"
+  add_foreign_key "cost_calcs", "tasks", on_delete: :cascade
+  add_foreign_key "documents", "carriers", on_delete: :cascade
+  add_foreign_key "form_templates", "carriers", on_delete: :cascade
+  add_foreign_key "form_templates", "customers", on_delete: :cascade
+  add_foreign_key "forms", "customers", on_delete: :cascade
+  add_foreign_key "forms", "form_templates", on_delete: :nullify
+  add_foreign_key "payments", "tasks", on_delete: :cascade
+  add_foreign_key "payments_tasks", "payments", on_delete: :cascade
+  add_foreign_key "payments_tasks", "tasks", on_delete: :cascade
+  add_foreign_key "phones", "carriers", on_delete: :cascade
+  add_foreign_key "preferences", "carriers", on_delete: :cascade
+  add_foreign_key "refunds", "payments", on_delete: :cascade
+  add_foreign_key "remarks", "tasks", on_delete: :cascade
+  add_foreign_key "tasks", "carriers", on_delete: :cascade
+  add_foreign_key "tasks", "customers", on_delete: :cascade
 end

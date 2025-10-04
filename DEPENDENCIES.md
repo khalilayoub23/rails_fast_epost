@@ -16,6 +16,10 @@ Top-level declared gems (from `Gemfile`):
 - turbo-rails
 - stimulus-rails
 - jbuilder
+- stripe
+- prawn
+- hexapdf
+- simple_form
 - tzinfo-data (platforms: windows, jruby)
 - solid_cache
 - solid_queue
@@ -55,6 +59,10 @@ Resolved gem versions (from `Gemfile.lock` - partial list):
 - importmap-rails 2.1.0
 - turbo-rails 2.0.11
 - stimulus-rails 1.3.4
+- stripe 16.0.0
+- prawn 2.5.0
+- hexapdf 1.4.1
+- simple_form 5.3.1
 
 Full Bundler dependencies are available in `Gemfile.lock`.
 
@@ -93,4 +101,4 @@ No `requirements.txt`, `Pipfile`, or `pyproject.toml` was found in the repositor
 4. If you want, I can also create a `DEPENDENCIES.json` machine-readable manifest.
 
 ---
-Generated: 2025-09-16
+Generated: 2025-10-04

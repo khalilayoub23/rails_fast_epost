@@ -10,8 +10,8 @@ if Rails.env.development?
         @app.call(env)
       rescue ActiveRecord::ConnectionNotEstablished, PG::ConnectionBad => e
         Rails.logger.warn("DbConnectionRescue: #{e.class} - #{e.message}")
-        body = File.read(Rails.root.join('public', '503_db.html')) rescue "Database unavailable"
-        return [503, { 'Content-Type' => 'text/html' }, [body]]
+        body = File.read(Rails.root.join("public", "503_db.html")) rescue "Database unavailable"
+        [ 503, { "Content-Type" => "text/html" }, [ body ] ]
       end
     end
   end

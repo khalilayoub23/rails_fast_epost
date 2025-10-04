@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Root route
-  root 'home#index'
+  root "home#index"
 
   get "up" => "rails/health#show", as: :rails_health_check
 
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   resources :form_templates
 
   # Tasks are nested under customers but also need standalone routes
-  resources :tasks, only: [:index, :show, :edit, :update, :destroy] do
+  resources :tasks, only: [ :index, :show, :edit, :update, :destroy ] do
     member do
       patch :update_status
       patch :update_delivery
@@ -31,10 +31,21 @@ Rails.application.routes.draw do
   end
 
   # Payments have polymorphic relationship (payable)
-  resources :payments
-  
+  resources :payments do
+    member do
+      post :refund
+      post :capture
+      post :cancel
+      post :sync
+    end
+  end
+  # Local checkout simulator
+  get "/pay/local/:id", to: "payments/checkout#show"
+  get "/pay/success", to: "payments/checkout#success"
+  get "/pay/cancel", to: "payments/checkout#cancel"
+
   # Join table routes for payments_tasks
-  resources :payments_tasks, only: [:create, :destroy]
+  resources :payments_tasks, only: [ :create, :destroy ]
 
   # API routes if needed
   namespace :api do
@@ -42,6 +53,45 @@ Rails.application.routes.draw do
       resources :tasks
       resources :carriers
       resources :customers
+
+      post "payments", to: "payments#create"
+      post "payments/:provider/webhook", to: "payments#webhook"
+  post "payments/:id/refund", to: "payments#refund"
+  post "payments/:id/capture", to: "payments#capture"
+  post "payments/:id/cancel", to: "payments#cancel"
+  post "payments/:id/sync", to: "payments#sync"
+
+      namespace :integrations do
+        # Meta platforms: GET verify + POST receive
+        get  "whatsapp",  to: "whatsapp#verify"
+        post "whatsapp",  to: "whatsapp#receive"
+        get  "instagram", to: "instagram#verify"
+        post "instagram", to: "instagram#receive"
+        get  "facebook",  to: "facebook#verify"
+        post "facebook",  to: "facebook#receive"
+
+        # Telegram: POST receive with secret token header
+        post "telegram", to: "telegram#receive"
+
+        # TikTok: POST receive
+        post "tiktok", to: "tiktok#receive"
+
+        # Generic websites: POST receive
+        post "websites", to: "websites#receive"
+
+        # HubSpot Free CRM style webhook
+        post "hubspot", to: "hubspot#receive"
+      end
+    end
+  end
+
+  namespace :admin do
+    resource :pdfs, only: [:new] do
+      post :merge
+      post :stamp
+      post :insert
+      post :rotate
+      post :crop
     end
   end
 end

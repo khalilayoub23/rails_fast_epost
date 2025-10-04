@@ -1,0 +1,9 @@
+<h1>Form Templates</h1>
+<%= link_to "New", new_form_template_path %>
+<ul>
+  <% @form_templates.each do |t| %>
+    <li>
+      <%= link_to "Template ##{t.id}", t %>
+    </li>
+  <% end %>
+  </ul>

@@ -17,8 +17,8 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create payment" do
     assert_difference("Payment.count") do
-      post payments_url, params: { 
-        payment: { 
+      post payments_url, params: {
+        payment: {
           category: @payment.category,
           task_id: @payment.task_id,
           payable_type: @payment.payable_type,
@@ -26,7 +26,7 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
           payment_type: @payment.payment_type,
           interval_start: @payment.interval_start,
           interval_end: @payment.interval_end
-        } 
+        }
       }
     end
 
@@ -44,8 +44,8 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update payment" do
-    patch payment_url(@payment), params: { 
-      payment: { 
+    patch payment_url(@payment), params: {
+      payment: {
         category: @payment.category,
         task_id: @payment.task_id,
         payable_type: @payment.payable_type,
@@ -53,7 +53,7 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
         payment_type: @payment.payment_type,
         interval_start: @payment.interval_start,
         interval_end: @payment.interval_end
-      } 
+      }
     }
     assert_redirected_to payment_url(@payment)
   end

@@ -1,2 +1,80 @@
 <h1>Payment <%= @payment.id %></h1>
 <p>Category: <%= @payment.category %></p>
+<p>Provider: <%= @payment.provider %></p>
+<p>Status:
+	<% status = @payment.gateway_status %>
+	<% bg = case status
+		when "succeeded" then "#e6ffed" 
+		when "failed" then "#ffecec"
+		when "canceled" then "#fff7e6"
+		when "refunded" then "#e6f0ff"
+		else "#f2f2f2" end %>
+	<span style="background:<%= bg %>; padding:2px 6px; border-radius:8px; display:inline-block;"><%= status %></span>
+</p>
+<p>Amount: <%= @payment.amount_cents ? ("%.2f" % (@payment.amount_cents / 100.0)) : "-" %> <%= @payment.currency %></p>
+
+<% if @payment.provider == "stripe" %>
+	<hr>
+	<h3>Stripe Details</h3>
+	<div style="border:1px solid #ddd; padding:8px; border-radius:6px; background:#fafafa; margin-bottom:12px;">
+		<ul>
+			<li>Customer: <code><%= @payment.stripe_customer_id || '-' %></code></li>
+			<li>Payment Intent: <code><%= @payment.payment_intent_id || '-' %></code></li>
+			<li>Checkout Session: <code><%= @payment.checkout_session_id || '-' %></code></li>
+			<li>Charge: <code><%= @payment.charge_id || '-' %></code></li>
+			<li>Refund ID: <code><%= @payment.refund_id || '-' %></code></li>
+			<li>Refund Status: <code><%= @payment.refund_status || '-' %></code></li>
+			<li>Refund Amount (cents): <code><%= @payment.refunded_amount_cents || '-' %></code></li>
+			<li>Refund Reason: <code><%= @payment.refund_reason || '-' %></code></li>
+			<li>Refund Balance Tx: <code><%= @payment.refund_balance_transaction_id || '-' %></code></li>
+			<li>Refunded At: <code><%= @payment.refunded_at || '-' %></code></li>
+		</ul>
+	</div>
+
+	<h3>Stripe Actions</h3>
+	<% unless @payment.gateway_status == "refunded" %>
+		<%= form_with url: refund_payment_path(@payment), method: :post do |f| %>
+		<input type="number" name="amount_cents" placeholder="Amount cents (optional)" />
+		<input type="text" name="reason" placeholder="Reason (optional)" />
+		<button type="submit">Refund</button>
+		<% end %>
+	<% end %>
+	<% if @payment.gateway_status == "pending" %>
+		<%= button_to "Capture", capture_payment_path(@payment), method: :post %>
+		<%= button_to "Cancel", cancel_payment_path(@payment), method: :post %>
+	<% end %>
+	<%= button_to "Sync",   sync_payment_path(@payment), method: :post %>
+
+	<hr>
+	<h3>Refund History</h3>
+	<% if @payment.refunds.any? %>
+	<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse; width:100%; background:#fff;">
+		<thead style="background:#f7f7f7;">
+			<tr>
+				<th>ID</th>
+				<th>Amount</th>
+				<th>Currency</th>
+				<th>Status</th>
+				<th>Reason</th>
+				<th>Balance Tx</th>
+				<th>Occurred At</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @payment.refunds.order(occurred_at: :desc, created_at: :desc).each do |r| %>
+			<tr>
+				<td><code><%= r.refund_id || r.id %></code></td>
+				<td><%= r.amount_cents ? ("%.2f" % (r.amount_cents / 100.0)) : "-" %></td>
+				<td><%= r.currency || '-' %></td>
+				<td><%= r.status || '-' %></td>
+				<td><%= r.reason || '-' %></td>
+				<td><code><%= r.balance_transaction_id || '-' %></code></td>
+				<td><%= r.occurred_at || r.created_at %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<% else %>
+	<p>No refunds recorded for this payment yet.</p>
+	<% end %>
+<% end %>

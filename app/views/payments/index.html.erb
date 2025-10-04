@@ -1,2 +1,35 @@
 <h1>Payments</h1>
-<%= @payments.map(&:id).join(", ") %>
+
+<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Provider</th>
+			<th>Status</th>
+			<th>Amount</th>
+			<th>Currency</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @payments.each do |p| %>
+			<tr>
+				<td><%= link_to p.id, payment_path(p) %></td>
+				<td><%= p.provider.presence || "-" %></td>
+				<td>
+								<% status = p.gateway_status.presence || "-" %>
+								<% bg = case status
+									when "succeeded" then "#e6ffed" 
+									when "failed" then "#ffecec"
+									when "canceled" then "#fff7e6"
+									when "refunded" then "#e6f0ff"
+									else "#f2f2f2" end %>
+								<span style="background:<%= bg %>; padding:2px 6px; border-radius:8px; display:inline-block;"><%= status %></span>
+				</td>
+				<td><%= p.amount_cents ? (p.amount_cents / 100.0) : nil %></td>
+				<td><%= p.currency %></td>
+				<td><%= link_to 'Show', payment_path(p) %></td>
+			</tr>
+		<% end %>
+	</tbody>
+	</table>

@@ -1,0 +1,5 @@
+<h1>Form Template <%= @form_template.id %></h1>
+<p>Carrier: <%= @form_template.carrier_id %></p>
+<p>Customer: <%= @form_template.customer_id %></p>
+<p><%= link_to "Preview PDF", form_template_path(@form_template, format: :pdf), target: "_blank" %></p>
+<pre><%= JSON.pretty_generate(@form_template.schema || {}) %></pre>

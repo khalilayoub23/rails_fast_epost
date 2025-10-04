@@ -1,0 +1,12 @@
+<h1>Local Payment Checkout</h1>
+<p>External ID: <%= @payment.external_id %></p>
+<p>Amount: <%= (@payment.amount_cents || 0) / 100.0 %> <%= @payment.currency %></p>
+<p>Status: <%= @payment.gateway_status %></p>
+
+<form method="post" action="/api/v1/payments/local/webhook">
+  <input type="hidden" name="id" value="<%= @payment.external_id %>">
+  <input type="hidden" name="status" value="succeeded">
+  <button type="submit">Simulate Success</button>
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <p style="font-size: 12px; color: #666;">For local dev only. In production, webhooks will be sent by the gateway.</p>
+</form>

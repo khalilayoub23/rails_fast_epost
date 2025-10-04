@@ -19,8 +19,8 @@ class CarriersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get create" do
-    # perform a POST to create
-  post carriers_url, params: { carrier: { carrier_type: 'RegularCarrier', name: 'New', email: 'n@example.com', address: 'Addr' } }
+  # perform a POST to create
+  post carriers_url, params: { carrier: { carrier_type: "RegularCarrier", name: "New", email: "n@example.com", address: "Addr" } }
     assert_response :redirect
   end
 
@@ -32,7 +32,7 @@ class CarriersControllerTest < ActionDispatch::IntegrationTest
 
   test "should get update" do
     carrier = carriers(:one)
-    patch carrier_url(carrier), params: { carrier: { name: 'Updated' } }
+    patch carrier_url(carrier), params: { carrier: { name: "Updated" } }
     assert_response :redirect
   end
 
