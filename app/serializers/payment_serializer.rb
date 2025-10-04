@@ -18,6 +18,9 @@ class PaymentSerializer
   def self.render_one(record)
     payload = record.as_json(only: FIELDS)
     if record.respond_to?(:refunds)
+      payload["total_refunded_cents"] = record.refunds.sum(:amount_cents)
+    end
+    if record.respond_to?(:refunds)
       payload["refunds"] = record.refunds.order(occurred_at: :desc, created_at: :desc).map do |r|
         {
           id: r.id,

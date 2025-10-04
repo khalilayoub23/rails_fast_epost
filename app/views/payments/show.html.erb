@@ -28,6 +28,9 @@
 			<li>Refund Reason: <code><%= @payment.refund_reason || '-' %></code></li>
 			<li>Refund Balance Tx: <code><%= @payment.refund_balance_transaction_id || '-' %></code></li>
 			<li>Refunded At: <code><%= @payment.refunded_at || '-' %></code></li>
+			<li>Total Refunded (computed): <code><%=
+			  (total = @payment.refunds.sum(:amount_cents)) && total > 0 ? ("%.2f" % (total / 100.0)) : '-'
+			%></code></li>
 		</ul>
 	</div>
 
