@@ -1,8 +1,14 @@
-<tr id="<%= dom_id(payment) %>">
-  <td><%= link_to payment.id, payment_path(payment) %></td>
-  <td><%= payment.provider.presence || "-" %></td>
-  <td><%= render "shared/status_badge", status: payment.gateway_status %></td>
-  <td><%= payment.amount_cents ? (payment.amount_cents / 100.0) : nil %></td>
-  <td><%= payment.currency %></td>
-  <td><%= link_to 'Show', payment_path(payment), class: "text-blue-600" %></td>
+<tr id="<%= dom_id(payment) %>" class="hover:bg-gray-50">
+  <td class="px-6 py-4 whitespace-nowrap">
+    <%= link_to payment_path(payment), class: "text-sm font-medium text-blue-600 hover:text-blue-500" do %>
+      #<%= payment.id %>
+    <% end %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= payment.provider.presence || "-" %></td>
+  <td class="px-6 py-4 whitespace-nowrap"><%= render "shared/status_badge", status: payment.gateway_status %></td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= payment.amount_cents ? ("%.2f" % (payment.amount_cents / 100.0)) : "-" %></td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= payment.currency %></td>
+  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+    <%= link_to 'View', payment_path(payment), class: "inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+  </td>
 </tr>

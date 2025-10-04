@@ -23,11 +23,10 @@ default: &default
 development:
   <<: *default
   database: fast_epost_3_development
-
-# By default, connect using the current OS user via a local domain socket
-# (peer authentication). If you want to use a specific DB user/password,
-# set the environment variables `DB_USER` and `DB_PASSWORD`.
-  username: <%= ENV['DB_USER'] || ENV['USER'] %>
+  host: localhost
+  port: 5432
+  username: postgres
+  password: password
   <% if ENV['DB_PASSWORD'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   <% end %>

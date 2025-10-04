@@ -1,0 +1,35 @@
+<% content_for :page_title, "Settings" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <%= link_to root_path, class: "text-gray-500 hover:text-gray-700" do %>
+              <span class="material-icons text-sm mr-1">home</span>
+              Home
+            <% end %>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-gray-400 mx-1">chevron_right</span>
+              <span class="text-gray-700 font-medium">Settings</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">Application Settings</h2>
+    </div>
+    <div class="px-6 py-8 text-center">
+      <span class="material-icons text-gray-400 text-4xl mb-2">settings</span>
+      <h3 class="text-sm font-medium text-gray-900 mb-1">System Configuration</h3>
+      <p class="text-sm text-gray-500">Application settings panel coming soon.</p>
+    </div>
+  </div>
+</div>

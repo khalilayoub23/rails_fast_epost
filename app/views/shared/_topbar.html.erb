@@ -1,24 +1,64 @@
-<header class="sticky top-0 z-10 bg-white border-b">
-  <div class="h-16 flex items-center justify-between px-4">
-    <button class="md:hidden inline-flex items-center justify-center p-2 rounded hover:bg-gray-100"
-            data-action="click->sidebar#toggle" aria-label="Open sidebar">
-      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-    </button>
-    <div class="flex-1"></div>
-    <div class="flex items-center gap-3">
-      <button id="userMenuButton" data-dropdown-toggle="userMenu"
-              class="inline-flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-100">
-        <span class="font-medium">Account</span>
-        <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 7l4.5 4.5L14.5 7"/></svg>
+<header class="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
+  <div class="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
+    <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
+      <!-- Hamburger Toggle BTN -->
+      <button class="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
+              data-action="click->sidebar#toggle">
+        <span class="material-icons text-lg text-dark dark:text-white">menu</span>
       </button>
-      <div id="userMenu" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-        <ul class="py-2 text-sm text-gray-700">
-          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Profile</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Settings</a></li>
-        </ul>
+      <!-- Hamburger Toggle BTN -->
+    </div>
+
+    <div class="hidden sm:block">
+      <h1 class="text-title-md2 font-semibold text-black dark:text-white">
+        <%= content_for?(:page_title) ? yield(:page_title) : "Dashboard" %>
+      </h1>
+    </div>
+
+    <div class="flex items-center gap-3 2xsm:gap-7">
+      <!-- Search Form -->
+      <div class="relative">
+        <button class="absolute left-0 top-1/2 -translate-y-1/2">
+          <svg class="fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"/>
+          </svg>
+        </button>
+        <input type="text" placeholder="Type to search..." 
+               class="w-full bg-transparent pl-9 pr-4 text-black focus:outline-none dark:text-white xl:w-125" />
+      </div>
+
+      <!-- User Area -->
+      <div class="relative" data-controller="dropdown">
+        <button class="flex items-center gap-4" data-action="click->dropdown#toggle">
+          <span class="hidden text-right lg:block">
+            <span class="block text-sm font-medium text-black dark:text-white">Account</span>
+            <span class="block text-xs">Admin</span>
+          </span>
+          <span class="h-12 w-12 rounded-full">
+            <img src="data:image/svg+xml,%3Csvg width='112' height='112' viewBox='0 0 112 112' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='56' cy='56' r='56' fill='url(%23paint0_linear_25_319)'/%3E%3Cpath d='M42 84V74.5C42 66.4919 48.4919 60 56.5 60H69.5C77.5081 60 84 66.4919 84 74.5V84' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='63' cy='44' r='14' stroke='white' stroke-width='4'/%3E%3Cdefs%3E%3ClinearGradient id='paint0_linear_25_319' x1='56' y1='0' x2='56' y2='112' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233C50E0'/%3E%3Cstop offset='1' stop-color='%23809CFF'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E" alt="User" class="h-12 w-12 rounded-full" />
+          </span>
+          <svg class="hidden fill-current sm:block" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.410765 0.910734C0.736202 0.585297 1.26384 0.585297 1.58928 0.910734L6.00002 5.32148L10.4108 0.910734C10.7362 0.585297 11.2638 0.585297 11.5893 0.910734C11.9147 1.23617 11.9147 1.76381 11.5893 2.08924L6.58928 7.08924C6.26384 7.41468 5.7362 7.41468 5.41077 7.08924L0.410765 2.08924C0.0853277 1.76381 0.0853277 1.23617 0.410765 0.910734Z"/>
+          </svg>
+        </button>
+
+  <div class="absolute right-0 mt-4 hidden w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark" data-dropdown-target="menu">
+          <ul class="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+            <li>
+              <%= link_to profile_path, class: "flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" do %>
+                <span class="material-icons text-lg">person</span>
+                My Profile
+              <% end %>
+            </li>
+            <li>
+              <%= link_to settings_path, class: "flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" do %>
+                <span class="material-icons text-lg">settings</span>
+                Account Settings
+              <% end %>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

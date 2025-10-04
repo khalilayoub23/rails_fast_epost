@@ -1,0 +1,72 @@
+<% content_for :page_title, @customer.name %>
+
+<div class="p-4 space-y-4">
+  <div class="breadcrumbs text-sm">
+    <ul>
+      <li><%= link_to "Home", root_path %></li>
+      <li><%= link_to "Customers", customers_path %></li>
+      <li><%= @customer.name %></li>
+    </ul>
+  </div>
+
+  <div class="card bg-base-100 shadow">
+    <div class="card-body p-4 space-y-2">
+      <h2 class="card-title"><%= @customer.name %></h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <div class="text-sm opacity-70">Email</div>
+          <div><%= @customer.email %></div>
+        </div>
+        <div>
+          <div class="text-sm opacity-70">Category</div>
+          <div class="capitalize"><%= @customer.category %></div>
+        </div>
+        <div class="sm:col-span-2">
+          <div class="text-sm opacity-70">Address</div>
+          <div><%= @customer.address %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card bg-base-100 shadow">
+    <div class="card-body p-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold">Tasks</h3>
+        <%= link_to "View all", customer_tasks_path(@customer), class: "btn btn-sm" %>
+      </div>
+      <% if @customer.tasks.any? %>
+        <div class="overflow-x-auto">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Carrier</th>
+                <th>Created</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @customer.tasks.limit(10).each do |task| %>
+                <tr>
+                  <td>#<%= task.id %></td>
+                  <td>
+                    <%= render "shared/status_badge", status: task.status %>
+                  </td>
+                  <td><%= task.carrier_id %></td>
+                  <td><%= l(task.created_at, format: :short) %></td>
+                  <td class="text-right">
+                    <%= link_to "Open", task_path(task), class: "btn btn-xs" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="alert">No tasks for this customer.</div>
+      <% end %>
+    </div>
+  </div>
+</div>

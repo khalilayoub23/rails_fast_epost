@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # Root route
   root "dashboard#index"
+  get "/dashboard", to: "dashboard#index", as: :dashboard
 
   get "up" => "rails/health#show", as: :rails_health_check
 
@@ -94,4 +95,8 @@ Rails.application.routes.draw do
       post :crop
     end
   end
+
+  # User Profile and Settings
+  resource :profile, only: [ :show ]
+  resources :settings, only: [ :index ]
 end

@@ -17,21 +17,17 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Tailwind v4 base stylesheet (tailwindcss-rails builds into app/assets/builds) %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%# Load Tailwind first, then our application overrides and icons (order matters) %>
+  <%= stylesheet_link_tag "tailwind", "application", "material-icons", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <!-- Flowbite JS (enhanced Tailwind components via CDN) -->
-    <script src="https://unpkg.com/flowbite@2.5.1/dist/flowbite.js" defer></script>
-    <!-- daisyUI CDN (themeable Tailwind components) -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet">
   </head>
 
-  <body class="bg-gray-50 text-gray-900">
+  <body class="bg-whiten font-satoshi text-base text-body">
     <div class="flex h-screen overflow-hidden" data-controller="sidebar">
       <%= render "shared/sidebar" %>
-      <div class="relative flex flex-1 flex-col overflow-y-auto">
+      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         <%= render "shared/topbar" %>
-        <main class="p-6">
+        <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-whiten">
           <%= render "shared/flash" %>
           <%= yield %>
         </main>

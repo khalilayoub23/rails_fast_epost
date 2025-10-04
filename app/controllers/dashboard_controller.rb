@@ -5,5 +5,6 @@ class DashboardController < ApplicationController
     @recent_tasks = Task.order(created_at: :desc).limit(5)
     @revenue_total_cents = Payment.where(gateway_status: :succeeded).sum(:amount_cents).to_i
     @refunds_total_cents  = Refund.sum(:amount_cents).to_i
+    @customers_count = Customer.count
   end
 end

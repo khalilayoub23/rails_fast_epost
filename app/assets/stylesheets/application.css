@@ -1,10 +1,154 @@
 /*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
+ * TailAdmin Dashboard Styles
  */
+
+/* Material Icons rules are loaded from material-icons.css */
+
+/* TailAdmin Color Palette */
+:root {
+  --primary: #3c50e0;
+  --secondary: #80caee;
+  --success: #219653;
+  --danger: #d34053;
+  --warning: #ffa70b;
+  --info: #8fbaf9;
+  --light: #eff4fb;
+  --dark: #1c2434;
+  --body: #64748b;
+  --bodydark: #aeb7c0;
+  --bodydark1: #dee4ee;
+  --bodydark2: #8a99af;
+  --stroke: #e2e8f0;
+  --gray: #eff4fb;
+  --graydark: #333a48;
+  --whiten: #f1f5f9;
+  --whiter: #f7f9fc;
+  --boxdark: #24303f;
+  --boxdark-2: #1a222c;
+  --strokedark: #2e3a47;
+  --form-strokedark: #3d4d60;
+  --form-input: #1d2a39;
+  --meta-1: #dc3545;
+  --meta-2: #eff2f7;
+  --meta-3: #10b981;
+  --meta-4: #313d4a;
+  --meta-5: #259ae6;
+  --meta-6: #ffba00;
+  --meta-7: #ff6766;
+  --meta-8: #f0950c;
+  --meta-9: #e5e7eb;
+  --meta-10: #0fadcf;
+}
+
+/* Custom Tailwind Extensions */
+.bg-primary { background-color: var(--primary) !important; }
+.bg-secondary { background-color: var(--secondary) !important; }
+.bg-success { background-color: var(--success) !important; }
+.bg-danger { background-color: var(--danger) !important; }
+.bg-warning { background-color: var(--warning) !important; }
+.bg-info { background-color: var(--info) !important; }
+.bg-light { background-color: var(--light) !important; }
+.bg-dark { background-color: var(--dark) !important; }
+.bg-body { background-color: var(--body) !important; }
+.bg-bodydark { background-color: var(--bodydark) !important; }
+.bg-bodydark1 { background-color: var(--bodydark1) !important; }
+.bg-bodydark2 { background-color: var(--bodydark2) !important; }
+.bg-stroke { background-color: var(--stroke) !important; }
+.bg-gray { background-color: var(--gray) !important; }
+.bg-gray-2 { background-color: var(--gray) !important; }
+.bg-graydark { background-color: var(--graydark) !important; }
+.bg-whiten { background-color: var(--whiten) !important; }
+.bg-whiter { background-color: var(--whiter) !important; }
+.bg-boxdark { background-color: var(--boxdark) !important; }
+.bg-boxdark-2 { background-color: var(--boxdark-2) !important; }
+.bg-strokedark { background-color: var(--strokedark) !important; }
+.bg-meta-2 { background-color: var(--meta-2) !important; }
+.bg-meta-4 { background-color: var(--meta-4) !important; }
+
+.text-primary { color: var(--primary) !important; }
+.text-secondary { color: var(--secondary) !important; }
+.text-success { color: var(--success) !important; }
+.text-danger { color: var(--danger) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-info { color: var(--info) !important; }
+.text-light { color: var(--light) !important; }
+.text-dark { color: var(--dark) !important; }
+.text-body { color: var(--body) !important; }
+.text-bodydark { color: var(--bodydark) !important; }
+.text-bodydark1 { color: var(--bodydark1) !important; }
+.text-bodydark2 { color: var(--bodydark2) !important; }
+
+.border-stroke { border-color: var(--stroke) !important; }
+.border-strokedark { border-color: var(--strokedark) !important; }
+
+/* Custom Width/Height Classes */
+.w-72\.5 { width: 18.125rem; }
+.w-62\.5 { width: 15.625rem; }
+.w-125 { width: 31.25rem; }
+
+/* Z-Index */
+.z-999 { z-index: 999; }
+.z-9999 { z-index: 9999; }
+.z-99999 { z-index: 99999; }
+
+/* Drop Shadow */
+.drop-shadow-1 { 
+  filter: drop-shadow(0px 1px 0px #e2e8f0);
+}
+
+/* Scrollbar Hide */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Typography */
+.text-title-md2 { 
+  font-size: 1.75rem; 
+  line-height: 2.25rem;
+}
+
+/* Shadow */
+.shadow-2 {
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
+}
+.shadow-default {
+  box-shadow: 0px 8px 13px -3px rgba(0, 0, 0, 0.07);
+}
+
+/* Additional TailAdmin Spacing */
+.px-7\.5 { padding-left: 1.875rem; padding-right: 1.875rem; }
+.py-7\.5 { padding-top: 1.875rem; padding-bottom: 1.875rem; }
+.gap-7\.5 { gap: 1.875rem; }
+.mt-7\.5 { margin-top: 1.875rem; }
+.h-11\.5 { height: 2.875rem; }
+.w-11\.5 { width: 2.875rem; }
+
+/* TailAdmin specific text sizes */
+.text-title-md { 
+  font-size: 1.5rem; 
+  line-height: 2rem;
+  font-weight: 600;
+}
+
+/* TailAdmin Typography: Satoshi fallback stack */
+.font-satoshi {
+  font-family: "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Additional custom widths */
+.min-w-47\.5 { min-width: 11.875rem; }
+.max-w-45 { max-width: 11.25rem; }
+.w-47\.5 { width: 11.875rem; }
+.max-w-4 { max-width: 1rem; }
+.max-w-2\.5 { max-width: 0.625rem; }
+
+/* Shadow variants */
+.shadow-card {
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+

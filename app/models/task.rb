@@ -19,4 +19,24 @@ class Task < ApplicationRecord
   validates :status, presence: true
   validates :barcode, presence: true, uniqueness: true
   validates :filled_form_url, allow_nil: true, format: { with: URI::DEFAULT_PARSER.make_regexp }
+
+  # Turbo Streams: broadcast task list updates
+  after_create_commit :broadcast_created
+  after_update_commit :broadcast_updated
+  after_destroy_commit :broadcast_destroyed
+
+  private
+
+  def broadcast_created
+    ApplicationController.renderer # ensure renderer is loaded
+    broadcast_prepend_later_to "tasks", target: "tasks", partial: "tasks/task", locals: { task: self }
+  end
+
+  def broadcast_updated
+    broadcast_replace_later_to "tasks", target: ActionView::RecordIdentifier.dom_id(self), partial: "tasks/task", locals: { task: self }
+  end
+
+  def broadcast_destroyed
+    broadcast_remove_to "tasks", target: ActionView::RecordIdentifier.dom_id(self)
+  end
 end

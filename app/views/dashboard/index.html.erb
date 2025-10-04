@@ -1,27 +1,114 @@
-<h1 class="text-xl font-semibold mb-4">Dashboard</h1>
+<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <h2 class="text-title-md2 font-bold text-black dark:text-white">
+    eCommerce Dashboard
+  </h2>
+</div>
 
 <%= turbo_stream_from "dashboard" %>
 
 <%= render "kpis" %>
 
-<div class="grid md:grid-cols-2 gap-6 mt-6">
-  <div class="bg-white border rounded p-4">
-    <div class="text-sm text-gray-500 mb-2">Pending payments</div>
-    <ul class="space-y-1">
-      <% @pending_payments.each do |p| %>
-        <li>
-          <%= link_to "##{p.id} #{p.provider.to_s.upcase}", payment_path(p), class: "text-blue-600 hover:underline" %>
-          <span class="ml-2"><%= render "shared/status_badge", status: p.gateway_status %></span>
-        </li>
-      <% end %>
-    </ul>
+<!-- Chart and Target Section -->
+<div class="mt-7.5 grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5">
+  <!-- Monthly Sales Chart -->
+  <div class="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
+    <div class="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
+      <div class="flex w-full flex-wrap gap-3 sm:gap-5">
+        <div class="flex min-w-47.5">
+          <span class="mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-primary">
+            <span class="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
+          </span>
+          <div class="w-full">
+            <p class="font-semibold text-primary">Total Revenue</p>
+            <p class="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+          </div>
+        </div>
+        <div class="flex min-w-47.5">
+          <span class="mr-2 mt-1 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-secondary">
+            <span class="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"></span>
+          </span>
+          <div class="w-full">
+            <p class="font-semibold text-secondary">Total Sales</p>
+            <p class="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex w-full max-w-45 justify-end">
+        <div class="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4">
+          <button class="rounded bg-white px-3 py-1 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
+            Day
+          </button>
+          <button class="px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
+            Week
+          </button>
+          <button class="px-3 py-1 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
+            Month
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div id="chartOne" class="-ml-5" data-controller="charts" data-charts-series-a-value='[120,380,220,180,260,140,80,300,190,280,220,110]' data-charts-series-b-value='[100,320,200,150,210,120,60,260,160,250,190,90]'></div>
+    </div>
   </div>
-  <div class="bg-white border rounded p-4">
-    <div class="text-sm text-gray-500 mb-2">Recent tasks</div>
-    <ul class="space-y-1">
-      <% @recent_tasks.each do |t| %>
-        <li><%= link_to "Task ##{t.id}", t, class: "text-blue-600 hover:underline" %></li>
-      <% end %>
-    </ul>
+
+  <!-- Monthly Target -->
+  <div class="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
+    <div class="mb-4 justify-between gap-4 sm:flex">
+      <div>
+        <h5 class="text-xl font-semibold text-black dark:text-white">
+          Monthly Target
+        </h5>
+      </div>
+      <div class="relative z-20 inline-block">
+        <select name="" id="" class="relative z-20 inline-flex appearance-none bg-transparent py-1 pl-3 pr-8 text-sm font-medium outline-none">
+          <option value="">This Month</option>
+          <option value="">Last Month</option>
+        </select>
+        <span class="absolute right-3 top-1/2 z-10 -translate-y-1/2">
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0.47072 1.08816C0.47072 1.02932 0.500141 0.955772 0.54404 0.911882C0.551987 0.903934 0.551987 0.903934 0.559934 0.895887L0.667063 0.789758C0.711953 0.744868 0.785499 0.715446 0.844341 0.715446C0.903183 0.715446 0.976729 0.744868 1.02162 0.789758L5.00007 4.56497L8.97852 0.789758C9.02341 0.744868 9.09696 0.715446 9.1558 0.715446C9.21464 0.715446 9.28819 0.744868 9.33308 0.789758L9.44021 0.895887C9.44816 0.903934 9.44816 0.903934 9.45611 0.911882C9.50001 0.955772 9.52943 1.02932 9.52943 1.08816C9.52943 1.147 9.50001 1.22055 9.45611 1.26444L5.2308 5.36379C5.1859 5.40868 5.11235 5.4381 5.05351 5.4381C4.99467 5.4381 4.92112 5.40868 4.87623 5.36379L0.650904 1.26444C0.607014 1.22055 0.57759 1.147 0.57759 1.08816C0.57759 1.08816 0.552669 1.11308 0.47072 1.08816Z" fill="#637381"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <p class="font-medium">Target you've set for each month</p>
+    </div>
+
+    <div class="mx-auto flex justify-center">
+      <svg class="rotate-90 transform" width="200" height="200">
+        <circle cx="100" cy="100" r="80" stroke="#f1f5f9" stroke-width="16" fill="transparent"/>
+        <circle cx="100" cy="100" r="80" stroke="#3c50e0" stroke-width="16" fill="transparent" stroke-dasharray="377" stroke-dashoffset="94.25" stroke-linecap="round"/>
+      </svg>
+      <div class="absolute flex flex-col items-center justify-center">
+        <span class="text-3xl font-bold text-black dark:text-white">75.55%</span>
+        <span class="text-sm font-medium">+10%</span>
+      </div>
+    </div>
+
+    <div class="mt-7">
+      <p class="mb-3 font-medium text-black dark:text-white">
+        You earn $<%= number_with_delimiter((@revenue_total_cents / 100.0).to_i) %> today, it's higher than last month.
+      </p>
+      <p class="text-sm">Keep up your good work!</p>
+    </div>
+
+    <div class="mt-5 flex items-center justify-between border-t border-stroke pt-5 dark:border-strokedark">
+      <div>
+        <p class="font-medium text-black dark:text-white">Target</p>
+        <p class="text-xl font-bold text-meta-1">$20K</p>
+      </div>
+      <div>
+        <p class="font-medium text-black dark:text-white">Revenue</p>
+        <p class="text-xl font-bold text-meta-3">$20K</p>
+      </div>
+      <div>
+        <p class="font-medium text-black dark:text-white">Today</p>
+        <p class="text-xl font-bold text-meta-3">$20K</p>
+      </div>
+    </div>
   </div>
 </div>
