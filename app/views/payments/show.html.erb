@@ -1,22 +1,17 @@
-<h1>Payment <%= @payment.id %></h1>
-<p>Category: <%= @payment.category %></p>
-<p>Provider: <%= @payment.provider %></p>
-<p>Status:
-	<% status = @payment.gateway_status %>
-	<% bg = case status
-		when "succeeded" then "#e6ffed" 
-		when "failed" then "#ffecec"
-		when "canceled" then "#fff7e6"
-		when "refunded" then "#e6f0ff"
-		else "#f2f2f2" end %>
-	<span style="background:<%= bg %>; padding:2px 6px; border-radius:8px; display:inline-block;"><%= status %></span>
-</p>
-<p>Amount: <%= @payment.amount_cents ? ("%.2f" % (@payment.amount_cents / 100.0)) : "-" %> <%= @payment.currency %></p>
+<h1 class="text-xl font-semibold mb-4">Payment <%= @payment.id %></h1>
+<div class="space-y-1">
+  <p>Category: <%= @payment.category %></p>
+  <p>Provider: <%= @payment.provider %></p>
+  <p>Status: <%= render "shared/status_badge", status: @payment.gateway_status %></p>
+  <p>Amount: <%= @payment.amount_cents ? ("%.2f" % (@payment.amount_cents / 100.0)) : "-" %> <%= @payment.currency %></p>
+  <p>Total Refunded (computed): <%= number_to_currency(@payment.refunds.sum(:amount_cents).to_i / 100.0, unit: @payment.currency) %></p>
+  
+</div>
 
 <% if @payment.provider == "stripe" %>
 	<hr>
-	<h3>Stripe Details</h3>
-	<div style="border:1px solid #ddd; padding:8px; border-radius:6px; background:#fafafa; margin-bottom:12px;">
+		<h3 class="text-lg font-semibold mt-6 mb-2">Stripe Details</h3>
+		<div class="border rounded bg-white p-4 mb-4">
 		<ul>
 			<li>Customer: <code><%= @payment.stripe_customer_id || '-' %></code></li>
 			<li>Payment Intent: <code><%= @payment.payment_intent_id || '-' %></code></li>
@@ -34,50 +29,79 @@
 		</ul>
 	</div>
 
-	<h3>Stripe Actions</h3>
-	<% unless @payment.gateway_status == "refunded" %>
-		<%= form_with url: refund_payment_path(@payment), method: :post do |f| %>
-		<input type="number" name="amount_cents" placeholder="Amount cents (optional)" />
-		<input type="text" name="reason" placeholder="Reason (optional)" />
-		<button type="submit">Refund</button>
-		<% end %>
-	<% end %>
-	<% if @payment.gateway_status == "pending" %>
-		<%= button_to "Capture", capture_payment_path(@payment), method: :post %>
-		<%= button_to "Cancel", cancel_payment_path(@payment), method: :post %>
-	<% end %>
-	<%= button_to "Sync",   sync_payment_path(@payment), method: :post %>
+		<h3 class="text-lg font-semibold mt-6 mb-2">Stripe Actions</h3>
+		<div class="flex flex-wrap gap-2">
+			<% unless @payment.gateway_status == "refunded" %>
+				<button data-modal-target="refundModal" data-modal-toggle="refundModal"
+								class="px-3 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Refund</button>
+			<% end %>
+			<% if @payment.gateway_status == "pending" %>
+				<%= button_to "Capture", capture_payment_path(@payment), method: :post, class: "px-3 py-2 rounded bg-green-600 text-white" %>
+				<%= button_to "Cancel",  cancel_payment_path(@payment),  method: :post, class: "px-3 py-2 rounded bg-gray-600 text-white" %>
+			<% end %>
+			<%= button_to "Sync",     sync_payment_path(@payment),     method: :post, class: "px-3 py-2 rounded bg-indigo-600 text-white" %>
+		</div>
+
+		<!-- Flowbite Refund Modal -->
+		<div id="refundModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+			<div class="relative p-4 w-full max-w-md max-h-full">
+				<div class="relative bg-white rounded-lg shadow">
+					<div class="flex items-center justify-between p-4 border-b rounded-t">
+						<h3 class="text-lg font-semibold">Issue Refund</h3>
+						<button type="button" class="text-gray-400 hover:text-gray-900" data-modal-hide="refundModal">✕</button>
+					</div>
+					<div class="p-4">
+						<%= form_with url: refund_payment_path(@payment), method: :post do |f| %>
+							<div class="space-y-3">
+								<div>
+									<label class="block text-sm text-gray-600">Amount (cents)</label>
+									<input type="number" name="amount_cents" class="mt-1 w-full border rounded px-3 py-2" placeholder="Optional" />
+								</div>
+								<div>
+									<label class="block text-sm text-gray-600">Reason</label>
+									<input type="text" name="reason" class="mt-1 w-full border rounded px-3 py-2" placeholder="Optional" />
+								</div>
+								<div class="flex justify-end gap-2 pt-2">
+									<button type="button" data-modal-hide="refundModal" class="px-3 py-2 rounded bg-gray-200">Cancel</button>
+									<button type="submit" class="px-3 py-2 rounded bg-blue-600 text-white">Submit Refund</button>
+								</div>
+							</div>
+						<% end %>
+					</div>
+				</div>
+			</div>
+		</div>
 
 	<hr>
-	<h3>Refund History</h3>
-	<% if @payment.refunds.any? %>
-	<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse; width:100%; background:#fff;">
-		<thead style="background:#f7f7f7;">
+		<h3 class="text-lg font-semibold mt-6 mb-2">Refund History</h3>
+		<% if @payment.refunds.any? %>
+		<table class="min-w-full bg-white shadow rounded overflow-hidden">
+			<thead class="bg-gray-50">
 			<tr>
-				<th>ID</th>
-				<th>Amount</th>
-				<th>Currency</th>
-				<th>Status</th>
-				<th>Reason</th>
-				<th>Balance Tx</th>
-				<th>Occurred At</th>
+					<th class="px-3 py-2">ID</th>
+					<th class="px-3 py-2">Amount</th>
+					<th class="px-3 py-2">Currency</th>
+					<th class="px-3 py-2">Status</th>
+					<th class="px-3 py-2">Reason</th>
+					<th class="px-3 py-2">Balance Tx</th>
+					<th class="px-3 py-2">Occurred At</th>
 			</tr>
 		</thead>
 		<tbody>
 			<% @payment.refunds.order(occurred_at: :desc, created_at: :desc).each do |r| %>
 			<tr>
-				<td><code><%= r.refund_id || r.id %></code></td>
-				<td><%= r.amount_cents ? ("%.2f" % (r.amount_cents / 100.0)) : "-" %></td>
-				<td><%= r.currency || '-' %></td>
-				<td><%= r.status || '-' %></td>
-				<td><%= r.reason || '-' %></td>
-				<td><code><%= r.balance_transaction_id || '-' %></code></td>
-				<td><%= r.occurred_at || r.created_at %></td>
+					<td class="px-3 py-2 font-mono"><%= r.refund_id || r.id %></td>
+					<td class="px-3 py-2"><%= r.amount_cents ? ("%.2f" % (r.amount_cents / 100.0)) : "-" %></td>
+					<td class="px-3 py-2"><%= r.currency || '-' %></td>
+					<td class="px-3 py-2"><%= r.status || '-' %></td>
+					<td class="px-3 py-2"><%= r.reason || '-' %></td>
+					<td class="px-3 py-2 font-mono"><%= r.balance_transaction_id || '-' %></td>
+					<td class="px-3 py-2"><%= r.occurred_at || r.created_at %></td>
 			</tr>
 			<% end %>
 		</tbody>
 	</table>
 	<% else %>
-	<p>No refunds recorded for this payment yet.</p>
+		<p class="text-gray-600">No refunds recorded for this payment yet.</p>
 	<% end %>
 <% end %>

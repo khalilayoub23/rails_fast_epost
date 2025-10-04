@@ -29,4 +29,27 @@ class Payment < ApplicationRecord
   def mark_failed!
     update!(gateway_status: "failed")
   end
+
+  # Turbo Streams: broadcast list updates and dashboard KPI refreshes
+  after_create_commit :broadcast_created
+  after_update_commit :broadcast_updated
+  after_destroy_commit :broadcast_destroyed
+
+  private
+
+  def broadcast_created
+    ApplicationController.renderer # ensure renderer is loaded
+    broadcast_prepend_later_to "payments", target: "payments", partial: "payments/payment", locals: { payment: self }
+    broadcast_replace_later_to "dashboard", target: "dashboard_kpis", partial: "dashboard/kpis"
+  end
+
+  def broadcast_updated
+    broadcast_replace_later_to "payments", target: ActionView::RecordIdentifier.dom_id(self), partial: "payments/payment", locals: { payment: self }
+    broadcast_replace_later_to "dashboard", target: "dashboard_kpis", partial: "dashboard/kpis"
+  end
+
+  def broadcast_destroyed
+    broadcast_remove_to "payments", target: ActionView::RecordIdentifier.dom_id(self)
+    broadcast_replace_later_to "dashboard", target: "dashboard_kpis", partial: "dashboard/kpis"
+  end
 end

@@ -1,0 +1,8 @@
+<tr id="<%= dom_id(payment) %>">
+  <td><%= link_to payment.id, payment_path(payment) %></td>
+  <td><%= payment.provider.presence || "-" %></td>
+  <td><%= render "shared/status_badge", status: payment.gateway_status %></td>
+  <td><%= payment.amount_cents ? (payment.amount_cents / 100.0) : nil %></td>
+  <td><%= payment.currency %></td>
+  <td><%= link_to 'Show', payment_path(payment), class: "text-blue-600" %></td>
+</tr>

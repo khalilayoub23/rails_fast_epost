@@ -1,35 +1,19 @@
-<h1>Payments</h1>
+<h1 class="text-xl font-semibold mb-4">Payments</h1>
 
-<table>
+<%= turbo_stream_from "payments" %>
+
+<table class="min-w-full bg-white shadow rounded overflow-hidden">
 	<thead>
 		<tr>
-			<th>ID</th>
-			<th>Provider</th>
-			<th>Status</th>
-			<th>Amount</th>
-			<th>Currency</th>
-			<th>Actions</th>
+			<th class="px-3 py-2">ID</th>
+			<th class="px-3 py-2">Provider</th>
+			<th class="px-3 py-2">Status</th>
+			<th class="px-3 py-2">Amount</th>
+			<th class="px-3 py-2">Currency</th>
+			<th class="px-3 py-2">Actions</th>
 		</tr>
 	</thead>
-	<tbody>
-		<% @payments.each do |p| %>
-			<tr>
-				<td><%= link_to p.id, payment_path(p) %></td>
-				<td><%= p.provider.presence || "-" %></td>
-				<td>
-								<% status = p.gateway_status.presence || "-" %>
-								<% bg = case status
-									when "succeeded" then "#e6ffed" 
-									when "failed" then "#ffecec"
-									when "canceled" then "#fff7e6"
-									when "refunded" then "#e6f0ff"
-									else "#f2f2f2" end %>
-								<span style="background:<%= bg %>; padding:2px 6px; border-radius:8px; display:inline-block;"><%= status %></span>
-				</td>
-				<td><%= p.amount_cents ? (p.amount_cents / 100.0) : nil %></td>
-				<td><%= p.currency %></td>
-				<td><%= link_to 'Show', payment_path(p) %></td>
-			</tr>
-		<% end %>
+	<tbody id="payments">
+		<%= render @payments %>
 	</tbody>
 	</table>
