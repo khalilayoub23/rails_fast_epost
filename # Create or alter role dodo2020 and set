@@ -1,0 +1,8 @@
+# Create or alter role dodo2020 and set password to 123456
+sudo -u postgres psql -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'dodo2020') THEN CREATE ROLE dodo2020 WITH LOGIN PASSWORD '123456' CREATEDB; ELSE ALTER ROLE dodo2020 WITH PASSWORD '123456'; END IF; END \$\$;"
+
+# Create development DB owned by dodo2020 (no-op if exists)
+sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='fast_epost_3_development'" | grep -q 1 || sudo -u postgres createdb -O dodo2020 fast_epost_3_development
+
+# Create test DB owned by dodo2020 (no-op if exists)
+sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='fast_epost_3_test'" | grep -q 1 || sudo -u postgres createdb -O dodo2020 fast_epost_3_test

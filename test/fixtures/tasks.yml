@@ -1,8 +1,8 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  customer_id: 1
-  carrier_id: 1
+  customer: one
+  carrier: one
   package_type: 'small'
   start: 'Start Address 1'
   target: 'Target Address 1'
@@ -11,8 +11,8 @@ one:
   delivery_time: <%= Time.current %>
 
 two:
-  customer_id: 2
-  carrier_id: 2
+  customer: two
+  carrier: two
   package_type: 'medium'
   start: 'Start Address 2'
   target: 'Target Address 2'

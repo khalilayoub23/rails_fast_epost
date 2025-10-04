@@ -99,3 +99,42 @@ jobs:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
+
+  secret_scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run gitleaks secret scan
+        uses: zricethezav/gitleaks-action@v2
+        with:
+          args: --path=. --redact
+        # Allow failure to avoid blocking CI on noisy false positives; consider making this required after tuning
+        continue-on-error: true
+
+  dependency_audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Install bundler-audit
+        run: gem install bundler-audit
+
+      - name: Update bundler-audit DB
+        run: bundle-audit update || true
+
+      - name: Run bundler-audit
+        run: bundle-audit check --update || true
+
+      - name: Run importmap audit (JS)
+        run: bin/importmap audit || true

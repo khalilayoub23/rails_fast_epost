@@ -4,25 +4,16 @@ class Task < ApplicationRecord
   has_many :payments_tasks
   has_many :payments, through: :payments_tasks
   has_one :cost_calc
-  has_many :remarks
+  has_many :payments_tasks, dependent: :destroy
+  has_many :payments, through: :payments_tasks
+  has_one :cost_calc, dependent: :destroy
+  has_many :remarks, dependent: :destroy
 
-  # Define failure_code enum
-  enum failure_code: {
-    no_failure: 0,
-    address_not_found: 1,
-    recipient_unavailable: 2,
-    package_damaged: 3,
-    refused_delivery: 4
-  }, _prefix: true
+  # Define failure_code enum (positional syntax)
+  enum :failure_code, { no_failure: 0, address_not_found: 1, recipient_unavailable: 2, package_damaged: 3, refused_delivery: 4 }, prefix: true
 
-  # Define status enum
-  enum status: {
-    pending: 0,
-    in_transit: 1,
-    delivered: 2,
-    failed: 3,
-    returned: 4
-  }
+  # Define status enum (positional syntax)
+  enum :status, { pending: 0, in_transit: 1, delivered: 2, failed: 3, returned: 4 }
 
   validates :package_type, presence: true
   validates :start, presence: true

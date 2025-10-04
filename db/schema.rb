@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_19_190758) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_02_160001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "carriers", force: :cascade do |t|
-    t.string "type"
+    t.string "carrier_type"
     t.string "name"
     t.string "email"
     t.string "address"
@@ -95,6 +95,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_190758) do
     t.boolean "primary"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "number"
     t.index ["carrier_id"], name: "index_phones_on_carrier_id"
   end
 

@@ -24,14 +24,13 @@ development:
   <<: *default
   database: fast_epost_3_development
 
-  # The specified database role being used to connect to PostgreSQL.
-  # To create additional roles in PostgreSQL see `$ createuser --help`.
-  # When left blank, PostgreSQL will use the default role. This is
-  # the same name as the operating system user running Rails.
-  #username: fast_epost_3
-
-  # The password associated with the PostgreSQL role (username).
-  #password:
+# By default, connect using the current OS user via a local domain socket
+# (peer authentication). If you want to use a specific DB user/password,
+# set the environment variables `DB_USER` and `DB_PASSWORD`.
+  username: <%= ENV['DB_USER'] || ENV['USER'] %>
+  <% if ENV['DB_PASSWORD'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  <% end %>
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -57,6 +56,12 @@ development:
 test:
   <<: *default
   database: fast_epost_3_test
+
+# Use the current OS user for test DB by default; override with DB_USER/DB_PASSWORD
+  username: <%= ENV['DB_USER'] || ENV['USER'] %>
+  <% if ENV['DB_PASSWORD'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  <% end %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

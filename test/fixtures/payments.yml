@@ -2,18 +2,18 @@
 
 one:
   category: 1
-  task_id: 1
+  task: one
   payable_type: 'Customer'
-  payable_id: 1
-  payment_type: 1
+  payable: one
+  payment_type: 0
   interval_start: <%= Date.today %>
   interval_end: <%= Date.today + 30.days %>
 
 two:
   category: 2
-  task_id: 2
+  task: two
   payable_type: 'Carrier'
-  payable_id: 2
-  payment_type: 2
+  payable: two
+  payment_type: 1
   interval_start: <%= Date.today %>
   interval_end: <%= Date.today + 30.days %>

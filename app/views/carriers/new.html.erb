@@ -13,8 +13,8 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :type %>
-    <%= form.select :type, ['PostalCarrier', 'CourierCarrier'], { prompt: 'Select carrier type' } %>
+    <%= form.label :carrier_type, 'Carrier type' %>
+    <%= form.select :carrier_type, ['PostalCarrier', 'CourierCarrier'], { prompt: 'Select carrier type' } %>
   </div>
 
   <div class="field">

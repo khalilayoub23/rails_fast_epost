@@ -2,37 +2,43 @@ require "test_helper"
 
 class CarriersControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
-    get carriers_index_url
+    get carriers_url
     assert_response :success
   end
 
   test "should get show" do
-    get carriers_show_url
+    # use a fixture carrier
+    carrier = carriers(:one)
+    get carrier_url(carrier)
     assert_response :success
   end
 
   test "should get new" do
-    get carriers_new_url
+    get new_carrier_url
     assert_response :success
   end
 
   test "should get create" do
-    get carriers_create_url
-    assert_response :success
+    # perform a POST to create
+  post carriers_url, params: { carrier: { carrier_type: 'RegularCarrier', name: 'New', email: 'n@example.com', address: 'Addr' } }
+    assert_response :redirect
   end
 
   test "should get edit" do
-    get carriers_edit_url
+    carrier = carriers(:one)
+    get edit_carrier_url(carrier)
     assert_response :success
   end
 
   test "should get update" do
-    get carriers_update_url
-    assert_response :success
+    carrier = carriers(:one)
+    patch carrier_url(carrier), params: { carrier: { name: 'Updated' } }
+    assert_response :redirect
   end
 
   test "should get destroy" do
-    get carriers_destroy_url
-    assert_response :success
+    carrier = carriers(:one)
+    delete carrier_url(carrier)
+    assert_response :redirect
   end
 end

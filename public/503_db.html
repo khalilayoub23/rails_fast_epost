@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Service temporarily unavailable</title>
+    <style>body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; padding:40px; color:#333}</style>
+  </head>
+  <body>
+    <h1>Service temporarily unavailable</h1>
+    <p>The application cannot connect to the database right now. Possible causes:</p>
+    <ul>
+      <li>Postgres server is not running in the development container.</li>
+      <li>Socket path or host/port in <code>config/database.yml</code> is incorrect.</li>
+    </ul>
+    <p>To run the app locally, start Postgres or adjust <code>config/database.yml</code>. Example commands (on Ubuntu):</p>
+    <pre>
+sudo service postgresql start
+# or with Docker
+# docker run --name pg -e POSTGRES_PASSWORD=pass -p 5432:5432 -d postgres:15
+    </pre>
+    <p>Check <code>log/development.log</code> for details.</p>
+  </body>
+</html>

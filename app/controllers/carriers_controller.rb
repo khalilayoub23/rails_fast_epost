@@ -36,13 +36,19 @@ class CarriersController < ApplicationController
 
   def destroy
     @carrier = Carrier.find(params[:id])
-    @carrier.destroy
+    # Ensure payments referencing this carrier's tasks are removed first to
+    # avoid foreign key constraint violations in tests/environments without
+    # cascading deletes set at the DB level.
+    ActiveRecord::Base.transaction do
+      Payment.where(task_id: @carrier.tasks.select(:id)).find_each(&:destroy)
+      @carrier.destroy
+    end
     redirect_to carriers_path, notice: "Carrier successfully deleted."
   end
 
   private
 
   def carrier_params
-    params.require(:carrier).permit(:type, :name, :email, :address)
+    params.require(:carrier).permit(:carrier_type, :name, :email, :address)
   end
 end
