@@ -23,7 +23,7 @@ default: &default
 development:
   <<: *default
   database: fast_epost_3_development
-  host: localhost
+  host: <%= ENV.fetch("DB_HOST", "127.0.0.1") %>
   port: 5432
   username: postgres
   password: password
@@ -55,6 +55,7 @@ development:
 test:
   <<: *default
   database: fast_epost_3_test
+  host: <%= ENV.fetch("DB_HOST", "127.0.0.1") %>
 
 # Use the current OS user for test DB by default; override with DB_USER/DB_PASSWORD
   username: <%= ENV['DB_USER'] || ENV['USER'] %>

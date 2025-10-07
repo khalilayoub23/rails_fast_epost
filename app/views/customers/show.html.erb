@@ -1,72 +1,89 @@
 <% content_for :page_title, @customer.name %>
 
-<div class="p-4 space-y-4">
-  <div class="breadcrumbs text-sm">
-    <ul>
-      <li><%= link_to "Home", root_path %></li>
-      <li><%= link_to "Customers", customers_path %></li>
-      <li><%= @customer.name %></li>
-    </ul>
+<div class="space-y-6">
+  <div>
+    <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <%= link_to root_path, class: "text-body hover:text-dark" do %>
+            <span class="material-icons text-sm mr-1">home</span>
+            Home
+          <% end %>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+            <%= link_to "Customers", customers_path, class: "text-body hover:text-dark" %>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+            <span class="text-dark font-medium"><%= @customer.name %></span>
+          </div>
+        </li>
+      </ol>
+    </nav>
   </div>
 
-  <div class="card bg-base-100 shadow">
-    <div class="card-body p-4 space-y-2">
-      <h2 class="card-title"><%= @customer.name %></h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <div class="text-sm opacity-70">Email</div>
-          <div><%= @customer.email %></div>
-        </div>
-        <div>
-          <div class="text-sm opacity-70">Category</div>
-          <div class="capitalize"><%= @customer.category %></div>
-        </div>
-        <div class="sm:col-span-2">
-          <div class="text-sm opacity-70">Address</div>
-          <div><%= @customer.address %></div>
-        </div>
+  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+    <div class="mb-4">
+      <h2 class="text-title-md font-semibold text-dark"><%= @customer.name %></h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <div class="text-sm text-body">Email</div>
+        <div class="text-dark"><%= @customer.email %></div>
+      </div>
+      <div>
+        <div class="text-sm text-body">Category</div>
+        <div class="text-dark capitalize"><%= @customer.category %></div>
+      </div>
+      <div class="sm:col-span-2">
+        <div class="text-sm text-body">Address</div>
+        <div class="text-dark"><%= @customer.address %></div>
       </div>
     </div>
   </div>
 
-  <div class="card bg-base-100 shadow">
-    <div class="card-body p-4">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="font-semibold">Tasks</h3>
-        <%= link_to "View all", customer_tasks_path(@customer), class: "btn btn-sm" %>
-      </div>
-      <% if @customer.tasks.any? %>
-        <div class="overflow-x-auto">
-          <table class="table w-full">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Status</th>
-                <th>Carrier</th>
-                <th>Created</th>
-                <th></th>
+  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+    <div class="mb-4 flex items-center justify-between">
+      <h3 class="text-title-md font-semibold text-dark">Tasks</h3>
+      <%= link_to "View all", customer_tasks_path(@customer), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+    </div>
+    <% if @customer.tasks.any? %>
+      <div class="max-w-full overflow-x-auto">
+        <table class="w-full table-auto">
+          <thead>
+            <tr class="bg-gray-2 text-left">
+              <th class="min-w-[100px] px-4 py-4 font-medium text-dark">ID</th>
+              <th class="min-w-[140px] px-4 py-4 font-medium text-dark">Status</th>
+              <th class="min-w-[120px] px-4 py-4 font-medium text-dark">Carrier</th>
+              <th class="min-w-[160px] px-4 py-4 font-medium text-dark">Created</th>
+              <th class="px-4 py-4 text-right font-medium text-dark"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @customer.tasks.limit(10).each do |task| %>
+              <tr class="border-b border-stroke hover:bg-gray-2">
+                <td class="px-4 py-4">#<%= task.id %></td>
+                <td class="px-4 py-4"><%= render "shared/status_badge", status: task.status %></td>
+                <td class="px-4 py-4 text-sm text-body">#<%= task.carrier_id %></td>
+                <td class="px-4 py-4 text-sm text-body"><%= l(task.created_at, format: :short) %></td>
+                <td class="px-4 py-4 text-right">
+                  <%= link_to "Open", task_path(task), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              <% @customer.tasks.limit(10).each do |task| %>
-                <tr>
-                  <td>#<%= task.id %></td>
-                  <td>
-                    <%= render "shared/status_badge", status: task.status %>
-                  </td>
-                  <td><%= task.carrier_id %></td>
-                  <td><%= l(task.created_at, format: :short) %></td>
-                  <td class="text-right">
-                    <%= link_to "Open", task_path(task), class: "btn btn-xs" %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% else %>
-        <div class="alert">No tasks for this customer.</div>
-      <% end %>
-    </div>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="px-6 py-8 text-center">
+        <span class="material-icons text-body text-4xl mb-2">task</span>
+        <h3 class="text-sm font-medium text-dark mb-1">No tasks for this customer</h3>
+        <p class="text-sm text-body">This customer has no tasks yet.</p>
+      </div>
+    <% end %>
   </div>
 </div>

@@ -16,12 +16,14 @@
               Dashboard
             <% end %>
           </li>
+          <% if current_user&.manager? %>
           <li>
             <%= link_to payments_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(payments_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(payments_path)}">payment</span>
               Payments
             <% end %>
           </li>
+          <% end %>
           <li>
             <%= link_to customers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(customers_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(customers_path)}">people</span>
@@ -34,10 +36,25 @@
               Tasks
             <% end %>
           </li>
+          <% if current_user&.admin? %>
           <li>
             <%= link_to carriers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(carriers_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(carriers_path)}">local_shipping</span>
               Carriers
+            <% end %>
+          </li>
+          <% end %>
+          <li class="mt-2 border-t border-stroke"></li>
+          <li>
+            <%= link_to profile_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(profile_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(profile_path)}">person</span>
+              Profile
+            <% end %>
+          </li>
+          <li>
+            <%= link_to settings_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(settings_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(settings_path)}">settings</span>
+              Settings
             <% end %>
           </li>
         </ul>

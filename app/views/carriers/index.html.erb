@@ -1,2 +1,62 @@
-<h1>Carriers#index</h1>
-<p>Find me in app/views/carriers/index.html.erb</p>
+<% content_for :page_title, "Carriers" %>
+
+<div class="space-y-6">
+	<div class="flex items-center justify-between">
+		<nav class="flex text-sm text-body" aria-label="Breadcrumb">
+			<ol class="inline-flex items-center space-x-1 md:space-x-3">
+				<li class="inline-flex items-center">
+					<%= link_to root_path, class: "text-body hover:text-dark" do %>
+						<span class="material-icons text-sm mr-1">home</span>
+						Home
+					<% end %>
+				</li>
+				<li>
+					<div class="flex items-center">
+						<span class="material-icons text-sm text-body mx-1">chevron_right</span>
+						<span class="text-dark font-medium">Carriers</span>
+					</div>
+				</li>
+			</ol>
+		</nav>
+		<%= link_to "New Carrier", new_carrier_path, class: "inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90" %>
+	</div>
+
+	<div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+		<div class="mb-6 flex items-center justify-between">
+			<h2 class="text-title-md font-semibold text-dark">All Carriers</h2>
+		</div>
+		<div class="max-w-full overflow-x-auto">
+			<table class="w-full table-auto">
+				<thead>
+					<tr class="bg-gray-2 text-left">
+						<th class="min-w-[140px] px-4 py-4 font-medium text-dark">Name</th>
+						<th class="min-w-[140px] px-4 py-4 font-medium text-dark">Type</th>
+						<th class="min-w-[200px] px-4 py-4 font-medium text-dark">Email</th>
+						<th class="min-w-[200px] px-4 py-4 font-medium text-dark">Address</th>
+						<th class="px-4 py-4 text-right font-medium text-dark">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @carriers.each do |carrier| %>
+						<tr class="border-b border-stroke hover:bg-gray-2">
+							<td class="px-4 py-4">
+								<%= link_to carrier_path(carrier), class: "text-sm font-medium text-primary hover:underline" do %>
+									<%= carrier.name %>
+								<% end %>
+							</td>
+							<td class="px-4 py-4 text-sm text-body"><%= carrier.carrier_type %></td>
+							<td class="px-4 py-4 text-sm text-dark"><%= carrier.email %></td>
+							<td class="px-4 py-4 text-sm text-body"><%= carrier.address %></td>
+							<td class="px-4 py-4 text-right">
+								<div class="inline-flex gap-2">
+									<%= link_to "View", carrier_path(carrier), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+									<%= link_to "Edit", edit_carrier_path(carrier), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+								</div>
+							</td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

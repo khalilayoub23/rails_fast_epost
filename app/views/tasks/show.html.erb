@@ -1,42 +1,69 @@
 <% content_for :page_title, "Task ##{@task.id}" %>
 
-<div class="p-4 space-y-4">
-  <div class="breadcrumbs text-sm">
-    <ul>
-      <li><%= link_to "Home", root_path %></li>
-      <% if @task.customer %>
-        <li><%= link_to "Customers", customers_path %></li>
-        <li><%= link_to @task.customer.name, customer_path(@task.customer) %></li>
-      <% end %>
-      <li><%= link_to "Tasks", (@task.customer ? customer_tasks_path(@task.customer) : tasks_path) %></li>
-      <li>#<%= @task.id %></li>
-    </ul>
+<div class="space-y-6">
+  <div>
+    <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <%= link_to root_path, class: "text-body hover:text-dark" do %>
+            <span class="material-icons text-sm mr-1">home</span>
+            Home
+          <% end %>
+        </li>
+        <% if @task.customer %>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <%= link_to "Customers", customers_path, class: "text-body hover:text-dark" %>
+            </div>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <%= link_to @task.customer.name, customer_path(@task.customer), class: "text-body hover:text-dark" %>
+            </div>
+          </li>
+        <% end %>
+        <li>
+          <div class="flex items-center">
+            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+            <%= link_to "Tasks", (@task.customer ? customer_tasks_path(@task.customer) : tasks_path), class: "text-body hover:text-dark" %>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+            <span class="text-dark font-medium">#<%= @task.id %></span>
+          </div>
+        </li>
+      </ol>
+    </nav>
   </div>
 
-  <div class="card bg-base-100 shadow">
-    <div class="card-body p-4 space-y-2">
-  <h2 class="card-title">Task #<%= @task.id %></h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <div class="text-sm opacity-70">Status</div>
-          <div><%= render "shared/status_badge", status: @task.status %></div>
-        </div>
-        <div>
-          <div class="text-sm opacity-70">Customer</div>
-          <div><%= @task.customer&.name || "-" %></div>
-        </div>
-        <div>
-          <div class="text-sm opacity-70">Carrier</div>
-          <div><%= @task.carrier_id %></div>
-        </div>
-        <div>
-          <div class="text-sm opacity-70">Created</div>
-          <div><%= l(@task.created_at, format: :long) %></div>
-        </div>
-        <div class="sm:col-span-2">
-          <div class="text-sm opacity-70">Barcode</div>
-          <div><%= @task.barcode %></div>
-        </div>
+  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+    <div class="mb-4">
+      <h2 class="text-title-md font-semibold text-dark">Task #<%= @task.id %></h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <div class="text-sm text-body">Status</div>
+        <div><%= render "shared/status_badge", status: @task.status %></div>
+      </div>
+      <div>
+        <div class="text-sm text-body">Customer</div>
+        <div class="text-dark"><%= @task.customer&.name || "-" %></div>
+      </div>
+      <div>
+        <div class="text-sm text-body">Carrier</div>
+        <div class="text-dark">#<%= @task.carrier_id %></div>
+      </div>
+      <div>
+        <div class="text-sm text-body">Created</div>
+        <div class="text-dark"><%= l(@task.created_at, format: :long) %></div>
+      </div>
+      <div class="sm:col-span-2">
+        <div class="text-sm text-body">Barcode</div>
+        <div class="text-dark"><%= @task.barcode %></div>
       </div>
     </div>
   </div>

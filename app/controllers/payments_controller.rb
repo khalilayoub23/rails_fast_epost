@@ -1,6 +1,7 @@
 
 class PaymentsController < ApplicationController
   before_action :set_payment, only: %i[show edit update destroy refund capture cancel sync]
+  before_action :require_manager!, only: %i[new create edit update destroy refund capture cancel sync]
 
   def index
     @payments = Payment.all

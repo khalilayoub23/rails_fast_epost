@@ -1,41 +1,8 @@
-<h1>Edit Carrier</h1>
+<% content_for :page_title, "Edit Carrier" %>
 
-<%= form_with(model: @carrier, local: true) do |form| %>
-  <% if @carrier.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@carrier.errors.count, "error") %> prohibited this carrier from being saved:</h2>
-      <ul>
-        <% @carrier.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :carrier_type, 'Carrier type' %>
-    <%= form.select :carrier_type, ['PostalCarrier', 'CourierCarrier'], { prompt: 'Select carrier type' } %>
+<div class="space-y-6">
+  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+    <h2 class="mb-4 text-title-md font-semibold text-dark">Edit Carrier</h2>
+    <%= render "form", carrier: @carrier %>
   </div>
-
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email %>
-    <%= form.email_field :email %>
-  </div>
-
-  <div class="field">
-    <%= form.label :address %>
-    <%= form.text_area :address %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit "Update Carrier" %>
-  </div>
-<% end %>
-
-<%= link_to 'Show', @carrier %> |
-<%= link_to 'Back', carriers_path %>
+</div>

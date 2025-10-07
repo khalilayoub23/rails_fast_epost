@@ -1,11 +1,12 @@
 <% raw_status = (local_assigns[:status] || "").to_s %>
 <% label = raw_status.present? ? raw_status.humanize : "Unknown" %>
 <%
-	variant_classes = case raw_status
-						when "succeeded", "delivered" then "bg-green-100 text-green-800 border-green-200"
-						when "pending", "in_transit" then "bg-yellow-100 text-yellow-800 border-yellow-200"
-						when "failed", "returned", "refunded", "canceled" then "bg-red-100 text-red-800 border-red-200"
-						else "bg-gray-100 text-gray-800 border-gray-200"
-						end
+	# TailAdmin-like badge colors
+		variant_classes = case raw_status
+			when "succeeded", "delivered" then "badge-success"
+			when "pending", "in_transit" then "badge-warning"
+			when "failed", "returned", "refunded", "canceled" then "badge-danger"
+			else "badge-default"
+		end
 %>
-<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border <%= variant_classes %>"><%= label %></span>
+<span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium <%= variant_classes %>"><%= label %></span>

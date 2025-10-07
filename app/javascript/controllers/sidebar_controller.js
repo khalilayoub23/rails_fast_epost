@@ -4,10 +4,13 @@ export default class extends Controller {
   toggle() {
     const el = document.getElementById("sidebar")
     if (!el) return
-    el.classList.toggle("hidden")
-    el.classList.toggle("fixed")
-    el.classList.toggle("inset-y-0")
-    el.classList.toggle("z-40")
-    el.classList.toggle("w-64")
+    // TailAdmin mobile sidebar slides in/out using translate classes
+    if (el.classList.contains("-translate-x-full")) {
+      el.classList.remove("-translate-x-full")
+      el.classList.add("translate-x-0")
+    } else {
+      el.classList.add("-translate-x-full")
+      el.classList.remove("translate-x-0")
+    }
   }
 }

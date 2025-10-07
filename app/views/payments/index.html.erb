@@ -1,49 +1,49 @@
 <% content_for :page_title, "Payments" %>
 
 <div class="space-y-6">
-	<div class="flex items-center justify-between">
-		<div>
-			<nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
-				<ol class="inline-flex items-center space-x-1 md:space-x-3">
-					<li class="inline-flex items-center">
-						<%= link_to root_path, class: "text-gray-500 hover:text-gray-700" do %>
-							<span class="material-icons text-sm mr-1">home</span>
-							Home
-						<% end %>
-					</li>
-					<li>
-						<div class="flex items-center">
-							<span class="material-icons text-sm text-gray-400 mx-1">chevron_right</span>
-							<span class="text-gray-700 font-medium">Payments</span>
-						</div>
-					</li>
-				</ol>
-			</nav>
-		</div>
-	</div>
+  <div class="flex items-center justify-between">
+    <div>
+      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <%= link_to root_path, class: "text-body hover:text-dark" do %>
+              <span class="material-icons text-sm mr-1">home</span>
+              Home
+            <% end %>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <span class="text-dark font-medium">Payments</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 
-	<%= turbo_stream_from "payments" %>
+  <%= turbo_stream_from "payments" %>
 
-	<div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-		<div class="px-6 py-4 border-b border-gray-200">
-			<h2 class="text-lg font-semibold text-gray-900">All Payments</h2>
-		</div>
-		<div class="overflow-x-auto">
-			<table class="min-w-full divide-y divide-gray-200">
-				<thead class="bg-gray-50">
-					<tr>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Provider</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Currency</th>
-						<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-					</tr>
-				</thead>
-				<tbody id="payments" class="bg-white divide-y divide-gray-200">
-					<%= render @payments %>
-				</tbody>
-			</table>
-		</div>
-	</div>
+  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+    <div class="mb-6 flex items-center justify-between">
+      <h2 class="text-title-md font-semibold text-dark">All Payments</h2>
+    </div>
+    <div class="max-w-full overflow-x-auto">
+      <table class="w-full table-auto">
+        <thead>
+          <tr class="bg-gray-2 text-left">
+            <th class="min-w-[120px] px-4 py-4 font-medium text-dark">ID</th>
+            <th class="min-w-[150px] px-4 py-4 font-medium text-dark">Provider</th>
+            <th class="min-w-[150px] px-4 py-4 font-medium text-dark">Status</th>
+            <th class="min-w-[150px] px-4 py-4 font-medium text-dark">Amount</th>
+            <th class="min-w-[100px] px-4 py-4 font-medium text-dark">Currency</th>
+            <th class="px-4 py-4 text-right font-medium text-dark">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="payments">
+          <%= render @payments %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

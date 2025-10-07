@@ -17,8 +17,8 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-  <%# Load Tailwind first, then our application overrides and icons (order matters) %>
-  <%= stylesheet_link_tag "tailwind", "application", "material-icons", "data-turbo-track": "reload" %>
+  <%# Load Tailwind first, then fonts, then our application overrides and icons (order matters) %>
+  <%= stylesheet_link_tag "tailwind", "fonts", "application", "material-icons", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 

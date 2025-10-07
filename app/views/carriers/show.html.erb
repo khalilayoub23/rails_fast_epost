@@ -1,2 +1,52 @@
-<h1>Carriers#show</h1>
-<p>Find me in app/views/carriers/show.html.erb</p>
+<% content_for :page_title, @carrier.name %>
+
+<div class="space-y-6">
+	<div>
+		<nav class="flex text-sm text-body" aria-label="Breadcrumb">
+			<ol class="inline-flex items-center space-x-1 md:space-x-3">
+				<li class="inline-flex items-center">
+					<%= link_to root_path, class: "text-body hover:text-dark" do %>
+						<span class="material-icons text-sm mr-1">home</span>
+						Home
+					<% end %>
+				</li>
+				<li>
+					<div class="flex items-center">
+						<span class="material-icons text-sm text-body mx-1">chevron_right</span>
+						<%= link_to "Carriers", carriers_path, class: "text-body hover:text-dark" %>
+					</div>
+				</li>
+				<li>
+					<div class="flex items-center">
+						<span class="material-icons text-sm text-body mx-1">chevron_right</span>
+						<span class="text-dark font-medium"><%= @carrier.name %></span>
+					</div>
+				</li>
+			</ol>
+		</nav>
+	</div>
+
+	<div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+		<div class="mb-4 flex items-center justify-between">
+			<h2 class="text-title-md font-semibold text-dark"><%= @carrier.name %></h2>
+			<div class="inline-flex gap-2">
+				<%= link_to "Edit", edit_carrier_path(@carrier), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+				<%= button_to "Delete", carrier_path(@carrier), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-danger hover:bg-whiter" %>
+			</div>
+		</div>
+		<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+			<div>
+				<div class="text-sm text-body">Type</div>
+				<div class="text-dark"><%= @carrier.carrier_type %></div>
+			</div>
+			<div>
+				<div class="text-sm text-body">Email</div>
+				<div class="text-dark"><%= @carrier.email %></div>
+			</div>
+			<div class="sm:col-span-2">
+				<div class="text-sm text-body">Address</div>
+				<div class="text-dark"><%= @carrier.address %></div>
+			</div>
+		</div>
+	</div>
+</div>
