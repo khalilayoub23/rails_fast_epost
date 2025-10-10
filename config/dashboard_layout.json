@@ -1,0 +1,7 @@
+[
+  { "id": "kpis", "span": "col-span-12" },
+  { "id": "chart", "span": "col-span-12 xl:col-span-8" },
+  { "id": "target", "span": "col-span-12 xl:col-span-4" },
+  { "id": "recent_payments", "span": "col-span-12 xl:col-span-7" },
+  { "id": "recent_tasks", "span": "col-span-12 xl:col-span-5" }
+]

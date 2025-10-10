@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   # Root route
   root "dashboard#index"
   get "/dashboard", to: "dashboard#index", as: :dashboard
@@ -87,6 +88,10 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    root to: "dashboard#index", as: :root
+    get "dashboard", to: "dashboard#index", as: :dashboard
+    post "dashboard_layout", to: "dashboard_layouts#update", as: :dashboard_layout
+    resource :branding, only: [:show, :update]
     resource :pdfs, only: [ :new ] do
       post :merge
       post :stamp

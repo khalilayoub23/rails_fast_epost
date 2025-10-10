@@ -1,46 +1,71 @@
-<h1>PDF Tools</h1>
+<% content_for :page_title, "Admin · PDF Tools" %>
 
-<h2>Merge PDFs</h2>
-<form action="<%= merge_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
-  <%= csrf_meta_tags %>
-  <input type="file" name="files[]" multiple accept="application/pdf" />
-  <button type="submit">Merge</button>
-</form>
+<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <h2 class="text-title-md2 font-bold text-black dark:text-white">PDF Tools</h2>
+</div>
 
-<h2>Stamp PDF</h2>
-<form action="<%= stamp_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
-  <%= csrf_meta_tags %>
-  <input type="file" name="file" accept="application/pdf" />
-  <input type="text" name="text" placeholder="Text" />
-  <input type="number" name="x" placeholder="x" value="100" />
-  <input type="number" name="y" placeholder="y" value="100" />
-  <input type="number" name="size" placeholder="size" value="14" />
-  <button type="submit">Stamp</button>
-</form>
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:gap-7.5">
+  <!-- Merge PDFs Card -->
+  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+    <h3 class="mb-4 text-title-md font-semibold text-dark">Merge PDFs</h3>
+    <form action="<%= merge_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="space-y-4">
+      <%= csrf_meta_tags %>
+      <input type="file" name="files[]" multiple accept="application/pdf" class="block w-full rounded border border-stroke px-3 py-2" />
+      <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Merge</button>
+    </form>
+  </div>
 
-<h2>Insert Page</h2>
-<form action="<%= insert_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
-  <%= csrf_meta_tags %>
-  <input type="file" name="file" accept="application/pdf" />
-  <input type="number" name="index" placeholder="index" value="0" />
-  <button type="submit">Insert</button>
-  </form>
+  <!-- Stamp PDF Card -->
+  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+    <h3 class="mb-4 text-title-md font-semibold text-dark">Stamp PDF</h3>
+    <form action="<%= stamp_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="grid grid-cols-2 gap-4">
+      <%= csrf_meta_tags %>
+      <input type="file" name="file" accept="application/pdf" class="col-span-2 block w-full rounded border border-stroke px-3 py-2" />
+      <input type="text" name="text" placeholder="Text" class="col-span-2 rounded border border-stroke px-3 py-2" />
+      <input type="number" name="x" placeholder="x" value="100" class="rounded border border-stroke px-3 py-2" />
+      <input type="number" name="y" placeholder="y" value="100" class="rounded border border-stroke px-3 py-2" />
+      <input type="number" name="size" placeholder="size" value="14" class="rounded border border-stroke px-3 py-2" />
+      <div class="col-span-2">
+        <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Stamp</button>
+      </div>
+    </form>
+  </div>
 
-<h2>Rotate Pages</h2>
-<form action="<%= rotate_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
-  <%= csrf_meta_tags %>
-  <input type="file" name="file" accept="application/pdf" />
-  <input type="number" name="degrees" placeholder="degrees (multiple of 90)" value="90" />
-  <button type="submit">Rotate</button>
-</form>
+  <!-- Insert Page Card -->
+  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+    <h3 class="mb-4 text-title-md font-semibold text-dark">Insert Page</h3>
+    <form action="<%= insert_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="space-y-4">
+      <%= csrf_meta_tags %>
+      <input type="file" name="file" accept="application/pdf" class="block w-full rounded border border-stroke px-3 py-2" />
+      <input type="number" name="index" placeholder="index" value="0" class="w-40 rounded border border-stroke px-3 py-2" />
+      <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Insert</button>
+    </form>
+  </div>
 
-<h2>Crop Pages</h2>
-<form action="<%= crop_admin_pdfs_path %>" method="post" enctype="multipart/form-data">
-  <%= csrf_meta_tags %>
-  <input type="file" name="file" accept="application/pdf" />
-  <input type="number" name="llx" placeholder="llx" value="0" />
-  <input type="number" name="lly" placeholder="lly" value="0" />
-  <input type="number" name="urx" placeholder="urx" value="400" />
-  <input type="number" name="ury" placeholder="ury" value="600" />
-  <button type="submit">Crop</button>
-</form>
+  <!-- Rotate Pages Card -->
+  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+    <h3 class="mb-4 text-title-md font-semibold text-dark">Rotate Pages</h3>
+    <form action="<%= rotate_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="space-y-4">
+      <%= csrf_meta_tags %>
+      <input type="file" name="file" accept="application/pdf" class="block w-full rounded border border-stroke px-3 py-2" />
+      <input type="number" name="degrees" placeholder="degrees (multiple of 90)" value="90" class="w-56 rounded border border-stroke px-3 py-2" />
+      <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Rotate</button>
+    </form>
+  </div>
+
+  <!-- Crop Pages Card -->
+  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
+    <h3 class="mb-4 text-title-md font-semibold text-dark">Crop Pages</h3>
+    <form action="<%= crop_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="grid grid-cols-2 gap-4">
+      <%= csrf_meta_tags %>
+      <input type="file" name="file" accept="application/pdf" class="col-span-2 block w-full rounded border border-stroke px-3 py-2" />
+      <input type="number" name="llx" placeholder="llx" value="0" class="rounded border border-stroke px-3 py-2" />
+      <input type="number" name="lly" placeholder="lly" value="0" class="rounded border border-stroke px-3 py-2" />
+      <input type="number" name="urx" placeholder="urx" value="400" class="rounded border border-stroke px-3 py-2" />
+      <input type="number" name="ury" placeholder="ury" value="600" class="rounded border border-stroke px-3 py-2" />
+      <div class="col-span-2">
+        <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Crop</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -20,14 +20,27 @@
   <%# Load Tailwind first, then fonts, then our application overrides and icons (order matters) %>
   <%= stylesheet_link_tag "tailwind", "fonts", "application", "material-icons", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <meta name="color-scheme" content="light dark">
+    <script>
+      // Initialize dark mode and RTL early to avoid flash of wrong theme
+      (function() {
+        try {
+          var ls = localStorage.getItem('ui.dark');
+          var dark = (ls === 'true') || (ls === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var dir = localStorage.getItem('ui.direction') || 'ltr';
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.setAttribute('dir', dir);
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
-  <body class="bg-whiten font-satoshi text-base text-body">
+  <body class="bg-whiten font-satoshi text-base text-body dark:bg-boxdark-2 dark:text-bodydark">
     <div class="flex h-screen overflow-hidden" data-controller="sidebar">
       <%= render "shared/sidebar" %>
-      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-whiten dark:bg-boxdark-2">
         <%= render "shared/topbar" %>
-        <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-whiten">
+        <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-whiten dark:bg-boxdark-2">
           <%= render "shared/flash" %>
           <%= yield %>
         </main>

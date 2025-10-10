@@ -65,6 +65,11 @@
 .bg-meta-2 { background-color: var(--meta-2) !important; }
 .bg-meta-4 { background-color: var(--meta-4) !important; }
 
+.fill-primary { fill: var(--primary) !important; }
+.fill-secondary { fill: var(--secondary) !important; }
+.fill-success { fill: var(--success) !important; }
+.fill-danger { fill: var(--danger) !important; }
+
 .text-primary { color: var(--primary) !important; }
 .text-secondary { color: var(--secondary) !important; }
 .text-success { color: var(--success) !important; }
@@ -138,6 +143,33 @@
 .font-satoshi {
   font-family: "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
+
+/* Brand logo visibility */
+.brand-logo-img { display: inline-block; }
+.brand-logo--dark { display: none; }
+html.dark .brand-logo--light { display: none; }
+html.dark .brand-logo--dark { display: inline-block; }
+
+/* Optional: if a non-transparent logo needs help blending, we can add filters here.
+   Keep disabled by default; uncomment if needed.
+   .brand-logo-img { filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+   html.dark .brand-logo-img { filter: brightness(1.05) contrast(1.05); }
+*/
+
+/* Global dark-mode mappings to support existing utility usage */
+html.dark .bg-white { background-color: var(--boxdark) !important; }
+html.dark .bg-whiten { background-color: var(--boxdark-2) !important; }
+html.dark .text-black { color: #e5e7eb !important; }
+html.dark .text-dark { color: #e2e8f0 !important; }
+html.dark .text-body { color: var(--bodydark) !important; }
+html.dark .border-stroke { border-color: var(--strokedark) !important; }
+
+/* RTL helpers: when html[dir=rtl], flip margin/padding left/right utilities minimally if needed */
+html[dir="rtl"] .ml-auto { margin-left: 0 !important; margin-right: auto !important; }
+html[dir="rtl"] .mr-1 { margin-right: 0.25rem !important; margin-left: 0 !important; }
+html[dir="rtl"] .pl-9 { padding-left: 0 !important; padding-right: 2.25rem !important; }
+html[dir="rtl"] .text-right { text-align: left !important; }
+html[dir="rtl"] .text-left { text-align: right !important; }
 
 /* Additional custom widths */
 .min-w-47\.5 { min-width: 11.875rem; }

@@ -1,7 +1,10 @@
-<aside id="sidebar" class="absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white border-r border-stroke duration-300 ease-linear lg:static lg:translate-x-0 -translate-x-full">
+<aside id="sidebar" class="absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white dark:bg-boxdark border-r border-stroke dark:border-strokedark duration-300 ease-linear lg:static lg:translate-x-0 -translate-x-full">
   <!-- SIDEBAR HEADER -->
   <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-  <span class="block text-2xl font-bold text-dark">Fast Epost</span>
+    <%= link_to root_path, class: "flex items-center gap-3" do %>
+      <%= brand_logo_tag(size: :sm) %>
+      <span class="hidden text-xl font-bold text-dark dark:text-white lg:block">Fast Epost</span>
+    <% end %>
   </div>
   <!-- SIDEBAR HEADER -->
 
@@ -41,6 +44,24 @@
             <%= link_to carriers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(carriers_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(carriers_path)}">local_shipping</span>
               Carriers
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_branding_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_branding_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_branding_path)}">brush</span>
+              Branding
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_dashboard_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_dashboard_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_dashboard_path)}">admin_panel_settings</span>
+              Admin Dashboard
+            <% end %>
+          </li>
+          <li>
+            <%= link_to new_admin_pdfs_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(new_admin_pdfs_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(new_admin_pdfs_path)}">picture_as_pdf</span>
+              PDF Tools
             <% end %>
           </li>
           <% end %>

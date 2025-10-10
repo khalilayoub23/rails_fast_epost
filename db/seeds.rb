@@ -4,6 +4,31 @@
 
 puts "🌱 Seeding the database..."
 
+# Create admin user
+puts "Creating admin user..."
+User.find_or_create_by!(email: "admin@example.com") do |user|
+  user.password = "password"
+  user.password_confirmation = "password"
+  user.role = "admin"
+end
+puts "✅ Admin user created: admin@example.com / password"
+
+# Create manager user
+User.find_or_create_by!(email: "manager@example.com") do |user|
+  user.password = "password"
+  user.password_confirmation = "password"
+  user.role = "manager"
+end
+puts "✅ Manager user created: manager@example.com / password"
+
+# Create viewer user
+User.find_or_create_by!(email: "viewer@example.com") do |user|
+  user.password = "password"
+  user.password_confirmation = "password"
+  user.role = "viewer"
+end
+puts "✅ Viewer user created: viewer@example.com / password"
+
 # Clear existing data for clean seeding
 puts "Clearing existing data..."
 Refund.destroy_all
@@ -26,12 +51,12 @@ end
 # Create Customers
 puts "Creating customers..."
 customers = [
-  { name: "Acme Corporation", email: "orders@acme.com", category: 0, address: "100 Business Park Dr, Corporate City", phones: ["+1-555-0101", "+1-555-0102"] },
-  { name: "Global Tech Solutions", email: "shipping@globaltech.io", category: 1, address: "200 Innovation Way, Tech Valley", phones: ["+1-555-0201"] },
-  { name: "Smith & Associates", email: "logistics@smithlaw.com", category: 0, address: "300 Professional Plaza, Legal District", phones: ["+1-555-0301", "+1-555-0302"] },
-  { name: "Retail Dynamics Inc", email: "fulfillment@retaildynamics.com", category: 1, address: "400 Commerce Center, Retail Row", phones: ["+1-555-0401"] },
-  { name: "Healthcare Partners", email: "supplies@healthpartners.org", category: 0, address: "500 Medical Mile, Healthcare Heights", phones: ["+1-555-0501", "+1-555-0502", "+1-555-0503"] },
-  { name: "Education First", email: "materials@educationfirst.edu", category: 1, address: "600 Campus Circle, University District", phones: ["+1-555-0601"] }
+  { name: "Acme Corporation", email: "orders@acme.com", category: 0, address: "100 Business Park Dr, Corporate City", phones: [ "+1-555-0101", "+1-555-0102" ] },
+  { name: "Global Tech Solutions", email: "shipping@globaltech.io", category: 1, address: "200 Innovation Way, Tech Valley", phones: [ "+1-555-0201" ] },
+  { name: "Smith & Associates", email: "logistics@smithlaw.com", category: 0, address: "300 Professional Plaza, Legal District", phones: [ "+1-555-0301", "+1-555-0302" ] },
+  { name: "Retail Dynamics Inc", email: "fulfillment@retaildynamics.com", category: 1, address: "400 Commerce Center, Retail Row", phones: [ "+1-555-0401" ] },
+  { name: "Healthcare Partners", email: "supplies@healthpartners.org", category: 0, address: "500 Medical Mile, Healthcare Heights", phones: [ "+1-555-0501", "+1-555-0502", "+1-555-0503" ] },
+  { name: "Education First", email: "materials@educationfirst.edu", category: 1, address: "600 Campus Circle, University District", phones: [ "+1-555-0601" ] }
 ].map do |attrs|
   Customer.create!(attrs)
 end

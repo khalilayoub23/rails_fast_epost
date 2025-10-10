@@ -1,3 +1,7 @@
+require "net/http"
+require "uri"
+require "json"
+
 namespace :integrations do
   desc "List required integration secrets"
   task secrets: :environment do
@@ -33,5 +37,38 @@ namespace :integrations do
     end
     File.write(path, (File.exist?(path) ? File.read(path) + "\n" : "") + lines.join("\n") + "\n")
     puts "Wrote placeholders to #{path}"
+  end
+end
+
+namespace :telegram do
+  desc "Set Telegram webhook to /api/v1/integrations/telegram with secret header"
+  task set_webhook: :environment do
+    require Rails.root.join("config/initializers/telegram")
+    token = TELEGRAM_BOT_TOKEN
+    secret = TELEGRAM_SECRET_TOKEN
+    url = telegram_webhook_url
+    abort "TELEGRAM_BOT_TOKEN is not set" if token.blank?
+    abort "TELEGRAM_SECRET_TOKEN is not set" if secret.blank?
+    api = URI("https://api.telegram.org/bot#{token}/setWebhook")
+    payload = { url: url, secret_token: secret }
+    http = Net::HTTP.new(api.host, api.port)
+    http.use_ssl = true
+    req = Net::HTTP::Post.new(api.request_uri, { "Content-Type" => "application/json" })
+    req.body = JSON.generate(payload)
+    res = http.request(req)
+    puts "Response: #{res.code} #{res.body}"
+  end
+
+  desc "Delete Telegram webhook"
+  task delete_webhook: :environment do
+    require Rails.root.join("config/initializers/telegram")
+    token = TELEGRAM_BOT_TOKEN
+    abort "TELEGRAM_BOT_TOKEN is not set" if token.blank?
+    api = URI("https://api.telegram.org/bot#{token}/deleteWebhook")
+    http = Net::HTTP.new(api.host, api.port)
+    http.use_ssl = true
+    req = Net::HTTP::Post.new(api.request_uri)
+    res = http.request(req)
+    puts "Response: #{res.code} #{res.body}"
   end
 end
