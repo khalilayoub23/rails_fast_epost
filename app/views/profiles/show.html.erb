@@ -3,18 +3,18 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
+      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <%= link_to root_path, class: "text-gray-500 hover:text-gray-700" do %>
+            <%= link_to root_path, class: "text-body hover:text-dark" do %>
               <span class="material-icons text-sm mr-1">home</span>
               Home
             <% end %>
           </li>
           <li>
             <div class="flex items-center">
-              <span class="material-icons text-sm text-gray-400 mx-1">chevron_right</span>
-              <span class="text-gray-700 font-medium">Profile</span>
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <span class="text-dark font-medium">Profile</span>
             </div>
           </li>
         </ol>
@@ -22,14 +22,92 @@
     </div>
   </div>
 
-  <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-lg font-semibold text-gray-900">User Profile</h2>
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <!-- Profile Card -->
+    <div class="lg:col-span-1">
+      <div class="rounded-sm border border-stroke bg-white shadow-default">
+        <div class="px-5 pt-6 pb-5">
+          <div class="flex flex-col items-center">
+            <div class="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-whiter">
+              <span class="material-icons text-primary text-5xl">account_circle</span>
+            </div>
+            <h3 class="mb-1 text-xl font-semibold text-dark">
+              <%= current_user&.name || "Demo User" %>
+            </h3>
+            <p class="text-sm text-body mb-4"><%= current_user&.email || "demo@example.com" %></p>
+            <% if current_user&.admin? %>
+              <span class="inline-flex rounded-full bg-danger bg-opacity-10 px-3 py-1 text-sm font-medium text-danger">
+                Admin
+              </span>
+            <% elsif current_user&.manager? %>
+              <span class="inline-flex rounded-full bg-warning bg-opacity-10 px-3 py-1 text-sm font-medium text-warning">
+                Manager
+              </span>
+            <% else %>
+              <span class="inline-flex rounded-full bg-success bg-opacity-10 px-3 py-1 text-sm font-medium text-success">
+                Viewer
+              </span>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="px-6 py-8 text-center">
-      <span class="material-icons text-gray-400 text-4xl mb-2">account_circle</span>
-      <h3 class="text-sm font-medium text-gray-900 mb-1">Profile Management</h3>
-      <p class="text-sm text-gray-500">User profile features coming soon.</p>
+
+    <!-- Profile Details -->
+    <div class="lg:col-span-2">
+      <div class="rounded-sm border border-stroke bg-white shadow-default">
+        <div class="border-b border-stroke px-5 py-4">
+          <h3 class="text-title-md font-semibold text-dark">Profile Information</h3>
+        </div>
+        <div class="px-5 pt-6 pb-6">
+          <div class="mb-5">
+            <label class="mb-3 block text-sm font-medium text-dark">Full Name</label>
+            <input
+              type="text"
+              placeholder="Enter your full name"
+              value="<%= current_user&.name || "Demo User" %>"
+              disabled
+              class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none"
+            />
+          </div>
+          <div class="mb-5">
+            <label class="mb-3 block text-sm font-medium text-dark">Email Address</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value="<%= current_user&.email || "demo@example.com" %>"
+              disabled
+              class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none"
+            />
+          </div>
+          <div class="mb-5">
+            <label class="mb-3 block text-sm font-medium text-dark">Role</label>
+            <input
+              type="text"
+              value="<%= current_user&.role&.titleize || "Viewer" %>"
+              disabled
+              class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none"
+            />
+          </div>
+          <div class="flex justify-end gap-4">
+            <button class="flex justify-center rounded border border-stroke px-6 py-2 font-medium text-dark hover:shadow-1" disabled>
+              Cancel
+            </button>
+            <button class="flex justify-center rounded bg-primary px-6 py-2 font-medium text-white hover:opacity-90" disabled>
+              Save Changes
+            </button>
+          </div>
+          <div class="mt-6 rounded-sm border border-stroke bg-whiten px-4 py-3">
+            <div class="flex items-start gap-3">
+              <span class="material-icons text-warning text-xl">info</span>
+              <div>
+                <p class="text-sm font-medium text-dark">Profile Management Coming Soon</p>
+                <p class="text-sm text-body mt-1">User authentication and profile editing features will be available once the authentication system is implemented.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
