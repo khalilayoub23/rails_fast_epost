@@ -1,13 +1,65 @@
-<h1>Edit Form Template</h1>
-<%= form_with model: @form_template do |f| %>
-  <div>
-    <%= f.label :carrier_id %>
-    <%= f.number_field :carrier_id %>
+<% content_for :page_title, "Edit Form Template ##{@form_template.id}" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <%= link_to root_path, class: "text-body hover:text-dark" do %>
+              <span class="material-icons text-sm mr-1">home</span>
+              Home
+            <% end %>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <%= link_to "Form Templates", form_templates_path, class: "text-body hover:text-dark" %>
+            </div>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <%= link_to "Template ##{@form_template.id}", form_template_path(@form_template), class: "text-body hover:text-dark" %>
+            </div>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <span class="text-dark font-medium">Edit</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
   </div>
-  <div>
-    <%= f.label :customer_id %>
-    <%= f.number_field :customer_id %>
+
+  <div class="rounded-sm border border-stroke bg-white shadow-default">
+    <div class="border-b border-stroke px-5 py-4">
+      <h3 class="text-title-md font-semibold text-dark">Edit Form Template #<%= @form_template.id %></h3>
+    </div>
+    <div class="px-5 pt-6 pb-6">
+      <%= form_with model: @form_template do |f| %>
+        <div class="mb-5">
+          <%= f.label :carrier_id, "Carrier ID", class: "mb-3 block text-sm font-medium text-dark" %>
+          <%= f.number_field :carrier_id, placeholder: "Enter carrier ID", class: "w-full rounded border border-stroke bg-white px-4 py-2.5 text-dark focus:border-primary focus:outline-none" %>
+        </div>
+
+        <div class="mb-5">
+          <%= f.label :customer_id, "Customer ID", class: "mb-3 block text-sm font-medium text-dark" %>
+          <%= f.number_field :customer_id, placeholder: "Enter customer ID", class: "w-full rounded border border-stroke bg-white px-4 py-2.5 text-dark focus:border-primary focus:outline-none" %>
+        </div>
+
+        <div class="mb-5">
+          <label class="mb-3 block text-sm font-medium text-dark">Schema Editor</label>
+          <%= render "schema_editor", form_template: @form_template %>
+        </div>
+
+        <div class="flex justify-end gap-4">
+          <%= link_to "Cancel", form_template_path(@form_template), class: "flex justify-center rounded border border-stroke px-6 py-2 font-medium text-dark hover:shadow-1" %>
+          <%= f.submit "Update Template", class: "flex justify-center rounded bg-primary px-6 py-2 font-medium text-white hover:opacity-90" %>
+        </div>
+      <% end %>
+    </div>
   </div>
-  <%= render "schema_editor", form_template: @form_template %>
-  <%= f.submit %>
-<% end %>
+</div>
