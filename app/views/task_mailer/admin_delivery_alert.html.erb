@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #dc2626; color: white; padding: 20px; text-align: center; }
+    .alert-icon { font-size: 48px; margin: 10px 0; }
+    .content { background-color: #f9fafb; padding: 20px; margin: 20px 0; }
+    .alert-box { background-color: #fee2e2; padding: 20px; border-left: 4px solid #dc2626; margin: 15px 0; }
+    .detail-row { margin: 10px 0; }
+    .label { font-weight: bold; color: #6b7280; }
+    .value { color: #111827; }
+    .button { background-color: #dc2626; color: white; padding: 12px 24px; text-decoration: none; display: inline-block; margin: 20px 0; border-radius: 4px; }
+    .footer { text-align: center; color: #6b7280; font-size: 12px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="alert-icon">🚨</div>
+      <h1>DELIVERY FAILURE ALERT</h1>
+    </div>
+    
+    <div class="content">
+      <p><strong>ADMIN ACTION REQUIRED</strong></p>
+      <p>A delivery has failed and requires immediate attention:</p>
+      
+      <div class="alert-box">
+        <div class="detail-row">
+          <span class="label">Tracking Number:</span>
+          <span class="value"><strong><%= @task.barcode %></strong></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Customer:</span>
+          <span class="value"><%= @customer.full_name %> (<%= @customer.email %>)</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Customer Phone:</span>
+          <span class="value"><%= @customer.phone %></span>
+        </div>
+        <% if @task.messenger.present? %>
+        <div class="detail-row">
+          <span class="label">Messenger:</span>
+          <span class="value"><%= @task.messenger.name %> (<%= @task.messenger.phone %>)</span>
+        </div>
+        <% end %>
+        <% if @task.sender.present? %>
+        <div class="detail-row">
+          <span class="label">Sender:</span>
+          <span class="value"><%= @task.sender.name %> (<%= @task.sender.phone %>)</span>
+        </div>
+        <% end %>
+        <div class="detail-row">
+          <span class="label">Delivery Address:</span>
+          <span class="value"><%= @task.drop_off_location %></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Failed At:</span>
+          <span class="value"><%= Time.current.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Failure Reason:</span>
+          <span class="value"><strong><%= @failure_reason || 'Not specified' %></strong></span>
+        </div>
+        <% if @task.priority == 'urgent' || @task.priority == 'express' %>
+        <div class="detail-row" style="color: #dc2626;">
+          <span class="label">Priority:</span>
+          <span class="value"><strong><%= @task.priority.upcase %> ⚠️</strong></span>
+        </div>
+        <% end %>
+      </div>
+      
+      <p><strong>Required Actions:</strong></p>
+      <ul>
+        <li>Contact customer to discuss rescheduling</li>
+        <li>Review messenger performance</li>
+        <li>Verify delivery address accuracy</li>
+        <li>Document resolution in system</li>
+      </ul>
+      
+      <center>
+        <a href="<%= root_url %>admin/tasks/<%= @task.id %>" class="button">View Task in Admin</a>
+      </center>
+    </div>
+    
+    <div class="footer">
+      <p>FastePost Admin Alert System</p>
+      <p>This is an automated alert. Please respond promptly.</p>
+    </div>
+  </div>
+</body>
+</html>

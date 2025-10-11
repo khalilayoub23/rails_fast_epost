@@ -18,9 +18,10 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should require valid role" do
-    user = User.new(email: "test@example.com", password: "password123", role: "invalid")
-    assert_not user.valid?
-    assert_includes user.errors[:role], "is not included in the list"
+    # Enum enforces valid roles by raising ArgumentError for invalid values
+    assert_raises(ArgumentError) do
+      User.new(email: "test@example.com", password: "password123", role: "invalid")
+    end
   end
 
   test "should default to viewer role" do

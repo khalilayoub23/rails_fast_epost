@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #3b82f6; color: white; padding: 20px; text-align: center; }
+    .content { background-color: #f9fafb; padding: 20px; margin: 20px 0; }
+    .task-count { font-size: 48px; font-weight: bold; color: #3b82f6; text-align: center; margin: 20px 0; }
+    .tasks-box { background-color: white; padding: 20px; border-left: 4px solid #3b82f6; margin: 15px 0; }
+    .task-item { padding: 10px 0; border-bottom: 1px solid #e5e7eb; }
+    .task-item:last-child { border-bottom: none; }
+    .barcode { font-weight: bold; color: #111827; }
+    .location { color: #6b7280; font-size: 14px; }
+    .button { background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; display: inline-block; margin: 20px 0; border-radius: 4px; }
+    .footer { text-align: center; color: #6b7280; font-size: 12px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📦 Tasks Available for Pickup</h1>
+    </div>
+    
+    <div class="content">
+      <p>Hello <%= @messenger.name %>,</p>
+      
+      <div class="task-count">
+        <%= @pending_tasks.count %>
+      </div>
+      <p style="text-align: center;"><strong><%= @pending_tasks.count == 1 ? 'task is' : 'tasks are' %> waiting for pickup in your area</strong></p>
+      
+      <div class="tasks-box">
+        <h3>Available Tasks:</h3>
+        <% @pending_tasks.limit(5).each do |task| %>
+          <div class="task-item">
+            <div class="barcode"><%= task.barcode %></div>
+            <div class="location">
+              📍 <%= task.pickup_location.truncate(50) %><br>
+              → <%= task.drop_off_location.truncate(50) %>
+            </div>
+            <% if task.priority == 'urgent' || task.priority == 'express' %>
+              <div style="color: #ef4444; font-weight: bold; margin-top: 5px;">
+                ⚠️ <%= task.priority.upcase %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        <% if @pending_tasks.count > 5 %>
+          <p style="text-align: center; color: #6b7280; margin-top: 15px;">
+            + <%= @pending_tasks.count - 5 %> more <%= (@pending_tasks.count - 5) == 1 ? 'task' : 'tasks' %>
+          </p>
+        <% end %>
+      </div>
+      
+      <center>
+        <a href="<%= root_url %>" class="button">View All Tasks</a>
+      </center>
+      
+      <p style="text-align: center;">
+        Log in to accept tasks and start earning!
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>FastePost Delivery System</p>
+    </div>
+  </div>
+</body>
+</html>

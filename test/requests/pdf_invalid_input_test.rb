@@ -2,6 +2,8 @@ require "test_helper"
 
 class PdfInvalidInputTest < ActionDispatch::IntegrationTest
   setup do
+    @user = users(:manager)
+    sign_in @user
     @customer = customers(:one)
   end
 

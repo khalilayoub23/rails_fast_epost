@@ -81,17 +81,27 @@ Rails.application.routes.draw do
         # Generic websites: POST receive
         post "websites", to: "websites#receive"
 
-        # HubSpot Free CRM style webhook
-        post "hubspot", to: "hubspot#receive"
+        # Free CRM Integrations
+        post "hubspot", to: "hubspot#receive"  # HubSpot Free CRM
+        post "odoo", to: "odoo#receive"        # Odoo (Open Source CRM)
       end
     end
   end
 
   namespace :admin do
+    resources :document_templates do
+      member do
+        get :download
+        get :preview
+        get :new_generate
+        post :generate
+      end
+    end
+    
     root to: "dashboard#index", as: :root
     get "dashboard", to: "dashboard#index", as: :dashboard
     post "dashboard_layout", to: "dashboard_layouts#update", as: :dashboard_layout
-    resource :branding, only: [:show, :update]
+    resource :branding, only: [ :show, :update ]
     resource :pdfs, only: [ :new ] do
       post :merge
       post :stamp
@@ -99,6 +109,37 @@ Rails.application.routes.draw do
       post :rotate
       post :crop
     end
+
+    # Sender, Messenger, and Lawyer Management
+    resources :senders
+    resources :messengers do
+      member do
+        patch :update_status
+        patch :update_location
+      end
+    end
+    resources :lawyers do
+      member do
+        patch :activate
+        patch :deactivate
+      end
+    end
+
+    # Monitoring dashboard
+    get "monitoring", to: "monitoring#index", as: :monitoring
+    get "monitoring/jobs", to: "monitoring#jobs", as: :monitoring_jobs
+    get "monitoring/jobs/:id", to: "monitoring#job_details", as: :monitoring_job_details
+    get "monitoring/webhooks", to: "monitoring#webhooks", as: :monitoring_webhooks
+    get "monitoring/health", to: "monitoring#health_check", as: :monitoring_health
+
+    # Database management
+    get "database", to: "database#index", as: :database
+    post "database/export", to: "database#export", as: :database_export
+    post "database/import", to: "database#import", as: :database_import
+    get "database/backup", to: "database#backup", as: :database_backup
+
+    # CRM integrations dashboard
+    get "crm", to: "crm#index", as: :crm
   end
 
   # User Profile and Settings

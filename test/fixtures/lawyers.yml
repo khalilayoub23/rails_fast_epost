@@ -1,0 +1,71 @@
+# Lawyers for testing
+lawyer_one:
+  name: "Sarah Chen"
+  email: "sarah.chen@legalfirm.com"
+  phone: "+1555100001"
+  license_number: "LAW-2020-001"
+  specialization: 0  # customs
+  bar_association: "Illinois State Bar"
+  certifications:
+    Customs Law Specialist:
+      date: "2020-03-15"
+      issuer: "National Customs Brokers & Forwarders Association"
+      added_at: "2023-01-10"
+    International Trade Certification:
+      date: "2021-06-20"
+      issuer: "International Trade Council"
+      added_at: "2023-01-10"
+  notes: "Specializes in customs clearance and international trade law"
+  active: true
+
+lawyer_two:
+  name: "Michael Rodriguez"
+  email: "m.rodriguez@tradepartners.com"
+  phone: "+1555100002"
+  license_number: "LAW-2019-045"
+  specialization: 1  # international_trade
+  bar_association: "New York State Bar"
+  certifications:
+    Trade Compliance Expert:
+      date: "2019-11-10"
+      issuer: "Trade Compliance Institute"
+      added_at: "2023-01-15"
+  notes: "Expert in import/export regulations and trade agreements"
+  active: true
+
+lawyer_three:
+  name: "Jennifer Park"
+  email: "j.park@contractpros.com"
+  phone: "+1555100003"
+  license_number: "LAW-2018-112"
+  specialization: 2  # contract
+  bar_association: "California State Bar"
+  certifications: {}
+  notes: "Focuses on commercial contracts and business agreements"
+  active: true
+
+lawyer_four:
+  name: "David Thompson"
+  email: "d.thompson@corplegal.com"
+  phone: "+1555100004"
+  license_number: "LAW-2017-089"
+  specialization: 3  # corporate
+  bar_association: "Texas State Bar"
+  certifications:
+    Corporate Law Certificate:
+      date: "2018-05-01"
+      issuer: "American Bar Association"
+      added_at: "2023-02-01"
+  notes: "Corporate law specialist with 15 years experience"
+  active: true
+
+lawyer_five:
+  name: "Amanda Foster"
+  email: "a.foster@retired-law.com"
+  phone: "+1555100005"
+  license_number: "LAW-2015-023"
+  specialization: 7  # general_practice
+  bar_association: "Florida State Bar"
+  certifications: {}
+  notes: "Semi-retired, occasional consultation only"
+  active: false

@@ -1,6 +1,6 @@
 class CarriersController < ApplicationController
   before_action :require_admin!
-  
+
   def index
     @carriers = Carrier.all
     respond_to do |format|

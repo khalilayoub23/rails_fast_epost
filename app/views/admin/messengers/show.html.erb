@@ -1,0 +1,131 @@
+<%# app/views/admin/messengers/show.html.erb %>
+<div class="page-header flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold"><%= @messenger.display_name %></h1>
+  <div>
+    <%= link_to 'Edit', edit_admin_messenger_path(@messenger), class: 'btn btn-secondary' %>
+    <%= link_to 'Back', admin_messengers_path, class: 'btn btn-outline ml-2' %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="font-semibold text-lg mb-4">Messenger Details</h2>
+    <dl class="divide-y">
+      <div class="py-2">
+        <dt class="font-medium text-gray-600">Status</dt>
+        <dd class="mt-1">
+          <% status_color = @messenger.available? ? 'badge-success' : @messenger.busy? ? 'badge-warning' : 'badge-secondary' %>
+          <span class="badge <%= status_color %>"><%= @messenger.status.titleize %></span>
+        </dd>
+      </div>
+      <div class="py-2">
+        <dt class="font-medium text-gray-600">Email</dt>
+        <dd class="mt-1"><%= @messenger.email %></dd>
+      </div>
+      <div class="py-2">
+        <dt class="font-medium text-gray-600">Phone</dt>
+        <dd class="mt-1"><%= @messenger.phone %></dd>
+      </div>
+      <div class="py-2">
+        <dt class="font-medium text-gray-600">Carrier</dt>
+        <dd class="mt-1"><%= @messenger.carrier&.name || 'Independent' %></dd>
+      </div>
+      <div class="py-2">
+        <dt class="font-medium text-gray-600">Vehicle Type</dt>
+        <dd class="mt-1"><%= @messenger.vehicle_type&.titleize %></dd>
+      </div>
+      <% if @messenger.license_plate.present? %>
+        <div class="py-2">
+          <dt class="font-medium text-gray-600">License Plate</dt>
+          <dd class="mt-1"><%= @messenger.license_plate %></dd>
+        </div>
+      <% end %>
+      <div class="py-2">
+        <dt class="font-medium text-gray-600">Employee ID</dt>
+        <dd class="mt-1"><%= @messenger.employee_id %></dd>
+      </div>
+      <% if @messenger.notes.present? %>
+        <div class="py-2">
+          <dt class="font-medium text-gray-600">Notes</dt>
+          <dd class="mt-1"><%= @messenger.notes %></dd>
+        </div>
+      <% end %>
+    </dl>
+    
+    <div class="mt-4 flex gap-2">
+      <%= button_to 'Mark Available', update_status_admin_messenger_path(@messenger, status: 'available'), method: :patch, class: 'btn btn-success btn-sm' %>
+      <%= button_to 'Mark Busy', update_status_admin_messenger_path(@messenger, status: 'busy'), method: :patch, class: 'btn btn-warning btn-sm' %>
+      <%= button_to 'Mark Offline', update_status_admin_messenger_path(@messenger, status: 'offline'), method: :patch, class: 'btn btn-secondary btn-sm' %>
+    </div>
+  </div>
+  
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="font-semibold text-lg mb-4">Performance</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-blue-50 p-4 rounded">
+        <h3 class="text-sm text-gray-600">Total Deliveries</h3>
+        <p class="text-2xl font-bold text-blue-600"><%= @messenger.total_deliveries %></p>
+      </div>
+      <div class="bg-green-50 p-4 rounded">
+        <h3 class="text-sm text-gray-600">On-Time Rate</h3>
+        <p class="text-2xl font-bold text-green-600"><%= number_to_percentage(@messenger.on_time_rate * 100, precision: 1) %></p>
+      </div>
+      <div class="bg-purple-50 p-4 rounded">
+        <h3 class="text-sm text-gray-600">Today's Tasks</h3>
+        <p class="text-2xl font-bold text-purple-600"><%= @today_tasks.count %></p>
+      </div>
+      <div class="bg-orange-50 p-4 rounded">
+        <h3 class="text-sm text-gray-600">Active Tasks</h3>
+        <p class="text-2xl font-bold text-orange-600"><%= @task_stats[:in_transit] %></p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="font-semibold text-lg mb-4">Task Overview</h2>
+    <ul class="space-y-2">
+      <li>Total Tasks: <span class="font-bold"><%= @task_stats[:total] %></span></li>
+      <li>Pending: <span class="font-bold"><%= @task_stats[:pending] %></span></li>
+      <li>In Transit: <span class="font-bold"><%= @task_stats[:in_transit] %></span></li>
+      <li>Delivered: <span class="font-bold"><%= @task_stats[:delivered] %></span></li>
+    </ul>
+    
+    <% if @messenger.current_location.present? %>
+      <div class="mt-4">
+        <h3 class="font-semibold mb-2">Current Location</h3>
+        <p class="text-sm text-gray-600">
+          Lat: <%= @messenger.current_location['latitude'] %><br>
+          Lng: <%= @messenger.current_location['longitude'] %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="bg-white rounded shadow p-6">
+  <h2 class="font-semibold text-lg mb-4">Recent Tasks</h2>
+  <table class="table-auto w-full">
+    <thead>
+      <tr>
+        <th class="px-4 py-2">Barcode</th>
+        <th class="px-4 py-2">Status</th>
+        <th class="px-4 py-2">Customer</th>
+        <th class="px-4 py-2">Created</th>
+        <th class="px-4 py-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recent_tasks.each do |task| %>
+        <tr>
+          <td class="border px-4 py-2"><%= task.barcode %></td>
+          <td class="border px-4 py-2"><span class="badge"><%= task.status.titleize %></span></td>
+          <td class="border px-4 py-2"><%= task.customer.name %></td>
+          <td class="border px-4 py-2"><%= task.created_at.strftime('%Y-%m-%d') %></td>
+          <td class="border px-4 py-2">
+            <%= link_to 'View', task_path(task), class: 'text-blue-700 hover:underline' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

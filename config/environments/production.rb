@@ -43,6 +43,19 @@ Rails.application.configure do
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = "/up"
 
+  # Enable Lograge for structured logging
+  config.lograge.enabled = true
+  config.lograge.formatter = Lograge::Formatters::Json.new
+  config.lograge.custom_options = lambda do |event|
+    {
+      time: event.time,
+      user_id: event.payload[:user_id],
+      ip: event.payload[:ip],
+      host: event.payload[:host],
+      params: event.payload[:params].except("controller", "action", "format", "utf8", "authenticity_token")
+    }
+  end
+
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 

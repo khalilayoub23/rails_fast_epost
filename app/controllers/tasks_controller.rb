@@ -23,6 +23,9 @@ class TasksController < ApplicationController
 
   def new
     @task = (@customer ? @customer.tasks : Task).new
+    @senders = Sender.order(:name)
+    @messengers = Messenger.available.order(:name)
+    @carriers = Carrier.order(:name)
   end
 
   def create
@@ -41,7 +44,11 @@ class TasksController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    @senders = Sender.order(:name)
+    @messengers = Messenger.order(:name)
+    @carriers = Carrier.order(:name)
+  end
 
   def update
     if @task.update(task_params)
@@ -92,6 +99,10 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:customer_id, :carrier_id, :package_type, :start, :target, :failure_code, :delivery_time, :status, :barcode, :filled_form_url)
+    params.require(:task).permit(
+      :customer_id, :carrier_id, :sender_id, :messenger_id,
+      :package_type, :start, :target, :failure_code, :delivery_time, :status, :barcode, :filled_form_url,
+      :pickup_address, :pickup_contact_phone, :pickup_notes, :requested_pickup_time
+    )
   end
 end

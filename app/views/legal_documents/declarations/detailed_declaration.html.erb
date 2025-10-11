@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detailed Customs Declaration</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', serif;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      color: #000;
+    }
+    .header {
+      text-align: center;
+      border: 3px double #000;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 26px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .reference-number {
+      text-align: right;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .section {
+      margin-bottom: 25px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      background-color: #fafafa;
+    }
+    .section-title {
+      font-weight: bold;
+      font-size: 16px;
+      text-transform: uppercase;
+      background-color: #333;
+      color: #fff;
+      padding: 8px 12px;
+      margin: -15px -15px 15px -15px;
+    }
+    .field-group {
+      margin-bottom: 10px;
+      display: flex;
+      border-bottom: 1px dotted #ccc;
+      padding-bottom: 8px;
+    }
+    .field-label {
+      font-weight: bold;
+      width: 250px;
+      flex-shrink: 0;
+    }
+    .field-value {
+      flex-grow: 1;
+    }
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    .items-table th {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #000;
+    }
+    .items-table td {
+      padding: 8px;
+      border: 1px solid #ccc;
+    }
+    .items-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .declaration-text {
+      text-align: justify;
+      margin: 25px 0;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid #333;
+      line-height: 1.8;
+    }
+    .certification-section {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #f0f0f0;
+      border-left: 5px solid #333;
+    }
+    .signature-section {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+    .signature-block {
+      text-align: center;
+    }
+    .signature-line {
+      border-top: 2px solid #000;
+      margin-top: 60px;
+      padding-top: 8px;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 2px solid #000;
+      text-align: center;
+      font-size: 10px;
+      color: #666;
+    }
+    .official-use {
+      margin-top: 30px;
+      padding: 15px;
+      border: 2px dashed #999;
+      background-color: #f9f9f9;
+    }
+    .official-use h3 {
+      margin-top: 0;
+      text-transform: uppercase;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Detailed Customs Declaration</h1>
+    <p>For International Trade and Commercial Shipments</p>
+  </div>
+
+  <div class="reference-number">
+    Declaration No: <%= declaration_number %><br>
+    Date: <%= declaration_date %>
+  </div>
+
+  <div class="section">
+    <div class="section-title">1. Exporter/Sender Information</div>
+    <div class="field-group">
+      <span class="field-label">Company/Individual Name:</span>
+      <span class="field-value"><%= sender_name %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Business Registration/ID:</span>
+      <span class="field-value"><%= sender_business_id %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Complete Address:</span>
+      <span class="field-value"><%= sender_address %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Country of Origin:</span>
+      <span class="field-value"><%= sender_country %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Contact Phone:</span>
+      <span class="field-value"><%= sender_phone %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Email Address:</span>
+      <span class="field-value"><%= sender_email %></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">2. Consignee/Recipient Information</div>
+    <div class="field-group">
+      <span class="field-label">Company/Individual Name:</span>
+      <span class="field-value"><%= recipient_name %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Tax/VAT Number:</span>
+      <span class="field-value"><%= recipient_tax_id %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Complete Address:</span>
+      <span class="field-value"><%= recipient_address %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Country of Destination:</span>
+      <span class="field-value"><%= recipient_country %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Contact Phone:</span>
+      <span class="field-value"><%= recipient_phone %></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">3. Detailed Item Description</div>
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>Item Description</th>
+          <th>HS Code</th>
+          <th>Quantity</th>
+          <th>Unit Weight</th>
+          <th>Unit Value</th>
+          <th>Total Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= item_description %></td>
+          <td><%= hs_code %></td>
+          <td><%= item_quantity %></td>
+          <td><%= item_weight %> kg</td>
+          <td><%= currency %> <%= item_unit_value %></td>
+          <td><%= currency %> <%= item_total_value %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="field-group">
+      <span class="field-label">Total Gross Weight:</span>
+      <span class="field-value"><%= total_weight %> kg</span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Total Net Weight:</span>
+      <span class="field-value"><%= net_weight %> kg</span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Total Declared Value:</span>
+      <span class="field-value"><%= currency %> <%= total_declared_value %></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">4. Shipment Details</div>
+    <div class="field-group">
+      <span class="field-label">Mode of Transport:</span>
+      <span class="field-value"><%= transport_mode %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Shipping Terms (Incoterms):</span>
+      <span class="field-value"><%= incoterms %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Purpose of Shipment:</span>
+      <span class="field-value"><%= shipment_purpose %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Insurance Value:</span>
+      <span class="field-value"><%= currency %> <%= insurance_value %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Port of Loading:</span>
+      <span class="field-value"><%= port_of_loading %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Port of Discharge:</span>
+      <span class="field-value"><%= port_of_discharge %></span>
+    </div>
+  </div>
+
+  <div class="certification-section">
+    <strong>CERTIFICATES AND LICENSES:</strong><br>
+    <div class="field-group">
+      <span class="field-label">Certificate of Origin Number:</span>
+      <span class="field-value"><%= certificate_of_origin %></span>
+    </div>
+    <div class="field-group">
+      <span class="field-label">Export License (if applicable):</span>
+      <span class="field-value"><%= export_license %></span>
+    </div>
+  </div>
+
+  <div class="declaration-text">
+    <strong>SOLEMN DECLARATION:</strong><br><br>
+    I, the undersigned, <%= declarant_name %>, in my capacity as <%= declarant_title %> of the exporting company, 
+    hereby solemnly declare that:
+    <ol>
+      <li>All information provided in this declaration is true, complete, and accurate to the best of my knowledge.</li>
+      <li>The goods described above do not contain any prohibited or restricted items as per international customs regulations.</li>
+      <li>The declared value accurately reflects the transaction value of the goods.</li>
+      <li>All applicable export regulations and licensing requirements have been complied with.</li>
+      <li>I understand that providing false or misleading information constitutes a criminal offense and may result in 
+          penalties, seizure of goods, or legal prosecution.</li>
+      <li>I accept full responsibility for the accuracy of this declaration and its supporting documentation.</li>
+    </ol>
+    I make this declaration conscientiously believing it to be true and correct, and subject to the penalties 
+    provided by law for false declarations.
+  </div>
+
+  <div class="signature-section">
+    <div class="signature-block">
+      <div class="signature-line">
+        Declarant's Signature
+      </div>
+      <p><%= declarant_name %></p>
+    </div>
+    <div class="signature-block">
+      <div class="signature-line">
+        Date and Place
+      </div>
+      <p><%= declaration_date %></p>
+      <p><%= declaration_place %></p>
+    </div>
+    <div class="signature-block">
+      <div class="signature-line">
+        Company Seal/Stamp
+      </div>
+      <p>(If applicable)</p>
+    </div>
+  </div>
+
+  <div class="official-use">
+    <h3>For Official Use Only</h3>
+    <p>Customs Officer Name: _______________________________</p>
+    <p>Date Received: _______________________________</p>
+    <p>Registration Number: _______________________________</p>
+    <p>Signature & Stamp: _______________________________</p>
+  </div>
+
+  <div class="footer">
+    <p>Form Generated: <%= Time.current.strftime("%B %d, %Y at %H:%M %Z") %></p>
+    <p>This is an official customs declaration document. Retain a copy for your records for at least 5 years.</p>
+    <p>For questions or assistance, contact your local customs authority.</p>
+  </div>
+</body>
+</html>

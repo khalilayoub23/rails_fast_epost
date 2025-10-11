@@ -22,7 +22,8 @@ class TaskTest < ActiveSupport::TestCase
     assert_includes task.errors[:start], "can't be blank"
     assert_includes task.errors[:target], "can't be blank"
     assert_includes task.errors[:delivery_time], "can't be blank"
-    assert_includes task.errors[:status], "can't be blank"
+    # Status is automatically set to :pending by aasm initial state
+    assert_equal "pending", task.status
     assert_includes task.errors[:barcode], "can't be blank"
   end
 

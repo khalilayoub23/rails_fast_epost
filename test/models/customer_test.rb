@@ -26,6 +26,7 @@ class CustomerTest < ActiveSupport::TestCase
     customer = Customer.create!(
       name: "Test",
       email: "test@test.com",
+      address: "123 Test St",
       category: 0,
       phones: [ "+1-555-0100", "+1-555-0101" ]
     )

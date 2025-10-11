@@ -14,4 +14,14 @@ class Customer < ApplicationRecord
     validates :category, presence: true
     validates :address, presence: true
     validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+    # Alias for email templates
+    def full_name
+      name
+    end
+
+    # Return first phone number for email templates
+    def phone
+      phones&.first || "N/A"
+    end
 end

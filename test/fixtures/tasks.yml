@@ -10,6 +10,16 @@ one:
   barcode: 'BARCODE1'
   delivery_time: <%= Time.current %>
 
+task_one:
+  customer: one
+  carrier: one
+  package_type: 'medium'
+  start: 'Legal Start Address'
+  target: 'Legal Target Address'
+  status: 1
+  barcode: 'LEGAL001'
+  delivery_time: <%= Time.current %>
+
 two:
   customer: two
   carrier: two

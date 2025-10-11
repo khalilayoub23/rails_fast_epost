@@ -47,6 +47,30 @@
             <% end %>
           </li>
           <li>
+            <%= link_to admin_senders_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_senders_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_senders_path)}">send</span>
+              Senders
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_messengers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_messengers_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_messengers_path)}">pedal_bike</span>
+              Messengers
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_lawyers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_lawyers_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_lawyers_path)}">gavel</span>
+              Lawyers
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_document_templates_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_document_templates_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_document_templates_path)}">description</span>
+              Document Templates
+            <% end %>
+          </li>
+          <li>
             <%= link_to admin_branding_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_branding_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(admin_branding_path)}">brush</span>
               Branding

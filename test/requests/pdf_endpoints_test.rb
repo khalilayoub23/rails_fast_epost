@@ -2,6 +2,8 @@ require "test_helper"
 
 class PdfEndpointsTest < ActionDispatch::IntegrationTest
   setup do
+    @user = users(:viewer)
+    sign_in @user
     @customer = customers(:one)
     @template = FormTemplate.create!(carrier: carriers(:one), customer: @customer, schema: { "title"=>"T", "fields"=>[ { "name"=>"x", "x"=>10, "y"=>10 } ] })
     @form = @customer.forms.create!(address: "a", form_default_url: "http://example.com", data: { "x"=>"1" }, form_template: @template)

@@ -1,0 +1,58 @@
+<%# app/views/admin/senders/show.html.erb %>
+<div class="page-header flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold"><%= @sender.display_name %></h1>
+  <div>
+    <%= link_to 'Edit', edit_admin_sender_path(@sender), class: 'btn btn-secondary' %>
+    <%= link_to 'Back', admin_senders_path, class: 'btn btn-outline ml-2' %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="font-semibold text-lg mb-2">Sender Details</h2>
+    <dl class="divide-y">
+      <dt class="font-medium">Type</dt>
+      <dd class="mb-2"><span class="badge badge-info"><%= @sender.sender_type.titleize %></span></dd>
+      <dt class="font-medium">Email</dt>
+      <dd class="mb-2"><%= @sender.email %></dd>
+      <dt class="font-medium">Phone</dt>
+      <dd class="mb-2"><%= @sender.phone %></dd>
+      <% if @sender.company_name.present? %>
+        <dt class="font-medium">Company</dt>
+        <dd class="mb-2"><%= @sender.company_name %></dd>
+      <% end %>
+      <% if @sender.tax_id.present? %>
+        <dt class="font-medium">Tax ID</dt>
+        <dd class="mb-2"><%= @sender.tax_id %></dd>
+      <% end %>
+      <% if @sender.business_registration.present? %>
+        <dt class="font-medium">Business Registration</dt>
+        <dd class="mb-2"><%= @sender.business_registration %></dd>
+      <% end %>
+      <dt class="font-medium">Address</dt>
+      <dd class="mb-2"><%= @sender.address %></dd>
+      <% if @sender.notes.present? %>
+        <dt class="font-medium">Notes</dt>
+        <dd class="mb-2"><%= @sender.notes %></dd>
+      <% end %>
+    </dl>
+  </div>
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="font-semibold text-lg mb-2">Task Stats</h2>
+    <ul class="mb-4">
+      <li>Total Tasks: <span class="font-bold"><%= @task_stats[:total] %></span></li>
+      <li>Pending: <span class="font-bold"><%= @task_stats[:pending] %></span></li>
+      <li>In Transit: <span class="font-bold"><%= @task_stats[:in_transit] %></span></li>
+      <li>Delivered: <span class="font-bold"><%= @task_stats[:delivered] %></span></li>
+    </ul>
+    <h3 class="font-semibold mb-2">Recent Tasks</h3>
+    <ul>
+      <% @recent_tasks.each do |task| %>
+        <li>
+          <%= link_to task.barcode, task_path(task), class: 'text-blue-700 hover:underline' %>
+          <span class="ml-2 text-xs text-gray-500">(<%= task.status.titleize %>)</span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

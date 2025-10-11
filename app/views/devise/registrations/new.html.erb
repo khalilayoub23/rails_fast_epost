@@ -1,0 +1,57 @@
+<div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+  <div class="w-full max-w-md">
+    <!-- Logo/Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-bold text-dark">Rails Fast Epost</h1>
+      <p class="mt-2 text-sm text-body">Create your account</p>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="rounded-sm border border-stroke bg-white px-8 py-10 shadow-default">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-5" }) do |f| %>
+        <!-- Error Messages -->
+        <% if resource.errors.any? %>
+          <div class="rounded-sm border border-danger/30 bg-[#FFF1F2] p-4 text-danger">
+            <h3 class="mb-2 font-semibold text-sm"><%= pluralize(resource.errors.count, "error") %> prohibited saving:</h3>
+            <ul class="list-disc pl-5 text-xs">
+              <% resource.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Email Field -->
+        <div>
+          <%= f.label :email, class: "mb-2 block text-sm font-medium text-dark" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full rounded border border-stroke bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none" %>
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <%= f.label :password, class: "mb-2 block text-sm font-medium text-dark" %>
+          <%= f.password_field :password, autocomplete: "new-password", class: "w-full rounded border border-stroke bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none" %>
+          <% if @minimum_password_length %>
+            <p class="mt-1 text-xs text-body"><%= @minimum_password_length %> characters minimum</p>
+          <% end %>
+        </div>
+
+        <!-- Password Confirmation Field -->
+        <div>
+          <%= f.label :password_confirmation, class: "mb-2 block text-sm font-medium text-dark" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full rounded border border-stroke bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none" %>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+          <%= f.submit "Create account", class: "w-full rounded bg-primary px-4 py-3 text-sm font-medium text-white hover:opacity-90 focus:outline-none" %>
+        </div>
+      <% end %>
+
+      <!-- Links -->
+      <div class="mt-6 text-center text-sm">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </div>
+</div>

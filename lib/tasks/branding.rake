@@ -9,7 +9,7 @@ namespace :branding do
       puts "Source not found: #{src}"
       exit 1
     end
-    cmd = ["convert", src, "-fuzz", fuzz, "-transparent", white, dst].join(" ")
+    cmd = [ "convert", src, "-fuzz", fuzz, "-transparent", white, dst ].join(" ")
     puts "Running: #{cmd}"
     system(cmd) || abort("ImageMagick convert failed")
     puts "Wrote: #{dst}"

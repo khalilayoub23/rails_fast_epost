@@ -1,0 +1,17 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-2">
+      <%= link_to admin_lawyer_path(@lawyer), class: "text-gray-600 hover:text-gray-900" do %>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+      <% end %>
+      <h1 class="text-3xl font-bold text-gray-900">Edit Lawyer</h1>
+    </div>
+    <p class="text-gray-600">Update information for <%= @lawyer.name %></p>
+  </div>
+
+  <!-- Form -->
+  <%= render "form", lawyer: @lawyer %>
+</div>

@@ -6,7 +6,7 @@ module Admin
     def update
   order = Array(params[:order] || params.dig(:_json, :order))
   spans = Array(params[:spans] || params.dig(:_json, :spans))
-      if order.empty? && request.content_type == 'application/json'
+      if order.empty? && request.content_type == "application/json"
         # Parse raw JSON body
         begin
           payload = JSON.parse(request.raw_post) rescue {}

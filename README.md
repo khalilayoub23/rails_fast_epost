@@ -48,6 +48,22 @@ A modern, full-featured postal and courier management system built with Rails 8,
 - **Document Storage**: Carrier documentation and signatures
 - **Preference Settings**: Carrier-specific configurations
 
+### 📮 Sender Management (Admin Only)
+- **Sender Profiles**: Track package originators (individual/business/government)
+- **Multi-Type Support**: Personal senders, business clients, government entities
+- **Business Details**: Company name, tax ID, business registration
+- **Task History**: View all packages sent by each sender
+- **Contact Management**: Primary and secondary contact information
+
+### 🚴 Messenger Management (Admin Only)
+- **Delivery Personnel**: Track messengers/delivery persons
+- **Real-time Status**: Available, busy, offline status tracking
+- **Vehicle Management**: Support for van, motorcycle, bicycle, car, truck
+- **GPS Tracking**: Current location tracking with JSONB storage
+- **Performance Metrics**: Total deliveries, on-time rate
+- **Carrier Association**: Link messengers to specific carriers
+- **Working Hours**: Track messenger availability schedules
+
 ### 🔐 Role-Based Access Control
 - **Admin Role**: Full system access including carrier management
 - **Manager Role**: Payment operations and customer management
@@ -157,7 +173,9 @@ app/
 ├── models/
 │   ├── carrier.rb          # Postal/courier carrier
 │   ├── customer.rb         # Customer with enum categories
-│   ├── task.rb             # Shipment tracking
+│   ├── sender.rb           # Package sender (individual/business/government)
+│   ├── messenger.rb        # Delivery personnel with GPS tracking
+│   ├── task.rb             # Shipment tracking with sender/messenger
 │   ├── payment.rb          # Payment with refunds
 │   └── current.rb          # Current user context
 └── views/

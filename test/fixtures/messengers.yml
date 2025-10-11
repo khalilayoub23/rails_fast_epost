@@ -1,0 +1,73 @@
+# Messengers for testing
+messenger_one:
+  name: Mike Johnson
+  email: mike.j@fastdelivery.com
+  phone: "+1555000001"
+  carrier: one
+  status: 0  # available
+  vehicle_type: 1  # motorcycle
+  license_plate: "MOTO-123"
+  license_number: "DL-12345678"
+  employee_id: "EMP-001"
+  total_deliveries: 150
+  on_time_rate: 0.95
+  current_location: '{"latitude": 41.8781, "longitude": -87.6298, "updated_at": "2025-01-10T10:00:00Z"}'
+  notes: "Experienced messenger, knows city routes well"
+
+messenger_two:
+  name: Sarah Williams
+  email: sarah.w@fastdelivery.com
+  phone: "+1555000002"
+  carrier: one
+  status: 1  # busy
+  vehicle_type: 0  # van
+  license_plate: "VAN-456"
+  license_number: "DL-87654321"
+  employee_id: "EMP-002"
+  total_deliveries: 220
+  on_time_rate: 0.98
+  current_location: '{"latitude": 41.8500, "longitude": -87.6500, "updated_at": "2025-01-10T11:30:00Z"}'
+  notes: "Top performer, handles large deliveries"
+
+messenger_three:
+  name: Carlos Rodriguez
+  email: carlos.r@speedpost.com
+  phone: "+1555000003"
+  carrier: two
+  status: 0  # available
+  vehicle_type: 2  # bicycle
+  license_number: "DL-11223344"
+  employee_id: "EMP-003"
+  total_deliveries: 80
+  on_time_rate: 0.92
+  current_location: '{"latitude": 41.9000, "longitude": -87.6000, "updated_at": "2025-01-10T09:45:00Z"}'
+  notes: "Eco-friendly option, city center specialist"
+
+messenger_four:
+  name: Emily Chen
+  email: emily.c@speedpost.com
+  phone: "+1555000004"
+  carrier: two
+  status: 2  # offline
+  vehicle_type: 3  # car
+  license_plate: "CAR-789"
+  license_number: "DL-55667788"
+  employee_id: "EMP-004"
+  total_deliveries: 180
+  on_time_rate: 0.96
+  notes: "Currently off-duty, suburban routes specialist"
+
+messenger_five:
+  name: David Martinez
+  email: david.m@fastdelivery.com
+  phone: "+1555000005"
+  carrier: one
+  status: 1  # busy
+  vehicle_type: 4  # truck
+  license_plate: "TRUCK-101"
+  license_number: "CDL-99887766"
+  employee_id: "EMP-005"
+  total_deliveries: 120
+  on_time_rate: 0.94
+  current_location: '{"latitude": 41.8200, "longitude": -87.7000, "updated_at": "2025-01-10T12:00:00Z"}'
+  notes: "Heavy cargo specialist, commercial deliveries"

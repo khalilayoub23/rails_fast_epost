@@ -2,6 +2,8 @@ require "test_helper"
 
 class AdminPdfsTest < ActionDispatch::IntegrationTest
   setup do
+    @admin_user = users(:admin)
+    sign_in @admin_user
     @schema = { "title" => "A", "fields" => [ { "name"=>"n", "x"=>10, "y"=>10 } ] }
     @data1  = { "n"=>"1" }
     @data2  = { "n"=>"2" }

@@ -1,0 +1,70 @@
+<%# app/views/admin/messengers/_form.html.erb %>
+<%= form_with model: [:admin, @messenger], local: true, class: 'space-y-6' do |f| %>
+  <% if @messenger.errors.any? %>
+    <div class="alert alert-error">
+      <h3><%= pluralize(@messenger.errors.count, "error") %> prohibited this messenger from being saved:</h3>
+      <ul>
+        <% @messenger.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="form-group">
+      <%= f.label :name, class: 'form-label' %>
+      <%= f.text_field :name, class: 'input input-bordered w-full', required: true %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :email, class: 'form-label' %>
+      <%= f.email_field :email, class: 'input input-bordered w-full' %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :phone, class: 'form-label' %>
+      <%= f.telephone_field :phone, class: 'input input-bordered w-full', required: true %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :employee_id, class: 'form-label' %>
+      <%= f.text_field :employee_id, class: 'input input-bordered w-full' %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :carrier_id, 'Carrier (Optional)', class: 'form-label' %>
+      <%= f.collection_select :carrier_id, @carriers, :id, :name, { include_blank: 'Independent' }, class: 'input input-bordered w-full' %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :status, class: 'form-label' %>
+      <%= f.select :status, Messenger.statuses.map { |k, v| [k.titleize, k] }, {}, class: 'input input-bordered w-full', required: true %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :vehicle_type, class: 'form-label' %>
+      <%= f.select :vehicle_type, Messenger.vehicle_types.map { |k, v| [k.titleize, k] }, { include_blank: 'Select Vehicle' }, class: 'input input-bordered w-full' %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :license_plate, class: 'form-label' %>
+      <%= f.text_field :license_plate, class: 'input input-bordered w-full' %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :license_number, class: 'form-label' %>
+      <%= f.text_field :license_number, class: 'input input-bordered w-full' %>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <%= f.label :notes, class: 'form-label' %>
+    <%= f.text_area :notes, class: 'input input-bordered w-full', rows: 3 %>
+  </div>
+  
+  <div class="flex gap-2">
+    <%= f.submit class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', admin_messengers_path, class: 'btn btn-outline' %>
+  </div>
+<% end %>

@@ -11,3 +11,9 @@ two:
   name: 'Carrier Two'
   email: 'carrier2@example.com'
   address: 'Carrier Address 2'
+
+three:
+  carrier_type: 'StandardCarrier'
+  name: 'Carrier Three'
+  email: 'carrier3@example.com'
+  address: 'Carrier Address 3'

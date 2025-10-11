@@ -5,11 +5,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   # Role-based access control
-  enum role: {
+  enum :role, {
     viewer: "viewer",
     manager: "manager",
     admin: "admin"
-  }, _prefix: true
+  }, prefix: true
 
   # Validations
   validates :role, presence: true, inclusion: { in: roles.keys }

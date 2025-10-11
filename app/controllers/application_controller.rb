@@ -4,6 +4,15 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :set_current_attributes
 
+  # Add custom data to logs (used by Lograge)
+  def append_info_to_payload(payload)
+    super
+    payload[:user_id] = current_user&.id
+    payload[:user_email] = current_user&.email
+    payload[:ip] = request.remote_ip
+    payload[:host] = request.host
+  end
+
   private
 
   def allow_github_codespaces

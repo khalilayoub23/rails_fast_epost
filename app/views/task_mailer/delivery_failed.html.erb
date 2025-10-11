@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #ef4444; color: white; padding: 20px; text-align: center; }
+    .alert-icon { font-size: 48px; margin: 10px 0; }
+    .content { background-color: #f9fafb; padding: 20px; margin: 20px 0; }
+    .failure-details { background-color: white; padding: 20px; border-left: 4px solid #ef4444; }
+    .detail-row { margin: 10px 0; }
+    .label { font-weight: bold; color: #6b7280; }
+    .value { color: #111827; }
+    .reason-box { background-color: #fee2e2; padding: 15px; margin: 15px 0; border-radius: 4px; }
+    .button { background-color: #ef4444; color: white; padding: 12px 24px; text-decoration: none; display: inline-block; margin: 20px 0; border-radius: 4px; }
+    .footer { text-align: center; color: #6b7280; font-size: 12px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="alert-icon">⚠️</div>
+      <h1>Delivery Failed</h1>
+    </div>
+    
+    <div class="content">
+      <p>Hello <%= @customer.full_name %>,</p>
+      <p>We regret to inform you that the delivery of your package was unsuccessful.</p>
+      
+      <div class="failure-details">
+        <div class="detail-row">
+          <span class="label">Tracking Number:</span>
+          <span class="value"><%= @task.barcode %></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Attempted Delivery:</span>
+          <span class="value"><%= Time.current.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Delivery Address:</span>
+          <span class="value"><%= @task.drop_off_location %></span>
+        </div>
+      </div>
+      
+      <div class="reason-box">
+        <strong>Reason for Failure:</strong><br>
+        <%= @failure_reason || 'Unable to complete delivery' %>
+      </div>
+      
+      <p><strong>What happens next?</strong></p>
+      <ul>
+        <li>Our customer service team will contact you within 24 hours</li>
+        <li>We will reschedule the delivery at your convenience</li>
+        <li>You can also pick up the package from our office</li>
+      </ul>
+      
+      <center>
+        <a href="<%= root_url %>?tracking=<%= @task.barcode %>" class="button">Contact Support</a>
+      </center>
+      
+      <p>We apologize for any inconvenience this may have caused. We're committed to resolving this issue promptly.</p>
+    </div>
+    
+    <div class="footer">
+      <p>FastePost Delivery System</p>
+      <p>For immediate assistance: support@fastepost.com | +123-456-7890</p>
+    </div>
+  </div>
+</body>
+</html>

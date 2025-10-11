@@ -1,6 +1,11 @@
 require "test_helper"
 
 class CarriersControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @user = users(:admin)
+    sign_in @user
+  end
+
   test "should get index" do
     get carriers_url
     assert_response :success
@@ -37,7 +42,7 @@ class CarriersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get destroy" do
-    carrier = carriers(:one)
+    carrier = carriers(:three)  # Use carrier without messengers
     delete carrier_url(carrier)
     assert_response :redirect
   end

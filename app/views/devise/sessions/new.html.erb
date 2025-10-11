@@ -1,0 +1,44 @@
+<div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+  <div class="w-full max-w-md">
+    <!-- Logo/Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-bold text-dark">Rails Fast Epost</h1>
+      <p class="mt-2 text-sm text-body">Sign in to your account</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="rounded-sm border border-stroke bg-white px-8 py-10 shadow-default">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-5" }) do |f| %>
+        <!-- Email Field -->
+        <div>
+          <%= f.label :email, class: "mb-2 block text-sm font-medium text-dark" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full rounded border border-stroke bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none" %>
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <%= f.label :password, class: "mb-2 block text-sm font-medium text-dark" %>
+          <%= f.password_field :password, autocomplete: "current-password", class: "w-full rounded border border-stroke bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none" %>
+        </div>
+
+        <!-- Remember Me -->
+        <% if devise_mapping.rememberable? %>
+          <div class="flex items-center">
+            <%= f.check_box :remember_me, class: "h-4 w-4 rounded border-stroke text-primary focus:ring-primary" %>
+            <%= f.label :remember_me, class: "ml-2 text-sm text-dark" %>
+          </div>
+        <% end %>
+
+        <!-- Submit Button -->
+        <div>
+          <%= f.submit "Sign in", class: "w-full rounded bg-primary px-4 py-3 text-sm font-medium text-white hover:opacity-90 focus:outline-none" %>
+        </div>
+      <% end %>
+
+      <!-- Links -->
+      <div class="mt-6 text-center text-sm">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </div>
+</div>

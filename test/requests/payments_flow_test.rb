@@ -4,6 +4,8 @@ require "openssl"
 
 class PaymentsFlowTest < ActionDispatch::IntegrationTest
   setup do
+    @user = users(:manager)
+    sign_in @user
     @customer = customers(:one)
     @task = tasks(:one)
     # Ensure secrets exist for signature tests

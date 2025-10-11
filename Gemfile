@@ -35,6 +35,15 @@ gem "simple_form"
 # Authentication solution for Rails
 gem "devise"
 
+# State machine for model workflows
+gem "aasm"
+
+# Retry failed operations with exponential backoff
+gem "retriable"
+
+# Structured logging for production
+gem "lograge"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
@@ -67,15 +76,24 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Load environment variables from .env file
+  gem "dotenv-rails"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  
+  # Preview email in browser instead of sending
+  gem "letter_opener"
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  
+  # Rails controller testing helpers (assigns, assert_template, etc.)
+  gem "rails-controller-testing"
 end

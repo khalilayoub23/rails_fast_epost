@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+prawn_template_one:
+  name: Power of Attorney Template
+  description: Legal document for authorization
+  template_type: 0  # prawn_template
+  category: Power of Attorney
+  variables: { "principal_name": { "type": "string", "label": "Principal Name", "required": true } }
+  active: true
+  content: |
+    # Power of Attorney
+    
+    I, {{principal_name}}, hereby appoint {{agent_name}} as my attorney-in-fact.
+
+fillable_form_one:
+  name: Customs Declaration Form
+  description: Fillable PDF form for customs
+  template_type: 1  # fillable_form
+  category: Customs Declaration
+  variables: { "shipper_name": { "type": "string", "label": "Shipper Name", "required": true } }
+  active: true
+
+hybrid_template_one:
+  name: Hybrid Invoice Template
+  description: Combined template and form
+  template_type: 2  # hybrid
+  category: Commercial Invoice
+  variables: { "invoice_number": { "type": "string", "label": "Invoice Number", "required": true } }
+  active: true
+  content: |
+    # Commercial Invoice
+    
+    Invoice #: {{invoice_number}}

@@ -2,6 +2,8 @@ require "test_helper"
 
 class PaymentsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    @user = users(:manager)
+    sign_in @user
     @payment = payments(:one)
   end
 

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #2563eb; color: white; padding: 20px; text-align: center; }
+    .content { background-color: #f9fafb; padding: 20px; margin: 20px 0; }
+    .task-details { background-color: white; padding: 15px; border-left: 4px solid #2563eb; }
+    .detail-row { margin: 10px 0; }
+    .label { font-weight: bold; color: #6b7280; }
+    .value { color: #111827; }
+    .button { background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; display: inline-block; margin: 20px 0; border-radius: 4px; }
+    .footer { text-align: center; color: #6b7280; font-size: 12px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>New Task Assigned</h1>
+    </div>
+    
+    <div class="content">
+      <p>Hello <%= @messenger.name %>,</p>
+      <p>You have been assigned a new task. Please review the details below:</p>
+      
+      <div class="task-details">
+        <div class="detail-row">
+          <span class="label">Tracking Number:</span>
+          <span class="value"><%= @task.barcode %></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Customer:</span>
+          <span class="value"><%= @customer.full_name %></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Pickup Address:</span>
+          <span class="value"><%= @task.pickup_location %></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Delivery Address:</span>
+          <span class="value"><%= @task.drop_off_location %></span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Priority:</span>
+          <span class="value"><%= @task.priority&.titleize || 'Normal' %></span>
+        </div>
+        <% if @task.scheduled_pickup_time.present? %>
+        <div class="detail-row">
+          <span class="label">Scheduled Pickup:</span>
+          <span class="value"><%= @task.scheduled_pickup_time.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+        <% end %>
+      </div>
+      
+      <center>
+        <a href="<%= root_url %>" class="button">View Task Details</a>
+      </center>
+      
+      <p><strong>Next Steps:</strong></p>
+      <ul>
+        <li>Review the task details carefully</li>
+        <li>Contact the customer if needed: <%= @customer.phone %></li>
+        <li>Update the task status when you begin pickup</li>
+      </ul>
+    </div>
+    
+    <div class="footer">
+      <p>FastePost Delivery System</p>
+      <p>This is an automated notification. Please do not reply to this email.</p>
+    </div>
+  </div>
+</body>
+</html>

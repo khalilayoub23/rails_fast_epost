@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power of Attorney for Customs and Shipping</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', serif;
+      line-height: 1.8;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 50px 30px;
+      color: #000;
+    }
+    .header {
+      text-align: center;
+      border: 4px double #000;
+      padding: 25px;
+      margin-bottom: 40px;
+      background-color: #f9f9f9;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+    .header .subtitle {
+      font-size: 14px;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .document-number {
+      text-align: right;
+      font-weight: bold;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .parties-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: #fafafa;
+      border-left: 5px solid #333;
+    }
+    .party-title {
+      font-weight: bold;
+      font-size: 16px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .party-details {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    .field-line {
+      margin-bottom: 8px;
+    }
+    .field-label {
+      font-weight: bold;
+      display: inline-block;
+      width: 180px;
+    }
+    .preamble {
+      text-align: justify;
+      margin: 30px 0;
+      font-size: 14px;
+      line-height: 2;
+    }
+    .witnesseth {
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 30px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .powers-section {
+      margin: 30px 0;
+    }
+    .powers-section h3 {
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-bottom: 2px solid #333;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+    }
+    .powers-list {
+      list-style-type: none;
+      counter-reset: powers-counter;
+      padding-left: 0;
+    }
+    .powers-list li {
+      counter-increment: powers-counter;
+      margin-bottom: 15px;
+      text-align: justify;
+      padding-left: 40px;
+      position: relative;
+    }
+    .powers-list li:before {
+      content: counter(powers-counter) ".";
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+      width: 30px;
+    }
+    .terms-section {
+      margin: 30px 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+    }
+    .terms-section h3 {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 0;
+      text-transform: uppercase;
+    }
+    .closing-statement {
+      text-align: justify;
+      margin: 30px 0;
+      line-height: 2;
+    }
+    .signature-section {
+      margin-top: 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .signature-block {
+      text-align: center;
+    }
+    .signature-title {
+      font-weight: bold;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 60px;
+    }
+    .signature-line {
+      border-top: 2px solid #000;
+      padding-top: 10px;
+      margin-bottom: 5px;
+    }
+    .signature-name {
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    .witness-section {
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 3px double #000;
+    }
+    .witness-section h3 {
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+    .witnesses {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 30px;
+    }
+    .witness-block {
+      text-align: center;
+    }
+    .notary-section {
+      margin-top: 50px;
+      padding: 20px;
+      border: 3px double #000;
+      background-color: #fafafa;
+    }
+    .notary-section h3 {
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+    .notary-field {
+      margin-bottom: 20px;
+    }
+    .footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 10px;
+      color: #666;
+      padding-top: 20px;
+      border-top: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Power of Attorney</h1>
+    <div class="subtitle">For Customs Clearance and Shipping Operations</div>
+  </div>
+
+  <div class="document-number">
+    POA No: <%= poa_number %><br>
+    Executed on: <%= execution_date %>
+  </div>
+
+  <div class="parties-section">
+    <div class="party-title">Principal (Grantor)</div>
+    <div class="party-details">
+      <div class="field-line">
+        <span class="field-label">Full Name/Company:</span>
+        <%= principal_name %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">ID/Registration No:</span>
+        <%= principal_id %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">Address:</span>
+        <%= principal_address %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">Nationality/Country:</span>
+        <%= principal_nationality %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">Contact Phone:</span>
+        <%= principal_phone %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">Email:</span>
+        <%= principal_email %>
+      </div>
+    </div>
+
+    <div class="party-title">Attorney-in-Fact (Agent)</div>
+    <div class="party-details">
+      <div class="field-line">
+        <span class="field-label">Full Name/Company:</span>
+        <%= agent_name %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">License/Registration No:</span>
+        <%= agent_license %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">Address:</span>
+        <%= agent_address %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">Contact Phone:</span>
+        <%= agent_phone %>
+      </div>
+      <div class="field-line">
+        <span class="field-label">Email:</span>
+        <%= agent_email %>
+      </div>
+    </div>
+  </div>
+
+  <div class="preamble">
+    <strong>KNOW ALL MEN BY THESE PRESENTS:</strong><br><br>
+    That I/We, <strong><%= principal_name %></strong>, of legal age, and a resident of <%= principal_address %>, 
+    hereinafter referred to as the <strong>"PRINCIPAL"</strong>, do hereby appoint, constitute, and designate 
+    <strong><%= agent_name %></strong>, with offices at <%= agent_address %>, hereinafter referred to as the 
+    <strong>"ATTORNEY-IN-FACT"</strong> or <strong>"AGENT"</strong>, to be my/our true and lawful attorney-in-fact, 
+    for me/us and in my/our name, place, and stead.
+  </div>
+
+  <div class="witnesseth">
+    — WITNESSETH —
+  </div>
+
+  <div class="powers-section">
+    <h3>Powers and Authorities Granted</h3>
+    <p>The Principal hereby grants to the Attorney-in-Fact full power and authority to perform the following acts:</p>
+    <ul class="powers-list">
+      <li>
+        To prepare, sign, submit, and file all customs declarations, import/export documents, and related paperwork 
+        required for the clearance of goods through customs authorities in <%= jurisdiction %>.
+      </li>
+      <li>
+        To represent the Principal before customs authorities, port authorities, shipping companies, freight forwarders, 
+        and any other relevant governmental or commercial entities involved in international trade and shipping.
+      </li>
+      <li>
+        To make declarations, provide information, answer questions, and execute any documents required by customs 
+        authorities for the importation, exportation, or transit of goods.
+      </li>
+      <li>
+        To pay customs duties, taxes, fees, charges, and any other amounts due on behalf of the Principal, and to 
+        receive refunds, drawbacks, or rebates of duties and taxes.
+      </li>
+      <li>
+        To receive, store, transport, deliver, and take possession of goods, cargo, shipments, and related documents 
+        on behalf of the Principal.
+      </li>
+      <li>
+        To sign bills of lading, airway bills, delivery orders, warehouse receipts, and any other transportation or 
+        storage documents.
+      </li>
+      <li>
+        To engage customs brokers, freight forwarders, carriers, warehouse operators, and other service providers 
+        necessary for the handling of the Principal's shipments.
+      </li>
+      <li>
+        To challenge, appeal, or contest any customs assessments, rulings, penalties, or decisions, and to represent 
+        the Principal in any administrative or legal proceedings related thereto.
+      </li>
+      <li>
+        To request and obtain classification rulings, valuations, certifications of origin, and other determinations 
+        from customs authorities.
+      </li>
+      <li>
+        To execute post-entry corrections, amendments, or protests as may be necessary or advisable.
+      </li>
+      <li>
+        To perform any and all acts, deeds, and things necessary or incidental to the effective exercise of the 
+        powers herein granted, with the same force and effect as if the Principal had personally performed such acts.
+      </li>
+    </ul>
+  </div>
+
+  <div class="terms-section">
+    <h3>Terms and Conditions</h3>
+    <div class="field-line">
+      <span class="field-label">Effective Date:</span>
+      <%= effective_date %>
+    </div>
+    <div class="field-line">
+      <span class="field-label">Expiration Date:</span>
+      <%= expiration_date %>
+    </div>
+    <div class="field-line">
+      <span class="field-label">Scope of Authority:</span>
+      <%= scope_description %>
+    </div>
+    <div class="field-line">
+      <span class="field-label">Territorial Jurisdiction:</span>
+      <%= jurisdiction %>
+    </div>
+    <p style="margin-top: 15px; text-align: justify;">
+      This Power of Attorney shall remain in full force and effect until <%= expiration_date %>, unless earlier 
+      revoked in writing by the Principal. Any revocation must be provided in writing to the Attorney-in-Fact and 
+      to all relevant customs authorities.
+    </p>
+  </div>
+
+  <div class="closing-statement">
+    The Principal hereby ratifies and confirms all acts lawfully performed by the Attorney-in-Fact pursuant to this 
+    Power of Attorney. The Principal agrees to indemnify and hold harmless the Attorney-in-Fact from any liability, 
+    loss, damage, or expense arising from the exercise of the powers granted herein, except for acts of willful 
+    misconduct or gross negligence.
+    <br><br>
+    This Power of Attorney is executed in accordance with the laws of <%= jurisdiction %> and shall be construed 
+    and enforced in accordance with such laws.
+  </div>
+
+  <div class="signature-section">
+    <div class="signature-block">
+      <div class="signature-title">Principal (Grantor)</div>
+      <div class="signature-line">
+        Signature
+      </div>
+      <div class="signature-name"><%= principal_name %></div>
+      <div>Date: <%= execution_date %></div>
+    </div>
+    <div class="signature-block">
+      <div class="signature-title">Attorney-in-Fact (Agent)</div>
+      <div class="signature-line">
+        Signature (Acceptance)
+      </div>
+      <div class="signature-name"><%= agent_name %></div>
+      <div>Date: <%= execution_date %></div>
+    </div>
+  </div>
+
+  <div class="witness-section">
+    <h3>Witnesses</h3>
+    <p style="text-align: center; margin-bottom: 30px;">
+      Signed in the presence of the following witnesses:
+    </p>
+    <div class="witnesses">
+      <div class="witness-block">
+        <div style="margin-bottom: 60px;">Witness 1</div>
+        <div class="signature-line">Signature</div>
+        <div style="margin-top: 10px;">Name: _______________________</div>
+        <div>Address: _______________________</div>
+        <div>Date: <%= execution_date %></div>
+      </div>
+      <div class="witness-block">
+        <div style="margin-bottom: 60px;">Witness 2</div>
+        <div class="signature-line">Signature</div>
+        <div style="margin-top: 10px;">Name: _______________________</div>
+        <div>Address: _______________________</div>
+        <div>Date: <%= execution_date %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notary-section">
+    <h3>Notarial Acknowledgment</h3>
+    <div class="notary-field">
+      <strong>State/Province:</strong> _______________________________________
+    </div>
+    <div class="notary-field">
+      <strong>County/Region:</strong> _______________________________________
+    </div>
+    <p style="text-align: justify; margin: 20px 0;">
+      On this _______ day of ______________, _______, before me personally appeared <%= principal_name %>, 
+      known to me (or satisfactorily proven) to be the person whose name is subscribed to the within instrument, 
+      and acknowledged that he/she/they executed the same for the purposes therein contained.
+    </p>
+    <p style="margin-top: 40px; text-align: center;">
+      <strong>IN WITNESS WHEREOF,</strong> I have hereunto set my hand and affixed my official seal.
+    </p>
+    <div style="margin-top: 60px; text-align: center;">
+      <div class="signature-line" style="max-width: 400px; margin: 0 auto;">
+        Notary Public Signature and Seal
+      </div>
+      <div style="margin-top: 10px;">Commission Expiration: _______________________</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Document Generated: <%= Time.current.strftime("%B %d, %Y at %H:%M %Z") %></p>
+    <p>This is a legal document. Please consult with legal counsel before execution.</p>
+    <p>Keep multiple certified copies for customs and shipping authorities.</p>
+  </div>
+</body>
+</html>
