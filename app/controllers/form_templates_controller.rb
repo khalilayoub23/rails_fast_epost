@@ -31,11 +31,21 @@ class FormTemplatesController < ApplicationController
       respond_to do |format|
         format.html { redirect_to @form_template, notice: "Form template created." }
         format.json { render json: @form_template, status: :created }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.prepend("form_templates_list", partial: "form_templates/form_template_card", locals: { form_template: @form_template }),
+            turbo_stream.update("form_template_form", ""),
+            turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("form_templates.created") })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: { errors: @form_template.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("form_template_form", partial: "form_templates/form", locals: { form_template: @form_template })
+        end
       end
     end
   end
@@ -47,11 +57,20 @@ class FormTemplatesController < ApplicationController
       respond_to do |format|
         format.html { redirect_to @form_template, notice: "Form template updated." }
         format.json { render json: @form_template }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(dom_id(@form_template), partial: "form_templates/form_template_card", locals: { form_template: @form_template }),
+            turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("form_templates.updated") })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: { errors: @form_template.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(dom_id(@form_template), partial: "form_templates/form", locals: { form_template: @form_template })
+        end
       end
     end
   end
@@ -61,6 +80,12 @@ class FormTemplatesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to form_templates_path, notice: "Form template deleted." }
       format.json { head :no_content }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove(dom_id(@form_template)),
+          turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("form_templates.deleted") })
+        ]
+      end
     end
   end
 

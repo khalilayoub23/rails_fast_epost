@@ -1,0 +1,42 @@
+<%= turbo_frame_tag customer do %>
+  <tr class="border-b border-stroke hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4">
+    <td class="px-4 py-4">
+      <%= link_to customer_path(customer), class: "text-sm font-medium text-primary hover:underline" do %>
+        <%= customer.name %>
+      <% end %>
+    </td>
+    <td class="px-4 py-4 text-sm text-dark dark:text-white">
+      <%= customer.email %>
+    </td>
+    <td class="px-4 py-4 text-sm text-body dark:text-bodydark capitalize">
+      <%= customer.category %>
+    </td>
+    <td class="px-4 py-4 text-sm text-body dark:text-bodydark">
+      <%= customer.tasks.size %>
+    </td>
+    <td class="px-4 py-4 text-right">
+      <div class="flex items-center justify-end gap-3">
+        <%= link_to customer_path(customer),
+            class: "text-primary hover:text-primary/80",
+            title: t('common.view') do %>
+          <span class="material-icons text-xl">visibility</span>
+        <% end %>
+        
+        <%= link_to edit_customer_path(customer),
+            data: { turbo_frame: dom_id(customer) },
+            class: "text-warning hover:text-warning/80",
+            title: t('common.edit') do %>
+          <span class="material-icons text-xl">edit</span>
+        <% end %>
+        
+        <%= button_to customer_path(customer),
+            method: :delete,
+            form: { data: { turbo_confirm: t('common.confirm_delete') } },
+            class: "text-danger hover:text-danger/80",
+            title: t('common.delete') do %>
+          <span class="material-icons text-xl">delete</span>
+        <% end %>
+      </div>
+    </td>
+  </tr>
+<% end %>

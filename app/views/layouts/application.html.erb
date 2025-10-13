@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>" dir="<%= text_direction %>">
   <head>
     <title><%= content_for(:title) || "Fast Epost 3" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1C2434">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    
+    <%# Turbo Native bridge %>
+    <meta name="turbo-visit-control" content="reload">
 
     <%= yield :head %>
 
@@ -17,8 +22,8 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-  <%# Load Tailwind first, then fonts, then our application overrides and icons (order matters) %>
-  <%= stylesheet_link_tag "tailwind", "fonts", "application", "material-icons", "data-turbo-track": "reload" %>
+  <%# Load Tailwind first, then fonts, RTL support, then our application overrides and icons (order matters) %>
+  <%= stylesheet_link_tag "tailwind", "fonts", "rtl", "application", "material-icons", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <meta name="color-scheme" content="light dark">
     <script>
@@ -37,14 +42,25 @@
 
   <body class="bg-whiten font-satoshi text-base text-body dark:bg-boxdark-2 dark:text-bodydark">
     <div class="flex h-screen overflow-hidden" data-controller="sidebar">
-      <%= render "shared/sidebar" %>
-      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-whiten dark:bg-boxdark-2">
-        <%= render "shared/topbar" %>
+      <!-- Hide sidebar on mobile/Turbo Native -->
+      <% unless turbo_native_app? %>
+        <%= render "shared/sidebar" %>
+      <% end %>
+      
+      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-whiten dark:bg-boxdark-2 <%= 'pb-20' if turbo_native_app? %>">
+        <!-- Hide topbar on Turbo Native (native apps have their own nav) -->
+        <% unless turbo_native_app? %>
+          <%= render "shared/topbar" %>
+        <% end %>
+        
         <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-whiten dark:bg-boxdark-2">
-          <%= render "shared/flash" %>
+          <%= render "shared/flash_messages" %>
           <%= yield %>
         </main>
       </div>
     </div>
+    
+    <!-- Mobile Bottom Navigation (Turbo Native only) -->
+    <%= render "shared/mobile_bottom_nav" %>
   </body>
 </html>

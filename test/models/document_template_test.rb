@@ -69,7 +69,7 @@ class DocumentTemplateTest < ActiveSupport::TestCase
   test "active_templates scope should return only active templates" do
     active_template = DocumentTemplate.create!(name: "Active", template_type: :prawn_template, active: true)
     inactive_template = DocumentTemplate.create!(name: "Inactive", template_type: :prawn_template, active: false)
-    
+
     active_templates = DocumentTemplate.active_templates
     assert_includes active_templates, active_template
     assert_not_includes active_templates, inactive_template
@@ -78,7 +78,7 @@ class DocumentTemplateTest < ActiveSupport::TestCase
   test "by_category scope should filter by category" do
     legal_template = DocumentTemplate.create!(name: "Legal", template_type: :prawn_template, category: "Legal Agreement")
     customs_template = DocumentTemplate.create!(name: "Customs", template_type: :prawn_template, category: "Customs Declaration")
-    
+
     legal_templates = DocumentTemplate.by_category("Legal Agreement")
     assert_includes legal_templates, legal_template
     assert_not_includes legal_templates, customs_template
@@ -87,7 +87,7 @@ class DocumentTemplateTest < ActiveSupport::TestCase
   test "by_type scope should filter by template type" do
     prawn_template = DocumentTemplate.create!(name: "Prawn", template_type: :prawn_template)
     fillable_template = DocumentTemplate.create!(name: "Fillable", template_type: :fillable_form)
-    
+
     prawn_templates = DocumentTemplate.by_type(:prawn_template)
     assert_includes prawn_templates, prawn_template
     assert_not_includes prawn_templates, fillable_template
@@ -96,10 +96,10 @@ class DocumentTemplateTest < ActiveSupport::TestCase
   test "recent scope should order by created_at descending" do
     # Clear any existing templates first
     DocumentTemplate.delete_all
-    
+
     old_template = DocumentTemplate.create!(name: "Old", template_type: :prawn_template, created_at: 2.days.ago)
     new_template = DocumentTemplate.create!(name: "New", template_type: :prawn_template, created_at: 1.day.ago)
-    
+
     recent_templates = DocumentTemplate.recent
     assert_equal new_template, recent_templates.first
   end
@@ -108,7 +108,7 @@ class DocumentTemplateTest < ActiveSupport::TestCase
   test "extract_variables_from_content should find variables" do
     @template.content = "Hello {{name}}, your order {{order_id}} is ready!"
     variables = @template.extract_variables_from_content
-    
+
     assert_equal 2, variables.length
     assert_includes variables, "name"
     assert_includes variables, "order_id"
@@ -123,7 +123,7 @@ class DocumentTemplateTest < ActiveSupport::TestCase
     @template.content = "{{name}} and {{name}} again"
     variables = @template.extract_variables_from_content
     assert_equal 1, variables.length
-    assert_equal ["name"], variables
+    assert_equal [ "name" ], variables
   end
 
   test "extract_variables_from_content should handle nil content" do
@@ -136,7 +136,7 @@ class DocumentTemplateTest < ActiveSupport::TestCase
     @template.content = "Hello {{customer_name}}!"
     @template.save!
     @template.update_variables_schema!
-    
+
     assert @template.variables.key?("customer_name")
     assert_equal "string", @template.variables["customer_name"]["type"]
     assert_equal "Customer Name", @template.variables["customer_name"]["label"]
@@ -148,7 +148,7 @@ class DocumentTemplateTest < ActiveSupport::TestCase
     @template.variables = { "name" => { "type" => "custom", "label" => "Custom Label" } }
     @template.save!
     @template.update_variables_schema!
-    
+
     assert_equal "custom", @template.variables["name"]["type"]
     assert_equal "Custom Label", @template.variables["name"]["label"]
   end
@@ -158,7 +158,7 @@ class DocumentTemplateTest < ActiveSupport::TestCase
     @template.variables = { "name" => { "type" => "string", "label" => "Name" } }
     @template.save!
     @template.update_variables_schema!
-    
+
     assert @template.variables.key?("name")
     assert @template.variables.key?("email")
     assert_equal 2, @template.variables.keys.length

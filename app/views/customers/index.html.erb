@@ -23,48 +23,57 @@
     <%= link_to "New Customer", new_customer_path, class: "inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90" %>
   </div>
 
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+  <%= turbo_stream_from "customers" %>
+
+  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
     <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-title-md font-semibold text-dark">All Customers</h2>
+      <h2 class="text-title-md font-semibold text-dark dark:text-white"><%= t('customers.title') %></h2>
+      <%= link_to t('customers.new'), new_customer_path,
+          class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90" do %>
+        <span class="material-icons <%= margin_end_class('2') %> text-xl">add</span>
+        <%= t('customers.new') %>
+      <% end %>
     </div>
 
-    <% if @customers.any? %>
+    <!-- Search form with autocomplete -->
+    <div class="mb-5">
+      <%= form_with url: search_customers_path,
+          method: :get,
+          data: { turbo_frame: "customers_table", turbo_action: "advance" },
+          class: "flex gap-3" do |f| %>
+        <%= f.text_field :q,
+            value: params[:q],
+            placeholder: t('common.search'),
+            class: "flex-1 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
+        <%= f.submit t('common.search'),
+            class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-6 text-center font-medium text-white hover:bg-opacity-90" %>
+      <% end %>
+    </div>
+
+    <%= turbo_frame_tag "customers_table" do %>
       <div class="max-w-full overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
-            <tr class="bg-gray-2 text-left">
-              <th class="min-w-[160px] px-4 py-4 font-medium text-dark">Name</th>
-              <th class="min-w-[200px] px-4 py-4 font-medium text-dark">Email</th>
-              <th class="min-w-[120px] px-4 py-4 font-medium text-dark">Category</th>
-              <th class="min-w-[80px] px-4 py-4 font-medium text-dark">Tasks</th>
-              <th class="px-4 py-4 text-right font-medium text-dark">Actions</th>
+            <tr class="bg-gray-2 text-left dark:bg-meta-4">
+              <th class="min-w-[160px] px-4 py-4 font-medium text-dark dark:text-white">Name</th>
+              <th class="min-w-[200px] px-4 py-4 font-medium text-dark dark:text-white">Email</th>
+              <th class="min-w-[120px] px-4 py-4 font-medium text-dark dark:text-white">Category</th>
+              <th class="min-w-[80px] px-4 py-4 font-medium text-dark dark:text-white">Tasks</th>
+              <th class="px-4 py-4 text-right font-medium text-dark dark:text-white">Actions</th>
             </tr>
           </thead>
-          <tbody id="customers">
-            <% @customers.each do |customer| %>
-              <tr id="<%= dom_id(customer) %>" class="border-b border-stroke hover:bg-gray-2">
-                <td class="px-4 py-4">
-                  <%= link_to customer_path(customer), class: "text-sm font-medium text-primary hover:underline" do %>
-                    <%= customer.name %>
-                  <% end %>
-                </td>
-                <td class="px-4 py-4 text-sm text-dark"><%= customer.email %></td>
-                <td class="px-4 py-4 text-sm text-body capitalize"><%= customer.category %></td>
-                <td class="px-4 py-4 text-sm text-body"><%= customer.tasks.size %></td>
-                <td class="px-4 py-4 text-right text-sm font-medium">
-                  <%= link_to "View", customer_path(customer), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
-                </td>
-              </tr>
-            <% end %>
+                    <tbody id="customers_list">
+            <%= render partial: "customers/customer_card", collection: @customers, as: :customer %>
           </tbody>
         </table>
-      </div>
-    <% else %>
-      <div class="px-6 py-8 text-center">
-        <span class="material-icons text-body text-4xl mb-2">people</span>
-        <h3 class="text-sm font-medium text-dark mb-1">No customers</h3>
-        <p class="text-sm text-body">Get started by adding a new customer.</p>
-        <%= link_to "New Customer", new_customer_path, class: "mt-4 inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90" %>
+        
+        <% if @customers.empty? %>
+          <div class="px-6 py-10 text-center">
+            <span class="material-icons text-bodydark1 dark:text-bodydark text-5xl mb-3">people</span>
+            <h3 class="text-sm font-medium text-dark dark:text-white mb-1"><%= t('customers.no_customers') %></h3>
+            <p class="text-sm text-body dark:text-bodydark">Get started by creating a new customer.</p>
+          </div>
+        <% end %>
       </div>
     <% end %>
   </div>

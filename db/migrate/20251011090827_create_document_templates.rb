@@ -11,7 +11,7 @@ class CreateDocumentTemplates < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
+
     add_index :document_templates, :name
     add_index :document_templates, :template_type
     add_index :document_templates, :category

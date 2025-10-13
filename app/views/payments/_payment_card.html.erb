@@ -1,0 +1,47 @@
+<%= turbo_frame_tag payment do %>
+  <tr class="border-b border-stroke dark:border-dark-3 hover:bg-gray-1 dark:hover:bg-dark-2 transition-colors">
+    <td class="px-4 py-3">
+      <span class="font-medium text-dark dark:text-white">
+        <%= payment.id %>
+      </span>
+    </td>
+    <td class="px-4 py-3">
+      <span class="<%= payment.status == 'succeeded' ? 'text-green-500' : payment.status == 'pending' ? 'text-yellow-500' : 'text-red-500' %>">
+        <%= payment.status&.titleize %>
+      </span>
+    </td>
+    <td class="px-4 py-3">
+      <span class="text-dark dark:text-white">
+        <%= number_to_currency(payment.amount_cents / 100.0) %>
+      </span>
+    </td>
+    <td class="px-4 py-3">
+      <span class="text-dark dark:text-white">
+        <%= payment.provider&.titleize %>
+      </span>
+    </td>
+    <td class="px-4 py-3 text-<%= margin_end_class %>">
+      <div class="flex items-center gap-2 justify-end">
+        <%= link_to payment_path(payment), 
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            title: t("common.view") do %>
+          <span class="material-icons text-xl">visibility</span>
+        <% end %>
+        
+        <%= link_to edit_payment_path(payment),
+            data: { turbo_frame: dom_id(payment) },
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            title: t("common.edit") do %>
+          <span class="material-icons text-xl">edit</span>
+        <% end %>
+        
+        <%= button_to payment_path(payment),
+            method: :delete,
+            data: { turbo_confirm: t("common.confirm_delete") },
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-red-500 dark:hover:text-red-500 transition-colors" do %>
+          <span class="material-icons text-xl">delete</span>
+        <% end %>
+      </div>
+    </td>
+  </tr>
+<% end %>

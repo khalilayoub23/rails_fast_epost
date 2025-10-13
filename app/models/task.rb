@@ -85,7 +85,7 @@ class Task < ApplicationRecord
   after_create_commit :broadcast_created
   after_update_commit :broadcast_updated
   after_destroy_commit :broadcast_destroyed
-  
+
   # Notification callbacks
   after_create_commit :send_task_assigned_notification
   before_update :track_status_change
@@ -109,7 +109,7 @@ class Task < ApplicationRecord
   # State machine callbacks with notifications
   def notify_customer_shipped
     Rails.logger.info("[Task #{id}] Shipped - barcode: #{barcode}")
-    NotificationService.notify_status_changed(self, @old_status || 'pending')
+    NotificationService.notify_status_changed(self, @old_status || "pending")
   rescue => e
     Rails.logger.error("[Task #{id}] Failed to send shipped notification: #{e.message}")
   end
@@ -130,14 +130,14 @@ class Task < ApplicationRecord
 
   def notify_customer_returned
     Rails.logger.info("[Task #{id}] Returned to sender - barcode: #{barcode}")
-    NotificationService.notify_status_changed(self, @old_status || 'failed')
+    NotificationService.notify_status_changed(self, @old_status || "failed")
   rescue => e
     Rails.logger.error("[Task #{id}] Failed to send return notification: #{e.message}")
   end
 
   def notify_customer_retry
     Rails.logger.info("[Task #{id}] Retry delivery scheduled - barcode: #{barcode}")
-    NotificationService.notify_status_changed(self, @old_status || 'failed')
+    NotificationService.notify_status_changed(self, @old_status || "failed")
   rescue => e
     Rails.logger.error("[Task #{id}] Failed to send retry notification: #{e.message}")
   end

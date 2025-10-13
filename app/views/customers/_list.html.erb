@@ -1,0 +1,16 @@
+<div id="customers_list">
+  <% customers.each do |customer| %>
+    <%= render "customers/customer_card", customer: customer %>
+  <% end %>
+  
+  <% if customers.empty? %>
+    <tr>
+      <td colspan="5" class="px-4 py-10 text-center">
+        <div class="flex flex-col items-center justify-center">
+          <span class="material-icons text-5xl text-bodydark1 dark:text-bodydark mb-3">people</span>
+          <p class="text-body dark:text-bodydark"><%= t('customers.no_customers') %></p>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</div>

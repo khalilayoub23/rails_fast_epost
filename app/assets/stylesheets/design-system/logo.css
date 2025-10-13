@@ -1,0 +1,398 @@
+/* Logo Component Styles */
+
+/* ========================================
+   🎨 LOGO COMPONENT
+   ======================================== */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.logo:hover {
+  opacity: 0.8;
+}
+
+/* Logo Icon */
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  padding: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-icon img,
+.logo-icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+/* Logo Text */
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  line-height: 1;
+}
+
+.logo-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.logo-subtitle {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Logo Sizes */
+.logo-sm .logo-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-sm .logo-title {
+  font-size: var(--text-base);
+}
+
+.logo-sm .logo-subtitle {
+  font-size: 0.625rem; /* 10px */
+}
+
+.logo-lg .logo-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.logo-lg .logo-title {
+  font-size: var(--text-2xl);
+}
+
+.logo-lg .logo-subtitle {
+  font-size: var(--text-sm);
+}
+
+.logo-xl .logo-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.logo-xl .logo-title {
+  font-size: var(--text-3xl);
+}
+
+.logo-xl .logo-subtitle {
+  font-size: var(--text-base);
+}
+
+/* Icon Only (no text) */
+.logo-icon-only {
+  gap: 0;
+}
+
+.logo-icon-only .logo-text {
+  display: none;
+}
+
+/* ========================================
+   🎨 BRAND BAR (Header with Logo)
+   ======================================== */
+
+.brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.brand-bar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-bar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.brand-bar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Mobile Brand Bar */
+@media (max-width: 768px) {
+  .brand-bar {
+    padding: var(--space-3);
+    padding-top: calc(var(--space-3) + var(--safe-area-inset-top));
+  }
+  
+  .brand-bar-center {
+    justify-content: flex-start;
+  }
+}
+
+/* ========================================
+   🎨 SPLASH SCREEN / LOADING SCREEN
+   ======================================== */
+
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  z-index: 9999;
+  transition: opacity var(--transition-base);
+}
+
+.splash-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-logo {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.95);
+  }
+}
+
+.splash-loading {
+  margin-top: var(--space-8);
+}
+
+/* ========================================
+   🎨 LOGIN SCREEN BRANDING
+   ======================================== */
+
+.login-brand {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+.login-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.login-logo-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-logo-icon img,
+.login-logo-icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.login-title {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.login-subtitle {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+
+/* ========================================
+   🎨 POWERED BY FOOTER
+   ======================================== */
+
+.powered-by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.powered-by-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.6;
+}
+
+/* ========================================
+   🎨 SIDEBAR LOGO
+   ======================================== */
+
+.sidebar-logo {
+  padding: var(--space-6) var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.sidebar-logo-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.sidebar-logo-link:hover {
+  background: var(--bg-secondary);
+}
+
+/* Collapsed sidebar - show icon only */
+.sidebar-collapsed .sidebar-logo-link .logo-text {
+  display: none;
+}
+
+.sidebar-collapsed .sidebar-logo-link {
+  justify-content: center;
+}
+
+/* ========================================
+   🎨 APP ICON BADGES (iOS/Android style)
+   ======================================== */
+
+.app-icon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 14px; /* iOS style */
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+}
+
+.app-icon img,
+.app-icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Badge (notification count) */
+.app-icon-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--color-error);
+  color: white;
+  font-size: 11px;
+  font-weight: var(--font-bold);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-primary);
+}
+
+/* ========================================
+   🎨 WATERMARK
+   ======================================== */
+
+.watermark {
+  position: fixed;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.watermark img,
+.watermark svg {
+  width: 40px;
+  height: 40px;
+  filter: grayscale(100%);
+}
+
+/* ========================================
+   🎨 FAVICON GENERATOR HELPER
+   ======================================== */
+
+/* For generating favicons in different sizes */
+.favicon-32 { width: 32px; height: 32px; }
+.favicon-64 { width: 64px; height: 64px; }
+.favicon-128 { width: 128px; height: 128px; }
+.favicon-256 { width: 256px; height: 256px; }
+.favicon-512 { width: 512px; height: 512px; }
+
+/* ========================================
+   🎨 DARK MODE LOGO VARIANTS
+   ======================================== */
+
+/* Automatically invert logo in dark mode if needed */
+[data-theme="dark"] .logo-auto-invert img,
+[data-theme="dark"] .logo-auto-invert svg {
+  filter: invert(1);
+}
+
+/* Or use separate logos for dark mode */
+.logo-light {
+  display: block;
+}
+
+.logo-dark {
+  display: none;
+}
+
+[data-theme="dark"] .logo-light {
+  display: none;
+}
+
+[data-theme="dark"] .logo-dark {
+  display: block;
+}

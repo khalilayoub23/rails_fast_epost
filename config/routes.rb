@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   end
 
   resources :customers do
+    collection do
+      get :search
+    end
     resources :forms
     resources :tasks, shallow: true do
       resources :cost_calcs
@@ -97,7 +100,7 @@ Rails.application.routes.draw do
         post :generate
       end
     end
-    
+
     root to: "dashboard#index", as: :root
     get "dashboard", to: "dashboard#index", as: :dashboard
     post "dashboard_layout", to: "dashboard_layouts#update", as: :dashboard_layout

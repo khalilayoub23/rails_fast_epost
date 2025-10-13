@@ -1,8 +1,17 @@
 /*
- * TailAdmin Dashboard Styles
+ * Rails Fast Epost - Application Styles
  */
 
 /* Material Icons rules are loaded from material-icons.css */
+
+/* ========================================
+   🎨 DESIGN SYSTEM IMPORTS
+   Cross-platform design system for web, iOS, and Android
+   ======================================== */
+@import "design-system/variables.css";
+@import "design-system/components.css";
+@import "design-system/mobile.css";
+@import "design-system/logo.css";
 
 /* TailAdmin Color Palette */
 :root {

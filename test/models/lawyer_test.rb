@@ -87,12 +87,12 @@ class LawyerTest < ActiveSupport::TestCase
     # Create a task associated with the lawyer
     task = tasks(:task_one)
     task.update(lawyer: @lawyer)
-    
+
     assert_equal @lawyer, task.lawyer
-    
+
     # Destroy the lawyer
     @lawyer.destroy
-    
+
     # Task should still exist but lawyer_id should be nil
     task.reload
     assert_nil task.lawyer_id
@@ -147,21 +147,21 @@ class LawyerTest < ActiveSupport::TestCase
   test "activate! should set active to true" do
     inactive_lawyer = lawyers(:lawyer_five)
     assert_not inactive_lawyer.active?
-    
+
     inactive_lawyer.activate!
     assert inactive_lawyer.active?
   end
 
   test "deactivate! should set active to false" do
     assert @lawyer.active?
-    
+
     @lawyer.deactivate!
     assert_not @lawyer.active?
   end
 
   test "add_certification should add certification to certifications hash" do
     @lawyer.add_certification("New Certification", "2024", "Test Authority")
-    
+
     @lawyer.reload
     assert @lawyer.certifications.key?("New Certification")
     assert_equal "2024", @lawyer.certifications["New Certification"]["date"]
@@ -208,7 +208,7 @@ class LawyerTest < ActiveSupport::TestCase
       license_number: "NEW-001",
       specialization: :customs
     )
-    
+
     assert_equal({}, lawyer.certifications)
   end
 

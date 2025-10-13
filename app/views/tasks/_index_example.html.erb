@@ -1,0 +1,48 @@
+<!-- Example Turbo Frame: Tasks List -->
+<div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+  <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
+    <h3 class="font-medium text-black dark:text-white">
+      <%= t('tasks.title') %>
+    </h3>
+  </div>
+
+  <div class="p-7">
+    <!-- Search form with Turbo Frame -->
+    <%= form_with url: search_tasks_path, method: :get, data: { turbo_frame: "tasks_list" } do |f| %>
+      <div class="mb-5.5">
+        <%= f.text_field :q, 
+            placeholder: t('common.search'),
+            class: "w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary",
+            data: { 
+              controller: "autocomplete",
+              autocomplete_url_value: search_tasks_path,
+              action: "input->autocomplete#search"
+            } %>
+      </div>
+    <% end %>
+
+    <!-- Turbo Frame for tasks list -->
+    <%= turbo_frame_tag "tasks_list" do %>
+      <%= render "tasks/list", tasks: @tasks %>
+    <% end %>
+
+    <!-- Button to load more (pagination) -->
+    <% if @tasks.next_page %>
+      <%= link_to t('common.load_more'), 
+          tasks_path(page: @tasks.next_page),
+          data: { turbo_frame: "tasks_list", turbo_action: "advance" },
+          class: "inline-flex items-center justify-center rounded-md bg-primary py-3 px-6 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" %>
+    <% end %>
+  </div>
+</div>
+
+<!-- New Task Button with Modal -->
+<%= link_to new_task_path,
+    data: { turbo_frame: "modal" },
+    class: "inline-flex items-center justify-center rounded-md bg-primary py-3 px-6 text-center font-medium text-white hover:bg-opacity-90" do %>
+  <span class="material-icons <%= margin_end_class('2') %>">add</span>
+  <%= t('tasks.new') %>
+<% end %>
+
+<!-- Modal container -->
+<%= turbo_frame_tag "modal" %>

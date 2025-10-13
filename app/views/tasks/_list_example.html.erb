@@ -1,0 +1,15 @@
+<!-- Example: Task List Partial -->
+<div id="tasks_list" class="space-y-3">
+  <% tasks.each do |task| %>
+    <%= turbo_frame_tag task do %>
+      <%= render "tasks/task", task: task %>
+    <% end %>
+  <% end %>
+
+  <% if tasks.empty? %>
+    <div class="text-center py-10 text-bodydark1">
+      <span class="material-icons text-5xl mb-3">inbox</span>
+      <p><%= t('tasks.no_tasks') %></p>
+    </div>
+  <% end %>
+</div>

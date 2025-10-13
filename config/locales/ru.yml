@@ -1,0 +1,122 @@
+# Russian translations - Русский
+ru:
+  language_name: "Русский"
+  direction: "ltr"
+
+  # Navigation - Навигация
+  nav:
+    dashboard: "Панель управления"
+    customers: "Клиенты"
+    tasks: "Задачи"
+    payments: "Платежи"
+    carriers: "Перевозчики"
+    profile: "Профиль"
+    settings: "Настройки"
+    admin: "Администрирование"
+    logout: "Выход"
+
+  # Common - Общее
+  common:
+    save: "Сохранить"
+    cancel: "Отмена"
+    delete: "Удалить"
+    edit: "Редактировать"
+    create: "Создать"
+    update: "Обновить"
+    search: "Поиск"
+    filter: "Фильтр"
+    export: "Экспорт"
+    import: "Импорт"
+    back: "Назад"
+    next: "Далее"
+    previous: "Предыдущий"
+    submit: "Отправить"
+    close: "Закрыть"
+    yes: "Да"
+    no: "Нет"
+    confirm: "Подтвердить"
+    loading: "Загрузка..."
+
+  # Messages - Сообщения
+  messages:
+    created: "%{model} успешно создан."
+    updated: "%{model} успешно обновлён."
+    deleted: "%{model} успешно удалён."
+    error: "Произошла ошибка. Пожалуйста, попробуйте ещё раз."
+    unauthorized: "У вас нет прав для выполнения этого действия."
+    not_found: "%{model} не найден."
+    
+  # Tasks - Задачи
+  tasks:
+    title: "Задачи"
+    new: "Новая задача"
+    no_tasks: "Задачи не найдены"
+    title_placeholder: "Введите название задачи"
+    description_placeholder: "Введите описание задачи"
+    search_user: "Поиск пользователя..."
+    created_successfully: "Задача успешно создана!"
+    updated_successfully: "Задача успешно обновлена!"
+    deleted_successfully: "Задача успешно удалена!"
+    status_updated: "Статус задачи успешно обновлён!"
+    
+  # Customers - Клиенты
+  customers:
+    title: "Клиенты"
+    new: "Новый клиент"
+    no_customers: "Клиенты не найдены"
+    created_successfully: "Клиент успешно создан!"
+    updated_successfully: "Клиент успешно обновлён!"
+    deleted_successfully: "Клиент успешно удалён!"
+    
+  # Payments - Платежи
+  payments:
+    title: "Платежи"
+    new: "Новый платёж"
+    no_payments: "Платежи не найдены"
+    created: "Платёж успешно создан!"
+    updated: "Платёж успешно обновлён!"
+    deleted: "Платёж успешно удалён!"
+    
+  # Documents - Документы
+  documents:
+    title: "Документы"
+    new: "Новый документ"
+    no_documents: "Документы не найдены"
+    created: "Документ успешно создан!"
+    updated: "Документ успешно обновлён!"
+    deleted: "Документ успешно удалён!"
+    
+  # Forms - Формы
+  forms:
+    title: "Формы"
+    new: "Новая форма"
+    no_forms: "Формы не найдены"
+    no_template: "Без шаблона"
+    download_pdf: "Скачать PDF"
+    created: "Форма успешно создана!"
+    updated: "Форма успешно обновлена!"
+    deleted: "Форма успешно удалена!"
+    
+  # Phones - Телефоны
+  phones:
+    title: "Телефоны"
+    new: "Новый телефон"
+    no_phones: "Телефоны не найдены"
+    primary: "Основной"
+    secondary: "Дополнительный"
+    call: "Позвонить"
+    created: "Телефон успешно добавлен!"
+    updated: "Телефон успешно обновлён!"
+    deleted: "Телефон успешно удалён!"
+    
+  # Form Templates - Шаблоны форм
+  form_templates:
+    title: "Шаблоны форм"
+    new: "Новый шаблон"
+    no_templates: "Шаблоны не найдены"
+    global: "Глобальный"
+    fields: "полей"
+    preview_pdf: "Предпросмотр PDF"
+    created: "Шаблон успешно создан!"
+    updated: "Шаблон успешно обновлён!"
+    deleted: "Шаблон успешно удалён!"

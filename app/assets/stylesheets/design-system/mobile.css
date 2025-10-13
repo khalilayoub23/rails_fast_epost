@@ -1,0 +1,623 @@
+/* Mobile-Specific Styles & Patterns */
+/* Optimized for iOS and Android */
+
+/* ========================================
+   📱 TOUCH INTERACTIONS
+   ======================================== */
+
+/* Touch-friendly tap targets */
+.touch-target {
+  position: relative;
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Increase tap area without changing visual size */
+.touch-target::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Disable text selection for buttons */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Smooth scrolling */
+.smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ========================================
+   🗂️ BOTTOM SHEET
+   ======================================== */
+
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-elevated);
+  border-top-left-radius: var(--radius-2xl);
+  border-top-right-radius: var(--radius-2xl);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  transition: transform var(--transition-base) var(--ease-out);
+  z-index: var(--z-modal);
+  max-height: 90vh;
+  overflow: hidden;
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+  margin: var(--space-3) auto;
+}
+
+.bottom-sheet-header {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.bottom-sheet-body {
+  padding: var(--space-6);
+  overflow-y: auto;
+  max-height: calc(90vh - 100px);
+  -webkit-overflow-scrolling: touch;
+}
+
+.bottom-sheet-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+  z-index: var(--z-modal-backdrop);
+}
+
+.bottom-sheet-backdrop.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ========================================
+   🔄 PULL TO REFRESH
+   ======================================== */
+
+.pull-to-refresh {
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pull-to-refresh-indicator {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: top var(--transition-fast);
+}
+
+.pull-to-refresh.pulling .pull-to-refresh-indicator {
+  top: 10px;
+}
+
+/* ========================================
+   👈 SWIPE ACTIONS
+   ======================================== */
+
+.swipeable {
+  position: relative;
+  overflow: hidden;
+}
+
+.swipeable-content {
+  position: relative;
+  transition: transform var(--transition-fast);
+  background: var(--bg-primary);
+  z-index: 2;
+}
+
+.swipeable-actions {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.swipeable-actions-left {
+  left: 0;
+  padding-right: var(--space-2);
+}
+
+.swipeable-actions-right {
+  right: 0;
+  padding-left: var(--space-2);
+}
+
+.swipeable-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  height: 100%;
+  color: white;
+  font-weight: var(--font-medium);
+  cursor: pointer;
+}
+
+.swipeable-action-delete {
+  background: var(--color-error);
+}
+
+.swipeable-action-archive {
+  background: var(--color-gray-600);
+}
+
+.swipeable-action-edit {
+  background: var(--color-primary-500);
+}
+
+/* ========================================
+   🎯 FAB (Floating Action Button)
+   ======================================== */
+
+.fab {
+  position: fixed;
+  bottom: calc(var(--space-6) + var(--safe-area-inset-bottom));
+  right: var(--space-6);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-500);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  cursor: pointer;
+  z-index: var(--z-fixed);
+  transition: all var(--transition-fast);
+  border: none;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab-icon {
+  font-size: 24px;
+}
+
+/* Extended FAB with label */
+.fab-extended {
+  width: auto;
+  padding: 0 var(--space-6);
+  gap: var(--space-2);
+  border-radius: var(--radius-full);
+}
+
+.fab-extended .fab-label {
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+}
+
+/* FAB with mobile nav offset */
+@media (max-width: 768px) {
+  .fab {
+    bottom: calc(var(--mobile-nav-height) + var(--space-6) + var(--safe-area-inset-bottom));
+  }
+}
+
+/* ========================================
+   📍 STICKY HEADERS
+   ======================================== */
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-light);
+  z-index: var(--z-sticky);
+  padding: var(--space-4) var(--space-6);
+  padding-top: calc(var(--space-4) + var(--safe-area-inset-top));
+}
+
+/* ========================================
+   📜 INFINITE SCROLL
+   ======================================== */
+
+.infinite-scroll-container {
+  position: relative;
+}
+
+.infinite-scroll-trigger {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.infinite-scroll-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+}
+
+.infinite-scroll-end {
+  text-align: center;
+  padding: var(--space-6);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* ========================================
+   🌗 NATIVE-LIKE MODALS
+   ======================================== */
+
+.modal-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-mobile-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-overlay);
+  animation: fadeIn var(--transition-base);
+}
+
+.modal-mobile-content {
+  position: relative;
+  width: 100%;
+  max-height: 90vh;
+  background: var(--bg-elevated);
+  border-top-left-radius: var(--radius-2xl);
+  border-top-right-radius: var(--radius-2xl);
+  overflow: hidden;
+  animation: slideUp var(--transition-base) var(--ease-out);
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   🎨 SEGMENTED CONTROL (iOS-style)
+   ======================================== */
+
+.segmented-control {
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
+  gap: var(--space-1);
+}
+
+.segmented-control-item {
+  flex: 1;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  background: transparent;
+}
+
+.segmented-control-item.active {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.segmented-control-item:hover:not(.active) {
+  color: var(--text-primary);
+}
+
+/* ========================================
+   📱 SAFE AREA HANDLING
+   ======================================== */
+
+.safe-area-top {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: var(--safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: var(--safe-area-inset-right);
+}
+
+/* Main content with mobile nav */
+.mobile-content {
+  padding-bottom: calc(var(--mobile-nav-height) + var(--safe-area-inset-bottom));
+}
+
+/* ========================================
+   🔍 SEARCH BAR (Native-like)
+   ======================================== */
+
+.search-bar-mobile {
+  position: sticky;
+  top: 0;
+  background: var(--bg-elevated);
+  padding: var(--space-3) var(--space-4);
+  padding-top: calc(var(--space-3) + var(--safe-area-inset-top));
+  border-bottom: 1px solid var(--border-light);
+  z-index: var(--z-sticky);
+}
+
+.search-input-mobile {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  padding-left: var(--space-10);
+  background: var(--bg-secondary);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  position: relative;
+}
+
+.search-icon-mobile {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* ========================================
+   🎯 HAPTIC FEEDBACK (CSS only hints)
+   ======================================== */
+
+@keyframes haptic-light {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.98); }
+}
+
+@keyframes haptic-medium {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(0.95); }
+  75% { transform: scale(1.02); }
+}
+
+.haptic-feedback {
+  animation: haptic-light 100ms;
+}
+
+/* ========================================
+   📊 NATIVE-LIKE LIST (iOS/Android)
+   ======================================== */
+
+.list-mobile {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin: var(--space-4);
+}
+
+.list-mobile-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+  min-height: var(--touch-target-min);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.list-mobile-item:last-child {
+  border-bottom: none;
+}
+
+.list-mobile-item:active {
+  background: var(--bg-secondary);
+}
+
+.list-mobile-item-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-100);
+  color: var(--color-primary-600);
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.list-mobile-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-mobile-item-title {
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.list-mobile-item-subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.list-mobile-item-chevron {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* ========================================
+   🎨 EMPTY STATES
+   ======================================== */
+
+.empty-state-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+}
+
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: 40px;
+  margin-bottom: var(--space-6);
+}
+
+.empty-state-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state-message {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-6);
+  max-width: 300px;
+}
+
+/* ========================================
+   📱 RESPONSIVE UTILITIES
+   ======================================== */
+
+/* Show only on mobile */
+.mobile-only {
+  display: block;
+}
+
+/* Hide on mobile */
+.mobile-hidden {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+  
+  .mobile-hidden {
+    display: block;
+  }
+}
+
+/* ========================================
+   🎯 PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* GPU acceleration for smooth animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Improve scrolling performance */
+.scroll-smooth {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent layout shifts */
+.aspect-ratio-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-ratio-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+/* ========================================
+   📱 GESTURE HINTS
+   ======================================== */
+
+.swipe-hint {
+  position: relative;
+  animation: swipeHint 2s ease-in-out infinite;
+}
+
+@keyframes swipeHint {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-10px);
+  }
+}

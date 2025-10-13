@@ -1,0 +1,42 @@
+<%# Brand Bar Component - Logo + Actions %>
+<%# Usage: <%= render 'shared/brand_bar' %>
+
+<div class="brand-bar mobile-only">
+  <!-- Left side - Menu button or back button -->
+  <div class="brand-bar-left">
+    <% if local_assigns[:back_url] %>
+      <%= link_to back_url, class: "btn btn-ghost btn-icon" do %>
+        <span class="material-icons">arrow_back</span>
+      <% end %>
+    <% else %>
+      <button class="btn btn-ghost btn-icon" data-action="click->sidebar#toggle">
+        <span class="material-icons">menu</span>
+      </button>
+    <% end %>
+  </div>
+  
+  <!-- Center - Logo -->
+  <div class="brand-bar-center">
+    <%= render 'shared/logo', size: 'sm', text: true %>
+  </div>
+  
+  <!-- Right side - User menu or actions -->
+  <div class="brand-bar-right">
+    <% if user_signed_in? %>
+      <%= link_to notifications_path, class: "btn btn-ghost btn-icon" do %>
+        <span class="material-icons">notifications</span>
+        <% if @unread_notifications_count && @unread_notifications_count > 0 %>
+          <span class="badge badge-error" style="position: absolute; top: 8px; right: 8px; min-width: 18px; height: 18px; padding: 0 4px; font-size: 10px;">
+            <%= @unread_notifications_count %>
+          </span>
+        <% end %>
+      <% end %>
+      
+      <%= link_to settings_path, class: "btn btn-ghost btn-icon" do %>
+        <span class="material-icons">settings</span>
+      <% end %>
+    <% else %>
+      <%= link_to 'Sign In', new_user_session_path, class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </div>
+</div>

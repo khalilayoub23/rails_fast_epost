@@ -1,5 +1,8 @@
 class ApplicationController < ActionController::Base
+  include TurboNativeSupport
+
   protect_from_forgery with: :exception
+  before_action :set_locale
   before_action :allow_github_codespaces
   before_action :authenticate_user!
   before_action :set_current_attributes
@@ -36,5 +39,52 @@ class ApplicationController < ActionController::Base
   # Set Current.user for use in models/jobs
   def set_current_attributes
     Current.user = current_user
+  end
+
+  # Set locale based on user preference, params, session, or browser
+  def set_locale
+    locale = extract_locale
+    I18n.locale = locale
+    session[:locale] = locale if locale != session[:locale]
+  end
+
+  def extract_locale
+    # 1. Check URL params (highest priority)
+    parsed_locale = parse_locale(params[:locale])
+    return parsed_locale if parsed_locale
+
+    # 2. Check current user preference
+    if current_user&.preferred_language.present?
+      parsed_locale = parse_locale(current_user.preferred_language)
+      return parsed_locale if parsed_locale
+    end
+
+    # 3. Check session
+    parsed_locale = parse_locale(session[:locale])
+    return parsed_locale if parsed_locale
+
+    # 4. Check browser Accept-Language header
+    parsed_locale = parse_locale_from_header
+    return parsed_locale if parsed_locale
+
+    # 5. Default locale
+    I18n.default_locale
+  end
+
+  def parse_locale(locale_string)
+    return nil if locale_string.blank?
+    locale = locale_string.to_sym
+    I18n.available_locales.include?(locale) ? locale : nil
+  end
+
+  def parse_locale_from_header
+    return nil unless request.env["HTTP_ACCEPT_LANGUAGE"]
+
+    accepted = request.env["HTTP_ACCEPT_LANGUAGE"]
+      .split(",")
+      .map { |l| l.split(";").first.strip.split("-").first.to_sym }
+      .find { |l| I18n.available_locales.include?(l) }
+
+    accepted
   end
 end

@@ -10,7 +10,7 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
       active: true
     )
     @template.update_variables_schema!
-    
+
     @variable_values = {
       "customer_name" => "John Doe",
       "amount" => "$100.00"
@@ -20,7 +20,7 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
   # Generate from Template Tests
   test "generate_from_template should create PDF" do
     pdf_string = PdfGeneratorService.generate_from_template(@template, @variable_values)
-    
+
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
     assert pdf_string.length > 100
@@ -28,7 +28,7 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
 
   test "generate_from_template should handle templates with variables" do
     pdf_string = PdfGeneratorService.generate_from_template(@template, @variable_values)
-    
+
     # Verify PDF is generated successfully
     assert_not_nil pdf_string
     assert pdf_string.length > 0
@@ -42,7 +42,7 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
       content: "# Simple Document\n\nNo variables here.",
       active: true
     )
-    
+
     pdf_string = PdfGeneratorService.generate_from_template(simple_template, {})
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
@@ -55,7 +55,7 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
       content: "# Title\n## Subtitle\n### Section\n\nParagraph text.",
       active: true
     )
-    
+
     pdf_string = PdfGeneratorService.generate_from_template(markdown_template, {})
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
@@ -68,7 +68,7 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
       content: "",
       active: true
     )
-    
+
     pdf_string = PdfGeneratorService.generate_from_template(empty_template, {})
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
@@ -84,9 +84,9 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
   test "generate_simple_document should create PDF with title" do
     pdf_string = PdfGeneratorService.generate_simple_document(
       "Test Document",
-      [{ heading: "Section 1", body: "Content here" }]
+      [ { heading: "Section 1", body: "Content here" } ]
     )
-    
+
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
   end
@@ -97,7 +97,7 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
       { heading: "Details", body: "Important information" },
       { heading: "Conclusion", body: "Thank you" }
     ]
-    
+
     pdf_string = PdfGeneratorService.generate_simple_document("Multi-Section", sections)
     assert_not_nil pdf_string
     assert pdf_string.length > 0
@@ -108,10 +108,10 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
     options = { page_size: "LETTER", page_layout: :portrait }
     pdf_string = PdfGeneratorService.generate_simple_document(
       "Custom Options",
-      [{ heading: "Test", body: "Body" }],
+      [ { heading: "Test", body: "Body" } ],
       options
     )
-    
+
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
   end
@@ -121,9 +121,9 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
   end
-  
+
   test "generate_simple_document should handle sections without heading" do
-    pdf_string = PdfGeneratorService.generate_simple_document("Title", [{ body: "Just body text" }])
+    pdf_string = PdfGeneratorService.generate_simple_document("Title", [ { body: "Just body text" } ])
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
   end

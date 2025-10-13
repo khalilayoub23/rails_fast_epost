@@ -1,0 +1,56 @@
+<%= turbo_frame_tag task do %>
+  <tr class="border-b border-stroke hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4">
+    <td class="px-4 py-4">
+      <%= link_to task_path(task), class: "text-sm font-medium text-primary hover:underline" do %>
+        #<%= task.id %>
+      <% end %>
+    </td>
+    <td class="px-4 py-4">
+      <%= render "shared/status_badge", status: task.status %>
+    </td>
+    <td class="px-4 py-4 text-sm text-dark dark:text-white">
+      <%= task.customer&.name || "-" %>
+    </td>
+    <td class="px-4 py-4 text-sm text-body dark:text-bodydark">
+      <%= task.carrier&.name || "##{task.carrier_id}" %>
+    </td>
+    <td class="px-4 py-4 text-sm text-body dark:text-bodydark">
+      <%= l(task.created_at, format: :short) %>
+    </td>
+    <td class="px-4 py-4 text-right">
+      <div class="flex items-center justify-end gap-3">
+        <!-- Quick status update buttons -->
+        <% if task.status != "delivered" %>
+          <%= button_to update_status_task_path(task, status: "in_progress"),
+              method: :patch,
+              class: "text-success hover:text-success/80",
+              title: t('tasks.mark_in_progress'),
+              data: { turbo_frame: dom_id(task) } do %>
+            <span class="material-icons text-xl">play_arrow</span>
+          <% end %>
+        <% end %>
+        
+        <%= link_to task_path(task),
+            class: "text-primary hover:text-primary/80",
+            title: t('common.view') do %>
+          <span class="material-icons text-xl">visibility</span>
+        <% end %>
+        
+        <%= link_to edit_task_path(task),
+            data: { turbo_frame: dom_id(task) },
+            class: "text-warning hover:text-warning/80",
+            title: t('common.edit') do %>
+          <span class="material-icons text-xl">edit</span>
+        <% end %>
+        
+        <%= button_to task_path(task),
+            method: :delete,
+            form: { data: { turbo_confirm: t('common.confirm_delete') } },
+            class: "text-danger hover:text-danger/80",
+            title: t('common.delete') do %>
+          <span class="material-icons text-xl">delete</span>
+        <% end %>
+      </div>
+    </td>
+  </tr>
+<% end %>

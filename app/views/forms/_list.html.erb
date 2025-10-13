@@ -1,0 +1,14 @@
+<div id="forms_list">
+  <% if forms.any? %>
+    <%= render partial: "forms/form_card", collection: forms, as: :form, locals: { customer: customer } %>
+  <% else %>
+    <tr>
+      <td colspan="4" class="px-4 py-12 text-center">
+        <div class="flex flex-col items-center justify-center text-body-color dark:text-dark-6">
+          <span class="material-icons text-6xl mb-4 opacity-50">description</span>
+          <p class="text-lg"><%= t("forms.no_forms") %></p>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</div>

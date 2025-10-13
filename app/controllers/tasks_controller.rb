@@ -35,11 +35,26 @@ class TasksController < ApplicationController
       respond_to do |format|
         format.html { redirect_to @task, notice: "Task created." }
         format.json { render json: @task, status: :created }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.prepend("tasks_list", partial: "tasks/task_card", locals: { task: @task }),
+            turbo_stream.update("task_form", partial: "tasks/form", locals: { task: scope.new }),
+            turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                               locals: { type: :success, message: t("tasks.created_successfully") })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "task_form",
+            partial: "tasks/form",
+            locals: { task: @task }
+          ), status: :unprocessable_entity
+        end
       end
     end
   end
@@ -55,11 +70,25 @@ class TasksController < ApplicationController
       respond_to do |format|
         format.html { redirect_to @task, notice: "Task updated." }
         format.json { render json: @task }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(@task, partial: "tasks/task_card", locals: { task: @task }),
+            turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                               locals: { type: :success, message: t("tasks.updated_successfully") })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            @task,
+            partial: "tasks/form",
+            locals: { task: @task }
+          ), status: :unprocessable_entity
+        end
       end
     end
   end
@@ -69,14 +98,33 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(@task.customer ? customer_tasks_path(@task.customer) : tasks_path, notice: "Task deleted.") }
       format.json { head :no_content }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove(@task),
+          turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                             locals: { type: :success, message: t("tasks.deleted_successfully") })
+        ]
+      end
     end
   end
 
   def update_status
     if @task.update(status: params[:status])
-      redirect_to @task, notice: "Task status updated."
+      respond_to do |format|
+        format.html { redirect_to @task, notice: "Task status updated." }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(@task, partial: "tasks/task_card", locals: { task: @task }),
+            turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                               locals: { type: :success, message: t("tasks.status_updated") })
+          ]
+        end
+      end
     else
-      render :show, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :show, status: :unprocessable_entity }
+        format.turbo_stream { head :unprocessable_entity }
+      end
     end
   end
 

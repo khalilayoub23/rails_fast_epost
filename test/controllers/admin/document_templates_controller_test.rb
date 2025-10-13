@@ -4,7 +4,7 @@ class Admin::DocumentTemplatesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:admin)
     sign_in @user
-    
+
     @template = DocumentTemplate.create!(
       name: "Test Template",
       template_type: :prawn_template,
@@ -28,7 +28,7 @@ class Admin::DocumentTemplatesControllerTest < ActionDispatch::IntegrationTest
   test "should filter by category" do
     legal_template = DocumentTemplate.create!(name: "Legal", template_type: :prawn_template, category: "Legal Agreement")
     customs_template = DocumentTemplate.create!(name: "Customs", template_type: :prawn_template, category: "Customs Declaration")
-    
+
     get admin_document_templates_url, params: { category: "Legal Agreement" }
     assert_response :success
   end
@@ -104,7 +104,7 @@ class Admin::DocumentTemplatesControllerTest < ActionDispatch::IntegrationTest
         active: true
       }
     }
-    
+
     template = DocumentTemplate.last
     assert template.variables.key?("name")
     assert template.variables.key?("email")
@@ -132,7 +132,7 @@ class Admin::DocumentTemplatesControllerTest < ActionDispatch::IntegrationTest
     }
     assert_redirected_to admin_document_template_url(@template)
     assert_equal "Document template successfully updated.", flash[:notice]
-    
+
     @template.reload
     assert_equal "Updated Name", @template.name
     assert_equal "Updated content {{new_var}}", @template.content
@@ -153,7 +153,7 @@ class Admin::DocumentTemplatesControllerTest < ActionDispatch::IntegrationTest
         content: "{{first_name}} {{last_name}}"
       }
     }
-    
+
     @template.reload
     assert @template.variables.key?("first_name")
     assert @template.variables.key?("last_name")

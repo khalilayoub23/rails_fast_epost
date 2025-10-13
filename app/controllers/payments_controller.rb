@@ -28,12 +28,22 @@ class PaymentsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to @payment, notice: "Payment successfully created." }
         format.json { render json: @payment, status: :created }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.prepend("payments_list", partial: "payments/payment_card", locals: { payment: @payment }),
+            turbo_stream.update("payment_form", ""),
+            turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("payments.created") })
+          ]
+        end
       end
     else
       # In test runs we want to see validation errors instead of failing silently
       respond_to do |format|
         format.html { render plain: @payment.errors.full_messages.join(", "), status: :unprocessable_entity }
         format.json { render json: { errors: @payment.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("payment_form", partial: "payments/form", locals: { payment: @payment })
+        end
       end
     end
   end
@@ -45,11 +55,20 @@ class PaymentsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to @payment, notice: "Payment successfully updated." }
         format.json { render json: @payment }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(dom_id(@payment), partial: "payments/payment_card", locals: { payment: @payment }),
+            turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("payments.updated") })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: { errors: @payment.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(dom_id(@payment), partial: "payments/form", locals: { payment: @payment })
+        end
       end
     end
   end
@@ -59,6 +78,12 @@ class PaymentsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to payments_path, notice: "Payment successfully deleted." }
       format.json { head :no_content }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove(dom_id(@payment)),
+          turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("payments.deleted") })
+        ]
+      end
     end
   end
 

@@ -35,11 +35,11 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-  
+
   # Use letter_opener to preview emails in browser instead of sending them
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_deliveries = true
-  
+
   # Fallback to SMTP if letter_opener is not available
   # Uncomment and configure for real email sending in development:
   # config.action_mailer.delivery_method = :smtp

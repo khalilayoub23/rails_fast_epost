@@ -27,11 +27,26 @@ class CarriersController < ApplicationController
       respond_to do |format|
         format.html { redirect_to @carrier, notice: "Carrier successfully created." }
         format.json { render json: @carrier, status: :created }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.prepend("carriers_list", partial: "carriers/carrier_card", locals: { carrier: @carrier }),
+            turbo_stream.update("carrier_form", partial: "carriers/form", locals: { carrier: Carrier.new }),
+            turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                               locals: { type: :success, message: "Carrier created successfully!" })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: { errors: @carrier.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "carrier_form",
+            partial: "carriers/form",
+            locals: { carrier: @carrier }
+          ), status: :unprocessable_entity
+        end
       end
     end
   end
@@ -62,6 +77,13 @@ class CarriersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to carriers_path, notice: "Carrier successfully deleted." }
       format.json { head :no_content }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove(@carrier),
+          turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                             locals: { type: :success, message: "Carrier deleted successfully!" })
+        ]
+      end
     end
   end
 

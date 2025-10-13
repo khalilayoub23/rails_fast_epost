@@ -27,11 +27,26 @@ class RemarksController < ApplicationController
       respond_to do |format|
         format.html { redirect_to [ @task, @remark ], notice: "Remark created." }
         format.json { render json: @remark, status: :created }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.append("remarks_list", partial: "remarks/remark_card", locals: { remark: @remark, task: @task }),
+            turbo_stream.update("remark_form", partial: "remarks/form", locals: { remark: @task.remarks.new, task: @task }),
+            turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                               locals: { type: :success, message: "Remark added successfully!" })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: { errors: @remark.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "remark_form",
+            partial: "remarks/form",
+            locals: { remark: @remark, task: @task }
+          ), status: :unprocessable_entity
+        end
       end
     end
   end
@@ -43,11 +58,25 @@ class RemarksController < ApplicationController
       respond_to do |format|
         format.html { redirect_to [ @task, @remark ], notice: "Remark updated." }
         format.json { render json: @remark }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(@remark, partial: "remarks/remark_card", locals: { remark: @remark, task: @task }),
+            turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                               locals: { type: :success, message: "Remark updated successfully!" })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: { errors: @remark.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            @remark,
+            partial: "remarks/form",
+            locals: { remark: @remark, task: @task }
+          ), status: :unprocessable_entity
+        end
       end
     end
   end
@@ -57,6 +86,13 @@ class RemarksController < ApplicationController
     respond_to do |format|
       format.html { redirect_to task_remarks_path(@task), notice: "Remark deleted." }
       format.json { head :no_content }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove(@remark),
+          turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                             locals: { type: :success, message: "Remark deleted successfully!" })
+        ]
+      end
     end
   end
 

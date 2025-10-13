@@ -1,0 +1,42 @@
+<%= turbo_frame_tag phone do %>
+  <tr class="border-b border-stroke dark:border-dark-3 hover:bg-gray-1 dark:hover:bg-dark-2 transition-colors">
+    <td class="px-4 py-3">
+      <span class="font-medium text-dark dark:text-white">
+        <%= phone.number %>
+      </span>
+    </td>
+    <td class="px-4 py-3">
+      <% if phone.primary %>
+        <span class="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+          <span class="material-icons text-sm">star</span>
+          <%= t("phones.primary") %>
+        </span>
+      <% else %>
+        <span class="text-body-color dark:text-dark-6"><%= t("phones.secondary") %></span>
+      <% end %>
+    </td>
+    <td class="px-4 py-3 text-<%= margin_end_class %>">
+      <div class="flex items-center gap-2 justify-end">
+        <%= link_to "tel:#{phone.number}",
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            title: t("phones.call") do %>
+          <span class="material-icons text-xl">phone</span>
+        <% end %>
+        
+        <%= link_to edit_carrier_phone_path(carrier, phone),
+            data: { turbo_frame: dom_id(phone) },
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            title: t("common.edit") do %>
+          <span class="material-icons text-xl">edit</span>
+        <% end %>
+        
+        <%= button_to carrier_phone_path(carrier, phone),
+            method: :delete,
+            data: { turbo_confirm: t("common.confirm_delete") },
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-red-500 dark:hover:text-red-500 transition-colors" do %>
+          <span class="material-icons text-xl">delete</span>
+        <% end %>
+      </div>
+    </td>
+  </tr>
+<% end %>

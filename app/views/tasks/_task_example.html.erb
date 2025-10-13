@@ -1,0 +1,39 @@
+<!-- Example: Single Task Card -->
+<div class="rounded-sm border border-stroke bg-white shadow-sm dark:border-strokedark dark:bg-boxdark p-4 hover:shadow-md transition-shadow">
+  <div class="flex items-start justify-between">
+    <div class="flex-1">
+      <h4 class="font-medium text-black dark:text-white mb-2">
+        <%= task.title %>
+      </h4>
+      <p class="text-sm text-bodydark1">
+        <%= task.description %>
+      </p>
+      
+      <div class="flex items-center gap-3 mt-3">
+        <span class="text-xs px-2.5 py-0.5 rounded <%= task.status_badge_class %>">
+          <%= task.status %>
+        </span>
+        <span class="text-xs text-bodydark1">
+          <%= l(task.due_date, format: :short) if task.due_date %>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 <%= margin_start_class('4') %>">
+      <!-- Edit button - loads form inline -->
+      <%= link_to edit_task_path(task),
+          data: { turbo_frame: dom_id(task) },
+          class: "hover:text-primary" do %>
+        <span class="material-icons text-xl">edit</span>
+      <% end %>
+
+      <!-- Delete button with confirmation -->
+      <%= button_to task_path(task),
+          method: :delete,
+          form: { data: { turbo_confirm: t('common.confirm_delete') } },
+          class: "hover:text-danger" do %>
+        <span class="material-icons text-xl">delete</span>
+      <% end %>
+    </div>
+  </div>
+</div>

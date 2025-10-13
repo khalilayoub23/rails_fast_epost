@@ -117,7 +117,7 @@ class Admin::LawyersControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to admin_lawyer_url(@lawyer)
     assert_equal "Lawyer successfully updated.", flash[:notice]
-    
+
     @lawyer.reload
     assert_equal "Updated Name", @lawyer.name
     assert_equal "Updated notes", @lawyer.notes
@@ -125,7 +125,7 @@ class Admin::LawyersControllerTest < ActionDispatch::IntegrationTest
 
   test "should not update lawyer with invalid data" do
     original_name = @lawyer.name
-    
+
     patch admin_lawyer_url(@lawyer), params: {
       lawyer: {
         name: "",
@@ -134,7 +134,7 @@ class Admin::LawyersControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :unprocessable_entity
-    
+
     @lawyer.reload
     assert_equal original_name, @lawyer.name
   end
@@ -155,10 +155,10 @@ class Admin::LawyersControllerTest < ActionDispatch::IntegrationTest
     assert_not inactive_lawyer.active?
 
     patch activate_admin_lawyer_url(inactive_lawyer)
-    
+
     assert_redirected_to admin_lawyer_url(inactive_lawyer)
     assert_equal "Lawyer activated successfully.", flash[:notice]
-    
+
     inactive_lawyer.reload
     assert inactive_lawyer.active?
   end
@@ -168,17 +168,17 @@ class Admin::LawyersControllerTest < ActionDispatch::IntegrationTest
     assert @lawyer.active?
 
     patch deactivate_admin_lawyer_url(@lawyer)
-    
+
     assert_redirected_to admin_lawyer_url(@lawyer)
     assert_equal "Lawyer deactivated successfully.", flash[:notice]
-    
+
     @lawyer.reload
     assert_not @lawyer.active?
   end
 
   # Authorization Tests (if applicable)
   # Uncomment and adjust these tests if you have authorization in place
-  
+
   # test "should not allow access without authentication" do
   #   sign_out @user
   #   get admin_lawyers_url

@@ -1,0 +1,44 @@
+<%# Logo Component - Reusable across the app %>
+<%# Usage: <%= render 'shared/logo', size: 'lg', text: true %>
+
+<%
+  size = local_assigns[:size] || 'md'  # sm, md, lg, xl
+  show_text = local_assigns.fetch(:text, true)
+  link = local_assigns.fetch(:link, true)
+  class_names = local_assigns[:class] || ''
+  
+  logo_classes = ['logo']
+  logo_classes << "logo-#{size}" if size != 'md'
+  logo_classes << 'logo-icon-only' unless show_text
+  logo_classes << class_names
+%>
+
+<% if link %>
+  <%= link_to root_path, class: logo_classes.join(' '), data: { turbo: false } do %>
+    <div class="logo-icon">
+      <%= image_tag 'fast epost transparent.png', alt: 'Fast Epost - Law&E-com Delivery', class: 'logo-light' %>
+      <%# You can add a separate dark mode logo here if needed %>
+      <%#= image_tag 'logo-dark.png', alt: 'Fast Epost', class: 'logo-dark' %>
+    </div>
+    
+    <% if show_text %>
+      <div class="logo-text">
+        <div class="logo-title">Fast Epost</div>
+        <div class="logo-subtitle">Law&E-com Delivery</div>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <div class="<%= logo_classes.join(' ') %>">
+    <div class="logo-icon">
+      <%= image_tag 'fast epost transparent.png', alt: 'Fast Epost - Law&E-com Delivery', class: 'logo-light' %>
+    </div>
+    
+    <% if show_text %>
+      <div class="logo-text">
+        <div class="logo-title">Fast Epost</div>
+        <div class="logo-subtitle">Law&E-com Delivery</div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,122 @@
+# Arabic translations - العربية
+ar:
+  language_name: "العربية"
+  direction: "rtl"
+  
+  # Navigation - التنقل
+  nav:
+    dashboard: "لوحة التحكم"
+    customers: "العملاء"
+    tasks: "المهام"
+    payments: "المدفوعات"
+    carriers: "شركات الشحن"
+    profile: "الملف الشخصي"
+    settings: "الإعدادات"
+    admin: "الإدارة"
+    logout: "تسجيل الخروج"
+  
+  # Common - عام
+  common:
+    save: "حفظ"
+    cancel: "إلغاء"
+    delete: "حذف"
+    edit: "تعديل"
+    create: "إنشاء"
+    update: "تحديث"
+    search: "بحث"
+    filter: "تصفية"
+    export: "تصدير"
+    import: "استيراد"
+    back: "رجوع"
+    next: "التالي"
+    previous: "السابق"
+    submit: "إرسال"
+    close: "إغلاق"
+    yes: "نعم"
+    no: "لا"
+    confirm: "تأكيد"
+    loading: "جاري التحميل..."
+    
+  # Messages - الرسائل
+  messages:
+    created: "تم إنشاء %{model} بنجاح."
+    updated: "تم تحديث %{model} بنجاح."
+    deleted: "تم حذف %{model} بنجاح."
+    error: "حدث خطأ. يرجى المحاولة مرة أخرى."
+    unauthorized: "ليس لديك صلاحية لتنفيذ هذا الإجراء."
+    not_found: "%{model} غير موجود."
+  
+  # Tasks - المهام
+  tasks:
+    title: "المهام"
+    new: "مهمة جديدة"
+    no_tasks: "لا توجد مهام"
+    title_placeholder: "أدخل عنوان المهمة"
+    description_placeholder: "أدخل وصف المهمة"
+    search_user: "البحث عن مستخدم..."
+    created_successfully: "تم إنشاء المهمة بنجاح!"
+    updated_successfully: "تم تحديث المهمة بنجاح!"
+    deleted_successfully: "تم حذف المهمة بنجاح!"
+    status_updated: "تم تحديث حالة المهمة بنجاح!"
+    
+  # Customers - العملاء
+  customers:
+    title: "العملاء"
+    new: "عميل جديد"
+    no_customers: "لا يوجد عملاء"
+    created_successfully: "تم إنشاء العميل بنجاح!"
+    updated_successfully: "تم تحديث العميل بنجاح!"
+    deleted_successfully: "تم حذف العميل بنجاح!"
+    
+  # Payments - المدفوعات
+  payments:
+    title: "المدفوعات"
+    new: "دفعة جديدة"
+    no_payments: "لا توجد مدفوعات"
+    created: "تم إنشاء الدفعة بنجاح!"
+    updated: "تم تحديث الدفعة بنجاح!"
+    deleted: "تم حذف الدفعة بنجاح!"
+    
+  # Documents - المستندات
+  documents:
+    title: "المستندات"
+    new: "مستند جديد"
+    no_documents: "لا توجد مستندات"
+    created: "تم إنشاء المستند بنجاح!"
+    updated: "تم تحديث المستند بنجاح!"
+    deleted: "تم حذف المستند بنجاح!"
+    
+  # Forms - النماذج
+  forms:
+    title: "النماذج"
+    new: "نموذج جديد"
+    no_forms: "لا توجد نماذج"
+    no_template: "بدون قالب"
+    download_pdf: "تحميل PDF"
+    created: "تم إنشاء النموذج بنجاح!"
+    updated: "تم تحديث النموذج بنجاح!"
+    deleted: "تم حذف النموذج بنجاح!"
+    
+  # Phones - الهواتف
+  phones:
+    title: "الهواتف"
+    new: "هاتف جديد"
+    no_phones: "لا توجد هواتف"
+    primary: "أساسي"
+    secondary: "ثانوي"
+    call: "اتصال"
+    created: "تم إضافة الهاتف بنجاح!"
+    updated: "تم تحديث الهاتف بنجاح!"
+    deleted: "تم حذف الهاتف بنجاح!"
+    
+  # Form Templates - قوالب النماذج
+  form_templates:
+    title: "قوالب النماذج"
+    new: "قالب جديد"
+    no_templates: "لا توجد قوالب"
+    global: "عام"
+    fields: "حقول"
+    preview_pdf: "معاينة PDF"
+    created: "تم إنشاء القالب بنجاح!"
+    updated: "تم تحديث القالب بنجاح!"
+    deleted: "تم حذف القالب بنجاح!"

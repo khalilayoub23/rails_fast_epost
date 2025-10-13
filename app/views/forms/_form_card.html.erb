@@ -1,0 +1,49 @@
+<%= turbo_frame_tag form do %>
+  <tr class="border-b border-stroke dark:border-dark-3 hover:bg-gray-1 dark:hover:bg-dark-2 transition-colors">
+    <td class="px-4 py-3">
+      <span class="font-medium text-dark dark:text-white">
+        #<%= form.id %>
+      </span>
+    </td>
+    <td class="px-4 py-3">
+      <span class="text-dark dark:text-white">
+        <%= form.form_template&.name || t("forms.no_template") %>
+      </span>
+    </td>
+    <td class="px-4 py-3">
+      <span class="text-dark dark:text-white">
+        <%= form.created_at.strftime("%Y-%m-%d %H:%M") %>
+      </span>
+    </td>
+    <td class="px-4 py-3 text-<%= margin_end_class %>">
+      <div class="flex items-center gap-2 justify-end">
+        <%= link_to customer_form_path(customer, form), 
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            title: t("common.view") do %>
+          <span class="material-icons text-xl">visibility</span>
+        <% end %>
+        
+        <%= link_to customer_form_path(customer, form, format: :pdf),
+            target: "_blank",
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            title: t("forms.download_pdf") do %>
+          <span class="material-icons text-xl">picture_as_pdf</span>
+        <% end %>
+        
+        <%= link_to edit_customer_form_path(customer, form),
+            data: { turbo_frame: dom_id(form) },
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            title: t("common.edit") do %>
+          <span class="material-icons text-xl">edit</span>
+        <% end %>
+        
+        <%= button_to customer_form_path(customer, form),
+            method: :delete,
+            data: { turbo_confirm: t("common.confirm_delete") },
+            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-red-500 dark:hover:text-red-500 transition-colors" do %>
+          <span class="material-icons text-xl">delete</span>
+        <% end %>
+      </div>
+    </td>
+  </tr>
+<% end %>

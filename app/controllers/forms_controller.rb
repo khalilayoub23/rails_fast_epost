@@ -37,11 +37,21 @@ class FormsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to [ @customer, @form ], notice: "Form created." }
         format.json { render json: @form, status: :created }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.prepend("forms_list", partial: "forms/form_card", locals: { form: @form, customer: @customer }),
+            turbo_stream.update("form_form", ""),
+            turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.created") })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("form_form", partial: "forms/form", locals: { form: @form, customer: @customer })
+        end
       end
     end
   end
@@ -53,11 +63,20 @@ class FormsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to [ @customer, @form ], notice: "Form updated." }
         format.json { render json: @form }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace(dom_id(@form), partial: "forms/form_card", locals: { form: @form, customer: @customer }),
+            turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.updated") })
+          ]
+        end
       end
     else
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(dom_id(@form), partial: "forms/form", locals: { form: @form, customer: @customer })
+        end
       end
     end
   end
@@ -67,6 +86,12 @@ class FormsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to customer_forms_path(@customer), notice: "Form deleted." }
       format.json { head :no_content }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove(dom_id(@form)),
+          turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.deleted") })
+        ]
+      end
     end
   end
 

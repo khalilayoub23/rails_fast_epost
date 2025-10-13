@@ -1,0 +1,78 @@
+{
+  "settings": {
+    "allow_remote_tracking": true
+  },
+  "rules": [
+    {
+      "patterns": ["/"],
+      "properties": {
+        "context": "default",
+        "uri": "turbo://fragment/web/home"
+      }
+    },
+    {
+      "patterns": ["/dashboard"],
+      "properties": {
+        "context": "default",
+        "presentation": "default"
+      }
+    },
+    {
+      "patterns": ["/customers", "/customers/:id"],
+      "properties": {
+        "context": "default",
+        "presentation": "default"
+      }
+    },
+    {
+      "patterns": ["/tasks", "/tasks/:id"],
+      "properties": {
+        "context": "default",
+        "presentation": "default"
+      }
+    },
+    {
+      "patterns": ["/payments", "/payments/:id"],
+      "properties": {
+        "context": "default",
+        "presentation": "default"
+      }
+    },
+    {
+      "patterns": ["/carriers", "/carriers/:id"],
+      "properties": {
+        "context": "default",
+        "presentation": "default"
+      }
+    },
+    {
+      "patterns": ["/admin/**"],
+      "properties": {
+        "context": "modal",
+        "presentation": "modal"
+      }
+    },
+    {
+      "patterns": ["/users/sign_in", "/users/sign_up", "/users/password/new"],
+      "properties": {
+        "context": "modal",
+        "presentation": "modal"
+      }
+    },
+    {
+      "patterns": ["/admin/document_templates/:id/new_generate"],
+      "properties": {
+        "context": "modal",
+        "presentation": "modal",
+        "pull_to_refresh_enabled": false
+      }
+    },
+    {
+      "patterns": ["**"],
+      "properties": {
+        "context": "default",
+        "presentation": "default"
+      }
+    }
+  ]
+}

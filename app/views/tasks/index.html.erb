@@ -38,34 +38,58 @@
 
   <%= turbo_stream_from "tasks" %>
 
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
     <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-title-md font-semibold text-dark">Tasks <%= "for #{@customer.name}" if @customer %></h2>
+      <h2 class="text-title-md font-semibold text-dark dark:text-white">
+        <%= t('tasks.title') %> <%= "for #{@customer.name}" if @customer %>
+      </h2>
+      <%= link_to (@customer ? new_customer_task_path(@customer) : new_task_path),
+          class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90" do %>
+        <span class="material-icons <%= margin_end_class('2') %> text-xl">add</span>
+        <%= t('tasks.new') %>
+      <% end %>
     </div>
 
-    <% if @tasks.any? %>
+    <!-- Search form -->
+    <div class="mb-5">
+      <%= form_with url: (@customer ? customer_tasks_path(@customer) : tasks_path), 
+          method: :get,
+          data: { turbo_frame: "tasks_table", turbo_action: "advance" },
+          class: "flex gap-3" do |f| %>
+        <%= f.text_field :q,
+            value: params[:q],
+            placeholder: t('common.search'),
+            class: "flex-1 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
+        <%= f.submit t('common.search'),
+            class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-6 text-center font-medium text-white hover:bg-opacity-90" %>
+      <% end %>
+    </div>
+
+    <%= turbo_frame_tag "tasks_table" do %>
       <div class="max-w-full overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
-            <tr class="bg-gray-2 text-left">
-              <th class="min-w-[100px] px-4 py-4 font-medium text-dark">ID</th>
-              <th class="min-w-[140px] px-4 py-4 font-medium text-dark">Status</th>
-              <th class="min-w-[180px] px-4 py-4 font-medium text-dark">Customer</th>
-              <th class="min-w-[120px] px-4 py-4 font-medium text-dark">Carrier</th>
-              <th class="min-w-[160px] px-4 py-4 font-medium text-dark">Created</th>
-              <th class="px-4 py-4 text-right font-medium text-dark">Actions</th>
+            <tr class="bg-gray-2 text-left dark:bg-meta-4">
+              <th class="min-w-[100px] px-4 py-4 font-medium text-dark dark:text-white">ID</th>
+              <th class="min-w-[140px] px-4 py-4 font-medium text-dark dark:text-white">Status</th>
+              <th class="min-w-[180px] px-4 py-4 font-medium text-dark dark:text-white">Customer</th>
+              <th class="min-w-[120px] px-4 py-4 font-medium text-dark dark:text-white">Carrier</th>
+              <th class="min-w-[160px] px-4 py-4 font-medium text-dark dark:text-white">Created</th>
+              <th class="px-4 py-4 text-right font-medium text-dark dark:text-white">Actions</th>
             </tr>
           </thead>
-          <tbody id="tasks">
-            <%= render @tasks %>
+          <tbody id="tasks_list">
+            <%= render partial: "tasks/task_card", collection: @tasks, as: :task %>
           </tbody>
         </table>
-      </div>
-    <% else %>
-      <div class="px-6 py-8 text-center">
-        <span class="material-icons text-body text-4xl mb-2">task</span>
-        <h3 class="text-sm font-medium text-dark mb-1">No tasks</h3>
-        <p class="text-sm text-body">Get started by creating a new task.</p>
+        
+        <% if @tasks.empty? %>
+          <div class="px-6 py-10 text-center">
+            <span class="material-icons text-bodydark1 dark:text-bodydark text-5xl mb-3">inbox</span>
+            <h3 class="text-sm font-medium text-dark dark:text-white mb-1"><%= t('tasks.no_tasks') %></h3>
+            <p class="text-sm text-body dark:text-bodydark">Get started by creating a new task.</p>
+          </div>
+        <% end %>
       </div>
     <% end %>
   </div>

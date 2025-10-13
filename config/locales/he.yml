@@ -1,0 +1,122 @@
+# Hebrew translations - עברית
+he:
+  language_name: "עברית"
+  direction: "rtl"
+
+  # Navigation - ניווט
+  nav:
+    dashboard: "לוח בקרה"
+    customers: "לקוחות"
+    tasks: "משימות"
+    payments: "תשלומים"
+    carriers: "חברות שילוח"
+    profile: "פרופיל"
+    settings: "הגדרות"
+    admin: "ניהול"
+    logout: "התנתקות"
+
+  # Common - כללי
+  common:
+    save: "שמור"
+    cancel: "ביטול"
+    delete: "מחק"
+    edit: "ערוך"
+    create: "צור"
+    update: "עדכן"
+    search: "חפש"
+    filter: "סנן"
+    export: "ייצא"
+    import: "ייבא"
+    back: "חזור"
+    next: "הבא"
+    previous: "הקודם"
+    submit: "שלח"
+    close: "סגור"
+    yes: "כן"
+    no: "לא"
+    confirm: "אישור"
+    loading: "טוען..."
+
+  # Messages - הודעות
+  messages:
+    created: "%{model} נוצר בהצלחה."
+    updated: "%{model} עודכן בהצלחה."
+    deleted: "%{model} נמחק בהצלחה."
+    error: "אירעה שגיאה. אנא נסה שוב."
+    unauthorized: "אין לך הרשאה לבצע פעולה זו."
+    not_found: "%{model} לא נמצא."
+    
+  # Tasks - משימות
+  tasks:
+    title: "משימות"
+    new: "משימה חדשה"
+    no_tasks: "לא נמצאו משימות"
+    title_placeholder: "הזן כותרת משימה"
+    description_placeholder: "הזן תיאור משימה"
+    search_user: "חפש משתמש..."
+    created_successfully: "המשימה נוצרה בהצלחה!"
+    updated_successfully: "המשימה עודכנה בהצלחה!"
+    deleted_successfully: "המשימה נמחקה בהצלחה!"
+    status_updated: "סטטוס המשימה עודכן בהצלחה!"
+    
+  # Customers - לקוחות
+  customers:
+    title: "לקוחות"
+    new: "לקוח חדש"
+    no_customers: "לא נמצאו לקוחות"
+    created_successfully: "הלקוח נוצר בהצלחה!"
+    updated_successfully: "הלקוח עודכן בהצלחה!"
+    deleted_successfully: "הלקוח נמחק בהצלחה!"
+    
+  # Payments - תשלומים
+  payments:
+    title: "תשלומים"
+    new: "תשלום חדש"
+    no_payments: "לא נמצאו תשלומים"
+    created: "התשלום נוצר בהצלחה!"
+    updated: "התשלום עודכן בהצלחה!"
+    deleted: "התשלום נמחק בהצלחה!"
+    
+  # Documents - מסמכים
+  documents:
+    title: "מסמכים"
+    new: "מסמך חדש"
+    no_documents: "לא נמצאו מסמכים"
+    created: "המסמך נוצר בהצלחה!"
+    updated: "המסמך עודכן בהצלחה!"
+    deleted: "המסמך נמחק בהצלחה!"
+    
+  # Forms - טפסים
+  forms:
+    title: "טפסים"
+    new: "טופס חדש"
+    no_forms: "לא נמצאו טפסים"
+    no_template: "ללא תבנית"
+    download_pdf: "הורד PDF"
+    created: "הטופס נוצר בהצלחה!"
+    updated: "הטופס עודכן בהצלחה!"
+    deleted: "הטופס נמחק בהצלחה!"
+    
+  # Phones - טלפונים
+  phones:
+    title: "טלפונים"
+    new: "טלפון חדש"
+    no_phones: "לא נמצאו טלפונים"
+    primary: "ראשי"
+    secondary: "משני"
+    call: "התקשר"
+    created: "הטלפון נוסף בהצלחה!"
+    updated: "הטלפון עודכן בהצלחה!"
+    deleted: "הטלפון נמחק בהצלחה!"
+    
+  # Form Templates - תבניות טפסים
+  form_templates:
+    title: "תבניות טפסים"
+    new: "תבנית חדשה"
+    no_templates: "לא נמצאו תבניות"
+    global: "גלובלי"
+    fields: "שדות"
+    preview_pdf: "תצוגה מקדימה PDF"
+    created: "התבנית נוצרה בהצלחה!"
+    updated: "התבנית עודכנה בהצלחה!"
+    deleted: "התבנית נמחקה בהצלחה!"

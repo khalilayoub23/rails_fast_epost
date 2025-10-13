@@ -29,3 +29,80 @@
 
 en:
   hello: "Hello world"
+  
+  common:
+    search: "Search"
+    save: "Save"
+    cancel: "Cancel"
+    edit: "Edit"
+    delete: "Delete"
+    confirm_delete: "Are you sure you want to delete this item?"
+    load_more: "Load More"
+    
+  tasks:
+    title: "Tasks"
+    new: "New Task"
+    no_tasks: "No tasks found"
+    title_placeholder: "Enter task title"
+    description_placeholder: "Enter task description"
+    search_user: "Search for user..."
+    created_successfully: "Task created successfully!"
+    updated_successfully: "Task updated successfully!"
+    deleted_successfully: "Task deleted successfully!"
+    status_updated: "Task status updated successfully!"
+    
+  customers:
+    title: "Customers"
+    new: "New Customer"
+    no_customers: "No customers found"
+    created_successfully: "Customer created successfully!"
+    updated_successfully: "Customer updated successfully!"
+    deleted_successfully: "Customer deleted successfully!"
+    
+  payments:
+    title: "Payments"
+    new: "New Payment"
+    no_payments: "No payments found"
+    created: "Payment created successfully!"
+    updated: "Payment updated successfully!"
+    deleted: "Payment deleted successfully!"
+    
+  documents:
+    title: "Documents"
+    new: "New Document"
+    no_documents: "No documents found"
+    created: "Document created successfully!"
+    updated: "Document updated successfully!"
+    deleted: "Document deleted successfully!"
+    
+  forms:
+    title: "Forms"
+    new: "New Form"
+    no_forms: "No forms found"
+    no_template: "No Template"
+    download_pdf: "Download PDF"
+    created: "Form created successfully!"
+    updated: "Form updated successfully!"
+    deleted: "Form deleted successfully!"
+    
+  phones:
+    title: "Phones"
+    new: "New Phone"
+    no_phones: "No phones found"
+    primary: "Primary"
+    secondary: "Secondary"
+    call: "Call"
+    created: "Phone created successfully!"
+    updated: "Phone updated successfully!"
+    deleted: "Phone deleted successfully!"
+    
+  form_templates:
+    title: "Form Templates"
+    new: "New Template"
+    no_templates: "No templates found"
+    global: "Global"
+    fields: "fields"
+    preview_pdf: "Preview PDF"
+    created: "Form template created successfully!"
+    updated: "Form template updated successfully!"
+    deleted: "Form template deleted successfully!"

@@ -1,0 +1,25 @@
+<%# Splash Screen / Loading Screen %>
+<%# Shows logo while app loads %>
+
+<div class="splash-screen" id="splashScreen">
+  <div class="splash-logo">
+    <%= render 'shared/logo', size: 'xl', text: true, link: false %>
+  </div>
+  
+  <div class="splash-loading">
+    <div class="spinner spinner-lg"></div>
+  </div>
+</div>
+
+<script>
+  // Hide splash screen after page loads
+  document.addEventListener('turbo:load', function() {
+    setTimeout(function() {
+      const splash = document.getElementById('splashScreen');
+      if (splash) {
+        splash.classList.add('hidden');
+        setTimeout(() => splash.remove(), 300);
+      }
+    }, 500); // Show for at least 500ms
+  });
+</script>
