@@ -23,7 +23,7 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
   <%# Load Tailwind first, then fonts, RTL support, then our application overrides and icons (order matters) %>
-  <%= stylesheet_link_tag "tailwind", "fonts", "rtl", "application", "material-icons", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "tailwind", "fonts", "rtl", "application", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <meta name="color-scheme" content="light dark">
     <script>
@@ -40,20 +40,20 @@
     </script>
   </head>
 
-  <body class="bg-whiten font-satoshi text-base text-body dark:bg-boxdark-2 dark:text-bodydark">
+  <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black font-satoshi text-base text-gray-200">
     <div class="flex h-screen overflow-hidden" data-controller="sidebar">
       <!-- Hide sidebar on mobile/Turbo Native -->
       <% unless turbo_native_app? %>
         <%= render "shared/sidebar" %>
       <% end %>
       
-      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-whiten dark:bg-boxdark-2 <%= 'pb-20' if turbo_native_app? %>">
+      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-transparent <%= 'pb-20' if turbo_native_app? %>">
         <!-- Hide topbar on Turbo Native (native apps have their own nav) -->
         <% unless turbo_native_app? %>
           <%= render "shared/topbar" %>
         <% end %>
         
-        <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-whiten dark:bg-boxdark-2">
+        <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
           <%= render "shared/flash_messages" %>
           <%= yield %>
         </main>

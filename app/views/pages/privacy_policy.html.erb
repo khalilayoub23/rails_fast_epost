@@ -1,0 +1,268 @@
+<% content_for :title, t('privacy_policy.hero_title') %>
+
+<!-- Hero Section -->
+<section class="relative py-20 px-4 overflow-hidden" dir="<%= I18n.t('direction') %>">
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black opacity-95"></div>
+  
+  <div class="container mx-auto max-w-5xl relative z-10">
+    <div class="text-center space-y-6">
+      <h1 class="text-5xl md:text-6xl font-bold text-white"><%= t('privacy_policy.hero_title') %></h1>
+      <p class="text-2xl md:text-3xl font-semibold text-yellow-400"><%= t('privacy_policy.hero_company') %></p>
+      <p class="text-gray-400 text-lg"><%= t('privacy_policy.hero_last_updated') %>: <%= l(Date.today, format: :long) %></p>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content Section -->
+<section class="py-16 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black min-h-screen" dir="<%= I18n.t('direction') %>">
+  <div class="container mx-auto max-w-5xl">
+    <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-gray-700 shadow-2xl">
+      
+      <!-- Section Title -->
+      <div class="mb-12">
+        <h2 class="text-3xl font-bold text-yellow-400 border-b border-gray-600 pb-4"><%= t('privacy_policy.content_title') %></h2>
+      </div>
+
+      <div class="space-y-10">
+        
+        <!-- Section 1: Introduction -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">1</span>
+            <%= t('privacy_policy.section_1_title') %>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            <%= t('privacy_policy.section_1_content') %>
+          </p>
+        </div>
+
+        <!-- Section 2: Types of Information -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">2</span>
+            <%= t('privacy_policy.section_2_title') %>
+          </h3>
+          <ul class="space-y-3 text-gray-300 <%= I18n.t('direction') == 'rtl' ? 'mr-6' : 'ml-6' %>">
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><strong class="text-yellow-400"><%= t('privacy_policy.section_2_list_1_title') %></strong> <%= t('privacy_policy.section_2_list_1_content') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><strong class="text-yellow-400"><%= t('privacy_policy.section_2_list_2_title') %></strong> <%= t('privacy_policy.section_2_list_2_content') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><strong class="text-yellow-400"><%= t('privacy_policy.section_2_list_3_title') %></strong> <%= t('privacy_policy.section_2_list_3_content') %></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 3: Purpose of Use -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">3</span>
+            <%= t('privacy_policy.section_3_title') %>
+          </h3>
+          <ul class="space-y-3 text-gray-300 <%= I18n.t('direction') == 'rtl' ? 'mr-6' : 'ml-6' %>">
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_3_list_1') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_3_list_2') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_3_list_3') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_3_list_4') %></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 4: Data Storage -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">4</span>
+            <%= t('privacy_policy.section_4_title') %>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            <%= t('privacy_policy.section_4_content') %>
+          </p>
+        </div>
+
+        <!-- Section 5: International Transfer -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">5</span>
+            <%= t('privacy_policy.section_5_title') %>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            <%= t('privacy_policy.section_5_content') %>
+          </p>
+        </div>
+
+        <!-- Section 6: Third-Party Sharing -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">6</span>
+            <%= t('privacy_policy.section_6_title') %>
+          </h3>
+          <ul class="space-y-3 text-gray-300 <%= I18n.t('direction') == 'rtl' ? 'mr-6' : 'ml-6' %>">
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_6_list_1') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_6_list_2') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_6_list_3') %></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 7: Data Security -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">7</span>
+            <%= t('privacy_policy.section_7_title') %>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            <%= t('privacy_policy.section_7_content') %>
+          </p>
+        </div>
+
+        <!-- Section 8: User Rights -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">8</span>
+            <%= t('privacy_policy.section_8_title') %>
+          </h3>
+          <ul class="space-y-3 text-gray-300 <%= I18n.t('direction') == 'rtl' ? 'mr-6' : 'ml-6' %>">
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_8_list_1') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_8_list_2') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_8_list_3') %></span>
+            </li>
+            <li class="flex items-start text-lg">
+              <span class="text-yellow-400 <%= I18n.t('direction') == 'rtl' ? 'ml-3' : 'mr-3' %> text-xl">•</span>
+              <span><%= t('privacy_policy.section_8_list_4') %></span>
+            </li>
+          </ul>
+          <div class="bg-gray-900/50 border border-yellow-400/30 rounded-lg p-6 mt-6">
+            <p class="text-gray-300 leading-relaxed text-lg">
+              <%= t('privacy_policy.section_8_contact') %><br><br>
+              📧 <a href="mailto:<%= t('privacy_policy.section_8_email') %>" class="text-yellow-400 hover:text-yellow-300 underline font-semibold text-xl"><%= t('privacy_policy.section_8_email') %></a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Section 9: Children's Privacy -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">9</span>
+            <%= t('privacy_policy.section_9_title') %>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            <%= t('privacy_policy.section_9_content') %>
+          </p>
+        </div>
+
+        <!-- Section 10: Cookies -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">10</span>
+            <%= t('privacy_policy.section_10_title') %>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            <%= t('privacy_policy.section_10_content') %>
+          </p>
+        </div>
+
+        <!-- Section 11: Jurisdiction -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">11</span>
+            <%= t('privacy_policy.section_11_title') %>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            <%= t('privacy_policy.section_11_content') %>
+          </p>
+        </div>
+
+        <!-- Section 12: Policy Updates -->
+        <div class="space-y-4 bg-gray-900/30 rounded-xl p-6 border border-gray-700/50">
+          <h3 class="text-2xl font-bold text-yellow-400 flex items-center gap-3">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-400/20 text-yellow-400 text-lg">12</span>
+            <%= t('privacy_policy.section_12_title') %>
+          </h3>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            <%= t('privacy_policy.section_12_content') %>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-12 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black" dir="<%= I18n.t('direction') %>">
+  <div class="container mx-auto max-w-5xl">
+    <div class="bg-gradient-to-br from-yellow-400/20 to-yellow-600/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-yellow-400/30 shadow-2xl text-center">
+      <h2 class="text-3xl font-bold text-yellow-400 mb-4"><%= t('privacy_policy.contact_title') %></h2>
+      <p class="text-gray-300 text-lg mb-6">
+        <%= t('privacy_policy.contact_text') %>
+      </p>
+      <a href="mailto:<%= t('privacy_policy.section_8_email') %>" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-4 px-8 rounded-lg text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+        📧 <%= t('privacy_policy.section_8_email') %>
+      </a>
+      <div class="mt-8">
+        <%= link_to root_path, class: "text-yellow-400 hover:text-yellow-300 underline text-lg font-semibold" do %>
+          <%= I18n.t('direction') == 'rtl' ? '→' : '←' %> <%= t('privacy_policy.back_home') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cookie Consent Banner -->
+<div id="cookieConsent" class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700 p-4 shadow-2xl z-50 hidden">
+  <div class="container mx-auto max-w-5xl flex flex-col md:flex-row items-center justify-between gap-4" dir="<%= I18n.t('direction') %>">
+    <p class="text-gray-300 text-sm md:text-base">
+      <%= t('cookie_message') %>
+    </p>
+    <div class="flex gap-3">
+      <button onclick="acceptCookies()" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors">
+        <%= t('cookie_accept') %>
+      </button>
+      <%= link_to t('cookie_learn_more'), pages_privacy_policy_path, class: "bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors" %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function acceptCookies() {
+    localStorage.setItem('cookieConsent', 'accepted');
+    document.getElementById('cookieConsent').classList.add('hidden');
+  }
+
+  // Show banner if not accepted
+  if (!localStorage.getItem('cookieConsent')) {
+    document.getElementById('cookieConsent').classList.remove('hidden');
+  }
+</script>

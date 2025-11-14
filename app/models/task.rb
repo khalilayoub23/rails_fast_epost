@@ -30,6 +30,11 @@ class Task < ApplicationRecord
   alias_attribute :pickup_location, :start
   alias_attribute :drop_off_location, :target
 
+  # Generate a display title for the task
+  def title
+    "#{package_type.titleize} - #{barcode}"
+  end
+
   # Optional attributes for notification templates (return nil if not present)
   def priority
     nil  # Optional: Can be 'normal', 'urgent', 'express'

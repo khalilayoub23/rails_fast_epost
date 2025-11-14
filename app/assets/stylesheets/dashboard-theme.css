@@ -1,0 +1,83 @@
+/* Dashboard Theme Override - Match Landing Page Style */
+
+/* Background Colors */
+.dark\:bg-boxdark, .dark\:bg-boxdark-2 {
+  background-color: #000000 !important;
+}
+
+.bg-whiten, .dark\:bg-whiter {
+  background-color: #111827 !important;
+}
+
+.bg-white.dark\:bg-boxdark {
+  background-color: #1f2937 !important;
+}
+
+/* Card Backgrounds */
+.rounded-2xl.border.border-stroke.bg-white {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+/* Primary Color - Change to Yellow */
+.bg-primary, .text-primary, .border-primary {
+  background-color: #fbbf24 !important;
+  color: #fbbf24 !important;
+  border-color: #fbbf24 !important;
+}
+
+/* Text Colors */
+.text-black.dark\:text-white {
+  color: #ffffff !important;
+}
+
+.text-body, .dark\:text-bodydark {
+  color: #d1d5db !important;
+}
+
+/* Borders */
+.border-stroke, .dark\:border-strokedark {
+  border-color: #374151 !important;
+}
+
+/* Hover States */
+.hover\:bg-white.dark\:hover\:bg-boxdark:hover {
+  background-color: #1f2937 !important;
+}
+
+/* Buttons */
+.bg-primary:hover {
+  background-color: #f59e0b !important;
+}
+
+/* Sidebar */
+aside {
+  background-color: #111827 !important;
+  border-right-color: #374151 !important;
+}
+
+/* Topbar */
+header {
+  background-color: #111827 !important;
+  border-bottom-color: #374151 !important;
+}
+
+/* Yellow Accent Highlights */
+.text-yellow-400 {
+  color: #fbbf24 !important;
+}
+
+.bg-yellow-400 {
+  background-color: #fbbf24 !important;
+}
+
+.border-yellow-400 {
+  border-color: #fbbf24 !important;
+}
+
+/* Card Hover Effects */
+.rounded-2xl.border:hover {
+  border-color: #fbbf24 !important;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}

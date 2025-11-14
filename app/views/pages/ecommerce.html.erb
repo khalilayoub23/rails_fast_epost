@@ -1,0 +1,154 @@
+<!-- For E-commerce Page -->
+<section class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-20">
+  <div class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6">
+        <%= t("ecommerce_page.title").split.first %> <span class="text-yellow-400"><%= t("ecommerce_page.title").split.last(2).join(" ") %></span>
+      </h1>
+      <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+        <%= t("ecommerce_page.subtitle") %>
+      </p>
+      <%= link_to t("ecommerce_page.start_shipping"), pages_contact_path, class: "inline-block px-8 py-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all transform hover:scale-105 shadow-lg text-lg" %>
+    </div>
+
+    <!-- Smart API Integration Section -->
+    <div class="max-w-6xl mx-auto mb-16">
+      <div class="bg-gradient-to-r from-yellow-400/10 to-yellow-500/10 border-2 border-yellow-400 rounded-2xl p-8 md:p-12">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-16 h-16 bg-yellow-400 rounded-xl flex items-center justify-center">
+            <svg class="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-3xl font-bold text-yellow-400"><%= t("ecommerce_page.api_title") %></h2>
+            <p class="text-gray-300"><%= t("ecommerce_page.api_subtitle") %></p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <h3 class="font-bold text-lg mb-2 text-yellow-400"><%= t("ecommerce_page.api_restful_title") %></h3>
+            <p class="text-sm text-gray-300"><%= t("ecommerce_page.api_restful_desc") %></p>
+          </div>
+          <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <h3 class="font-bold text-lg mb-2 text-yellow-400"><%= t("ecommerce_page.api_webhooks_title") %></h3>
+            <p class="text-sm text-gray-300"><%= t("ecommerce_page.api_webhooks_desc") %></p>
+          </div>
+          <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <h3 class="font-bold text-lg mb-2 text-yellow-400"><%= t("ecommerce_page.api_sdks_title") %></h3>
+            <p class="text-sm text-gray-300"><%= t("ecommerce_page.api_sdks_desc") %></p>
+          </div>
+        </div>
+
+        <div class="bg-gray-900 rounded-xl p-6 border border-gray-700">
+          <p class="text-sm text-gray-400 mb-3">Quick Start - Create a shipment in seconds:</p>
+          <pre class="text-xs text-green-400 overflow-x-auto"><code>POST /api/v1/shipments
+{
+  "pickup_address": {...},
+  "delivery_address": {...},
+  "package_details": {...}
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Integrations -->
+    <div class="max-w-6xl mx-auto mb-16">
+      <h2 class="text-3xl font-bold text-center mb-12"><%= t("ecommerce_page.platforms_title") %></h2>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-yellow-400 transition-all text-center">
+          <div class="w-20 h-20 bg-yellow-400/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13.5 2C10.5 2 8 4.5 8 7.5c0 1.3.5 2.5 1.2 3.5L2 18.2V22h3.8l7.2-7.2c1 .7 2.2 1.2 3.5 1.2 3 0 5.5-2.5 5.5-5.5S19.5 2 16.5 2h-3z"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-yellow-400 mb-4"><%= t("ecommerce_page.platform_shopify") %></h3>
+          <p class="text-gray-300 mb-4"><%= t("ecommerce_page.platform_shopify_desc") %></p>
+          <span class="inline-block px-4 py-2 bg-yellow-400 text-black font-semibold rounded-lg text-sm"><%= t("ecommerce_page.available") %></span>
+        </div>
+
+        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-yellow-400 transition-all text-center">
+          <div class="w-20 h-20 bg-yellow-400/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-yellow-400 mb-4"><%= t("ecommerce_page.platform_woocommerce") %></h3>
+          <p class="text-gray-300 mb-4"><%= t("ecommerce_page.platform_woocommerce_desc") %></p>
+          <span class="inline-block px-4 py-2 bg-yellow-400 text-black font-semibold rounded-lg text-sm"><%= t("ecommerce_page.available") %></span>
+        </div>
+
+        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 hover:border-yellow-400 transition-all text-center">
+          <div class="w-20 h-20 bg-yellow-400/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-yellow-400 mb-4"><%= t("ecommerce_page.platform_custom") %></h3>
+          <p class="text-gray-300 mb-4"><%= t("ecommerce_page.platform_custom_desc") %></p>
+          <span class="inline-block px-4 py-2 bg-yellow-400 text-black font-semibold rounded-lg text-sm"><%= t("ecommerce_page.api_available") %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+      <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
+        <div class="w-12 h-12 bg-yellow-400/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h4 class="font-bold mb-2"><%= t("ecommerce_page.feature_pickups_title") %></h4>
+        <p class="text-sm text-gray-400"><%= t("ecommerce_page.feature_pickups_desc") %></p>
+      </div>
+
+      <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
+        <div class="w-12 h-12 bg-yellow-400/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+        </div>
+        <h4 class="font-bold mb-2"><%= t("ecommerce_page.feature_optimization_title") %></h4>
+        <p class="text-sm text-gray-400"><%= t("ecommerce_page.feature_optimization_desc") %></p>
+      </div>
+
+      <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
+        <div class="w-12 h-12 bg-yellow-400/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+        </div>
+        <h4 class="font-bold mb-2"><%= t("ecommerce_page.feature_alerts_title") %></h4>
+        <p class="text-sm text-gray-400"><%= t("ecommerce_page.feature_alerts_desc") %></p>
+      </div>
+
+      <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 text-center">
+        <div class="w-12 h-12 bg-yellow-400/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h4 class="font-bold mb-2"><%= t("ecommerce_page.feature_analytics_title") %></h4>
+        <p class="text-sm text-gray-400"><%= t("ecommerce_page.feature_analytics_desc") %></p>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="max-w-4xl mx-auto bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-2xl p-8 md:p-12 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-black mb-4">
+        <%= t("ecommerce_page.cta_title") %>
+      </h2>
+      <p class="text-black/80 text-lg mb-8">
+        <%= t("ecommerce_page.cta_subtitle") %>
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <%= link_to t("ecommerce_page.start_trial"), pages_contact_path, class: "inline-block px-8 py-4 bg-black text-white font-bold rounded-lg hover:bg-gray-900 transition-all shadow-lg" %>
+        <%= link_to t("ecommerce_page.view_docs"), pages_services_path, class: "inline-block px-8 py-4 bg-white text-black font-bold rounded-lg hover:bg-gray-100 transition-all shadow-lg" %>
+      </div>
+    </div>
+  </div>
+</section>

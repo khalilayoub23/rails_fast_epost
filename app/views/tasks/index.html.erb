@@ -1,42 +1,55 @@
-<% content_for :page_title, (@customer ? "Tasks for #{@customer.name}" : "Tasks") %>
+<% content_for :page_title, (@customer ? "Tasks for #{@customer.name}" : "All Tasks - Fastepost") %>
 
-<div class="space-y-6">
-  <div class="flex items-center justify-between">
-    <div>
-      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-          <li class="inline-flex items-center">
-            <%= link_to root_path, class: "text-body hover:text-dark" do %>
-              <span class="material-icons text-sm mr-1">home</span>
-              Home
-            <% end %>
-          </li>
-          <% if @customer %>
-            <li>
-              <div class="flex items-center">
-                <span class="material-icons text-sm text-body mx-1">chevron_right</span>
-                <%= link_to "Customers", customers_path, class: "text-body hover:text-dark" %>
-              </div>
-            </li>
-            <li>
-              <div class="flex items-center">
-                <span class="material-icons text-sm text-body mx-1">chevron_right</span>
-                <%= link_to @customer.name, customer_path(@customer), class: "text-body hover:text-dark" %>
-              </div>
-            </li>
-          <% end %>
-          <li>
-            <div class="flex items-center">
-              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
-              <span class="text-dark font-medium">Tasks</span>
-            </div>
-          </li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-8">
   <%= turbo_stream_from "tasks" %>
+  
+  <div class="container mx-auto px-4 max-w-7xl">
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">
+            <% if @customer %>
+              Tasks for <%= @customer.name %>
+            <% else %>
+              All Tasks
+            <% end %>
+          </h1>
+          <nav class="flex items-center text-sm text-gray-400 flex-wrap gap-1" aria-label="Breadcrumb">
+            <%= link_to root_path, class: "hover:text-yellow-400 transition-colors" do %>
+              <span class="inline-flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Home
+              </span>
+            <% end %>
+            <% if @customer %>
+              <svg class="w-4 h-4 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <%= link_to "Customers", customers_path, class: "hover:text-yellow-400 transition-colors" %>
+              <svg class="w-4 h-4 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+              <%= link_to @customer.name, customer_path(@customer), class: "hover:text-yellow-400 transition-colors" %>
+              <svg class="w-4 h-4 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            <% end %>
+            <span class="text-yellow-400">Tasks</span>
+          </nav>
+        </div>
+        <% if @customer %>
+          <%= link_to new_customer_task_path(@customer), class: "inline-flex items-center justify-center px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50 transform hover:scale-105" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            New Task
+          <% end %>
+        <% end %>
+      </div>
+    </div>
 
   <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
     <div class="mb-6 flex items-center justify-between">

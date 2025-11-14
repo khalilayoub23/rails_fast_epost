@@ -1,57 +1,137 @@
-<div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
-  <div class="w-full max-w-md">
+<!-- Dark Gradient Background matching landing page -->
+<div class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-hidden px-4 py-12">
+  
+  <!-- Animated Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-1/2 -left-1/2 w-full h-full bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-1/2 -right-1/2 w-full h-full bg-yellow-500/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+  </div>
+
+  <div class="relative z-10 w-full max-w-md">
     <!-- Logo/Header -->
     <div class="mb-8 text-center">
-      <h1 class="text-3xl font-bold text-dark">Rails Fast Epost</h1>
-      <p class="mt-2 text-sm text-body">Create your account</p>
+      <%= link_to pages_home_path, class: "inline-block mb-4" do %>
+        <%= image_tag "logo.png", alt: "FastEpost Logo", class: "h-20 mx-auto animate-float-logo" %>
+      <% end %>
+      <h1 class="text-4xl font-bold text-white mb-2">
+        <%= t('signup_title', default: 'Create Account') %>
+      </h1>
+      <p class="text-gray-400">
+        <%= t('signup_subtitle', default: 'Start your journey with us today') %>
+      </p>
     </div>
 
-    <!-- Registration Card -->
-    <div class="rounded-sm border border-stroke bg-white px-8 py-10 shadow-default">
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-5" }) do |f| %>
+    <!-- Registration Card with Glassmorphism -->
+    <div class="rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm px-8 py-10 shadow-2xl">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+        
         <!-- Error Messages -->
         <% if resource.errors.any? %>
-          <div class="rounded-sm border border-danger/30 bg-[#FFF1F2] p-4 text-danger">
-            <h3 class="mb-2 font-semibold text-sm"><%= pluralize(resource.errors.count, "error") %> prohibited saving:</h3>
-            <ul class="list-disc pl-5 text-xs">
-              <% resource.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-              <% end %>
-            </ul>
+          <div class="rounded-lg border border-red-500/30 bg-red-900/20 p-4">
+            <div class="flex items-start">
+              <svg class="w-5 h-5 text-red-400 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div class="flex-1">
+                <h3 class="mb-2 font-semibold text-sm text-red-300">
+                  <%= pluralize(resource.errors.count, "error") %> <%= t('errors_occurred', default: 'occurred') %>:
+                </h3>
+                <ul class="list-disc pl-5 text-xs text-red-200 space-y-1">
+                  <% resource.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
           </div>
         <% end %>
 
         <!-- Email Field -->
         <div>
-          <%= f.label :email, class: "mb-2 block text-sm font-medium text-dark" %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full rounded border border-stroke bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none" %>
+          <%= f.label :email, t('email', default: 'Email'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+              </svg>
+            </div>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email",
+                placeholder: t('email_placeholder', default: 'your@email.com'),
+                class: "w-full rounded-lg border border-gray-600 bg-gray-900/50 px-4 py-3 pl-10 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/50 focus:outline-none transition-all" %>
+          </div>
         </div>
 
         <!-- Password Field -->
         <div>
-          <%= f.label :password, class: "mb-2 block text-sm font-medium text-dark" %>
-          <%= f.password_field :password, autocomplete: "new-password", class: "w-full rounded border border-stroke bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none" %>
+          <%= f.label :password, t('password', default: 'Password'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <%= f.password_field :password, autocomplete: "new-password",
+                placeholder: t('password_placeholder', default: '••••••••'),
+                class: "w-full rounded-lg border border-gray-600 bg-gray-900/50 px-4 py-3 pl-10 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/50 focus:outline-none transition-all" %>
+          </div>
           <% if @minimum_password_length %>
-            <p class="mt-1 text-xs text-body"><%= @minimum_password_length %> characters minimum</p>
+            <p class="mt-2 text-xs text-gray-400 flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <%= t('minimum_characters', default: '%{count} characters minimum', count: @minimum_password_length) %>
+            </p>
           <% end %>
         </div>
 
         <!-- Password Confirmation Field -->
         <div>
-          <%= f.label :password_confirmation, class: "mb-2 block text-sm font-medium text-dark" %>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full rounded border border-stroke bg-white px-4 py-3 text-dark focus:border-primary focus:outline-none" %>
+          <%= f.label :password_confirmation, t('password_confirmation', default: 'Confirm Password'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password",
+                placeholder: t('password_placeholder', default: '••••••••'),
+                class: "w-full rounded-lg border border-gray-600 bg-gray-900/50 px-4 py-3 pl-10 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/50 focus:outline-none transition-all" %>
+          </div>
         </div>
 
         <!-- Submit Button -->
         <div>
-          <%= f.submit "Create account", class: "w-full rounded bg-primary px-4 py-3 text-sm font-medium text-white hover:opacity-90 focus:outline-none" %>
+          <%= f.submit t('create_account_button', default: 'Create Account'), 
+              class: "w-full rounded-lg bg-yellow-400 px-4 py-3 text-base font-semibold text-gray-900 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all transform hover:scale-[1.02] active:scale-[0.98]" %>
         </div>
       <% end %>
 
+      <!-- Divider -->
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-700"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-4 bg-gray-800/50 text-gray-400">
+            <%= t('or', default: 'or') %>
+          </span>
+        </div>
+      </div>
+
       <!-- Links -->
-      <div class="mt-6 text-center text-sm">
+      <div class="text-center text-sm">
         <%= render "devise/shared/links" %>
       </div>
+    </div>
+
+    <!-- Back to Home Link -->
+    <div class="mt-6 text-center">
+      <%= link_to pages_home_path, class: "inline-flex items-center text-sm text-gray-400 hover:text-yellow-400 transition-colors" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <%= t('back_to_home', default: 'Back to homepage') %>
+      <% end %>
     </div>
   </div>
 </div>

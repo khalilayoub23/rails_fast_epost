@@ -1,0 +1,150 @@
+<!-- Track Parcel Page -->
+<section class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-20">
+  <div class="container mx-auto px-4 py-16">
+    <div class="max-w-3xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          <%= t("track.title").split.first(2).join(" ") %> <span class="text-yellow-400"><%= t("track.title").split.last %></span>
+        </h1>
+        <p class="text-xl text-gray-300">
+          <%= t("track.subtitle") %>
+        </p>
+      </div>
+
+      <!-- Tracking Form -->
+      <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 mb-8">
+        <%= form_with url: pages_track_parcel_path, method: :get, local: true, class: "space-y-6" do |f| %>
+          <div>
+            <%= f.label :tracking_number, t("track.tracking_number"), class: "block text-sm font-medium mb-2" %>
+            <div class="flex gap-4">
+              <%= f.text_field :tracking_number, 
+                  value: params[:tracking_number],
+                  class: "flex-1 px-4 py-4 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent text-white text-lg", 
+                  placeholder: t("track.placeholder"),
+                  required: true %>
+              <%= f.submit t("track.track_button"), class: "px-8 py-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all transform hover:scale-105 shadow-lg cursor-pointer" %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="mt-6 p-4 bg-gray-900 rounded-lg">
+          <p class="text-sm text-gray-400">
+            <svg class="w-5 h-5 inline mr-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <%= t("track.tip") %>
+          </p>
+        </div>
+      </div>
+
+      <% if params[:tracking_number].present? %>
+        <!-- Tracking Results -->
+        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-2"><%= t("track.details_title") %></h2>
+            <p class="text-gray-300"><%= t("track.tracking_number") %>: <strong class="text-white"><%= params[:tracking_number] %></strong></p>
+          </div>
+
+          <!-- Timeline -->
+          <div class="space-y-6">
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="w-0.5 h-full bg-yellow-400 mt-2"></div>
+              </div>
+              <div class="flex-1 pb-6">
+                <p class="font-semibold text-lg"><%= t("track.status_received") %></p>
+                <p class="text-sm text-gray-400"><%= t("track.status_received_desc") %></p>
+                <p class="text-xs text-gray-500 mt-1"><%= t("track.time_ago", time: "2") %></p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="w-0.5 h-full bg-yellow-400 mt-2"></div>
+              </div>
+              <div class="flex-1 pb-6">
+                <p class="font-semibold text-lg"><%= t("track.status_pickup") %></p>
+                <p class="text-sm text-gray-400"><%= t("track.status_pickup_desc") %></p>
+                <p class="text-xs text-gray-500 mt-1"><%= t("track.time_ago", time: "1") %></p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
+                  <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                </div>
+                <div class="w-0.5 h-full bg-gray-700 mt-2"></div>
+              </div>
+              <div class="flex-1 pb-6">
+                <p class="font-semibold text-lg text-yellow-400"><%= t("track.status_transit") %></p>
+                <p class="text-sm text-gray-400"><%= t("track.status_transit_desc") %></p>
+                <p class="text-xs text-gray-500 mt-1"><%= t("track.current_status") %></p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-1">
+                <p class="font-semibold text-lg text-gray-500"><%= t("track.status_delivery") %></p>
+                <p class="text-sm text-gray-500"><%= t("track.status_delivery_desc") %></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 p-4 bg-gray-900 rounded-lg">
+            <p class="text-sm text-gray-300">
+              <strong class="text-yellow-400"><%= t("track.estimated_delivery") %>:</strong> <%= t("track.delivery_time") %>
+            </p>
+          </div>
+        </div>
+      <% else %>
+        <!-- No Tracking Number -->
+        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 text-center">
+          <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+          </svg>
+          <p class="text-gray-400"><%= t("track.no_tracking") %></p>
+        </div>
+      <% end %>
+
+      <!-- Help Section -->
+      <div class="mt-8 grid md:grid-cols-2 gap-4">
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <h3 class="font-bold text-lg mb-2 text-yellow-400"><%= t("track.need_help") %></h3>
+          <p class="text-sm text-gray-300 mb-4"><%= t("track.contact_support") %></p>
+          <%= link_to t("track.contact_button"), pages_contact_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-500 font-medium" %>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <h3 class="font-bold text-lg mb-2 text-yellow-400"><%= t("track.create_shipment") %></h3>
+          <p class="text-sm text-gray-300 mb-4"><%= t("track.ready_to_send") %></p>
+          <% if user_signed_in? %>
+            <%= link_to t("track.go_dashboard"), dashboard_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-500 font-medium" %>
+          <% else %>
+            <%= link_to t("track.sign_up"), new_user_registration_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-500 font-medium" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

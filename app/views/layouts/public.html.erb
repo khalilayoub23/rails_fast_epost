@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>" dir="<%= text_direction %>" id="html-root">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= content_for(:title) || "Fastepost - Speed Meets Trust" %></title>
+    <meta name="description" content="From legal filings to online orders — Fastepost delivers it all.">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <!-- Google Fonts for Handwriting -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap&v=2" rel="stylesheet">
+
+    <style>
+      
+      @keyframes float-logo {
+        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        25% { transform: translateY(-6px) rotate(-1deg) scale(1.02); }
+        50% { transform: translateY(-3px) rotate(1deg) scale(1.04); }
+        75% { transform: translateY(-8px) rotate(-0.5deg) scale(1.02); }
+      }
+
+      @keyframes pulse-glow {
+        0%, 100% { 
+          box-shadow: 0 8px 20px rgba(251, 191, 36, 0.5), 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+        50% { 
+          box-shadow: 0 12px 30px rgba(251, 191, 36, 0.7), 0 0 40px rgba(251, 191, 36, 0.5);
+        }
+      }
+
+      .logo-animated {
+        animation: float-logo 4s ease-in-out infinite, pulse-glow 3s ease-in-out infinite;
+      }
+      
+      .handwriting-font {
+        font-family: 'Tangerine', cursive !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.1em !important;
+        font-size: 1.5rem !important;
+        line-height: 1 !important;
+      }
+      
+      /* Kaushan Script is self-hosted and scoped via .brand-script only */
+    </style>
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-black text-white">
+    <!-- Public Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-20">
+          <!-- Logo - Yellow Background with Dark Icon -->
+          <div class="flex items-center">
+            <%= link_to pages_home_path, class: "group flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/5 transition-all duration-300" do %>
+              <!-- Icon with yellow background & bold dark logo - keep button size, enlarge icon -->
+              <div class="relative w-14 h-14 rounded-xl flex items-center justify-center bg-yellow-400 shadow-lg shadow-yellow-400/50 group-hover:shadow-yellow-400/70 transition-all duration-300 logo-animated">
+                <%= image_tag 'fast epost transparent.png', alt: 'Fast Epost', class: 'w-12 h-12 object-contain', style: 'filter: brightness(0) saturate(100%) contrast(2);' %>
+              </div>
+              <!-- Brand Name - Bold & Enhanced -->
+              <div class="hidden sm:flex flex-col">
+                <span class="text-white font-black text-xl tracking-tight leading-none group-hover:text-yellow-400 transition-colors duration-300 drop-shadow-lg">Fast Epost</span>
+                <span class="text-yellow-400 leading-none mt-1 drop-shadow-md handwriting-font">EXPRESS DELIVERY</span>
+              </div>
+            <% end %>
+          </div>
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-8">
+            <%= link_to pages_privacy_policy_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+              <%= t("nav.privacy_policy") %>
+            <% end %>
+            <%= link_to pages_services_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+              <%= t("nav.services") %>
+            <% end %>
+            <%= link_to pages_track_parcel_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+              <%= t("nav.track") %>
+            <% end %>
+            <!-- Law Firms Button -->
+            <%= link_to pages_law_firms_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+              <%= t("nav.law_firms") %>
+            <% end %>
+            <!-- E-commerce Button -->
+            <%= link_to pages_ecommerce_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+              <%= t("nav.ecommerce") %>
+            <% end %>
+          </div>
+
+          <!-- Language & Auth Buttons -->
+          <div class="hidden md:flex items-center gap-4">
+            <!-- Server-side Locale Switcher -->
+            <%= render "shared/locale_switcher" %>
+
+            <% if user_signed_in? %>
+              <%= link_to t("nav.dashboard"), root_path, class: "px-4 py-2 text-sm font-medium text-white hover:text-yellow-400 transition-colors" %>
+              <%= link_to t("nav.logout"), destroy_user_session_path, data: { turbo_method: :delete }, class: "px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50" %>
+            <% else %>
+              <%= link_to t("nav.login"), new_user_session_path, class: "px-4 py-2 text-sm font-medium text-white hover:text-yellow-400 transition-colors" %>
+              <%= link_to t("nav.get_started"), new_user_registration_path, class: "px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50" %>
+            <% end %>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors" aria-label="Toggle menu">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation Menu -->
+      <div id="mobile-menu" class="hidden bg-black/95 backdrop-blur-md border-t border-gray-800">
+        <div class="container mx-auto px-4 py-6 space-y-4">
+            <%= link_to pages_privacy_policy_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
+            <span data-i18n="nav_privacy_policy"><%= t("nav.privacy_policy") %></span>
+          <% end %>
+          <%= link_to pages_services_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
+            <span data-i18n="nav_services"><%= t("nav.services") %></span>
+          <% end %>
+          <%= link_to pages_track_parcel_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
+            <span data-i18n="nav_track"><%= t("nav.track") %></span>
+          <% end %>
+          <%= link_to pages_law_firms_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
+            <span data-i18n="nav_law_firms"><%= t("nav.law_firms") %></span>
+          <% end %>
+          <%= link_to pages_ecommerce_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
+            <span data-i18n="nav_ecommerce"><%= t("nav.ecommerce") %></span>
+          <% end %>          <div class="pt-4 border-t border-gray-800 space-y-3">
+            <!-- Simple Mobile Locale Links -->
+            <div class="grid grid-cols-2 gap-3">
+              <%= link_to "🇺🇸 English", url_for(locale: :en), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+              <%= link_to "🇮🇱 עברית", url_for(locale: :he), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+              <%= link_to "🇸🇦 العربية", url_for(locale: :ar), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+              <%= link_to "🇷🇺 Русский", url_for(locale: :ru), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+            </div>
+
+            <% if user_signed_in? %>
+              <%= link_to t("nav.dashboard"), root_path, class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+              <%= link_to t("nav.logout"), destroy_user_session_path, data: { turbo_method: :delete }, class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>
+            <% else %>
+              <%= link_to t("nav.login"), new_user_session_path, class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+              <%= link_to t("nav.get_started"), new_user_registration_path, class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20">
+      <%= yield %>
+    </main>
+
+    <%= render "shared/footer" %>
+
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

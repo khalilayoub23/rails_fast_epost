@@ -1,0 +1,30 @@
+<footer style="padding: 2rem 0; background-color: #111827; border-top: 1px solid #374151;">
+  <style>
+    @font-face {
+      font-family: 'Kaushan Script';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('<%= asset_path("kaushan/KaushanScript-Regular.ttf") %>') format('truetype');
+    }
+
+    .brand-script { font-family: 'Kaushan Script', cursive !important; }
+  </style>
+  <div class="container mx-auto px-4">
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <!-- Left side - Terms of Service -->
+      <div style="flex: 1; display: flex; justify-content: flex-start;">
+        <%= link_to "#terms", style: "color: #9CA3AF; font-size: 1rem; text-decoration: none; transition: color 0.3s; white-space: nowrap;" do %>
+          <span data-i18n="footer_terms"><%= t("footer_terms") %></span>
+        <% end %>
+      </div>
+      <!-- Right side - Fastepost branding + rights -->
+      <div style="flex: 1; display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem;">
+        <span class="brand-script" style="font-size: 1.25rem; font-weight: 400; letter-spacing: 0.03em; color: #FBBF24; text-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);">
+          fastepost <span data-i18n="footer_rights_inline"><%= t("footer_rights_inline") %></span> © 2019
+        </span>
+      </div>
+    </div>
+  </div>
+  
+</footer>

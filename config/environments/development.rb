@@ -87,4 +87,7 @@ Rails.application.configure do
 
   # Allow requests from GitHub Codespaces domain
   config.hosts << /.*\.app\.github\.dev/
+  
+  # Configure allowed origins for CSRF protection in Codespaces
+  config.action_controller.forgery_protection_origin_check = false
 end

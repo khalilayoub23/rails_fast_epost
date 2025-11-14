@@ -1,76 +1,62 @@
 <!-- Locale Switcher Component -->
-<div class="relative inline-block" data-controller="dropdown">
-  <!-- Trigger Button -->
-  <button type="button" 
-          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-whiter dark:hover:bg-boxdark-2 transition-colors"
-          data-action="click->dropdown#toggle"
-          aria-haspopup="true"
-          aria-expanded="false">
-    <!-- Current Language Icon -->
-    <span class="material-icons text-xl text-body">language</span>
-    
-    <!-- Current Language Code -->
-    <span class="text-sm font-medium text-dark dark:text-white uppercase">
-      <%= I18n.locale %>
-    </span>
-    
-    <!-- Dropdown Arrow -->
-    <span class="material-icons text-lg text-body">expand_more</span>
+<div class="relative inline-block" data-controller="dropdown" data-dropdown-hover-value="true" 
+     data-action="mouseenter->dropdown#show mouseleave->dropdown#hide">
+  <!-- Trigger Button: Circle 1 - Just 2 letters -->
+  <button type="button"
+          class="flex items-center justify-center w-12 h-12 rounded-full bg-black/40 border-2 border-yellow-400 hover:bg-yellow-400/10 transition-all duration-300">
+    <span class="font-bold text-yellow-400 text-sm"><%= I18n.locale.to_s.upcase %></span>
   </button>
 
   <!-- Dropdown Menu -->
-  <div data-dropdown-target="menu" 
-       class="hidden absolute <%= rtl? ? 'left-0' : 'right-0' %> mt-2 w-48 bg-white dark:bg-boxdark rounded-lg shadow-lg border border-stroke dark:border-strokedark z-9999">
-    <div class="py-2">
+  <div data-dropdown-target="menu"
+       data-action="mouseenter->dropdown#show mouseleave->dropdown#hide"
+       class="hidden absolute <%= rtl? ? 'left-0' : 'right-0' %> mt-2 w-40 bg-black/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-700 z-50">
+    <div class="py-1">
       <!-- English -->
-      <%= link_to url_for(locale: :en), 
-          class: "flex items-center gap-3 px-4 py-2.5 hover:bg-whiter dark:hover:bg-boxdark-2 transition-colors #{I18n.locale == :en ? 'bg-whiter dark:bg-boxdark-2' : ''}" do %>
-        <span class="text-2xl">🇬🇧</span>
+      <% css_classes = "flex items-center gap-3 px-4 py-2 hover:bg-yellow-400/10 transition-colors #{I18n.locale == :en ? 'bg-yellow-400/10' : ''}" %>
+      <%= link_to url_for(locale: :en), class: css_classes do %>
+        <span class="text-xs font-bold text-yellow-400">EN</span>
         <div class="flex-1">
-          <div class="text-sm font-medium text-dark dark:text-white">English</div>
-          <div class="text-xs text-bodydark1">LTR</div>
+          <div class="text-xs font-medium text-white">English</div>
         </div>
         <% if I18n.locale == :en %>
-          <span class="material-icons text-primary text-lg">check</span>
+          <span class="text-yellow-400 text-sm">✓</span>
         <% end %>
       <% end %>
 
       <!-- Arabic -->
-      <%= link_to url_for(locale: :ar), 
-          class: "flex items-center gap-3 px-4 py-2.5 hover:bg-whiter dark:hover:bg-boxdark-2 transition-colors #{I18n.locale == :ar ? 'bg-whiter dark:bg-boxdark-2' : ''}" do %>
-        <span class="text-2xl">🇸🇦</span>
+      <% css_classes = "flex items-center gap-3 px-4 py-2 hover:bg-yellow-400/10 transition-colors #{I18n.locale == :ar ? 'bg-yellow-400/10' : ''}" %>
+      <%= link_to url_for(locale: :ar), class: css_classes do %>
+        <span class="text-xs font-bold text-yellow-400">AR</span>
         <div class="flex-1">
-          <div class="text-sm font-medium text-dark dark:text-white">العربية</div>
-          <div class="text-xs text-bodydark1">RTL</div>
+          <div class="text-xs font-medium text-white">العربية</div>
         </div>
         <% if I18n.locale == :ar %>
-          <span class="material-icons text-primary text-lg">check</span>
+          <span class="text-yellow-400 text-sm">✓</span>
         <% end %>
       <% end %>
 
       <!-- Russian -->
-      <%= link_to url_for(locale: :ru), 
-          class: "flex items-center gap-3 px-4 py-2.5 hover:bg-whiter dark:hover:bg-boxdark-2 transition-colors #{I18n.locale == :ru ? 'bg-whiter dark:bg-boxdark-2' : ''}" do %>
-        <span class="text-2xl">��</span>
+      <% css_classes = "flex items-center gap-3 px-4 py-2 hover:bg-yellow-400/10 transition-colors #{I18n.locale == :ru ? 'bg-yellow-400/10' : ''}" %>
+      <%= link_to url_for(locale: :ru), class: css_classes do %>
+        <span class="text-xs font-bold text-yellow-400">RU</span>
         <div class="flex-1">
-          <div class="text-sm font-medium text-dark dark:text-white">Русский</div>
-          <div class="text-xs text-bodydark1">LTR</div>
+          <div class="text-xs font-medium text-white">Русский</div>
         </div>
         <% if I18n.locale == :ru %>
-          <span class="material-icons text-primary text-lg">check</span>
+          <span class="text-yellow-400 text-sm">✓</span>
         <% end %>
       <% end %>
 
       <!-- Hebrew -->
-      <%= link_to url_for(locale: :he), 
-          class: "flex items-center gap-3 px-4 py-2.5 hover:bg-whiter dark:hover:bg-boxdark-2 transition-colors #{I18n.locale == :he ? 'bg-whiter dark:bg-boxdark-2' : ''}" do %>
-        <span class="text-2xl">🇮🇱</span>
+      <% css_classes = "flex items-center gap-3 px-4 py-2 hover:bg-yellow-400/10 transition-colors #{I18n.locale == :he ? 'bg-yellow-400/10' : ''}" %>
+      <%= link_to url_for(locale: :he), class: css_classes do %>
+        <span class="text-xs font-bold text-yellow-400">HE</span>
         <div class="flex-1">
-          <div class="text-sm font-medium text-dark dark:text-white">עברית</div>
-          <div class="text-xs text-bodydark1">RTL</div>
+          <div class="text-xs font-medium text-white">עברית</div>
         </div>
         <% if I18n.locale == :he %>
-          <span class="material-icons text-primary text-lg">check</span>
+          <span class="text-yellow-400 text-sm">✓</span>
         <% end %>
       <% end %>
     </div>

@@ -1,18 +1,15 @@
-/* Self-hosted font setup: alias "Satoshi" to locally hosted Inter as a close match.
-   Place font files under app/assets/fonts (see README note below). */
+/* Font setup: Using Google Fonts CDN for Inter font (aliased as "Satoshi") */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 
 @font-face {
   font-family: "Satoshi";
-  src: url("../fonts/Inter-VariableFont.woff2") format("woff2");
+  src: local("Inter"), local("Inter Variable");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Satoshi";
-  src: url("../fonts/Inter-Italic-VariableFont.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
+/* Fallback: Use Inter directly if Satoshi alias doesn't work */
+body {
+  font-family: "Satoshi", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
