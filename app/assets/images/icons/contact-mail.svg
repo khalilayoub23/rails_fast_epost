@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Envelope Body -->
+  <rect x="8" y="16" width="48" height="32" rx="3" fill="#1F2937" stroke="#FCD34D" stroke-width="2"/>
+  <!-- Envelope Flap -->
+  <path d="M8 16 L32 36 L56 16" fill="#374151" stroke="#FCD34D" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Paper Inside -->
+  <rect x="14" y="24" width="36" height="18" rx="1" fill="#FCD34D" opacity="0.2"/>
+  <!-- Text Lines -->
+  <path d="M18 30 L46 30 M18 36 L46 36 M18 42 L38 42" stroke="#FCD34D" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+</svg>

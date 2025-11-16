@@ -64,6 +64,26 @@ A modern, full-featured postal and courier management system built with Rails 8,
 - **Carrier Association**: Link messengers to specific carriers
 - **Working Hours**: Track messenger availability schedules
 
+### 🔗 CRM Integration (Admin Only)
+- **Primary: Odoo CRM** - Open source, completely free
+  - Contact synchronization via webhooks
+  - Lead/opportunity tracking
+  - Automated Actions for real-time sync
+  - Self-hosted for full data control
+- **Alternative: HubSpot CRM** - Available if needed later
+  - Free tier support
+  - Marketing automation
+  - Ready to enable with environment variable
+- **CRM Dashboard**: Monitor integrations at `/admin/crm`
+- **Event Logging**: Track all webhook calls and sync status
+- **Customer Sync**: Automatic creation of Customer records from CRM
+
+### 📱 Social Media Integration
+- **Configurable Links**: Dynamic social media icons on landing page
+- **WhatsApp Business**: Direct "Chat Now" button integration
+- **Multi-Platform**: Facebook, Instagram, Telegram, TikTok webhook support
+- **Easy Configuration**: Update URLs in `config/social_media.yml`
+
 ### 🔐 Role-Based Access Control
 - **Admin Role**: Full system access including carrier management
 - **Manager Role**: Payment operations and customer management
@@ -130,12 +150,33 @@ A modern, full-featured postal and courier management system built with Rails 8,
 DB_HOST=127.0.0.1
 DB_PASSWORD=password
 
+# CRM Integration (Primary: Odoo)
+ODOO_API_KEY=your_secure_api_key_here
+
+# Optional: HubSpot CRM (if needed later)
+HUBSPOT_APP_SECRET=your_hubspot_secret
+
+# Optional: Social Media Webhooks
+META_VERIFY_TOKEN=your_meta_token
+META_APP_SECRET=your_meta_secret
+TELEGRAM_SECRET_TOKEN=your_telegram_token
+
 # Role Simulation (for demo purposes)
 DEMO_ROLE=ADMIN  # Options: ADMIN, MANAGER, VIEWER
 
 # Admin Actions (bypass role checks)
 ENABLE_ADMIN_ACTIONS=false
 ```
+
+#### CRM Setup (Odoo - Primary)
+
+See detailed guide: [ODOO_CRM_SETUP.md](ODOO_CRM_SETUP.md)
+
+Quick steps:
+1. Generate API key: `openssl rand -hex 32`
+2. Add to `.env`: `ODOO_API_KEY=your_key`
+3. Configure Odoo Automated Actions to POST to `/api/v1/integrations/odoo`
+4. Monitor integration at `/admin/crm`
 
 #### Database Configuration
 

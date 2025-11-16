@@ -1,20 +1,16 @@
 class CarriersController < ApplicationController
+  include Respondable
+
   before_action :require_admin!
+  before_action :set_carrier, only: %i[show edit update destroy]
 
   def index
     @carriers = Carrier.all
-    respond_to do |format|
-      format.html
-      format.json { render json: @carriers }
-    end
+    respond_with_index(@carriers)
   end
 
   def show
-    @carrier = Carrier.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.json { render json: @carrier }
-    end
+    respond_with_show(@carrier)
   end
 
   def new
@@ -23,71 +19,39 @@ class CarriersController < ApplicationController
 
   def create
     @carrier = Carrier.new(carrier_params)
-    if @carrier.save
-      respond_to do |format|
-        format.html { redirect_to @carrier, notice: "Carrier successfully created." }
-        format.json { render json: @carrier, status: :created }
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.prepend("carriers_list", partial: "carriers/carrier_card", locals: { carrier: @carrier }),
-            turbo_stream.update("carrier_form", partial: "carriers/form", locals: { carrier: Carrier.new }),
-            turbo_stream.append("flash-messages", partial: "shared/flash_message",
-                               locals: { type: :success, message: "Carrier created successfully!" })
-          ]
-        end
-      end
-    else
-      respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: { errors: @carrier.errors.full_messages }, status: :unprocessable_entity }
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            "carrier_form",
-            partial: "carriers/form",
-            locals: { carrier: @carrier }
-          ), status: :unprocessable_entity
-        end
-      end
+    respond_with_create(@carrier, nil, notice: "Carrier successfully created.") do
+      render turbo_stream: [
+        turbo_stream.prepend("carriers_list", partial: "carriers/carrier_card", locals: { carrier: @carrier }),
+        turbo_stream.update("carrier_form", partial: "carriers/form", locals: { carrier: Carrier.new }),
+        turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                           locals: { type: :success, message: "Carrier created successfully!" })
+      ]
     end
   end
 
-  def edit
-    @carrier = Carrier.find(params[:id])
-  end
+  def edit; end
 
   def update
-    @carrier = Carrier.find(params[:id])
-    if @carrier.update(carrier_params)
-      respond_to do |format|
-        format.html { redirect_to @carrier, notice: "Carrier successfully updated." }
-        format.json { render json: @carrier }
-      end
-    else
-      respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: { errors: @carrier.errors.full_messages }, status: :unprocessable_entity }
-      end
+    respond_with_update(@carrier, nil, notice: "Carrier successfully updated.") do
+      carrier_params
     end
   end
 
   def destroy
-    @carrier = Carrier.find(params[:id])
-    # DB-level ON DELETE CASCADE handles dependent records
-    @carrier.destroy
-    respond_to do |format|
-      format.html { redirect_to carriers_path, notice: "Carrier successfully deleted." }
-      format.json { head :no_content }
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.remove(@carrier),
-          turbo_stream.append("flash-messages", partial: "shared/flash_message",
-                             locals: { type: :success, message: "Carrier deleted successfully!" })
-        ]
-      end
+    respond_with_destroy(@carrier, carriers_path, notice: "Carrier successfully deleted.") do
+      render turbo_stream: [
+        turbo_stream.remove(@carrier),
+        turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                           locals: { type: :success, message: "Carrier deleted successfully!" })
+      ]
     end
   end
 
   private
+
+  def set_carrier
+    @carrier = Carrier.find(params[:id])
+  end
 
   def carrier_params
     params.require(:carrier).permit(:carrier_type, :name, :email, :address)

@@ -5,7 +5,7 @@ class Payment < ApplicationRecord
   belongs_to :payable, polymorphic: true
   # Associate payment to a primary task — fixtures reference tasks by label (task: one)
   # The payments table already has a task_id column and a foreign key to tasks.
-  belongs_to :task
+  belongs_to :task, optional: true
 
   # Define category enum (positional syntax)
   enum :category, { service_fee: 0, delivery_fee: 1, insurance: 2, penalty: 3 }

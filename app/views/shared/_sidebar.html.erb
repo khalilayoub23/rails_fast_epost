@@ -68,6 +68,15 @@
             <% end %>
           </li>
           <li>
+            <%= link_to admin_contact_inquiries_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_contact_inquiries_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_contact_inquiries_path)}">mail</span>
+              Contact Inquiries
+              <% if @pending_count ||= ContactInquiry.pending.count > 0 %>
+                <span class="ml-auto bg-warning text-white rounded-full px-2 py-0.5 text-xs"><%= @pending_count %></span>
+              <% end %>
+            <% end %>
+          </li>
+          <li>
             <%= link_to admin_branding_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_branding_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(admin_branding_path)}">brush</span>
               Branding

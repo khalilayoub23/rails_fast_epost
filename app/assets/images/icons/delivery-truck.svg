@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Truck Body with Package -->
+  <rect x="6" y="26" width="34" height="18" rx="2" fill="#1F2937" stroke="#FCD34D" stroke-width="2"/>
+  <!-- Package Icon Inside -->
+  <rect x="14" y="30" width="10" height="10" rx="1" fill="#FCD34D" opacity="0.3"/>
+  <path d="M19 30 L19 40 M14 35 L24 35" stroke="#FCD34D" stroke-width="1.5"/>
+  <!-- Truck Cabin -->
+  <path d="M40 26 L40 34 L48 34 L54 40 L54 44 L40 44 L40 26" fill="#1F2937" stroke="#FCD34D" stroke-width="2"/>
+  <!-- Cabin Window -->
+  <rect x="42" y="28" width="10" height="5" rx="1" fill="#FCD34D" opacity="0.3"/>
+  <!-- Front Wheel -->
+  <circle cx="16" cy="44" r="6" fill="#FCD34D"/>
+  <circle cx="16" cy="44" r="3" fill="#000000"/>
+  <!-- Back Wheel -->
+  <circle cx="46" cy="44" r="6" fill="#FCD34D"/>
+  <circle cx="46" cy="44" r="3" fill="#000000"/>
+  <!-- Location Pin Above -->
+  <path d="M56 12 C56 8 52 6 48 6 C44 6 40 8 40 12 C40 16 48 24 48 24 C48 24 56 16 56 12Z" fill="#FCD34D" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="48" cy="12" r="2" fill="#000000"/>
+</svg>

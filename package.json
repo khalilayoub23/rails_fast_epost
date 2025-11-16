@@ -2,6 +2,9 @@
   "name": "rails_fast_epost",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "@stripe/stripe-js": "^4.0.0"
+  },
   "scripts": {
     "test": "echo \"No JS tests defined\" && exit 0",
     "lint": "echo \"No JS lint configured\" && exit 0"

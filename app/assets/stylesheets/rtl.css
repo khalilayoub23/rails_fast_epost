@@ -1,10 +1,19 @@
-/* RTL (Right-to-Left) Support for Arabic and other RTL languages */
+/* RTL (Right-to-Left) Support for Arabic and Hebrew */
 
 /* Apply RTL direction when html has dir="rtl" */
 html[dir="rtl"] {
   direction: rtl;
   text-align: right;
 }
+
+/* IMPORTANT: Do NOT override symmetric properties */
+/* The following work identically in LTR and RTL without overrides: */
+/* - mx-auto (centers horizontally) */
+/* - items-center, justify-center, justify-between */
+/* - text-center */
+/* - px-*, py-*, p-* (symmetric padding) */
+/* - w-*, h-* (width/height) */
+/* - gap-* (flexbox gap - direction-agnostic) */
 
 /* Flip margins in RTL */
 html[dir="rtl"] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
@@ -13,6 +22,9 @@ html[dir="rtl"] .ml-3 { margin-left: 0; margin-right: 0.75rem; }
 html[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
 html[dir="rtl"] .ml-5 { margin-left: 0; margin-right: 1.25rem; }
 html[dir="rtl"] .ml-6 { margin-left: 0; margin-right: 1.5rem; }
+html[dir="rtl"] .ml-8 { margin-left: 0; margin-right: 2rem; }
+html[dir="rtl"] .ml-10 { margin-left: 0; margin-right: 2.5rem; }
+html[dir="rtl"] .ml-12 { margin-left: 0; margin-right: 3rem; }
 
 html[dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
 html[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
@@ -20,6 +32,9 @@ html[dir="rtl"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
 html[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
 html[dir="rtl"] .mr-5 { margin-right: 0; margin-left: 1.25rem; }
 html[dir="rtl"] .mr-6 { margin-right: 0; margin-left: 1.5rem; }
+html[dir="rtl"] .mr-8 { margin-right: 0; margin-left: 2rem; }
+html[dir="rtl"] .mr-10 { margin-right: 0; margin-left: 2.5rem; }
+html[dir="rtl"] .mr-12 { margin-right: 0; margin-left: 3rem; }
 
 /* Flip padding in RTL */
 html[dir="rtl"] .pl-1 { padding-left: 0; padding-right: 0.25rem; }
@@ -28,6 +43,9 @@ html[dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
 html[dir="rtl"] .pl-4 { padding-left: 0; padding-right: 1rem; }
 html[dir="rtl"] .pl-5 { padding-left: 0; padding-right: 1.25rem; }
 html[dir="rtl"] .pl-6 { padding-left: 0; padding-right: 1.5rem; }
+html[dir="rtl"] .pl-8 { padding-left: 0; padding-right: 2rem; }
+html[dir="rtl"] .pl-10 { padding-left: 0; padding-right: 2.5rem; }
+html[dir="rtl"] .pl-12 { padding-left: 0; padding-right: 3rem; }
 
 html[dir="rtl"] .pr-1 { padding-right: 0; padding-left: 0.25rem; }
 html[dir="rtl"] .pr-2 { padding-right: 0; padding-left: 0.5rem; }
@@ -35,6 +53,13 @@ html[dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
 html[dir="rtl"] .pr-4 { padding-right: 0; padding-left: 1rem; }
 html[dir="rtl"] .pr-5 { padding-right: 0; padding-left: 1.25rem; }
 html[dir="rtl"] .pr-6 { padding-right: 0; padding-left: 1.5rem; }
+html[dir="rtl"] .pr-8 { padding-right: 0; padding-left: 2rem; }
+html[dir="rtl"] .pr-10 { padding-right: 0; padding-left: 2.5rem; }
+html[dir="rtl"] .pr-12 { padding-right: 0; padding-left: 3rem; }
+
+/* Note: px, py, p utilities apply padding to both sides and don't need flipping */
+/* Symmetric utilities like px-*, py-*, w-*, h-*, gap-* work identically in RTL */
+/* They don't need any overrides to ensure consistency */
 
 /* Flip borders in RTL */
 html[dir="rtl"] .border-l { border-left: 0; border-right: 1px solid; }
@@ -62,6 +87,49 @@ html[dir="rtl"] .float-right { float: left; }
 
 /* Flip flex direction */
 html[dir="rtl"] .flex-row-reverse { flex-direction: row; }
+
+/* Handle space-x utilities in RTL - flip the spacing direction */
+html[dir="rtl"] .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+html[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+html[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+html[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+html[dir="rtl"] .space-x-5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+html[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+html[dir="rtl"] .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(2rem * var(--tw-space-x-reverse));
+  margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+}
 
 /* Flip positioning */
 html[dir="rtl"] .left-0 { left: auto; right: 0; }
@@ -167,6 +235,16 @@ html[dir="rtl"] .tag {
 html[dir="rtl"] .notification {
   right: auto;
   left: 1rem;
+}
+
+/* Header/Navigation RTL Adjustments - Match English measurements exactly */
+html[dir="rtl"] nav {
+  direction: rtl;
+}
+
+/* Ensure logo stays on the right in RTL */
+html[dir="rtl"] nav .flex.items-center.justify-between {
+  flex-direction: row-reverse;
 }
 
 /* Mobile bottom navigation in RTL - icons stay centered */

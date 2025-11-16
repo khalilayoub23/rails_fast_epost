@@ -1,0 +1,55 @@
+<%= form_with model: @payment, html: { id: "payment_form" } do |f| %>
+  <div>
+    <%= f.label :provider %>
+    <%= f.select :provider, options_for_select([ ["Local", "local"], ["Stripe", "stripe"] ], @payment.provider), include_blank: true %>
+  </div>
+
+  <div>
+    <%= f.label :category %>
+    <%= f.select :category, Payment.categories.keys.map { |key| [key.humanize, key] }, include_blank: true %>
+  </div>
+
+  <div>
+    <%= f.label :payment_type %>
+    <%= f.select :payment_type, Payment.payment_types.keys.map { |key| [key.humanize, key] }, include_blank: true %>
+  </div>
+
+  <div>
+    <%= f.label :amount_cents %>
+    <%= f.number_field :amount_cents, step: 1 %>
+  </div>
+
+  <div>
+    <%= f.label :currency %>
+    <%= f.text_field :currency %>
+  </div>
+
+  <div>
+    <%= f.label :task_id %>
+    <%= f.number_field :task_id %>
+  </div>
+
+  <div>
+    <%= f.label :payable_type %>
+    <%= f.text_field :payable_type %>
+  </div>
+
+  <div>
+    <%= f.label :payable_id %>
+    <%= f.number_field :payable_id %>
+  </div>
+
+  <div>
+    <%= f.label :interval_start %>
+    <%= f.date_field :interval_start %>
+  </div>
+
+  <div>
+    <%= f.label :interval_end %>
+    <%= f.date_field :interval_end %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

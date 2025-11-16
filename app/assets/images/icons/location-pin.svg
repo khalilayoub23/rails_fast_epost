@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Pin Shape -->
+  <path d="M32 8 C22 8 14 16 14 26 C14 38 32 56 32 56 C32 56 50 38 50 26 C50 16 42 8 32 8Z" fill="#1F2937" stroke="#FCD34D" stroke-width="3"/>
+  <!-- Inner Glow -->
+  <path d="M32 14 C26 14 20 19 20 26 C20 34 32 48 32 48 C32 48 44 34 44 26 C44 19 38 14 32 14Z" fill="#FCD34D" opacity="0.2"/>
+  <!-- Center Circle -->
+  <circle cx="32" cy="26" r="8" fill="#FCD34D"/>
+  <circle cx="32" cy="26" r="4" fill="#000000"/>
+</svg>

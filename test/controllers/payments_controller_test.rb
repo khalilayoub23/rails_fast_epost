@@ -67,4 +67,34 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to payments_url
   end
+
+  test "viewer cannot access new payment" do
+    sign_out @user
+    sign_in users(:viewer)
+
+    get new_payment_url
+
+    assert_redirected_to root_path
+    assert_equal I18n.t("messages.unauthorized"), flash[:alert]
+  end
+
+  test "viewer cannot create payment" do
+    sign_out @user
+    sign_in users(:viewer)
+
+    assert_no_difference("Payment.count") do
+      post payments_url, params: {
+        payment: {
+          category: @payment.category,
+          task_id: @payment.task_id,
+          payable_type: @payment.payable_type,
+          payable_id: @payment.payable_id,
+          payment_type: @payment.payment_type
+        }
+      }
+    end
+
+    assert_redirected_to root_path
+    assert_equal I18n.t("messages.unauthorized"), flash[:alert]
+  end
 end

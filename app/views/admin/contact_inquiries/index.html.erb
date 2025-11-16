@@ -1,0 +1,90 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col">
+      <h1 class="h3">Contact Inquiries</h1>
+      <p class="text-muted">Manage customer inquiries from the contact form</p>
+    </div>
+  </div>
+
+  <!-- Status Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card border-warning">
+        <div class="card-body">
+          <h5 class="card-title text-warning">
+            <i class="bi bi-hourglass-split"></i> Pending
+          </h5>
+          <h2 class="mb-0"><%= @pending_count %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-info">
+        <div class="card-body">
+          <h5 class="card-title text-info">
+            <i class="bi bi-telephone"></i> Contacted
+          </h5>
+          <h2 class="mb-0"><%= @contacted_count %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-success">
+        <div class="card-body">
+          <h5 class="card-title text-success">
+            <i class="bi bi-check-circle"></i> Resolved
+          </h5>
+          <h2 class="mb-0"><%= @resolved_count %></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Inquiries Table -->
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">All Inquiries</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Service</th>
+              <th>Status</th>
+              <th>Created At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @contact_inquiries.each do |inquiry| %>
+              <tr>
+                <td>#<%= inquiry.id %></td>
+                <td><%= inquiry.name %></td>
+                <td><%= inquiry.email %></td>
+                <td><%= inquiry.service %></td>
+                <td>
+                  <% case inquiry.status %>
+                  <% when "pending" %>
+                    <span class="badge bg-warning">Pending</span>
+                  <% when "contacted" %>
+                    <span class="badge bg-info">Contacted</span>
+                  <% when "resolved" %>
+                    <span class="badge bg-success">Resolved</span>
+                  <% end %>
+                </td>
+                <td><%= l(inquiry.created_at, format: :short) %></td>
+                <td>
+                  <%= link_to "View", admin_contact_inquiry_path(inquiry), class: "btn btn-sm btn-primary" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

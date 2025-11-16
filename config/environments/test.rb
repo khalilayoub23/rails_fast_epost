@@ -50,4 +50,7 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # RackTest driver cannot wait for Turbo cable connections, so disable auto waits in tests.
+  config.turbo.test_connect_after_actions = []
 end

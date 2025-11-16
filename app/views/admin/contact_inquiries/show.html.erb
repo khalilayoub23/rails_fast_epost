@@ -1,0 +1,120 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "Dashboard", admin_dashboard_path %></li>
+          <li class="breadcrumb-item"><%= link_to "Contact Inquiries", admin_contact_inquiries_path %></li>
+          <li class="breadcrumb-item active" aria-current="page">#<%= @contact_inquiry.id %></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Inquiry Details -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Inquiry Details</h5>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Name:</strong>
+            </div>
+            <div class="col-md-8">
+              <%= @contact_inquiry.name %>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Email:</strong>
+            </div>
+            <div class="col-md-8">
+              <%= mail_to @contact_inquiry.email %>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Phone:</strong>
+            </div>
+            <div class="col-md-8">
+              <%= @contact_inquiry.phone || "N/A" %>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Service:</strong>
+            </div>
+            <div class="col-md-8">
+              <%= @contact_inquiry.service %>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <strong>Message:</strong>
+            </div>
+            <div class="col-md-8">
+              <%= simple_format(@contact_inquiry.message) %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <strong>Submitted At:</strong>
+            </div>
+            <div class="col-md-8">
+              <%= l(@contact_inquiry.created_at, format: :long) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- Status Update -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Update Status</h5>
+        </div>
+        <div class="card-body">
+          <%= form_with model: @contact_inquiry, url: admin_contact_inquiry_path(@contact_inquiry), method: :patch, local: true do |f| %>
+            <div class="mb-3">
+              <%= f.label :status, class: "form-label" %>
+              <%= f.select :status, ContactInquiry.statuses.keys.map { |k| [k.titleize, k] }, {}, class: "form-select" %>
+            </div>
+            <div class="mb-3">
+              <%= f.label :admin_notes, "Admin Notes", class: "form-label" %>
+              <%= f.text_area :admin_notes, rows: 5, class: "form-control", placeholder: "Add internal notes about this inquiry..." %>
+            </div>
+            <%= f.submit "Update", class: "btn btn-primary w-100" %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Current Status -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Current Status</h5>
+        </div>
+        <div class="card-body">
+          <% case @contact_inquiry.status %>
+          <% when "pending" %>
+            <span class="badge bg-warning fs-5">Pending</span>
+          <% when "contacted" %>
+            <span class="badge bg-info fs-5">Contacted</span>
+          <% when "resolved" %>
+            <span class="badge bg-success fs-5">Resolved</span>
+          <% end %>
+          <hr>
+          <% if @contact_inquiry.admin_notes.present? %>
+            <strong>Admin Notes:</strong>
+            <%= simple_format(@contact_inquiry.admin_notes) %>
+          <% else %>
+            <p class="text-muted mb-0">No admin notes yet</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

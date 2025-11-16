@@ -1,0 +1,31 @@
+# Social Media Configuration
+# Update these with your actual social media profiles
+# Leave blank to hide the icon on the landing page
+
+development:
+  facebook: "https://facebook.com/fastepost"
+  twitter: "https://twitter.com/fastepost"
+  linkedin: "https://linkedin.com/company/fastepost"
+  whatsapp: "https://wa.me/972123456789"  # Replace with your WhatsApp Business number
+  telegram: "https://t.me/fastepost"
+  instagram: "https://instagram.com/fastepost"
+  tiktok: "https://tiktok.com/@fastepost"
+
+test:
+  facebook: "https://facebook.com/fastepost"
+  twitter: "https://twitter.com/fastepost"
+  linkedin: "https://linkedin.com/company/fastepost"
+  whatsapp: "https://wa.me/972123456789"
+  telegram: "https://t.me/fastepost"
+  instagram: "https://instagram.com/fastepost"
+  tiktok: "https://tiktok.com/@fastepost"
+
+production:
+  facebook: "https://facebook.com/fastepost"
+  twitter: "https://twitter.com/fastepost"
+  linkedin: "https://linkedin.com/company/fastepost"
+  whatsapp: "https://wa.me/972123456789"
+  telegram: "https://t.me/fastepost"
+  instagram: "https://instagram.com/fastepost"
+  tiktok: "https://tiktok.com/@fastepost"
+  # Update these URLs in production with your real social media profiles

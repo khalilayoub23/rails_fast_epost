@@ -117,10 +117,11 @@ module Admin
     end
 
     def check_stripe_connection
-      return { status: "not_configured" } unless ENV["STRIPE_SECRET_KEY"].present?
+      secret_key = Rails.configuration.x.stripe.secret_key
+      return { status: "not_configured" } unless secret_key.present?
 
       require "stripe"
-      Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+      Stripe.api_key = secret_key
       Stripe::Account.retrieve
       { status: "healthy" }
     rescue => e

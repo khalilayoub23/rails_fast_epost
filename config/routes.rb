@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Prevent noisy 404s from browsers requesting the default favicon
+  get "/favicon.ico", to: "static#favicon"
+
   # Locale switcher
   get "/locale/:id", to: "locales#update", as: :set_locale
   # Public pages
@@ -7,10 +10,18 @@ Rails.application.routes.draw do
   get "pages/about"
   get "pages/services"
   get "pages/contact"
+  post "pages/contact", to: "pages#contact"
   get "pages/track_parcel"
   get "pages/law_firms"
   get "pages/ecommerce"
   get "pages/privacy_policy"
+  get "pages/icons" # Icon showcase and documentation
+
+  # Public checkout
+  get "/checkout", to: "checkout#new", as: :new_checkout
+  post "/checkout", to: "checkout#create", as: :checkout
+  get "/checkout/success", to: "checkout#success", as: :checkout_success
+  get "/checkout/cancel", to: "checkout#cancel", as: :checkout_cancel
   
   devise_for :users
   
@@ -33,6 +44,20 @@ Rails.application.routes.draw do
     resources :preferences
   end
 
+  # Payments for tasks require dedicated success/cancel handlers
+  get "/tasks/payment/success", to: "tasks#payment_success", as: :task_payment_success
+  get "/tasks/payment/cancel", to: "tasks#payment_cancel", as: :task_payment_cancel
+
+  # Tasks are nested under customers but also need standalone routes.
+  # The standalone routes must be defined before the shallow routes
+  # generated below so that /tasks/new does not get captured by /tasks/:id.
+  resources :tasks, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
+    member do
+      patch :update_status
+      patch :update_delivery
+    end
+  end
+
   resources :customers do
     collection do
       get :search
@@ -46,14 +71,6 @@ Rails.application.routes.draw do
 
   # Form templates have many-to-many relationship
   resources :form_templates
-
-  # Tasks are nested under customers but also need standalone routes
-  resources :tasks, only: [ :index, :show, :edit, :update, :destroy ] do
-    member do
-      patch :update_status
-      patch :update_delivery
-    end
-  end
 
   # Payments have polymorphic relationship (payable)
   resources :payments do
@@ -75,6 +92,11 @@ Rails.application.routes.draw do
   # API routes if needed
   namespace :api do
     namespace :v1 do
+      # Public API (no authentication required)
+      namespace :public do
+        get "track/:barcode", to: "tracking#show"
+      end
+
       resources :tasks
       resources :carriers
       resources :customers
@@ -120,6 +142,8 @@ Rails.application.routes.draw do
         post :generate
       end
     end
+
+    resources :contact_inquiries, only: [:index, :show, :update]
 
     root to: "dashboard#index", as: :root
     get "dashboard", to: "dashboard#index", as: :dashboard

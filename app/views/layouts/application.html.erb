@@ -22,8 +22,12 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-  <%# Load Tailwind first, then fonts, RTL support, then our application overrides and icons (order matters) %>
-  <%= stylesheet_link_tag "tailwind", "fonts", "rtl", "application", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
+  <%# Load Tailwind first, then fonts, then conditionally RTL support, then our application overrides and icons (order matters) %>
+  <% if rtl? %>
+    <%= stylesheet_link_tag "tailwind", "fonts", "rtl", "application", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
+  <% else %>
+    <%= stylesheet_link_tag "tailwind", "fonts", "application", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
+  <% end %>
     <%= javascript_importmap_tags %>
     <meta name="color-scheme" content="light dark">
     <script>

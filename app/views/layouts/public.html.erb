@@ -48,6 +48,9 @@
 
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <% if rtl? %>
+      <%= stylesheet_link_tag "rtl", "data-turbo-track": "reload" %>
+    <% end %>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -55,53 +58,52 @@
     <!-- Public Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
       <div class="container mx-auto px-4">
-        <div class="flex items-center justify-between h-20">
-          <!-- Logo - Yellow Background with Dark Icon -->
-          <div class="flex items-center">
-            <%= link_to pages_home_path, class: "group flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/5 transition-all duration-300" do %>
-              <!-- Icon with yellow background & bold dark logo - keep button size, enlarge icon -->
-              <div class="relative w-14 h-14 rounded-xl flex items-center justify-center bg-yellow-400 shadow-lg shadow-yellow-400/50 group-hover:shadow-yellow-400/70 transition-all duration-300 logo-animated">
-                <%= image_tag 'fast epost transparent.png', alt: 'Fast Epost', class: 'w-12 h-12 object-contain', style: 'filter: brightness(0) saturate(100%) contrast(2);' %>
+        <div class="flex items-center justify-between h-20 gap-4">
+          <!-- Logo - Compact -->
+          <div class="flex items-center flex-shrink-0">
+            <%= link_to pages_home_path, class: "group flex items-center rounded-lg hover:bg-white/5 transition-all duration-300 px-2 py-1 gap-2" do %>
+              <!-- Icon with yellow background -->
+              <div class="relative rounded-xl flex items-center justify-center bg-yellow-400 shadow-lg shadow-yellow-400/50 group-hover:shadow-yellow-400/70 transition-all duration-300 logo-animated w-12 h-12">
+                <%= image_tag 'fast epost transparent.png', alt: 'Fast Epost', class: 'object-contain w-10 h-10', style: 'filter: brightness(0) saturate(100%) contrast(2);' %>
               </div>
-              <!-- Brand Name - Bold & Enhanced -->
-              <div class="hidden sm:flex flex-col">
-                <span class="text-white font-black text-xl tracking-tight leading-none group-hover:text-yellow-400 transition-colors duration-300 drop-shadow-lg">Fast Epost</span>
-                <span class="text-yellow-400 leading-none mt-1 drop-shadow-md handwriting-font">EXPRESS DELIVERY</span>
+              <!-- Brand Name -->
+              <div class="hidden lg:flex flex-col">
+                <span class="text-white font-black text-lg leading-none group-hover:text-yellow-400 transition-colors duration-300 drop-shadow-lg whitespace-nowrap">Fast Epost</span>
+                <span class="text-yellow-400 text-xs leading-none mt-0.5 drop-shadow-md handwriting-font whitespace-nowrap">EXPRESS DELIVERY</span>
               </div>
             <% end %>
           </div>
-          <!-- Desktop Navigation -->
-          <div class="hidden md:flex items-center space-x-8">
-            <%= link_to pages_privacy_policy_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+          
+          <!-- Desktop Navigation - Centered -->
+          <div class="hidden md:flex items-center gap-6 flex-1 justify-center">
+            <%= link_to pages_privacy_policy_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
               <%= t("nav.privacy_policy") %>
             <% end %>
-            <%= link_to pages_services_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+            <%= link_to pages_services_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
               <%= t("nav.services") %>
             <% end %>
-            <%= link_to pages_track_parcel_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+            <%= link_to pages_track_parcel_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
               <%= t("nav.track") %>
             <% end %>
-            <!-- Law Firms Button -->
-            <%= link_to pages_law_firms_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+            <%= link_to pages_law_firms_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
               <%= t("nav.law_firms") %>
             <% end %>
-            <!-- E-commerce Button -->
-            <%= link_to pages_ecommerce_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium" do %>
+            <%= link_to pages_ecommerce_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
               <%= t("nav.ecommerce") %>
             <% end %>
           </div>
 
           <!-- Language & Auth Buttons -->
-          <div class="hidden md:flex items-center gap-4">
+          <div class="flex items-center gap-3 flex-shrink-0">
             <!-- Server-side Locale Switcher -->
             <%= render "shared/locale_switcher" %>
 
             <% if user_signed_in? %>
-              <%= link_to t("nav.dashboard"), root_path, class: "px-4 py-2 text-sm font-medium text-white hover:text-yellow-400 transition-colors" %>
-              <%= link_to t("nav.logout"), destroy_user_session_path, data: { turbo_method: :delete }, class: "px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50" %>
+              <%= link_to t("nav.dashboard"), root_path, class: "text-sm font-medium text-white hover:text-yellow-400 transition-colors", style: "width: 100px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
+              <%= link_to t("nav.logout"), destroy_user_session_path, data: { turbo_method: :delete }, class: "bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50", style: "width: 130px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
             <% else %>
-              <%= link_to t("nav.login"), new_user_session_path, class: "px-4 py-2 text-sm font-medium text-white hover:text-yellow-400 transition-colors" %>
-              <%= link_to t("nav.get_started"), new_user_registration_path, class: "px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50" %>
+              <%= link_to t("nav.login"), new_user_session_path, class: "text-sm font-medium text-white hover:text-yellow-400 transition-colors", style: "width: 100px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
+              <%= link_to t("nav.get_started"), new_user_registration_path, class: "bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50", style: "width: 130px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
             <% end %>
           </div>
 
@@ -154,6 +156,9 @@
 
     <!-- Main Content -->
     <main class="pt-20">
+      <div class="container mx-auto px-4">
+        <%= render "shared/flash" %>
+      </div>
       <%= yield %>
     </main>
 

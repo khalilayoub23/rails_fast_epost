@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :allow_github_codespaces
   before_action :authenticate_user!
   before_action :set_current_attributes
+  helper_method :stripe_publishable_key
 
   # Add custom data to logs (used by Lograge)
   def append_info_to_payload(payload)
@@ -23,9 +24,30 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def stripe_publishable_key
+    Rails.configuration.x.try(:stripe).try(:publishable_key)
+  end
+
   def require_admin!
     unless current_user&.admin?
       redirect_to root_path, alert: "You are not authorized to access this page."
+    end
+  end
+
+  def require_manager!
+    return if current_user&.manager?
+
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: t("messages.unauthorized") }
+      format.json { render json: { error: t("messages.unauthorized") }, status: :forbidden }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.append(
+          "flash_messages",
+          partial: "shared/flash_message",
+          locals: { type: :alert, message: t("messages.unauthorized") }
+        ), status: :forbidden
+      end
+      format.any { head :forbidden }
     end
   end
 

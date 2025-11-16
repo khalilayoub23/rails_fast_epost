@@ -1,5 +1,14 @@
+require "securerandom"
+
 class Task < ApplicationRecord
   include AASM
+
+  SNAPSHOT_ATTRIBUTES = %w[
+    customer_id carrier_id sender_id messenger_id lawyer_id
+    package_type start target failure_code delivery_time status
+    filled_form_url pickup_address pickup_contact_phone pickup_notes
+    requested_pickup_time
+  ].freeze
 
   belongs_to :customer
   belongs_to :carrier
@@ -30,9 +39,18 @@ class Task < ApplicationRecord
   alias_attribute :pickup_location, :start
   alias_attribute :drop_off_location, :target
 
+  before_validation :assign_generated_fields, on: :create
+
   # Generate a display title for the task
   def title
     "#{package_type.titleize} - #{barcode}"
+  end
+
+  def snapshot_for_payment
+    snapshot = attributes.slice(*SNAPSHOT_ATTRIBUTES)
+    snapshot["customer_id"] ||= customer_id
+    snapshot["status"] ||= status
+    snapshot
   end
 
   # Optional attributes for notification templates (return nil if not present)
@@ -96,6 +114,19 @@ class Task < ApplicationRecord
   before_update :track_status_change
 
   private
+
+  def assign_generated_fields
+    self.status ||= :pending
+    self.delivery_time ||= Time.current
+    self.barcode ||= self.class.generate_unique_barcode
+  end
+
+  def self.generate_unique_barcode(prefix: "TSK")
+    loop do
+      code = "#{prefix}#{SecureRandom.hex(5).upcase}"
+      break code unless exists?(barcode: code)
+    end
+  end
 
   # Track status changes for notifications
   def track_status_change

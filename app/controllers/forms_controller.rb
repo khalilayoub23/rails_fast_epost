@@ -1,14 +1,13 @@
 class FormsController < ApplicationController
+  include Respondable
+
   before_action :set_customer
   before_action :set_form, only: %i[show edit update destroy]
   before_action :set_template, only: []
 
   def index
     @forms = @customer.forms
-    respond_to do |format|
-      format.html
-      format.json { render json: @forms }
-    end
+    respond_with_index(@forms)
   end
 
   def show
@@ -33,65 +32,33 @@ class FormsController < ApplicationController
 
   def create
     @form = @customer.forms.new(form_params)
-    if @form.save
-      respond_to do |format|
-        format.html { redirect_to [ @customer, @form ], notice: "Form created." }
-        format.json { render json: @form, status: :created }
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.prepend("forms_list", partial: "forms/form_card", locals: { form: @form, customer: @customer }),
-            turbo_stream.update("form_form", ""),
-            turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.created") })
-          ]
-        end
-      end
-    else
-      respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity }
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("form_form", partial: "forms/form", locals: { form: @form, customer: @customer })
-        end
-      end
+    respond_with_create(@form, @customer, notice: "Form created.") do
+      render turbo_stream: [
+        turbo_stream.prepend("forms_list", partial: "forms/form_card", locals: { form: @form, customer: @customer }),
+        turbo_stream.update("form_form", ""),
+        turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.created") })
+      ]
     end
   end
 
   def edit; end
 
   def update
-    if @form.update(form_params)
-      respond_to do |format|
-        format.html { redirect_to [ @customer, @form ], notice: "Form updated." }
-        format.json { render json: @form }
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace(dom_id(@form), partial: "forms/form_card", locals: { form: @form, customer: @customer }),
-            turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.updated") })
-          ]
-        end
-      end
-    else
-      respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity }
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(dom_id(@form), partial: "forms/form", locals: { form: @form, customer: @customer })
-        end
-      end
+    respond_with_update(@form, @customer, notice: "Form updated.") do
+      render turbo_stream: [
+        turbo_stream.replace(dom_id(@form), partial: "forms/form_card", locals: { form: @form, customer: @customer }),
+        turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.updated") })
+      ]
+      form_params
     end
   end
 
   def destroy
-    @form.destroy
-    respond_to do |format|
-      format.html { redirect_to customer_forms_path(@customer), notice: "Form deleted." }
-      format.json { head :no_content }
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.remove(dom_id(@form)),
-          turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.deleted") })
-        ]
-      end
+    respond_with_destroy(@form, customer_forms_path(@customer), notice: "Form deleted.") do
+      render turbo_stream: [
+        turbo_stream.remove(dom_id(@form)),
+        turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.deleted") })
+      ]
     end
   end
 

@@ -66,7 +66,7 @@ class LocaleSwitchingTest < ApplicationSystemTestCase
     assert_selector "html[lang='he']"
     
     # Navigate to another page (services) without explicit locale param
-    click_link "שירותים" # Hebrew "Services"
+    find("a", text: "שירותים", match: :first).click # Hebrew "Services"
     
     # Should maintain Hebrew locale
     assert_selector "html[lang='he']"

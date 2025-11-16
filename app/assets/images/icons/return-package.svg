@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Package Box -->
+  <rect x="20" y="24" width="24" height="24" rx="2" fill="#1F2937" stroke="#FCD34D" stroke-width="2"/>
+  <!-- Package Tape -->
+  <path d="M32 24 L32 48 M20 36 L44 36" stroke="#FCD34D" stroke-width="2"/>
+  <!-- Curved Return Arrow -->
+  <path d="M12 16 C12 12 16 8 24 8 L40 8" stroke="#FCD34D" stroke-width="3" stroke-linecap="round"/>
+  <path d="M36 4 L40 8 L36 12" stroke="#FCD34D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 48 C52 52 48 56 40 56 L24 56" stroke="#FCD34D" stroke-width="3" stroke-linecap="round"/>
+  <path d="M28 52 L24 56 L28 60" stroke="#FCD34D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

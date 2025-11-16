@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Warning Triangle -->
+  <path d="M32 8 L56 52 L8 52 Z" fill="#1F2937" stroke="#EF4444" stroke-width="3" stroke-linejoin="round"/>
+  <!-- Inner Triangle -->
+  <path d="M32 14 L50 48 L14 48 Z" fill="#EF4444" opacity="0.2"/>
+  <!-- Exclamation Mark -->
+  <path d="M32 24 L32 36" stroke="#FCD34D" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="32" cy="42" r="2.5" fill="#FCD34D"/>
+</svg>

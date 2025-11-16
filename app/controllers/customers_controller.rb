@@ -1,19 +1,15 @@
 class CustomersController < ApplicationController
+  include Respondable
+
   before_action :set_customer, only: %i[show edit update destroy]
 
   def index
     @customers = Customer.all
-    respond_to do |format|
-      format.html
-      format.json { render json: @customers }
-    end
+    respond_with_index(@customers)
   end
 
   def show
-    respond_to do |format|
-      format.html
-      format.json { render json: @customer }
-    end
+    respond_with_show(@customer)
   end
 
   def new
@@ -22,76 +18,36 @@ class CustomersController < ApplicationController
 
   def create
     @customer = Customer.new(customer_params)
-    if @customer.save
-      respond_to do |format|
-        format.html { redirect_to @customer, notice: "Customer created." }
-        format.json { render json: @customer, status: :created }
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.prepend("customers_list", partial: "customers/customer_card", locals: { customer: @customer }),
-            turbo_stream.update("customer_form", partial: "customers/form", locals: { customer: Customer.new }),
-            turbo_stream.append("flash-messages", partial: "shared/flash_message",
-                               locals: { type: :success, message: t("customers.created_successfully") })
-          ]
-        end
-      end
-    else
-      respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: { errors: @customer.errors.full_messages }, status: :unprocessable_entity }
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            "customer_form",
-            partial: "customers/form",
-            locals: { customer: @customer }
-          ), status: :unprocessable_entity
-        end
-      end
+    respond_with_create(@customer, nil, notice: "Customer created.") do
+      render turbo_stream: [
+        turbo_stream.prepend("customers_list", partial: "customers/customer_card", locals: { customer: @customer }),
+        turbo_stream.update("customer_form", partial: "customers/form", locals: { customer: Customer.new }),
+        turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                           locals: { type: :success, message: t("customers.created_successfully") })
+      ]
     end
   end
 
   def edit; end
 
   def update
-    if @customer.update(customer_params)
-      respond_to do |format|
-        format.html { redirect_to @customer, notice: "Customer updated." }
-        format.json { render json: @customer }
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace(@customer, partial: "customers/customer_card", locals: { customer: @customer }),
-            turbo_stream.append("flash-messages", partial: "shared/flash_message",
-                               locals: { type: :success, message: t("customers.updated_successfully") })
-          ]
-        end
-      end
-    else
-      respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: { errors: @customer.errors.full_messages }, status: :unprocessable_entity }
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            @customer,
-            partial: "customers/form",
-            locals: { customer: @customer }
-          ), status: :unprocessable_entity
-        end
-      end
+    respond_with_update(@customer, nil, notice: "Customer updated.") do
+      render turbo_stream: [
+        turbo_stream.replace(@customer, partial: "customers/customer_card", locals: { customer: @customer }),
+        turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                           locals: { type: :success, message: t("customers.updated_successfully") })
+      ]
+      customer_params
     end
   end
 
   def destroy
-    @customer.destroy
-    respond_to do |format|
-      format.html { redirect_to customers_path, notice: "Customer deleted." }
-      format.json { head :no_content }
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.remove(@customer),
-          turbo_stream.append("flash-messages", partial: "shared/flash_message",
-                             locals: { type: :success, message: t("customers.deleted_successfully") })
-        ]
-      end
+    respond_with_destroy(@customer, customers_path, notice: "Customer deleted.") do
+      render turbo_stream: [
+        turbo_stream.remove(@customer),
+        turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                           locals: { type: :success, message: t("customers.deleted_successfully") })
+      ]
     end
   end
 

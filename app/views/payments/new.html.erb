@@ -1,6 +1,2 @@
 <h1>New Payment</h1>
-<%= form_with model: @payment do |f| %>
-  <%= f.label :category %>
-  <%= f.number_field :category %>
-  <%= f.submit %>
-<% end %>
+<%= render "form" %>
