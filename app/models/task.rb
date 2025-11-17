@@ -33,7 +33,7 @@ class Task < ApplicationRecord
   validates :delivery_time, presence: true
   validates :status, presence: true
   validates :barcode, presence: true, uniqueness: true
-  validates :filled_form_url, allow_nil: true, format: { with: URI::DEFAULT_PARSER.make_regexp }
+  validates :filled_form_url, allow_blank: true, format: { with: URI::DEFAULT_PARSER.make_regexp }
 
   # Aliases for notification templates (compatibility)
   alias_attribute :pickup_location, :start

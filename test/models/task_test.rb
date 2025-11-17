@@ -21,10 +21,29 @@ class TaskTest < ActiveSupport::TestCase
     assert_includes task.errors[:package_type], "can't be blank"
     assert_includes task.errors[:start], "can't be blank"
     assert_includes task.errors[:target], "can't be blank"
-    assert_includes task.errors[:delivery_time], "can't be blank"
-    # Status is automatically set to :pending by aasm initial state
+    assert task.delivery_time.present?, "delivery_time should be auto-populated"
     assert_equal "pending", task.status
-    assert_includes task.errors[:barcode], "can't be blank"
+    assert task.barcode.present?, "barcode should be auto-generated"
+  end
+
+  test "allows blank filled_form_url but validates format when present" do
+    task = Task.new(
+      customer: customers(:one),
+      carrier: carriers(:one),
+      package_type: "box",
+      start: "Location A",
+      target: "Location B",
+      delivery_time: 2.days.from_now,
+      status: :pending,
+      barcode: "FORMURL123",
+      filled_form_url: ""
+    )
+
+    assert task.valid?, "blank filled_form_url should not trigger validation errors"
+
+    task.filled_form_url = "not_a_url"
+    assert_not task.valid?
+    assert_includes task.errors[:filled_form_url], "is invalid"
   end
 
   test "should validate uniqueness of barcode" do

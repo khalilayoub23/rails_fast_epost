@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :allow_github_codespaces
   before_action :authenticate_user!
+  skip_before_action :authenticate_user!, if: :devise_controller?
   before_action :set_current_attributes
   helper_method :stripe_publishable_key
 

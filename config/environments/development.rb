@@ -90,4 +90,13 @@ Rails.application.configure do
   
   # Configure allowed origins for CSRF protection in Codespaces
   config.action_controller.forgery_protection_origin_check = false
+
+  # Ensure logs are visible when running inside containers/Codespaces by mirroring production STDOUT logging
+  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "debug").to_sym
+  config.log_tags = [:request_id]
+
+  stdout_logger = ActiveSupport::Logger.new($stdout)
+  stdout_logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(stdout_logger)
+  ActiveRecord::Base.logger = config.logger
 end
