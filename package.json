@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@stripe/stripe-js": "^4.0.0"
+    "@stripe/stripe-js": "^8.5.1"
   },
   "scripts": {
     "test": "echo \"No JS tests defined\" && exit 0",
