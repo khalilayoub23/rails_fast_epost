@@ -1,6 +1,7 @@
 require "test_helper"
 
 class TasksControllerTest < ActionDispatch::IntegrationTest
+  include ActionView::RecordIdentifier
   setup do
     @user = users(:admin)
     sign_in @user
@@ -33,7 +34,8 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
             carrier_id: @carrier.id,
             package_type: "Legal Docs",
             start: "Jerusalem",
-            target: "Haifa"
+            target: "Haifa",
+            priority: "urgent"
           },
           payment: {
             amount: "150",
@@ -48,6 +50,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to payment.payment_url
     assert captured_metadata.present?, "metadata should be captured"
     assert_equal "Legal Docs", captured_metadata.dig("task_snapshot", "package_type")
+    assert_equal "urgent", captured_metadata.dig("task_snapshot", "priority")
     assert_equal "standard_delivery", captured_metadata["payment_service_type"]
     assert_match "tasks/payment/success", captured_metadata["success_url"]
   end
@@ -81,6 +84,17 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to task_path(task)
     assert_equal task.id, payment.reload.task_id
     assert_equal "Secure Delivery", task.package_type
+  end
+
+  test "GET /tasks filters by priority" do
+    urgent = tasks(:one)
+    express = tasks(:task_one)
+
+    get tasks_path(priority: "urgent")
+
+    assert_response :success
+    assert_select "turbo-frame##{dom_id(urgent)}", count: 1
+    assert_select "turbo-frame##{dom_id(express)}", count: 0
   end
 
   test "GET /tasks/payment/cancel re-renders new with stored form" do

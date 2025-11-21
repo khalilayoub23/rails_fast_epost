@@ -19,3 +19,4 @@ Local dev setup (Docker)
 Notes:
 - Ensure `config/master.key` is set as env `RAILS_MASTER_KEY` in `.env` or use `bin/rails credentials:edit` locally.
 - This composes a basic stack for running automations (Solid Queue) and the web server.
+- `bin/dev`, `bin/setup`, and all `bin/rails` commands automatically run `script/ensure_postgres.sh`, which starts the local PostgreSQL service if it's not already accepting connections. This keeps `localhost:5432` reachable without manual steps.

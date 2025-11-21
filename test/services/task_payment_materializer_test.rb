@@ -11,6 +11,7 @@ class TaskPaymentMaterializerTest < ActiveSupport::TestCase
       "start" => "Tel Aviv",
       "target" => "Haifa",
       "status" => "pending",
+      "priority" => "express",
       "pickup_address" => "123 Main",
       "pickup_contact_phone" => "+972-555-0000",
       "delivery_time" => 1.day.from_now.iso8601
@@ -35,6 +36,7 @@ class TaskPaymentMaterializerTest < ActiveSupport::TestCase
     assert_equal @snapshot["package_type"], task.package_type
     assert_equal @snapshot["start"], task.start
     assert_equal @snapshot["target"], task.target
+    assert_equal "express", task.priority
   end
 
   test "raises error when snapshot is missing" do

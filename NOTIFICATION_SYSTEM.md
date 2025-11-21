@@ -274,6 +274,45 @@ All email templates follow this structure:
 4. Add tests
 5. Update documentation
 
+## Preference & Audit Storage (Nov 18, 2025)
+
+- `notification_preferences` keeps per-recipient channel settings (email, SMS, in-app) along with quiet hours (hour-of-day start/end) and metadata.
+- `notification_logs` captures every delivery attempt with channel, message type, provider SID, and success/skipped/failed status. Use this table for audits instead of scraping logs.
+- `NotificationService` now checks `NotificationPreference` before sending SMS/email and skips SMS automatically during quiet hours.
+- `SmsDelivery` wraps Twilio credentials, falling back to a stub when env vars are missing so development/test remain deterministic.
+
+## Preference Management UI (Nov 20, 2025)
+
+- Three shallow-nested controllers (`Customers::NotificationPreferencesController`, `Messengers::NotificationPreferencesController`, `Senders::NotificationPreferencesController`) expose CRUD over the shared partials in `app/views/notification_preferences/`.
+- Each parent show page (`customers/show`, `admin/messengers/show`, `admin/senders/show`) now renders a Turbo frame that lists current preferences and inlines the form for adding or editing entries without leaving the dashboard.
+- Channel + quiet-hour validation happens at the model level, but the UI prevents duplicates by disabling the submit button until a unique channel is selected for that recipient.
+- Messenger and sender flows require an admin/manager session; customer preferences respect the existing customer-level authorization.
+- Operators can reach the UI via:
+  - `Customers → <customer> → Notification Preferences` card
+  - `Admin → Messengers → <messenger>` (Preferences tab)
+  - `Admin → Senders → <sender>` (Preferences tab)
+- All create/update/destroy paths stream their updates back into the same Turbo frame, so lists refresh automatically alongside toast notices.
+
+## Priority-Aware Notifications (Nov 21, 2025)
+
+- `Task.priority` is now a string enum (`normal`, `urgent`, `express`). Urgent/express values automatically add ⚠️ banners in `task_mailer` templates (`pickup_requested`, `admin_delivery_alert`, `pending_tasks_alert`).
+- Make sure you run `bin/rails db:migrate` after pulling to add the column plus index (`priority` defaults to `normal`).
+- Optional data backfill: if you previously tracked urgent shipments via pickup notes or upcoming delivery windows, run a one-off script to seed the new column. Example:
+
+  ```bash
+  bin/rails runner <<'RUBY'
+  urgent_cutoff = 24.hours.from_now
+
+  Task.where(status: %i[pending in_transit])
+      .where('delivery_time <= ?', urgent_cutoff)
+      .update_all(priority: :urgent)
+
+  Task.where("pickup_notes ILIKE ?", '%express%')
+      .update_all(priority: :express)
+  RUBY
+  ```
+- Once populated, the messenger dashboard, pending-task alerts, and direct assignment mails will highlight the urgency without any other code changes.
+
 ## Monitoring and Analytics
 
 ### Email Delivery Tracking
@@ -287,19 +326,19 @@ ActionMailer::Base.deliveries.last
 
 ### Logs
 ```ruby
-# Notification logs
-Rails.logger.info("[NotificationService] Task assigned notification sent: Task #123")
+# Structured records (preferred)
+NotificationLog.order(created_at: :desc).limit(20)
 
-# Error logs
-Rails.logger.error("[NotificationService] Failed to send notification: SMTP Error")
+# Legacy Rails logger fallback
+Rails.logger.info("[NotificationService] Task assigned notification sent: Task #123")
 ```
 
 ## Future Enhancements
 
-### Phase 1 - SMS Notifications
-- [ ] Integrate Twilio for SMS
-- [ ] Add SMS templates for critical events
-- [ ] User preference for email vs SMS
+### Phase 1 - SMS Notifications *(Completed Nov 18, 2025)*
+- [x] Integrate Twilio for SMS (via `SmsDelivery` service)
+- [x] Add SMS templates for critical events (assignment, status change, delivery, failures, pending alerts)
+- [x] User preference for email vs SMS (polymorphic `notification_preferences` with quiet hours)
 
 ### Phase 2 - Push Notifications
 - [ ] Web push notifications

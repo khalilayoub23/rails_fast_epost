@@ -73,6 +73,20 @@
     </div>
   </div>
 
+  <div>
+    <%= f.label :priority, t("tasks.priority", default: "Priority"), class: "mb-2 block text-sm font-medium text-gray-200" %>
+    <%= f.select :priority, Task.priorities.keys.map { |priority| [priority.titleize, priority] }, {},
+          class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+    <p class="mt-2 text-xs text-gray-400"><%= t("tasks.priority_help", default: "Urgent or express tasks trigger warning banners in alerts and emails.") %></p>
+  </div>
+
+  <div>
+    <%= f.label :priority, t("tasks.priority", default: "Priority"), class: "mb-2 block text-sm font-medium text-gray-200" %>
+    <%= f.select :priority, Task.priorities.keys.map { |priority| [priority.humanize, priority] }, {},
+          class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+    <p class="mt-2 text-xs text-gray-400"><%= t("tasks.priority_help", default: "Express shipments alert messengers immediately; normal stays in the standard queue.") %></p>
+  </div>
+
   <div class="grid gap-6 md:grid-cols-2">
     <div>
       <%= f.label :delivery_time, t("tasks.delivery_time", default: "Delivery time"), class: "mb-2 block text-sm font-medium text-gray-200" %>

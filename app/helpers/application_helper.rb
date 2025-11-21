@@ -48,6 +48,14 @@ module ApplicationHelper
     rtl? ? "border-l" : "border-r"
   end
 
+  def switch_locale_path(locale)
+    raw_params = params.respond_to?(:to_unsafe_h) ? params.to_unsafe_h : params.to_h
+    filtered = raw_params.except(:controller, :action, :locale, "controller", "action", "locale")
+    url_for(filtered.merge(locale: locale, only_path: true))
+  rescue ActionController::UrlGenerationError
+    url_for(controller: controller_name, action: action_name, locale: locale, only_path: true)
+  end
+
   # Check if request is from Turbo Native iOS or Android app
   def turbo_native_app?
     request.user_agent.to_s.match?(/Turbo Native/)

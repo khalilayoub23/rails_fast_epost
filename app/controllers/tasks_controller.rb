@@ -11,11 +11,16 @@ class TasksController < ApplicationController
   before_action :load_form_collections, only: %i[new create payment_cancel]
 
   def index
-    @tasks = if @customer
-      @customer.tasks
+    base_scope = @customer ? @customer.tasks : Task.all
+
+    @priority_filter = params[:priority].presence
+    if @priority_filter.present? && Task.priorities.key?(@priority_filter)
+      base_scope = base_scope.where(priority: @priority_filter)
     else
-      Task.all
+      @priority_filter = nil
     end
+
+    @tasks = base_scope
     respond_with_index(@tasks)
   end
 
@@ -63,13 +68,12 @@ class TasksController < ApplicationController
   end
 
   def update
-    respond_with_update(@task, @task.customer, notice: "Task updated.") do
+    respond_with_update(@task, @task.customer, notice: "Task updated.", attributes: task_params) do
       render turbo_stream: [
         turbo_stream.replace(@task, partial: "tasks/task_card", locals: { task: @task }),
         turbo_stream.append("flash-messages", partial: "shared/flash_message",
                            locals: { type: :success, message: t("tasks.updated_successfully") })
       ]
-      task_params
     end
   end
 
@@ -177,7 +181,7 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(
       :customer_id, :carrier_id, :sender_id, :messenger_id, :lawyer_id,
-      :package_type, :start, :target, :failure_code, :delivery_time, :status, :filled_form_url,
+      :package_type, :start, :target, :failure_code, :delivery_time, :status, :priority, :filled_form_url,
       :pickup_address, :pickup_contact_phone, :pickup_notes, :requested_pickup_time
     )
   end

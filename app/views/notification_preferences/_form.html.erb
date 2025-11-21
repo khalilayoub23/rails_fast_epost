@@ -1,0 +1,41 @@
+<% parent = local_assigns.fetch(:parent) %>
+<% notification_preference = local_assigns.fetch(:notification_preference) %>
+<% form_url = if notification_preference.persisted?
+  polymorphic_path([ parent, notification_preference ])
+else
+  polymorphic_path([ parent, :notification_preferences ])
+end %>
+
+<%= form_with(model: notification_preference, url: form_url, data: { turbo_frame: "notification-preferences" }) do |form| %>
+  <div class="space-y-4">
+    <div>
+      <%= form.label :channel, "Channel", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.select :channel, NotificationPreference.channels.keys.map { |c| [c.titleize, c] }, {}, class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <%= form.check_box :enabled, class: "rounded border-gray-300 text-blue-600 shadow-sm" %>
+      <%= form.label :enabled, "Enabled" %>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div>
+        <%= form.label :quiet_hours_start, "Quiet Hours Start", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.number_field :quiet_hours_start, in: 0..23, class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+      </div>
+      <div>
+        <%= form.label :quiet_hours_end, "Quiet Hours End", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.number_field :quiet_hours_end, in: 0..23, class: "mt-1 block w-full rounded border-gray-300 shadow-sm" %>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-500">
+      SMS delivery requires configured `TWILIO_*` environment variables. Quiet hours are inclusive of the start hour and exclusive of the end hour.
+    </p>
+
+    <div class="flex space-x-3">
+      <%= form.submit class: "btn btn-primary" %>
+      <%= link_to "Cancel", polymorphic_path([ parent, :notification_preferences ]), class: "btn btn-secondary" %>
+    </div>
+  </div>
+<% end %>

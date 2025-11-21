@@ -17,6 +17,20 @@ class ApplicationController < ActionController::Base
     payload[:host] = request.host
   end
 
+  # Ensure Devise always returns to the sign-in screen after logout, even
+  # when locale-scoped routes are used.
+  def after_sign_out_path_for(_resource_or_scope)
+    new_user_session_path
+  end
+
+  def after_sign_in_path_for(resource)
+    stored_location_for(resource) || default_signed_in_path(resource)
+  end
+
+  def after_sign_up_path_for(resource)
+    default_signed_in_path(resource)
+  end
+
   private
 
   def allow_github_codespaces
@@ -62,6 +76,12 @@ class ApplicationController < ActionController::Base
     locale = extract_locale
     I18n.locale = locale
     session[:locale] = locale if locale != session[:locale]
+  end
+
+  def default_signed_in_path(resource)
+    return admin_dashboard_path if resource.respond_to?(:admin?) && resource.admin?
+
+    dashboard_path
   end
 
   def extract_locale

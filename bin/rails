@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
 APP_PATH = File.expand_path("../config/application", __dir__)
+
+ensure_postgres = File.expand_path("../script/ensure_postgres.sh", __dir__)
+system(ensure_postgres) if File.executable?(ensure_postgres)
+
 require_relative "../config/boot"
 require "rails/commands"

@@ -25,9 +25,7 @@ class CostCalcsController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@cost_calc, @task, notice: "Cost calc updated.") do
-      cost_calc_params
-    end
+    respond_with_update(@cost_calc, @task, notice: "Cost calc updated.", attributes: cost_calc_params)
   end
 
   def destroy

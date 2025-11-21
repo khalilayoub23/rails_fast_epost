@@ -9,6 +9,7 @@ one:
   status: 1
   barcode: 'BARCODE1'
   delivery_time: <%= Time.current %>
+  priority: urgent
 
 task_one:
   customer: one
@@ -19,6 +20,7 @@ task_one:
   status: 1
   barcode: 'LEGAL001'
   delivery_time: <%= Time.current %>
+  priority: express
 
 two:
   customer: two
@@ -29,3 +31,4 @@ two:
   status: 2
   barcode: 'BARCODE2'
   delivery_time: <%= Time.current %>
+  priority: normal

@@ -72,6 +72,13 @@
   - Troubleshooting section
   - Future enhancements roadmap
 
+### Phase 2 Enhancements (Nov 18-20, 2025)
+- **SMS Delivery**: `SmsDelivery` service + `config/initializers/twilio.rb` wire Twilio credentials when `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_PHONE_NUMBER` are present, while development/test use a deterministic stub.
+- **Preference Storage**: `notification_preferences` and `notification_logs` tables with corresponding models capture per-recipient channel opt-ins, quiet hours, and an immutable audit trail for every delivery attempt.
+- **Turbo UI**: New shallow-nested controllers (`Customers::NotificationPreferencesController`, `Messengers::NotificationPreferencesController`, `Senders::NotificationPreferencesController`) render shared `notification_preferences/_index` + `_form` partials so operators can manage channels inline on customer/messenger/sender dashboards, with role guards for admin/manager-only scopes.
+- **Tests**: Dedicated controller tests exercise create/update/destroy flows, uniqueness validation, and authorization branches; service tests cover the new preference guardrails.
+- **Docs**: `NOTIFICATION_SYSTEM.md`, README, and gap summaries now explain how to configure Twilio, manage preferences, and audit log entries.
+
 ---
 
 ## 📊 Files Created (20 files)
@@ -330,9 +337,9 @@ config.action_mailer.smtp_settings = {
 ## 🔮 Future Enhancements (Phase 2+)
 
 ### SMS Notifications (Phase 2)
-- [ ] Integrate Twilio SDK
-- [ ] SMS templates for critical events
-- [ ] User preference: email vs SMS vs both
+- [x] Integrate Twilio SDK (via `SmsDelivery` service)
+- [x] SMS templates for critical events
+- [x] User preference: email vs SMS vs both (polymorphic `notification_preferences`)
 - [ ] International phone number support
 
 ### Push Notifications (Phase 2)

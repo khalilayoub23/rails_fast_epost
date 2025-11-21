@@ -8,6 +8,9 @@
     <td class="px-4 py-4">
       <%= render "shared/status_badge", status: task.status %>
     </td>
+    <td class="px-4 py-4">
+        <%= render "shared/priority_badge", priority: task.priority %>
+    </td>
     <td class="px-4 py-4 text-sm text-dark dark:text-white">
       <%= task.customer&.name || "-" %>
     </td>

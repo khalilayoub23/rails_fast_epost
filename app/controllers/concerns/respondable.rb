@@ -35,10 +35,10 @@ module Respondable
     end
   end
 
-  def respond_with_update(resource, parent = nil, notice: nil, &turbo_stream_block)
+  def respond_with_update(resource, parent = nil, notice: nil, attributes:, &turbo_stream_block)
     notice ||= "#{resource.class.name} updated."
 
-    if resource.update(yield)
+    if resource.update(attributes)
       respond_to do |format|
         format.html { redirect_to [ parent, resource ].compact, notice: notice }
         format.json { render json: resource }
@@ -48,7 +48,15 @@ module Respondable
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity }
-        format.turbo_stream { render turbo_stream: turbo_stream.replace(resource, partial: "#{resource.model_name.plural}/form", locals: { resource.model_name.param_key.to_sym => resource, (parent.model_name.param_key.to_sym if parent) => parent }.compact), status: :unprocessable_entity } if turbo_stream_block
+        if turbo_stream_block
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(
+              resource,
+              partial: "#{resource.model_name.plural}/form",
+              locals: { resource.model_name.param_key.to_sym => resource, (parent.model_name.param_key.to_sym if parent) => parent }.compact
+            ), status: :unprocessable_entity
+          end
+        end
       end
     end
   end

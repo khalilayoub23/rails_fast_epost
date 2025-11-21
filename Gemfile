@@ -29,11 +29,18 @@ gem "prawn"
 # PDF with form fields (AcroForms) and advanced operations
 gem "hexapdf"
 
+# SMS delivery provider
+gem "twilio-ruby"
+
 # Forms helper (optional; improves form builders)
 gem "simple_form"
 
 # Authentication solution for Rails
 gem "devise"
+gem "omniauth"
+gem "omniauth-rails_csrf_protection"
+gem "omniauth-google-oauth2"
+gem "omniauth-facebook"
 
 # State machine for model workflows
 gem "aasm"

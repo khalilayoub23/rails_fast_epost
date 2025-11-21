@@ -135,4 +135,23 @@ class TaskTest < ActiveSupport::TestCase
     task.failure_code = :address_not_found
     assert task.failure_code_address_not_found?
   end
+
+  test "has priority enum with normal default" do
+    task = Task.create!(
+      customer: customers(:one),
+      carrier: carriers(:one),
+      package_type: "box",
+      start: "HQ",
+      target: "Court",
+      delivery_time: 1.day.from_now,
+      status: :pending,
+      barcode: "PRIORITY123"
+    )
+
+    assert_equal "normal", task.priority
+    task.priority = :urgent
+    assert task.urgent?
+    task.priority = :express
+    assert task.express?
+  end
 end

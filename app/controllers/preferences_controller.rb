@@ -25,9 +25,7 @@ class PreferencesController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@preference, @carrier, notice: "Preference updated.") do
-      preference_params
-    end
+    respond_with_update(@preference, @carrier, notice: "Preference updated.", attributes: preference_params)
   end
 
   def destroy

@@ -1,0 +1,13 @@
+<% raw_priority = (local_assigns[:priority] || "").to_s %>
+<% label = raw_priority.present? ? raw_priority.titleize : "Normal" %>
+<%
+  # Highlight urgent shipments so operators can triage quickly
+  variant_classes = case raw_priority
+  when "express" then "badge-danger"
+  when "urgent" then "badge-warning"
+  else "badge-default"
+  end
+%>
+<span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold <%= variant_classes %>">
+  <%= label %>
+</span>

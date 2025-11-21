@@ -32,9 +32,7 @@ class CarriersController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@carrier, nil, notice: "Carrier successfully updated.") do
-      carrier_params
-    end
+    respond_with_update(@carrier, nil, notice: "Carrier successfully updated.", attributes: carrier_params)
   end
 
   def destroy

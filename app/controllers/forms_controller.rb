@@ -44,12 +44,11 @@ class FormsController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@form, @customer, notice: "Form updated.") do
+    respond_with_update(@form, @customer, notice: "Form updated.", attributes: form_params) do
       render turbo_stream: [
         turbo_stream.replace(dom_id(@form), partial: "forms/form_card", locals: { form: @form, customer: @customer }),
         turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("forms.updated") })
       ]
-      form_params
     end
   end
 

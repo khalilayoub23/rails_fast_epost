@@ -35,6 +35,7 @@ A modern, full-featured postal and courier management system built with Rails 8,
 - **Status Updates**: Pending, in-transit, delivered, failed, returned
 - **Delivery Management**: Track delivery times and failure codes
 - **Customer Association**: Link tasks to customer profiles
+- **Priority Levels**: Normal, urgent, and express priorities drive escalations in the UI, notifications, and mailers
 
 ### 👥 Customer Management
 - **Comprehensive Profiles**: Contact info, category, address management
@@ -63,6 +64,12 @@ A modern, full-featured postal and courier management system built with Rails 8,
 - **Performance Metrics**: Total deliveries, on-time rate
 - **Carrier Association**: Link messengers to specific carriers
 - **Working Hours**: Track messenger availability schedules
+
+### 🔔 Notification Orchestration
+- **Channel Preferences**: Inline Turbo forms on customer, messenger, and sender dashboards let operators mix email/SMS/in-app per recipient with quiet hours.
+- **SMS Delivery**: `SmsDelivery` routes texts through Twilio when `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_PHONE_NUMBER` are set; otherwise the stub keeps local/test runs deterministic.
+- **Audit Trail**: Every attempt is logged to `NotificationLog`, so admins can trace why something was sent or skipped.
+- **Quiet Hour Enforcement**: `NotificationPreference` automatically suppresses SMS during configured windows without requiring extra business logic.
 
 ### 🔗 CRM Integration (Admin Only)
 - **Primary: Odoo CRM** - Open source, completely free
@@ -145,28 +152,23 @@ A modern, full-featured postal and courier management system built with Rails 8,
 
 #### Environment Variables
 
-```bash
-# Database
-DB_HOST=127.0.0.1
-DB_PASSWORD=password
+1. Copy the template and adjust values for your environment:
 
-# CRM Integration (Primary: Odoo)
-ODOO_API_KEY=your_secure_api_key_here
+  ```bash
+  cp .env.example .env
+  ```
 
-# Optional: HubSpot CRM (if needed later)
-HUBSPOT_APP_SECRET=your_hubspot_secret
+2. Update the sections in `.env`:
 
-# Optional: Social Media Webhooks
-META_VERIFY_TOKEN=your_meta_token
-META_APP_SECRET=your_meta_secret
-TELEGRAM_SECRET_TOKEN=your_telegram_token
+  - **Core + URLs:** `APP_BASE_URL`, `APP_URL`, `HOST`, log level, and `PORT` control hostnames used in Stripe redirects, Telegram webhooks, etc.
+  - **Database:** `DATABASE_HOST`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_URL` should match your local Postgres (defaults target the included docker-compose service).
+  - **Email:** `SMTP_ADDRESS`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD` drive Action Mailer/NotificationService delivery.
+  - **SMS:** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` enable SmsDelivery so NotificationService can text messengers/customers and power the dashboard preference UI options.
+  - **Payments:** `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`, and `LOCALPAY_APP_SECRET` are required for checkout flows and webhook verification.
+  - **CRM + Integrations:** `ODOO_API_KEY`, `ODOO_URL`, `HUBSPOT_APP_SECRET`, `WEBSITES_SHARED_SECRET`, `META_VERIFY_TOKEN`, `META_APP_SECRET`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_SECRET_TOKEN`, `TIKTOK_APP_SECRET` secure the webhook controllers.
+  - **Demo accounts:** `DEFAULT_*` values seed local admin/manager/viewer logins when `DefaultAccountsProvisioner` runs in development.
 
-# Role Simulation (for demo purposes)
-DEMO_ROLE=ADMIN  # Options: ADMIN, MANAGER, VIEWER
-
-# Admin Actions (bypass role checks)
-ENABLE_ADMIN_ACTIONS=false
-```
+Refer to `.env.example` for the full list (job concurrency, PDF determinism toggle, optional HubSpot OAuth keys, etc.).
 
 #### CRM Setup (Odoo - Primary)
 
@@ -331,6 +333,33 @@ bin/rails db:seed
 # View schema
 bin/rails db:schema:dump
 ```
+
+### Priority Column Rollout (Nov 21, 2025)
+
+The `tasks` table now includes a `priority` enum (`normal`, `urgent`, `express`) that powers the updated UI badges and messenger alert emails.
+
+1. Run the migration after pulling:
+
+   ```bash
+   bin/rails db:migrate
+   ```
+
+2. Existing records default to `normal`. Optionally backfill urgent/express tasks using your own heuristics. Example based on delivery window and pickup notes:
+
+   ```bash
+   bin/rails runner <<'RUBY'
+   urgent_cutoff = 24.hours.from_now
+
+   Task.where(status: %i[pending in_transit])
+     .where('delivery_time <= ?', urgent_cutoff)
+     .update_all(priority: :urgent)
+
+   Task.where("pickup_notes ILIKE ?", '%express%')
+     .update_all(priority: :express)
+   RUBY
+   ```
+
+3. Rebuild any cached dashboards so the new priority badges appear immediately (Turbo Stream subscribers update automatically once tasks are touched).
 
 ## 🚢 Deployment
 
@@ -605,12 +634,12 @@ end
 ### Feature Expansions
 
 #### 6. **Enhanced Notifications** 🔔
-**Status**: Planned | **Priority**: Medium
+**Status**: In Progress | **Priority**: Medium
 
 - [ ] Real-time in-app notifications with Turbo Streams
-- [ ] Email notifications for task status changes
-- [ ] SMS notifications via Twilio
-- [ ] Notification preferences per user
+- [x] Email notifications for task status changes
+- [x] SMS notifications via Twilio (NotificationService + SmsDelivery)
+- [ ] Notification preferences UI (backend table `notification_preferences` shipped)
 - [ ] Push notifications (PWA)
 - [ ] Notification center in topbar
 

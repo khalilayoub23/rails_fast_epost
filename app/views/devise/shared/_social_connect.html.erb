@@ -1,0 +1,37 @@
+<% return unless devise_mapping.omniauthable? %>
+<% configured = Devise.omniauth_configs.keys %>
+<% providers = (local_assigns[:providers].presence || resource_class.omniauth_providers).map(&:to_sym).select { |provider| configured.include?(provider) } %>
+<% return if providers.blank? %>
+
+<% providers.each do |provider| %>
+  <% label, button_class, icon_name = case provider
+    when :google_oauth2
+      ["Google", "bg-white/90 text-gray-900 hover:bg-white hover:shadow-xl", :google]
+    when :facebook
+      ["Facebook", "bg-[#1877F2] text-white hover:bg-[#2d88ff]", :facebook]
+    else
+      [provider.to_s.titleize, "bg-gray-800 text-white hover:bg-gray-700", :default]
+    end %>
+  <%= button_to omniauth_authorize_path(resource_name, provider), data: { turbo: false }, class: "group flex w-full items-center justify-center gap-3 rounded-2xl border border-white/10 px-5 py-3 text-sm font-semibold transition-all #{button_class}" do %>
+    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/10">
+      <% case icon_name
+        when :google %>
+          <svg class="h-5 w-5" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#4285F4" d="M24 9.5c3.54 0 6 1.54 7.38 2.83l5.4-5.26C33.66 3.58 29.29 2 24 2 14.82 2 6.98 7.98 3.84 16.19l6.56 5.1C11.66 14.81 17.29 9.5 24 9.5z"/>
+            <path fill="#34A853" d="M46.08 24.5c0-1.57-.14-3.08-.39-4.5H24v8.52h12.44c-.54 2.78-2.17 5.13-4.61 6.71l7.44 5.78C43.78 37.4 46.08 31.4 46.08 24.5z"/>
+            <path fill="#FBBC05" d="M10.4 28.31a14.5 14.5 0 010-8.62l-6.56-5.1C1.3 18.64 0 21.94 0 25.5s1.3 6.86 3.84 10.91l6.56-5.1z"/>
+            <path fill="#EA4335" d="M24 47c6.48 0 11.93-2.13 15.91-5.78l-7.44-5.78C30.44 36.89 27.5 38 24 38c-6.71 0-12.34-5.31-13.6-12.19l-6.56 5.1C6.98 40.02 14.82 47 24 47z"/>
+          </svg>
+        <% when :facebook %>
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M22 12.07C22 6.55 17.52 2 12 2S2 6.55 2 12.07c0 5 3.66 9.15 8.44 9.93v-7.02H8.08v-2.91h2.36V9.41c0-2.33 1.37-3.62 3.48-3.62.99 0 2.03.18 2.03.18v2.24h-1.14c-1.13 0-1.48.7-1.48 1.42v1.7h2.53l-.4 2.91h-2.13v7.02C18.34 21.22 22 17.07 22 12.07z" />
+          </svg>
+        <% else %>
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0z" />
+          </svg>
+      <% end %>
+    </span>
+    <span><%= t('social_connect.cta', default: 'Continue with %{provider}', provider: label) %></span>
+  <% end %>
+<% end %>

@@ -19,7 +19,7 @@ export default class extends Controller {
 
   // Click fallback
   toggle(event) {
-    if (this.hoverValue) return // hover mode active
+    if (this.hoverValue && this.deviceSupportsHover()) return
     event.preventDefault()
     this.menuTarget.classList.toggle("hidden")
   }
@@ -42,5 +42,10 @@ export default class extends Controller {
     if (!this.hasMenuTarget) return
     if (this.element.contains(e.target)) return
     this.menuTarget.classList.add("hidden")
+  }
+
+  deviceSupportsHover() {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false
+    return window.matchMedia("(hover: hover) and (pointer: fine)").matches
   }
 }

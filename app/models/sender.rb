@@ -1,7 +1,8 @@
 class Sender < ApplicationRecord
+  include Notifiable
+
   # Associations
   has_many :tasks, dependent: :restrict_with_error
-  has_many :phones, as: :phoneable
 
   # Enums
   enum :sender_type, { individual: 0, business: 1, government: 2 }

@@ -33,7 +33,12 @@
       
       <div class="tasks-box">
         <h3>Available Tasks:</h3>
-        <% @pending_tasks.limit(5).each do |task| %>
+        <% limited_tasks = if @pending_tasks.respond_to?(:limit)
+            @pending_tasks.limit(5)
+          else
+            Array(@pending_tasks).first(5)
+          end %>
+        <% limited_tasks.each do |task| %>
           <div class="task-item">
             <div class="barcode"><%= task.barcode %></div>
             <div class="location">
@@ -47,9 +52,10 @@
             <% end %>
           </div>
         <% end %>
-        <% if @pending_tasks.count > 5 %>
+        <% if @pending_tasks.count > limited_tasks.count %>
           <p style="text-align: center; color: #6b7280; margin-top: 15px;">
-            + <%= @pending_tasks.count - 5 %> more <%= (@pending_tasks.count - 5) == 1 ? 'task' : 'tasks' %>
+            <% remaining = @pending_tasks.count - limited_tasks.count %>
+            + <%= remaining %> more <%= remaining == 1 ? 'task' : 'tasks' %>
           </p>
         <% end %>
       </div>

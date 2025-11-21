@@ -287,6 +287,8 @@ app/services/
 - [x] SMTP configuration for production
 - [x] Comprehensive test suite (35+ tests)
 - [x] Complete documentation
+- [x] Preference management UI surfaced on customer/messenger/sender dashboards with Turbo frames, shallow-nested controllers, and shared partials.
+- [x] Controller + model tests that cover create/update/destroy flows and admin/manager authorization for messenger/sender scopes.
 
 ### Files Created:
 ```
@@ -365,10 +367,10 @@ app/services/
 ✅ Complete documentation  
 
 ### What's Still Optional (Future Enhancements):
-- [ ] SMS integration (Twilio) - Phase 2
+- [x] SMS integration (Twilio) - Phase 2 ✓ (delivered Nov 18, 2025)
 - [ ] Push notifications (web/mobile) - Phase 2
 - [ ] In-app notification center - Phase 3
-- [ ] User notification preferences - Phase 3
+- [x] User notification preferences - Phase 3 ✓ (backend complete; UI pending)
 - [ ] Multi-language support - Phase 3
 - [ ] Email analytics dashboard - Phase 3
 

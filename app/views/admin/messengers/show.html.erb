@@ -129,3 +129,7 @@
     </tbody>
   </table>
 </div>
+
+<div class="bg-white rounded shadow p-6 mt-6">
+  <%= render "notification_preferences/index", parent: @messenger, collection: @messenger.notification_preferences, new_path: new_messenger_notification_preference_path(@messenger) %>
+</div>

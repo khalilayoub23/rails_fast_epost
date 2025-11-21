@@ -2,8 +2,10 @@
 
 one:
   carrier: one
-  primary: false
+  number: "+15550001"
+  primary: true
 
 two:
   carrier: two
+  number: "+15550002"
   primary: false

@@ -1,8 +1,9 @@
 class Messenger < ApplicationRecord
+  include Notifiable
+
   # Associations
   belongs_to :carrier, optional: true
   has_many :tasks, dependent: :restrict_with_error
-  has_many :phones, as: :phoneable
 
   # Enums
   enum :status, { available: 0, busy: 1, offline: 2 }

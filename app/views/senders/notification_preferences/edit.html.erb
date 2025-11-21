@@ -1,0 +1,4 @@
+<%= turbo_frame_tag "notification-preferences" do %>
+  <h2 class="text-lg font-semibold mb-4">Edit Notification Preference</h2>
+  <%= render "notification_preferences/form", parent: @sender, notification_preference: @notification_preference %>
+<% end %>

@@ -1,6 +1,6 @@
 # Gap Analysis: FastAPI Platform vs Rails Fast Epost
 
-**Date**: October 10, 2025  
+**Date**: November 18, 2025  
 **Comparison**: Python/FastAPI structure → Current Rails 8 system
 
 ---
@@ -12,6 +12,11 @@ This document compares the FastAPI platform architecture you described against o
 - ❌ **Features we're missing**
 - ⚠️ **Features we have partially**
 - 💡 **Recommendations for implementation**
+
+**Updates – November 18, 2025**
+- ✅ `.env.example` template plus README workflow shipped to remove onboarding guesswork.
+- ✅ PhonesController Hotwire revert re-enables inline add/remove/edit of phone numbers.
+- ⚠️ `NotificationService` now includes Twilio-backed SMS delivery, per-recipient preferences, and delivery logs; push/in-app layers remain outstanding.
 
 ---
 
@@ -74,7 +79,7 @@ This document compares the FastAPI platform architecture you described against o
 | `task_service.py` | `task.rb` + aasm | ✅ **Complete** | State machine with callbacks |
 | `payment_service.py` | `gateways/*_gateway.rb` | ✅ **Complete** | Stripe, PayPal gateways with retry logic |
 | `pdf_service.py` | `pdf/template_renderer.rb` + `pdf/editor.rb` | ⚠️ **Partial** | Has PDF generation/editing but **missing specific templates** |
-| `notification_service.py` | ❌ **Missing** | ❌ **Gap** | **No unified notification service** |
+| `notification_service.py` | `notification_service.rb` | ⚠️ **Partial** | Central email delivery with messenger guard rails exists, but SMS/push layers and preference matrix remain unbuilt |
 
 #### Services We Have (Not in FastAPI):
 - ✅ `integrations/hubspot_service.rb` - HubSpot CRM sync
@@ -108,6 +113,7 @@ This document compares the FastAPI platform architecture you described against o
 - ✅ Devise authentication views (sign in, sign up, password reset)
 - ✅ Payment checkout pages
 - ✅ Custom error pages (400, 404, 422, 500, 503)
+- ✅ PhonesController Hotwire workflow restored (Nov 2025) for inline add/remove/edit of customer phone numbers without page reloads
 
 ---
 
@@ -129,7 +135,7 @@ This document compares the FastAPI platform architecture you described against o
 | `docker-compose.yml` | `docker-compose.dev.yml` | ✅ **Complete** | Dev environment with PostgreSQL |
 | `alembic/versions/` | `db/migrate/` | ✅ **Complete** | Rails migrations (superior to Alembic) |
 | `requirements.txt` | `Gemfile` + `Gemfile.lock` | ✅ **Complete** | Ruby dependency management |
-| `.env.example` | `.env.example` | ❌ **Missing** | **No .env.example file** |
+| `.env.example` | `.env.example` | ✅ **Complete** | Template added (Nov 18, 2025) with grouped ENV sections |
 
 ---
 
@@ -238,51 +244,34 @@ app/
 
 ---
 
-### 4. **Unified Notification Service** 🔔
+### 4. **Unified Notification Service Enhancements** 🔔
 **Priority**: HIGH
 
-**What's Missing**:
-- No centralized notification service
-- No email notifications for task status changes
-- No SMS notifications (Twilio integration missing)
-- No in-app notification center
-- No notification preferences per user
-- No notification templates
+**Current State (Nov 20, 2025)**:
+- `NotificationService` centralizes email + SMS delivery, with guard rails that prevent nil recipients.
+- `SmsDelivery` integrates Twilio via `TWILIO_*` env vars and gracefully stubs in dev/test.
+- `notification_preferences` table stores per-recipient channel opt-ins, quiet hours, and metadata; enforcement happens before any send.
+- `notification_logs` table keeps an immutable audit trail per channel with provider SIDs and statuses.
+- Task callbacks already delegate to this service to keep controllers/Turbo responses lean.
+- Turbo-powered preference management UI now lives on every customer, messenger, and sender show page so operators can add/update channels without leaving the dashboard; access is locked down to the relevant roles.
 
-**Current State**:
-- Task model has callback stubs (`notify_customer_*`) with logging only
-- ApplicationMailer exists but no mailers implemented
-- No SMS integration
-- No push notifications
+**What's Still Missing**:
+- In-app notification center (Turbo Streams) and/or web push delivery.
+- Template localization/management tooling beyond the current Ruby helpers.
+- Advanced analytics dashboard for open/click/SMS delivery metrics.
 
 **Recommendation**:
 ```ruby
-# app/services/notification_service.rb
-class NotificationService
-  def self.send_task_status_update(task, old_status, new_status)
-    # Email notification
-    TaskMailer.status_changed(task, old_status, new_status).deliver_later
-    
-    # SMS notification (if customer opted in)
-    send_sms(task.customer.phone, "Your shipment is now #{new_status}")
-    
-    # In-app notification
-    create_notification(task.customer.user, "Task #{task.id} updated")
-  end
-  
-  private
-  
-  def self.send_sms(phone, message)
-    # Twilio integration
-  end
-  
-  def self.create_notification(user, message)
-    # Create in-app notification record
-  end
+# Extend NotificationService with in-app/Turbo delivery once preference UI exists
+def deliver_in_app(recipient:, message_type:, body:)
+   return unless channel_enabled?(recipient, :in_app)
+
+   NotificationsChannel.broadcast_to(recipient, { type: message_type, body: body })
+   NotificationLog.record!(message_type: message_type, channel: :in_app, status: NotificationLog::STATUSES[:sent], notifiable: recipient)
 end
 ```
 
-**Impact**: Customers and staff not notified of important status changes.
+**Impact**: Email/SMS coverage now meets parity with the FastAPI plan, but operators still lack a first-class in-app experience and analytics until the remaining layers land.
 
 ---
 
@@ -326,47 +315,13 @@ storage/
 ---
 
 ### 6. **Environment Configuration Template** ⚙️
-**Priority**: LOW
+**Status**: ✅ COMPLETE (Nov 18, 2025)
 
-**What's Missing**:
-- No `.env.example` file for developers
-- ENV variables not documented
+**What Exists Now**:
+- `.env.example` at the repository root with grouped sections for Rails core settings, URLs, database credentials, SMTP, Stripe/LocalPay keys, CRM/webhook secrets (HubSpot, Odoo, Meta, Telegram, TikTok, websites), PDF determinism toggle, and default demo account emails.
+- README instructions guiding contributors to `cp .env.example .env` and personalize each section before running `bin/dev` or tests.
 
-**Current State**:
-- Using dotenv-rails gem
-- ENV variables scattered in code comments
-
-**Recommendation**:
-```bash
-# .env.example
-# Database
-DATABASE_URL=postgresql://user:pass@localhost/fastepost_dev
-
-# Stripe Payment Gateway
-STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
-# PayPal Payment Gateway
-PAYPAL_CLIENT_ID=...
-PAYPAL_CLIENT_SECRET=...
-
-# CRM Integrations
-HUBSPOT_CLIENT_ID=...
-HUBSPOT_CLIENT_SECRET=...
-ODOO_API_KEY=...
-
-# Twilio (for SMS notifications)
-TWILIO_ACCOUNT_SID=...
-TWILIO_AUTH_TOKEN=...
-TWILIO_PHONE_NUMBER=...
-
-# Application
-APP_BASE_URL=http://localhost:3000
-SECRET_KEY_BASE=...
-```
-
-**Impact**: Developers struggle with setup and configuration.
+**Impact**: New developers can boot the stack without spelunking through code comments for ENV names, reducing onboarding time and ensuring notification/Stripe features are configured consistently.
 
 ---
 
@@ -461,11 +416,10 @@ SECRET_KEY_BASE=...
    - Search and filter documents
    - Bulk upload interface
 
-7. **Environment Setup**
-   - Create `.env.example`
-   - Document all ENV variables
-   - Setup script improvements
-   - Developer onboarding guide
+7. **Environment Setup** *(✅ Completed Nov 18, 2025)*
+   - `.env.example` added with categorized sections
+   - README documents required ENV variables and copy steps
+   - Remaining nice-to-have items (setup script automation, expanded onboarding guide) can proceed later
 
 ---
 
@@ -475,10 +429,10 @@ SECRET_KEY_BASE=...
 |----------|---------------|-------------|-----------|-----------|
 | **Models** | 7 | 5 (71%) | 0 (0%) | 2 (29%) |
 | **API Endpoints** | 6 | 5 (83%) | 0 (0%) | 1 (17%) |
-| **Services** | 5 | 3 (60%) | 1 (20%) | 1 (20%) |
+| **Services** | 5 | 3 (60%) | 2 (40%) | 0 (0%) |
 | **Templates** | 3 | 0 (0%) | 0 (0%) | 3 (100%) |
-| **Infrastructure** | 5 | 4 (80%) | 0 (0%) | 1 (20%) |
-| **TOTAL** | **26** | **17 (65%)** | **1 (4%)** | **8 (31%)** |
+| **Infrastructure** | 5 | 5 (100%) | 0 (0%) | 0 (0%) |
+| **TOTAL** | **26** | **18 (69%)** | **2 (8%)** | **6 (23%)** |
 
 ---
 
@@ -568,7 +522,7 @@ SECRET_KEY_BASE=...
 
 ## 📝 Conclusion
 
-Our Rails Fast Epost system is **65% feature-complete** compared to the FastAPI platform architecture. The main gaps are:
+Our Rails Fast Epost system is **69% feature-complete** compared to the FastAPI platform architecture. The main gaps are:
 
 **Critical Gaps**:
 - 🚚 Messenger/delivery person management
@@ -593,5 +547,5 @@ However, our system has **significant advantages**:
 ---
 
 **Generated**: October 10, 2025  
-**Last Updated**: October 10, 2025  
-**Version**: 1.0
+**Last Updated**: November 18, 2025  
+**Version**: 1.1

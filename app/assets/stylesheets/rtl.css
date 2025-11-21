@@ -237,16 +237,6 @@ html[dir="rtl"] .notification {
   left: 1rem;
 }
 
-/* Header/Navigation RTL Adjustments - Match English measurements exactly */
-html[dir="rtl"] nav {
-  direction: rtl;
-}
-
-/* Ensure logo stays on the right in RTL */
-html[dir="rtl"] nav .flex.items-center.justify-between {
-  flex-direction: row-reverse;
-}
-
 /* Mobile bottom navigation in RTL - icons stay centered */
 html[dir="rtl"] .mobile-bottom-nav {
   direction: ltr; /* Keep navigation items in logical order */

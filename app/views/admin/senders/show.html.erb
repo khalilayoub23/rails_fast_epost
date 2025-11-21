@@ -56,3 +56,7 @@
     </ul>
   </div>
 </div>
+
+<div class="bg-white rounded shadow p-6 mt-6">
+  <%= render "notification_preferences/index", parent: @sender, collection: @sender.notification_preferences, new_path: new_sender_notification_preference_path(@sender) %>
+</div>

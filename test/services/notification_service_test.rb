@@ -1,11 +1,14 @@
 require "test_helper"
 
 class NotificationServiceTest < ActionMailer::TestCase
+  include ActiveSupport::Testing::TimeHelpers
+
   setup do
     @task = tasks(:one)
     @messenger = messengers(:messenger_one)
     @customer = customers(:one)
     @sender = senders(:sender_one)
+    NotificationLog.delete_all
 
     # Clear ActionMailer deliveries before each test
     ActionMailer::Base.deliveries.clear
@@ -22,6 +25,15 @@ class NotificationServiceTest < ActionMailer::TestCase
     assert_equal [ @messenger.email ], email.to
     assert_match @task.barcode, email.subject
     assert_match "New Task Assigned", email.subject
+  end
+
+  test "notify_task_assigned skips messenger without email" do
+    @task.update!(messenger: @messenger)
+    @messenger.update!(email: nil)
+
+    assert_emails 0 do
+      NotificationService.notify_task_assigned(@task)
+    end
   end
 
   test "notify_task_assigned handles missing messenger gracefully" do
@@ -58,6 +70,20 @@ class NotificationServiceTest < ActionMailer::TestCase
 
     email = ActionMailer::Base.deliveries.last
     assert_equal [ @customer.email ], email.to
+  end
+
+  test "notify_status_changed skips recipients without email" do
+    @task.update!(messenger: @messenger, sender: @sender)
+    @messenger.update!(email: nil)
+
+    assert_emails 2 do
+      NotificationService.notify_status_changed(@task, "pending")
+    end
+
+    recipients = ActionMailer::Base.deliveries.last(2).map(&:to).flatten
+    assert_includes recipients, @customer.email
+    assert_includes recipients, @sender.email
+    refute_includes recipients, nil
   end
 
   test "notify_delivery_complete sends emails to all parties" do
@@ -132,6 +158,98 @@ class NotificationServiceTest < ActionMailer::TestCase
     email = ActionMailer::Base.deliveries.last
     assert_equal [ @messenger.email ], email.to
     assert_match "Available for Pickup", email.subject
+  end
+
+  test "notify_available_messengers skips contacts without email" do
+    @task.update!(status: :pending)
+    pending_tasks = Task.where(status: :pending)
+    @messenger.update!(email: nil)
+
+    assert_emails 0 do
+      NotificationService.notify_available_messengers_about_pending_tasks(@messenger, pending_tasks)
+    end
+  end
+
+  test "pending tasks alert supports array input" do
+    @task.update!(status: :pending)
+    pending_tasks = [ @task ]
+
+    assert_emails 1 do
+      NotificationService.notify_available_messengers_about_pending_tasks(@messenger, pending_tasks)
+    end
+
+    email = ActionMailer::Base.deliveries.last
+    assert_equal [ @messenger.email ], email.to
+    assert_match(/Tasks Available/, email.subject)
+  end
+
+  test "notify_task_assigned sends sms when preference enabled" do
+    @task.update!(messenger: @messenger)
+
+    sms_calls = []
+
+    SmsDelivery.stub(:deliver!, ->(to:, body:, metadata:) {
+      sms_calls << { to: to, body: body, metadata: metadata }
+      SmsDelivery::Response.new(sid: "SM123", status: "queued")
+    }) do
+      NotificationService.notify_task_assigned(@task)
+    end
+
+    refute_empty sms_calls
+    assert_equal @messenger.phone, sms_calls.first[:to]
+  end
+
+  test "status change sms respects quiet hours" do
+    quiet_pref = notification_preferences(:messenger_quiet_hours)
+    messenger = quiet_pref.notifiable
+    @task.update!(messenger: messenger)
+
+    travel_to Time.zone.local(2025, 11, 18, 23, 30, 0) do
+      assert quiet_pref.quiet_hours_active?, "Fixture should report quiet hours at 23:30"
+      recipient_ids = []
+
+      SmsDelivery.stub(:deliver!, ->(to:, body:, metadata:) {
+        recipient_ids << metadata[:recipient_id]
+        SmsDelivery::Response.new(sid: "SM123", status: "queued")
+      }) do
+        NotificationService.notify_status_changed(@task, "pending")
+      end
+
+      refute_includes recipient_ids, messenger.id, "Messenger should not receive SMS during quiet hours"
+    end
+  end
+
+  test "sms not sent without opt in" do
+    @task.update!(messenger: messengers(:messenger_three))
+
+    sms_called = false
+
+    SmsDelivery.stub(:deliver!, ->(**) {
+      sms_called = true
+      SmsDelivery::Response.new(sid: "SM123", status: "queued")
+    }) do
+      NotificationService.notify_task_assigned(@task)
+    end
+
+    assert_equal false, sms_called
+  end
+
+  test "notification logs capture email and sms deliveries" do
+    @task.update!(messenger: @messenger)
+
+    SmsDelivery.stub(:deliver!, ->(**) {
+      SmsDelivery::Response.new(sid: "SM123", status: "queued")
+    }) do
+      assert_difference -> { NotificationLog.count }, 2 do
+        NotificationService.notify_task_assigned(@task)
+      end
+    end
+
+    email_log = NotificationLog.where(channel: :email).last
+    sms_log = NotificationLog.where(channel: :sms).last
+
+    assert_equal "task_assigned", email_log.message_type
+    assert_equal "task_assigned", sms_log.message_type
   end
 
   test "notification service handles email delivery failures gracefully" do

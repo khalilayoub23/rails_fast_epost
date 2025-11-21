@@ -5,6 +5,7 @@
     <% end %>
   </td>
   <td class="px-4 py-4"><%= render "shared/status_badge", status: task.status %></td>
+  <td class="px-4 py-4"><%= render "shared/priority_badge", priority: task.priority %></td>
   <td class="px-4 py-4 text-sm text-dark"><%= task.customer&.name || "-" %></td>
   <td class="px-4 py-4 text-sm text-body">#<%= task.carrier_id %></td>
   <td class="px-4 py-4 text-sm text-body"><%= l(task.created_at, format: :short) %></td>

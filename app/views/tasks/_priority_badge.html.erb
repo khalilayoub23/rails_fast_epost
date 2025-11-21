@@ -1,0 +1,20 @@
+<% value = (local_assigns[:priority].presence || "normal").to_s %>
+<% label = value.humanize %>
+<%
+  variant_classes = case value
+                    when "express"
+                      "badge-danger"
+                    when "urgent"
+                      "badge-warning"
+                    else
+                      "badge-default"
+                    end
+%>
+<span class="inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold <%= variant_classes %>">
+  <% if value == "express" %>
+    <span class="material-icons !text-[12px]">flash_on</span>
+  <% elsif value == "urgent" %>
+    <span class="material-icons !text-[12px]">priority_high</span>
+  <% end %>
+  <%= label %>
+</span>

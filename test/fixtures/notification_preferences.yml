@@ -1,0 +1,22 @@
+# Notification preferences for opt-in/quiet-hours scenarios
+messenger_sms_opt_in:
+  notifiable: messenger_one (Messenger)
+  channel: sms
+  enabled: true
+
+customer_sms_opt_in:
+  notifiable: one (Customer)
+  channel: sms
+  enabled: true
+
+sender_sms_muted:
+  notifiable: sender_one (Sender)
+  channel: sms
+  enabled: false
+
+messenger_quiet_hours:
+  notifiable: messenger_two (Messenger)
+  channel: sms
+  enabled: true
+  quiet_hours_start: 22
+  quiet_hours_end: 6

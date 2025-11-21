@@ -31,12 +31,11 @@ class DocumentsController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@document, @carrier, notice: "Document updated.") do
+    respond_with_update(@document, @carrier, notice: "Document updated.", attributes: document_params) do
       render turbo_stream: [
         turbo_stream.replace(dom_id(@document), partial: "documents/document_card", locals: { document: @document, carrier: @carrier }),
         turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("documents.updated") })
       ]
-      document_params
     end
   end
 

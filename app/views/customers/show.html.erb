@@ -86,4 +86,8 @@
       </div>
     <% end %>
   </div>
+
+  <div class="rounded-sm border border-dashed border-stroke bg-white px-5 py-6 shadow-default">
+    <%= render "notification_preferences/index", parent: @customer, collection: @customer.notification_preferences, new_path: new_customer_notification_preference_path(@customer) %>
+  </div>
 </div>

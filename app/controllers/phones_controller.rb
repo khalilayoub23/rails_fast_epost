@@ -31,12 +31,11 @@ class PhonesController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@phone, @carrier, notice: "Phone updated.") do
+    respond_with_update(@phone, @carrier, notice: "Phone updated.", attributes: phone_params) do
       render turbo_stream: [
         turbo_stream.replace(dom_id(@phone), partial: "phones/phone_card", locals: { phone: @phone, carrier: @carrier }),
         turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("phones.updated") })
       ]
-      phone_params
     end
   end
 

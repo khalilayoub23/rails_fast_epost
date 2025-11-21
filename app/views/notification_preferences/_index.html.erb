@@ -1,0 +1,57 @@
+<% parent = local_assigns.fetch(:parent) %>
+<% collection = local_assigns.fetch(:collection) %>
+<% new_path = local_assigns.fetch(:new_path) %>
+
+<%= turbo_frame_tag "notification-preferences" do %>
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900">Notification Preferences</h2>
+      <p class="text-sm text-gray-500">Fine-tune how <%= parent.try(:name) || parent.try(:full_name) %> receives alerts.</p>
+    </div>
+    <%= link_to "Add Preference", new_path, class: "btn btn-primary", data: { turbo_frame: "notification-preferences" } %>
+  </div>
+
+  <% if collection.any? %>
+    <div class="overflow-hidden border border-gray-200 rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Channel</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enabled</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quiet Hours</th>
+            <th class="px-4 py-3" aria-label="Actions"></th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% collection.each do |preference| %>
+            <tr>
+              <td class="px-4 py-3 text-sm font-medium text-gray-900"><%= preference.channel.titleize %></td>
+              <td class="px-4 py-3 text-sm">
+                <% if preference.enabled? %>
+                  <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Enabled</span>
+                <% else %>
+                  <span class="inline-flex items-center rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-800">Disabled</span>
+                <% end %>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-700">
+                <% if preference.quiet_hours? %>
+                  <%= preference.quiet_hours_start %>:00 → <%= preference.quiet_hours_end %>:00
+                <% else %>
+                  <span class="text-gray-400">Not set</span>
+                <% end %>
+              </td>
+              <td class="px-4 py-3 text-right text-sm flex items-center justify-end space-x-2">
+                <%= link_to "Edit", edit_polymorphic_path([ parent, preference ]), class: "text-blue-600 hover:text-blue-800", data: { turbo_frame: "notification-preferences" } %>
+                <%= button_to "Delete", polymorphic_path([ parent, preference ]), method: :delete, data: { turbo_confirm: "Remove this preference?" }, class: "text-red-600 hover:text-red-800" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="rounded-md border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500">
+      No preferences yet. Click "Add Preference" to create one.
+    </div>
+  <% end %>
+<% end %>

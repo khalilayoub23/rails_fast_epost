@@ -208,6 +208,7 @@
           <tr class="bg-gray-900/50 text-left border-b border-gray-700">
             <th class="px-4 py-4 font-medium text-yellow-400">Task</th>
             <th class="px-4 py-4 font-medium text-yellow-400">Customer</th>
+            <th class="px-4 py-4 font-medium text-yellow-400">Priority</th>
             <th class="px-4 py-4 font-medium text-yellow-400">Status</th>
             <th class="px-4 py-4 text-right font-medium text-yellow-400">Actions</th>
           </tr>
@@ -221,6 +222,9 @@
                 <% end %>
               </td>
               <td class="px-4 py-4 text-sm text-gray-400"><%= task.customer&.name || "-" %></td>
+              <td class="px-4 py-4">
+                <%= render "shared/priority_badge", priority: task.priority %>
+              </td>
               <td class="px-4 py-4">
                 <%= render "shared/status_badge", status: task.status %>
               </td>

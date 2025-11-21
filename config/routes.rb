@@ -6,16 +6,14 @@ Rails.application.routes.draw do
   get "/locale/:id", to: "locales#update", as: :set_locale
   # Public pages
   get "home", to: "pages#home", as: :landing_page
-  get "pages/home"
-  get "pages/about"
-  get "pages/services"
-  get "pages/contact"
-  post "pages/contact", to: "pages#contact"
-  get "pages/track_parcel"
-  get "pages/law_firms"
-  get "pages/ecommerce"
-  get "pages/privacy_policy"
-  get "pages/icons" # Icon showcase and documentation
+
+  controller :pages do
+    %i[home about services track_parcel law_firms ecommerce privacy_policy icons].each do |action|
+      get "pages/#{action}", action: action
+    end
+
+    match "pages/contact", action: :contact, via: [ :get, :post ]
+  end
 
   # Public checkout
   get "/checkout", to: "checkout#new", as: :new_checkout
@@ -23,7 +21,9 @@ Rails.application.routes.draw do
   get "/checkout/success", to: "checkout#success", as: :checkout_success
   get "/checkout/cancel", to: "checkout#cancel", as: :checkout_cancel
   
-  devise_for :users
+  devise_for :users, controllers: {
+    omniauth_callbacks: "users/omniauth_callbacks"
+  }
   
   # Root route - public homepage for non-authenticated users
   authenticated :user do
@@ -63,6 +63,7 @@ Rails.application.routes.draw do
       get :search
     end
     resources :forms
+    resources :notification_preferences, module: :customers
     resources :tasks, shallow: true do
       resources :cost_calcs
       resources :remarks
@@ -88,6 +89,14 @@ Rails.application.routes.draw do
 
   # Join table routes for payments_tasks
   resources :payments_tasks, only: [ :create, :destroy ]
+
+  resources :messengers, only: [] do
+    resources :notification_preferences, module: :messengers
+  end
+
+  resources :senders, only: [] do
+    resources :notification_preferences, module: :senders
+  end
 
   # API routes if needed
   namespace :api do

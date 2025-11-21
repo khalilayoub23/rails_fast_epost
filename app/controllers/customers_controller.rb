@@ -31,13 +31,12 @@ class CustomersController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@customer, nil, notice: "Customer updated.") do
+    respond_with_update(@customer, nil, notice: "Customer updated.", attributes: customer_params) do
       render turbo_stream: [
         turbo_stream.replace(@customer, partial: "customers/customer_card", locals: { customer: @customer }),
         turbo_stream.append("flash-messages", partial: "shared/flash_message",
                            locals: { type: :success, message: t("customers.updated_successfully") })
       ]
-      customer_params
     end
   end
 

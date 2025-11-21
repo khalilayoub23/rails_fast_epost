@@ -5,7 +5,7 @@ class Task < ApplicationRecord
 
   SNAPSHOT_ATTRIBUTES = %w[
     customer_id carrier_id sender_id messenger_id lawyer_id
-    package_type start target failure_code delivery_time status
+    package_type start target failure_code delivery_time status priority
     filled_form_url pickup_address pickup_contact_phone pickup_notes
     requested_pickup_time
   ].freeze
@@ -26,6 +26,8 @@ class Task < ApplicationRecord
 
   # Define status enum (positional syntax)
   enum :status, { pending: 0, in_transit: 1, delivered: 2, failed: 3, returned: 4 }
+
+  enum :priority, { normal: "normal", urgent: "urgent", express: "express" }, default: :normal
 
   validates :package_type, presence: true
   validates :start, presence: true
@@ -54,9 +56,6 @@ class Task < ApplicationRecord
   end
 
   # Optional attributes for notification templates (return nil if not present)
-  def priority
-    nil  # Optional: Can be 'normal', 'urgent', 'express'
-  end
 
   def scheduled_pickup_time
     nil  # Optional: Scheduled pickup timestamp

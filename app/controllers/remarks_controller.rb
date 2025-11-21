@@ -32,13 +32,12 @@ class RemarksController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@remark, @task, notice: "Remark updated.") do
+    respond_with_update(@remark, @task, notice: "Remark updated.", attributes: remark_params) do
       render turbo_stream: [
         turbo_stream.replace(@remark, partial: "remarks/remark_card", locals: { remark: @remark, task: @task }),
         turbo_stream.append("flash-messages", partial: "shared/flash_message",
                            locals: { type: :success, message: "Remark updated successfully!" })
       ]
-      remark_params
     end
   end
 

@@ -198,13 +198,17 @@ class TaskMailerTest < ActionMailer::TestCase
   end
 
   test "urgent tasks are highlighted in emails" do
-    # Priority is optional - skip if not defined in database
-    skip "Priority attribute not defined in Task model" unless @task.respond_to?(:priority=)
-
     @task.update!(priority: "urgent")
     email = TaskMailer.pickup_requested(@task)
 
-    assert_match /urgent/i, email.body.encoded
+    assert_match /URGENT/i, email.body.encoded
+  end
+
+  test "express tasks render express banner" do
+    @task.update!(priority: "express")
+    email = TaskMailer.pickup_requested(@task)
+
+    assert_match /EXPRESS/i, email.body.encoded
   end
 
   test "failure emails include failure reason text" do

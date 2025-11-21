@@ -1,5 +1,41 @@
 # Changelog - Database Schema Updates
 
+## [2025-11-21] - Task Priority Rollout
+
+### Added
+- `priority` string enum on `Task` (`normal`, `urgent`, `express`) with database index so operators can flag rush deliveries.
+- Documentation in `README.md` and `NOTIFICATION_SYSTEM.md` describing how to run the migration plus optional backfill scripts that derive urgency from delivery windows or pickup notes.
+
+### Notes
+- After pulling, run `bin/rails db:migrate` followed by any backfill script that marks urgent/express shipments for your tenant data before verifying the messenger alert emails.
+
+## [2025-11-20] - Notification Preference UI & Tests
+
+### Added
+- Shallow-nested notification preference controllers for customers, messengers, and senders plus shared Turbo-friendly partials so operators can manage channel opt-ins inline on each dashboard.
+- Controller test suites that cover CRUD flows, duplicate channel handling, and admin/manager authorization for messenger/sender scopes.
+- Documentation updates (README, NOTIFICATION_SYSTEM.md, GAP reports) outlining how to access the UI, configure Twilio, and audit notification logs.
+
+### Changed
+- Customer, admin messenger, and admin sender show pages now embed preference lists/forms in Turbo frames so changes reflect immediately without navigation.
+- `config/routes.rb` exposes the new shallow routes while keeping admin guardrails for messenger/sender parents.
+
+## [2025-11-18] - Respondable & Notification Hardening
+
+### Added
+- `.env.example` template with grouped sections for Rails, database, SMTP, Stripe/LocalPay, CRM/webhook secrets, and demo account credentials to streamline onboarding.
+- Regression tests for `NotificationService` covering email-skipping scenarios (messenger/sender without email, bulk alerts, etc.).
+- `notification_preferences` (per-recipient channel opt-ins + quiet hours) and `notification_logs` (auditable delivery history) tables with associated models.
+- `SmsDelivery` service plus Twilio initializer so NotificationService can send SMS when `TWILIO_*` env vars are present.
+
+### Changed
+- `Respondable#respond_with_update` now accepts explicit `attributes:` arguments so parameter evaluation is separated from Turbo rendering. All controllers invoking it were updated to pass `attributes` and keep Turbo stream blocks dedicated to rendering.
+- `NotificationService` now routes both email and SMS through preference-aware helpers, logs every attempt to `notification_logs`, and skips SMS automatically during quiet hours.
+
+### Notes
+- Run `DATABASE_USER=postgres DATABASE_PASSWORD=postgres bin/rails test` (seed `42136`, 247 tests) after pulling to ensure local environments mirror CI settings.
+- Copy `.env.example` to `.env` and adjust as needed before running `bin/dev` or tests.
+
 ## [2025-10-04] - Payments Refunds Audit Trail and UI/API
 
 ### Added

@@ -8,12 +8,9 @@ module Pdf
       fields = Array(schema["fields"]) || []
 
       io = StringIO.new
+      deterministic = deterministic_output?
       doc = HexaPDF::Document.new
-      # Enable deterministic output for testing/snapshots
-      if ENV["PDF_DETERMINISTIC"].to_s == "1"
-        # Fixed seed for trailer ID
-        doc.config["document.id_seed"] = "fixed-seed"
-      end
+      doc.trailer[:ID] = deterministic_pdf_id.map(&:dup) if deterministic
       page = doc.pages.add
       canvas = page.canvas
 
@@ -35,7 +32,7 @@ module Pdf
       end
 
       # Set fixed metadata timestamps if deterministic
-      if ENV["PDF_DETERMINISTIC"].to_s == "1"
+      if deterministic
         info = doc.trailer.info
         info.set(:Producer, "FastEpost")
         info.set(:Creator, "FastEpost")
@@ -57,4 +54,18 @@ module Pdf
       pdf.render
     end
   end
+    class << self
+      private
+
+      def deterministic_output?
+        ENV["PDF_DETERMINISTIC"].to_s == "1"
+      end
+
+      def deterministic_pdf_id
+        @deterministic_pdf_id ||= [
+          "FastEpostPDFID01".b,
+          "FastEpostPDFID02".b
+        ].freeze
+      end
+    end
 end

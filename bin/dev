@@ -5,6 +5,10 @@ if ! gem list foreman -i --silent; then
   gem install foreman
 fi
 
+if [ -x "./script/ensure_postgres.sh" ]; then
+  ./script/ensure_postgres.sh
+fi
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_16_090000) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_21_170644) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -181,6 +181,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_090000) do
     t.index ["status"], name: "index_messengers_on_status"
   end
 
+  create_table "notification_logs", force: :cascade do |t|
+    t.string "notifiable_type"
+    t.bigint "notifiable_id"
+    t.integer "channel", null: false
+    t.string "message_type", null: false
+    t.string "status", default: "sent", null: false
+    t.string "provider_message_id"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel"], name: "index_notification_logs_on_channel"
+    t.index ["message_type"], name: "index_notification_logs_on_message_type"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notification_logs_on_notifiable_type_and_notifiable_id"
+    t.index ["status"], name: "index_notification_logs_on_status"
+  end
+
+  create_table "notification_preferences", force: :cascade do |t|
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false
+    t.integer "channel", default: 0, null: false
+    t.boolean "enabled", default: true, null: false
+    t.integer "quiet_hours_start"
+    t.integer "quiet_hours_end"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notifiable_type", "notifiable_id", "channel"], name: "index_notification_preferences_on_notifiable_and_channel"
+  end
+
   create_table "payments", force: :cascade do |t|
     t.integer "category"
     t.bigint "task_id"
@@ -313,10 +343,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_090000) do
     t.text "pickup_notes"
     t.datetime "requested_pickup_time"
     t.bigint "lawyer_id"
+    t.string "priority", default: "normal", null: false
     t.index ["carrier_id"], name: "index_tasks_on_carrier_id"
     t.index ["customer_id"], name: "index_tasks_on_customer_id"
     t.index ["lawyer_id"], name: "index_tasks_on_lawyer_id"
     t.index ["messenger_id"], name: "index_tasks_on_messenger_id"
+    t.index ["priority"], name: "index_tasks_on_priority"
     t.index ["sender_id"], name: "index_tasks_on_sender_id"
   end
 
@@ -330,7 +362,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_090000) do
     t.datetime "updated_at", null: false
     t.string "role", default: "viewer", null: false
     t.string "preferred_language"
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_users_on_role"
   end

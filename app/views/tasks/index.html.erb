@@ -68,11 +68,15 @@
       <%= form_with url: (@customer ? customer_tasks_path(@customer) : tasks_path), 
           method: :get,
           data: { turbo_frame: "tasks_table", turbo_action: "advance" },
-          class: "flex gap-3" do |f| %>
+          class: "flex flex-col gap-3 md:flex-row" do |f| %>
         <%= f.text_field :q,
             value: params[:q],
             placeholder: t('common.search'),
             class: "flex-1 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
+          <%= f.select :priority,
+            Task.priorities.keys.map { |priority| [priority.titleize, priority] },
+            { include_blank: t('tasks.priority_all', default: 'All priorities'), selected: params[:priority] },
+              class: "md:w-52 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
         <%= f.submit t('common.search'),
             class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-6 text-center font-medium text-white hover:bg-opacity-90" %>
       <% end %>
@@ -85,6 +89,7 @@
             <tr class="bg-gray-2 text-left dark:bg-meta-4">
               <th class="min-w-[100px] px-4 py-4 font-medium text-dark dark:text-white">ID</th>
               <th class="min-w-[140px] px-4 py-4 font-medium text-dark dark:text-white">Status</th>
+              <th class="min-w-[120px] px-4 py-4 font-medium text-dark dark:text-white">Priority</th>
               <th class="min-w-[180px] px-4 py-4 font-medium text-dark dark:text-white">Customer</th>
               <th class="min-w-[120px] px-4 py-4 font-medium text-dark dark:text-white">Carrier</th>
               <th class="min-w-[160px] px-4 py-4 font-medium text-dark dark:text-white">Created</th>

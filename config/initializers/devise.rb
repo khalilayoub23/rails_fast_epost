@@ -269,9 +269,22 @@ Devise.setup do |config|
   config.sign_out_via = :delete
 
   # ==> OmniAuth
-  # Add a new OmniAuth provider. Check the wiki for more information on setting
-  # up on your models and hooks.
-  # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  # Add new OmniAuth providers conditionally based on available credentials.
+  google_client_id = Rails.application.credentials.dig(:google_oauth2, :client_id) || ENV["GOOGLE_OAUTH_CLIENT_ID"]
+  google_client_secret = Rails.application.credentials.dig(:google_oauth2, :client_secret) || ENV["GOOGLE_OAUTH_CLIENT_SECRET"]
+
+  if google_client_id.present? && google_client_secret.present?
+    config.omniauth :google_oauth2, google_client_id, google_client_secret,
+                    scope: "userinfo.email,userinfo.profile", prompt: "select_account"
+  end
+
+  facebook_app_id = Rails.application.credentials.dig(:facebook_oauth, :app_id) || ENV["FACEBOOK_APP_ID"]
+  facebook_app_secret = Rails.application.credentials.dig(:facebook_oauth, :app_secret) || ENV["FACEBOOK_APP_SECRET"]
+
+  if facebook_app_id.present? && facebook_app_secret.present?
+    config.omniauth :facebook, facebook_app_id, facebook_app_secret,
+                    scope: "email,public_profile", info_fields: "email,name"
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

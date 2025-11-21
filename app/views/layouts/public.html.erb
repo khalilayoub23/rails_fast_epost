@@ -56,7 +56,7 @@
 
   <body class="bg-black text-white">
     <!-- Public Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800" dir="ltr">
       <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-20 gap-4">
           <!-- Logo - Compact -->
@@ -100,7 +100,11 @@
 
             <% if user_signed_in? %>
               <%= link_to t("nav.dashboard"), root_path, class: "text-sm font-medium text-white hover:text-yellow-400 transition-colors", style: "width: 100px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
-              <%= link_to t("nav.logout"), destroy_user_session_path, data: { turbo_method: :delete }, class: "bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50", style: "width: 130px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
+                <%= button_to t("nav.logout"), destroy_user_session_path,
+                  method: :delete,
+                  form: { class: "inline" },
+                  class: "bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50",
+                  style: "width: 130px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
             <% else %>
               <%= link_to t("nav.login"), new_user_session_path, class: "text-sm font-medium text-white hover:text-yellow-400 transition-colors", style: "width: 100px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
               <%= link_to t("nav.get_started"), new_user_registration_path, class: "bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50", style: "width: 130px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
@@ -144,7 +148,10 @@
 
             <% if user_signed_in? %>
               <%= link_to t("nav.dashboard"), root_path, class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
-              <%= link_to t("nav.logout"), destroy_user_session_path, data: { turbo_method: :delete }, class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>
+                <%= button_to t("nav.logout"), destroy_user_session_path,
+                  method: :delete,
+                  form: { class: "w-full" },
+                  class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>
             <% else %>
               <%= link_to t("nav.login"), new_user_session_path, class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
               <%= link_to t("nav.get_started"), new_user_registration_path, class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>

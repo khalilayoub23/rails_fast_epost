@@ -15,6 +15,10 @@
             <div class="flex items-center">
               <span class="material-icons text-sm text-body mx-1">chevron_right</span>
               <%= link_to "Customers", customers_path, class: "text-body hover:text-dark" %>
+          <div>
+            <div class="text-sm text-body">Priority</div>
+            <div><%= render "shared/priority_badge", priority: @task.priority %></div>
+          </div>
             </div>
           </li>
           <li>
@@ -48,6 +52,10 @@
       <div>
         <div class="text-sm text-body">Status</div>
         <div><%= render "shared/status_badge", status: @task.status %></div>
+      </div>
+      <div>
+        <div class="text-sm text-body">Priority</div>
+        <div><%= render "shared/priority_badge", priority: @task.priority %></div>
       </div>
       <div>
         <div class="text-sm text-body">Customer</div>

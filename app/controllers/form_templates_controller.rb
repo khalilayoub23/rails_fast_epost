@@ -38,12 +38,11 @@ class FormTemplatesController < ApplicationController
   def edit; end
 
   def update
-    respond_with_update(@form_template, nil, notice: "Form template updated.") do
+    respond_with_update(@form_template, nil, notice: "Form template updated.", attributes: form_template_params) do
       render turbo_stream: [
         turbo_stream.replace(dom_id(@form_template), partial: "form_templates/form_template_card", locals: { form_template: @form_template }),
         turbo_stream.append("flash_messages", partial: "shared/flash_message", locals: { type: :notice, message: t("form_templates.updated") })
       ]
-      form_template_params
     end
   end
 
