@@ -34,6 +34,23 @@
 				<%= button_to "Delete", carrier_path(@carrier), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-danger hover:bg-whiter" %>
 			</div>
 		</div>
+
+		<% unless @carrier.signature_present? %>
+			<div class="mb-4 rounded border border-dashed border-warning bg-yellow-50 p-4">
+				<p class="text-sm text-dark">
+					This carrier is missing a legal signature. <%= link_to "Capture signature", new_carrier_signature_path(@carrier), class: "font-semibold underline" %>
+				</p>
+			</div>
+		<% else %>
+			<div class="mb-4 rounded border border-dashed border-success bg-green-50 p-4">
+				<p class="text-sm text-dark">
+					Signature on file. <%= link_to "Update signature", edit_carrier_signature_path(@carrier), class: "font-semibold underline" %>
+				</p>
+			</div>
+		<% end %>
+
+		<% summary = @carrier.rating_summary %>
+
 		<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 			<div>
 				<div class="text-sm text-body">Type</div>
@@ -46,6 +63,16 @@
 			<div class="sm:col-span-2">
 				<div class="text-sm text-body">Address</div>
 				<div class="text-dark"><%= @carrier.address %></div>
+			</div>
+		</div>
+
+		<div class="mt-6">
+			<h3 class="text-title-md font-semibold text-dark mb-4">Performance</h3>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+				<%= render partial: "carriers/rating_card", locals: { label: "Overall Score", value: summary[:average_overall_rating] } %>
+				<%= render partial: "carriers/rating_card", locals: { label: "Sender Score", value: summary[:average_sender_rating] } %>
+				<%= render partial: "carriers/rating_card", locals: { label: "Recipient Score", value: summary[:average_recipient_rating] } %>
+				<%= render partial: "carriers/rating_card", locals: { label: "Task Completion", value: summary[:average_completion_rating] } %>
 			</div>
 		</div>
 	</div>

@@ -60,6 +60,9 @@ module Integrations
         customer.phones = (existing_phones + [ phone ]).uniq.join("\n")
       end
 
+      customer.allow_partial_profile = true
+      customer.category ||= :individual if customer.category.blank?
+
       customer.save!
       Rails.logger.info("[OdooService] Contact synced: #{customer.email || customer.name}")
       customer

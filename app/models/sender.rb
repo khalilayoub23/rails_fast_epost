@@ -43,4 +43,18 @@ class Sender < ApplicationRecord
   def recent_shipments(limit = 5)
     tasks.order(created_at: :desc).limit(limit)
   end
+
+  def carrier_overall_score
+    carrier_ids = tasks.select(:carrier_id).distinct
+    return nil if carrier_ids.blank?
+
+    Carrier.where(id: carrier_ids).average(:average_overall_rating)&.to_f
+  end
+
+  def carrier_performance
+    carrier_ids = tasks.select(:carrier_id).distinct
+    return Carrier.none if carrier_ids.blank?
+
+    Carrier.where(id: carrier_ids).order(average_overall_rating: :desc)
+  end
 end

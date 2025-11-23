@@ -34,8 +34,19 @@ class Payment < ApplicationRecord
   after_create_commit :broadcast_created
   after_update_commit :broadcast_updated
   after_destroy_commit :broadcast_destroyed
+  after_commit :generate_legal_forms_if_needed, if: :legal_form_trigger?
 
   private
+
+  def legal_form_trigger?
+    saved_change_to_gateway_status? && gateway_status == "succeeded" && task&.lawyer.present?
+  end
+
+  def generate_legal_forms_if_needed
+    LegalFormAutomationService.call(task: task, payment: self)
+  rescue => e
+    Rails.logger.error("[Payment #{id}] Failed to automate legal forms: #{e.message}")
+  end
 
   def broadcast_created
     ApplicationController.renderer # ensure renderer is loaded

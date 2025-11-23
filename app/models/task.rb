@@ -20,6 +20,7 @@ class Task < ApplicationRecord
   has_many :payments, through: :payments_tasks
   has_one :cost_calc
   has_many :remarks
+  has_many :forms
 
   # Define failure_code enum (positional syntax)
   enum :failure_code, { no_failure: 0, address_not_found: 1, recipient_unavailable: 2, package_damaged: 3, refused_delivery: 4 }, prefix: true

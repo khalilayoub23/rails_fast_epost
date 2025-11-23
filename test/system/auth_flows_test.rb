@@ -11,9 +11,11 @@ class AuthFlowsTest < ApplicationSystemTestCase
   test "viewer lands on dashboard after email login" do
     visit new_user_session_path
 
-    fill_in "Email", with: @viewer.email
-    fill_in "Password", with: "password"
-    click_on "Sign In"
+    within "form#new_user" do
+      fill_in "user_email", with: @viewer.email
+      fill_in "user_password", with: "password"
+      submit_devise_form
+    end
 
     assert_current_path dashboard_path
     assert_text I18n.t("dashboard_title", default: "Dashboard")
@@ -22,9 +24,11 @@ class AuthFlowsTest < ApplicationSystemTestCase
   test "admin lands on admin dashboard after login" do
     visit new_user_session_path
 
-    fill_in "Email", with: @admin.email
-    fill_in "Password", with: "password"
-    click_on "Sign In"
+    within "form#new_user" do
+      fill_in "user_email", with: @admin.email
+      fill_in "user_password", with: "password"
+      submit_devise_form
+    end
 
     assert_current_path admin_dashboard_path
     assert_text "Admin Dashboard"
@@ -36,10 +40,12 @@ class AuthFlowsTest < ApplicationSystemTestCase
 
     unique_email = "new-user-#{SecureRandom.hex(4)}@example.com"
 
-    fill_in "Email", with: unique_email
-    fill_in "Password", with: "strong-password"
-    fill_in "Confirm Password", with: "strong-password"
-    click_on "Create Account"
+    within "form#new_user" do
+      fill_in "user_email", with: unique_email
+      fill_in "user_password", with: "strong-password"
+      fill_in "user_password_confirmation", with: "strong-password"
+      submit_devise_form
+    end
 
     assert_current_path dashboard_path
     assert_text I18n.t("dashboard_title", default: "Dashboard")
@@ -52,13 +58,17 @@ class AuthFlowsTest < ApplicationSystemTestCase
     visit new_user_session_path
 
     configured_providers.each do |provider|
-      path = omniauth_authorize_path(:user, provider)
+      path = "/users/auth/#{provider}"
       label = provider.to_s.titleize
       assert_selector "form[action='#{path}'] button", text: /#{Regexp.escape(label)}/i
     end
   end
 
   private
+
+  def submit_devise_form
+    find(:css, "button[type='submit'],input[type='submit']", match: :first).click
+  end
 
   def setup_fixtures(*); end
   def teardown_fixtures(*); end

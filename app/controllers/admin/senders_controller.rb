@@ -28,6 +28,10 @@ module Admin
         in_transit: @sender.tasks.where(status: :in_transit).count,
         delivered: @sender.tasks.where(status: :delivered).count
       }
+      carrier_ids = @sender.tasks.select(:carrier_id).distinct
+      @carrier_performance = Carrier.where(id: carrier_ids)
+      @carrier_delivery_counts = @sender.tasks.where(status: :delivered).group(:carrier_id).count
+      @sender_average_carrier_score = @sender.carrier_overall_score&.round(2)
     end
 
     def new

@@ -8,6 +8,9 @@ one:
   payment_type: 0
   interval_start: <%= Date.today %>
   interval_end: <%= Date.today + 30.days %>
+  amount_cents: 15000
+  currency: USD
+  external_id: PAY-TEST-001
 
 two:
   category: 2
@@ -17,3 +20,6 @@ two:
   payment_type: 1
   interval_start: <%= Date.today %>
   interval_end: <%= Date.today + 30.days %>
+  amount_cents: 25000
+  currency: USD
+  external_id: PAY-TEST-002

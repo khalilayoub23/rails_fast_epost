@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_21_170644) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_21_170644) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "carrier_ratings", force: :cascade do |t|
+    t.bigint "carrier_id", null: false
+    t.bigint "task_id", null: false
+    t.integer "completion_score", null: false
+    t.integer "recipient_score", null: false
+    t.string "rated_by"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "sender_score", default: 3, null: false
+    t.index ["carrier_id"], name: "index_carrier_ratings_on_carrier_id"
+    t.index ["task_id"], name: "index_carrier_ratings_on_task_id", unique: true
+  end
+
   create_table "carriers", force: :cascade do |t|
     t.string "carrier_type"
     t.string "name"
@@ -49,6 +63,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_21_170644) do
     t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "average_completion_rating", precision: 4, scale: 2, default: "0.0", null: false
+    t.decimal "average_service_rating", precision: 4, scale: 2, default: "0.0", null: false
+    t.integer "ratings_count", default: 0, null: false
+    t.decimal "average_overall_rating", precision: 4, scale: 2, default: "0.0", null: false
+    t.decimal "average_sender_rating", precision: 4, scale: 2, default: "0.0", null: false
   end
 
   create_table "contact_inquiries", force: :cascade do |t|
@@ -123,8 +142,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_21_170644) do
     t.datetime "updated_at", null: false
     t.jsonb "data", default: {}, null: false
     t.bigint "form_template_id"
+    t.bigint "task_id"
     t.index ["customer_id"], name: "index_forms_on_customer_id"
     t.index ["form_template_id"], name: "index_forms_on_form_template_id"
+    t.index ["task_id"], name: "index_forms_on_task_id"
   end
 
   create_table "integration_events", force: :cascade do |t|
@@ -372,12 +393,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_21_170644) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "carrier_ratings", "carriers"
+  add_foreign_key "carrier_ratings", "tasks"
   add_foreign_key "cost_calcs", "tasks", on_delete: :cascade
   add_foreign_key "documents", "carriers", on_delete: :cascade
   add_foreign_key "form_templates", "carriers", on_delete: :cascade
   add_foreign_key "form_templates", "customers", on_delete: :cascade
   add_foreign_key "forms", "customers", on_delete: :cascade
   add_foreign_key "forms", "form_templates", on_delete: :nullify
+  add_foreign_key "forms", "tasks"
   add_foreign_key "messengers", "carriers"
   add_foreign_key "payments", "tasks", on_delete: :cascade
   add_foreign_key "payments_tasks", "payments", on_delete: :cascade

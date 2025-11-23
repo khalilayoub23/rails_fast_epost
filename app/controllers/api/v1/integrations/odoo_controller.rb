@@ -14,7 +14,7 @@ module Api
             return forbidden
           end
 
-          Integrations::OdooService.process(json_body, headers: request.headers.to_h)
+          ::Integrations::OdooService.process(json_body, headers: request.headers.to_h)
           ok
         end
       end

@@ -76,6 +76,6 @@ class FormsController < ApplicationController
   end
 
   def form_params
-    params.require(:form).permit(:address, :form_default_url, :data, :form_template_id)
+    params.require(:form).permit(:address, :form_default_url, :data, :form_template_id, :task_id)
   end
 end

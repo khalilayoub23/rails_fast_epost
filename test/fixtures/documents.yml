@@ -9,3 +9,8 @@ two:
   carrier: two
   id_document: MyString
   signature: MyString
+
+carrier_one_signature:
+  carrier: one
+  id_document: carrier_signature
+  signature: data:image/png;base64,iVBORw0KGgoAAAANSUhEUg

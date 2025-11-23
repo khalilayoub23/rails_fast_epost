@@ -1,9 +1,16 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-    devise :database_authenticatable, :registerable,
-      :recoverable, :rememberable, :validatable,
-      :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
+
+  OMNIAUTH_PROVIDERS = begin
+    providers = %i[google_oauth2 facebook]
+    providers << :developer if Rails.env.test?
+    providers.freeze
+  end
+
+  devise :database_authenticatable, :registerable,
+    :recoverable, :rememberable, :validatable,
+    :omniauthable, omniauth_providers: OMNIAUTH_PROVIDERS
 
   # Role-based access control
   enum :role, {

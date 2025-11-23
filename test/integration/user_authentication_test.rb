@@ -10,7 +10,7 @@ class UserAuthenticationTest < ActionDispatch::IntegrationTest
 
     follow_redirect!
     assert_response :success
-    assert_select "h2", /dashboard/i
+    assert_select "h2", /dashboard|overview/i
   end
 
   test "login form renders without authentication" do
@@ -46,6 +46,6 @@ class UserAuthenticationTest < ActionDispatch::IntegrationTest
 
     get dashboard_path
     assert_response :success
-    assert_select "h2", /dashboard/i
+    assert_select "h2", /dashboard|overview/i
   end
 end

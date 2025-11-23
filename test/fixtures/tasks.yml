@@ -14,6 +14,7 @@ one:
 task_one:
   customer: one
   carrier: one
+  lawyer: lawyer_one
   package_type: 'medium'
   start: 'Legal Start Address'
   target: 'Legal Target Address'

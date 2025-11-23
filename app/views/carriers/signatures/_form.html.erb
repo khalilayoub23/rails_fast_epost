@@ -1,0 +1,57 @@
+<div class="space-y-6">
+  <div>
+    <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <%= link_to root_path, class: "text-body hover:text-dark" do %>
+            <span class="material-icons text-sm mr-1">home</span>
+            Home
+          <% end %>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+            <%= link_to "Carriers", carriers_path, class: "text-body hover:text-dark" %>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+            <%= link_to @carrier.name, carrier_path(@carrier), class: "text-body hover:text-dark" %>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+            <span class="text-dark font-medium"><%= @signature.persisted? ? "Update Signature" : "Add Signature" %></span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="rounded-sm border border-dashed border-stroke bg-white p-6 shadow-default">
+    <h1 class="text-title-md font-semibold text-dark mb-4">
+      <%= @signature.persisted? ? "Update Carrier Signature" : "Add Carrier Signature" %>
+    </h1>
+    <p class="text-body text-sm mb-6">
+      Store a reusable signature payload (base64 PNG, JSON blob, or secure token). The automation service
+      reuses this value in every legal form generated for <%= @carrier.name %>.
+    </p>
+
+    <%= form_with model: [@carrier, @signature], class: "space-y-4" do |form| %>
+      <div>
+        <%= form.label :signature, "Signature payload", class: "block text-sm font-medium text-dark" %>
+        <%= form.text_area :signature, rows: 8, class: "mt-2 block w-full rounded border border-stroke bg-whiter p-3 text-body", placeholder: "data:image/png;base64,iVBORw0KGgo..." %>
+        <p class="mt-2 text-xs text-body">
+          Paste the exact payload your signing tool outputs. We keep it encrypted at rest and embed it in lawyer packets only.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <%= form.submit(@signature.persisted? ? "Update signature" : "Save signature", class: "inline-flex items-center rounded bg-primary px-5 py-2 text-sm font-semibold text-white shadow-default hover:bg-primary-dark") %>
+        <%= link_to "Cancel", carrier_path(@carrier), class: "text-sm text-body hover:text-dark" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -38,26 +38,27 @@ class LocaleSwitchingTest < ApplicationSystemTestCase
   end
 
   test "landing page defaults to English" do
-    visit root_path
-    
-    # Check hero text in English
-    assert_text "SPEED MEETS"
-    
-    # Verify LTR direction
-    assert_selector "html[dir='ltr']"
-    assert_selector "html[lang='en']"
+    Capybara.using_session("default-locale-check") do
+      visit root_path
+
+      # Check hero text in English
+      assert_text "SPEED MEETS"
+
+      # Verify LTR direction
+      assert_selector "html[dir='ltr']"
+      assert_selector "html[lang='en']"
+    end
   end
 
   test "locale switcher shows all language options" do
     visit root_path(locale: :en)
     
-    # Hover over language dropdown (in real browser this would open it)
-    # For headless test we check the links exist in the menu
-    within "[data-controller='dropdown']" do
-      assert_selector "a[href*='locale=en']"
-      assert_selector "a[href*='locale=he']"
-      assert_selector "a[href*='locale=ar']"
-      assert_selector "a[href*='locale=ru']"
+    within "[data-controller='dropdown'][data-dropdown-hover-value='true']" do
+      find("button[data-action*='dropdown#toggle']", match: :first).click
+
+      %w[en he ar ru].each do |locale|
+        assert_selector "a[href*='locale=#{locale}']", visible: :all
+      end
     end
   end
 
@@ -66,7 +67,7 @@ class LocaleSwitchingTest < ApplicationSystemTestCase
     assert_selector "html[lang='he']"
     
     # Navigate to another page (services) without explicit locale param
-    find("a", text: "שירותים", match: :first).click # Hebrew "Services"
+    click_link href: pages_services_path
     
     # Should maintain Hebrew locale
     assert_selector "html[lang='he']"

@@ -42,6 +42,7 @@ Rails.application.routes.draw do
     resources :documents
     resources :phones
     resources :preferences
+    resource :signature, module: :carriers, only: [ :new, :create, :edit, :update ]
   end
 
   # Payments for tasks require dedicated success/cancel handlers
@@ -69,6 +70,8 @@ Rails.application.routes.draw do
       resources :remarks
     end
   end
+
+  resources :carrier_ratings, only: :create
 
   # Form templates have many-to-many relationship
   resources :form_templates

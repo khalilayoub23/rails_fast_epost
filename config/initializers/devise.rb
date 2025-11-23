@@ -270,6 +270,12 @@ Devise.setup do |config|
 
   # ==> OmniAuth
   # Add new OmniAuth providers conditionally based on available credentials.
+  if Rails.env.test?
+    config.omniauth :developer,
+      fields: %i[email name],
+      uid_field: :email
+  end
+
   google_client_id = Rails.application.credentials.dig(:google_oauth2, :client_id) || ENV["GOOGLE_OAUTH_CLIENT_ID"]
   google_client_secret = Rails.application.credentials.dig(:google_oauth2, :client_secret) || ENV["GOOGLE_OAUTH_CLIENT_SECRET"]
 

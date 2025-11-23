@@ -55,6 +55,43 @@
       <% end %>
     </ul>
   </div>
+
+  <div class="bg-white rounded shadow p-6">
+    <h2 class="font-semibold text-lg mb-2">Carrier Experience</h2>
+    <% if @carrier_performance.present? %>
+      <div class="mb-4">
+        <div class="text-sm text-gray-500">Average Carrier Score</div>
+        <div class="text-3xl font-bold text-dark"><%= display_rating(@sender_average_carrier_score) %></div>
+      </div>
+      <table class="table-auto w-full">
+        <thead>
+          <tr>
+            <th class="px-2 py-1 text-left">Carrier</th>
+            <th class="px-2 py-1 text-left">Overall</th>
+            <th class="px-2 py-1 text-left">Sender</th>
+            <th class="px-2 py-1 text-left">Recipient</th>
+            <th class="px-2 py-1 text-left">Completion</th>
+            <th class="px-2 py-1 text-left">Delivered</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @carrier_performance.each do |carrier| %>
+            <tr>
+              <td class="px-2 py-1 font-medium"><%= link_to carrier.name, carrier_path(carrier), class: 'text-blue-700 hover:underline' %></td>
+              <% summary = carrier.rating_summary %>
+              <td class="px-2 py-1"><%= display_rating(summary[:average_overall_rating]) %></td>
+              <td class="px-2 py-1"><%= display_rating(summary[:average_sender_rating]) %></td>
+              <td class="px-2 py-1"><%= display_rating(summary[:average_recipient_rating]) %></td>
+              <td class="px-2 py-1"><%= display_rating(summary[:average_completion_rating]) %></td>
+              <td class="px-2 py-1"><%= @carrier_delivery_counts[carrier.id] || 0 %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-body">No carrier performance data yet.</p>
+    <% end %>
+  </div>
 </div>
 
 <div class="bg-white rounded shadow p-6 mt-6">
