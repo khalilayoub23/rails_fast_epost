@@ -12,10 +12,14 @@ class User < ApplicationRecord
     :recoverable, :rememberable, :validatable,
     :omniauthable, omniauth_providers: OMNIAUTH_PROVIDERS
 
+  has_many :carrier_memberships, dependent: :destroy
+  has_many :carriers, through: :carrier_memberships
+
   # Role-based access control
   enum :role, {
     viewer: "viewer",
     manager: "manager",
+    operations_manager: "operations_manager",
     admin: "admin"
   }, prefix: true
 
@@ -45,7 +49,11 @@ class User < ApplicationRecord
   end
 
   def manager?
-    role == "manager" || admin?
+    admin? || role.in?([ "manager", "operations_manager" ])
+  end
+
+  def operations_manager?
+    role == "operations_manager" || admin?
   end
 
   def viewer?

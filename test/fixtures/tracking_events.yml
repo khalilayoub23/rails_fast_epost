@@ -1,0 +1,16 @@
+one:
+  task: one
+  event_type: picked_up
+  title: "Package Picked Up"
+  status: in_transit
+  description: "Courier collected the parcel"
+  location: "Main Hub"
+  occurred_at: <%= 2.hours.ago %>
+
+two:
+  task: one
+  event_type: out_for_delivery
+  title: "Out for Delivery"
+  status: in_transit
+  description: "Messenger departed towards destination"
+  occurred_at: <%= 30.minutes.ago %>

@@ -399,6 +399,10 @@ en:
   signup_title: "Create Account"
   signup_subtitle: "Start your journey with us today"
   email: "Email"
+  flash_titles:
+    success: "All set"
+    alert: "Heads up"
+    info: "FYI"
   email_placeholder: "your@email.com"
   password: "Password"
   password_confirmation: "Confirm Password"

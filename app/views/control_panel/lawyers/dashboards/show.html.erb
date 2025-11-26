@@ -1,0 +1,106 @@
+<% if @lawyer.present? %>
+  <% content_for :control_panel_context do %>
+    <%= render "control_panel/shared/entity_context_bar",
+      label: "Lawyer",
+      title: @lawyer.display_name,
+      description: "See every customs/legal task linked to this counsel and spot blockers early.",
+      entities: @lawyer_scope,
+      current_entity: @lawyer,
+      entity_label: "Lawyer",
+      param_key: :lawyer_id %>
+  <% end %>
+<% end %>
+
+<% if @empty_state %>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-10 text-center">
+    <p class="text-xl font-semibold text-white">No lawyers selected</p>
+    <p class="mt-2 text-sm text-slate-300">Invite a lawyer or add one under Admin → Lawyers.</p>
+  </div>
+  <% return %>
+<% end %>
+
+<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <p class="text-xs uppercase tracking-wide text-slate-300">Total cases</p>
+    <p class="mt-2 text-3xl font-bold text-white"><%= @caseload[:total] %></p>
+  </div>
+  <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 p-5">
+    <p class="text-xs uppercase tracking-wide text-blue-100">Active</p>
+    <p class="mt-2 text-3xl font-bold text-blue-50"><%= @caseload[:active] %></p>
+  </div>
+  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-5">
+    <p class="text-xs uppercase tracking-wide text-emerald-100">Cleared</p>
+    <p class="mt-2 text-3xl font-bold text-emerald-50"><%= @caseload[:delivered] %></p>
+  </div>
+  <div class="rounded-2xl border border-amber-400/30 bg-amber-500/10 p-5">
+    <p class="text-xs uppercase tracking-wide text-amber-100">Investigations</p>
+    <p class="mt-2 text-3xl font-bold text-amber-50"><%= @caseload[:investigative] %></p>
+  </div>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-2 mt-6">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg font-semibold text-white">Compliance rate</h2>
+      <span class="text-3xl font-bold text-emerald-200"><%= @compliance_rate %>%</span>
+    </div>
+    <p class="mt-2 text-sm text-slate-300">Delivered vs total case volume.</p>
+  </div>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <h2 class="text-lg font-semibold text-white mb-2">Certifications</h2>
+    <% if @lawyer.certifications.present? %>
+      <ul class="space-y-2 text-sm text-slate-200">
+        <% @lawyer.certifications.each_key do |name| %>
+          <li class="rounded-lg border border-white/10 bg-white/5 px-3 py-2"><%= name %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-sm text-slate-400">No certifications listed.</p>
+    <% end %>
+  </div>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-2 mt-6">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-white">Awaiting clearance</h2>
+      <span class="text-xs text-slate-400">Escalate oldest first</span>
+    </div>
+    <div class="space-y-3">
+      <% @pending_clearances.each do |task| %>
+        <div class="rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3">
+          <div class="flex items-center justify-between">
+            <p class="text-sm font-semibold text-white">Task <%= task.barcode %></p>
+            <span class="text-xs text-slate-200"><%= task.status.humanize %></span>
+          </div>
+          <p class="text-xs text-slate-200">Carrier: <%= task.carrier&.name || 'Unassigned' %></p>
+          <p class="text-xs text-slate-300">Updated <%= l(task.updated_at, format: :short) %></p>
+        </div>
+      <% end %>
+      <% if @pending_clearances.empty? %>
+        <p class="text-sm text-slate-400">No pending items.</p>
+      <% end %>
+    </div>
+  </div>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-white">Recent clearances</h2>
+      <span class="text-xs text-slate-400">Delivered tasks</span>
+    </div>
+    <div class="space-y-3">
+      <% @recent_clearances.each do |task| %>
+        <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+          <div class="flex items-center justify-between">
+            <p class="text-sm font-semibold text-white">Task <%= task.barcode %></p>
+            <span class="text-xs text-emerald-200"><%= l(task.delivery_time, format: :short) if task.delivery_time %></span>
+          </div>
+          <p class="text-xs text-slate-400">Carrier: <%= task.carrier&.name || 'Unassigned' %></p>
+          <p class="text-xs text-slate-400">Customer: <%= task.customer&.name %></p>
+        </div>
+      <% end %>
+      <% if @recent_clearances.empty? %>
+        <p class="text-sm text-slate-400">No delivered tasks yet.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

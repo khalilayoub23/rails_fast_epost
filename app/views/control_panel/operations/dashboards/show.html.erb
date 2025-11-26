@@ -1,0 +1,140 @@
+<% content_for :control_panel_context do %>
+  <div class="rounded-2xl border border-white/10 bg-gradient-to-r from-slate-900/80 to-indigo-900/60 p-6 shadow-2xl shadow-black/40">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-[0.4em] text-slate-300/80">Operations</p>
+        <h1 class="text-3xl font-semibold text-white">Network Health Overview</h1>
+      </div>
+      <div class="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm text-slate-200">
+        <span class="font-semibold"><%= Time.current.strftime('%b %d, %Y %H:%M') %></span>
+        <span class="ml-2 text-slate-400">Auto-refresh via Turbo Streams</span>
+      </div>
+    </div>
+    <p class="mt-4 max-w-3xl text-sm text-slate-200/90">
+      Monitor carrier payouts, delivery incidents, and SLA risk in a single control room. Use this view to unblock stalled shipments before they hit customers.
+    </p>
+  </div>
+<% end %>
+
+<% currency = "USD" %>
+<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+  <div class="rounded-2xl border border-white/5 bg-white/5 p-5">
+    <p class="text-xs font-semibold uppercase tracking-wide text-slate-300">Active Tasks</p>
+    <p class="mt-2 text-4xl font-bold text-white"><%= @kpis[:active_tasks] %></p>
+    <p class="text-sm text-slate-400">Pending / In transit shipments</p>
+  </div>
+  <div class="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5">
+    <p class="text-xs font-semibold uppercase tracking-wide text-rose-200">At Risk</p>
+    <p class="mt-2 text-4xl font-bold text-rose-100"><%= @kpis[:delayed_tasks] %></p>
+    <p class="text-sm text-rose-200/70">In-transit past SLA (12h)</p>
+  </div>
+  <div class="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5">
+    <p class="text-xs font-semibold uppercase tracking-wide text-amber-200">Failed / Investigations</p>
+    <p class="mt-2 text-4xl font-bold text-amber-100"><%= @kpis[:failed_tasks] %></p>
+    <p class="text-sm text-amber-200/70">Awaiting remediation</p>
+  </div>
+  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-5">
+    <p class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Outstanding carrier payouts</p>
+    <p class="mt-2 text-3xl font-bold text-emerald-100"><%= number_to_currency(@kpis[:outstanding_payouts_cents].to_i / 100.0, unit: currency) %></p>
+    <p class="text-sm text-emerald-200/70">Scheduled + pending carrier disbursements</p>
+  </div>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <p class="text-xs font-semibold uppercase tracking-wide text-slate-300">Active Carriers</p>
+    <p class="mt-2 text-4xl font-bold text-white"><%= @kpis[:carriers_online] %></p>
+    <p class="text-sm text-slate-400">Connected carrier partners</p>
+  </div>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <p class="text-xs font-semibold uppercase tracking-wide text-slate-300">Active Senders</p>
+    <p class="mt-2 text-4xl font-bold text-white"><%= @kpis[:active_senders] %></p>
+    <p class="text-sm text-slate-400">Shippers with activity this quarter</p>
+  </div>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-2 mt-6">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-white">Carrier performance</h2>
+      <span class="text-xs text-slate-400">Top 5 by rating</span>
+    </div>
+    <ul class="space-y-3">
+      <% @carrier_leaderboard.each do |carrier| %>
+        <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+          <div>
+            <p class="font-semibold text-white"><%= carrier.name %></p>
+            <p class="text-xs text-slate-400">Ratings: <%= carrier.ratings_count %></p>
+          </div>
+          <span class="text-lg font-bold text-emerald-200"><%= carrier.average_overall_rating.to_f.round(2) %> ★</span>
+        </li>
+      <% end %>
+      <% if @carrier_leaderboard.empty? %>
+        <li class="text-sm text-slate-400">No carrier ratings yet.</li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-white">Payout alerts</h2>
+      <span class="text-xs text-slate-400">Oldest first</span>
+    </div>
+    <ul class="space-y-3">
+      <% @payout_alerts.each do |payout| %>
+        <li class="flex items-center justify-between rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3">
+          <div>
+            <p class="text-sm font-semibold text-white">Task <%= payout.task&.barcode || payout.task_id %></p>
+            <p class="text-xs text-amber-100">Due <%= payout.due_at ? l(payout.due_at, format: :long) : "Awaiting date" %></p>
+          </div>
+          <span class="text-sm font-bold text-amber-200"><%= number_to_currency(payout.amount_cents / 100.0, unit: currency) %></span>
+        </li>
+      <% end %>
+      <% if @payout_alerts.empty? %>
+        <li class="text-sm text-slate-400">No outstanding payouts 🎉</li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-2 mt-6">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-white">Late-stage shipments</h2>
+      <span class="text-xs text-slate-400">Escalate before SLA breach</span>
+    </div>
+    <ul class="space-y-3">
+      <% @late_tasks.each do |task| %>
+        <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+          <div>
+            <p class="text-sm font-semibold text-white"><%= task.barcode %></p>
+            <p class="text-xs text-slate-400">Carrier: <%= task.carrier&.name || 'Unassigned' %></p>
+          </div>
+          <span class="text-xs font-semibold text-amber-200">ETA <%= task.delivery_time ? l(task.delivery_time, format: :short) : 'TBD' %></span>
+        </li>
+      <% end %>
+      <% if @late_tasks.empty? %>
+        <li class="text-sm text-slate-400">No delayed shipments on deck.</li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-white">Incident feed</h2>
+      <span class="text-xs text-slate-400">Latest tracking events</span>
+    </div>
+    <ul class="space-y-3">
+      <% @incident_feed.each do |event| %>
+        <li class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+          <div class="flex items-center justify-between">
+            <p class="text-sm font-semibold text-white"><%= event.title %></p>
+            <span class="text-xs text-slate-400"><%= l(event.occurred_at, format: :short) %></span>
+          </div>
+          <p class="text-xs text-slate-400">Task <%= event.task&.barcode || event.task_id %> · <%= event.event_type.to_s.humanize %></p>
+          <% if event.description.present? %>
+            <p class="mt-1 text-sm text-slate-200/80"><%= event.description %></p>
+          <% end %>
+        </li>
+      <% end %>
+      <% if @incident_feed.empty? %>
+        <li class="text-sm text-slate-400">No incidents reported.</li>
+      <% end %>
+    </ul>
+  </div>
+</div>

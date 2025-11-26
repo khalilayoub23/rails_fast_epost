@@ -1,0 +1,162 @@
+<% content_for :title, "Logo Demo - Rails Fast Epost" %>
+<% content_for :body_class, "logo-demo-body" %>
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag "logo_demo", "data-turbo-track": "reload" %>
+<% end %>
+
+<%
+  logo_sizes = [
+    { size: "sm", label: "Small (32px)", snippet: "<%= render 'shared/logo', size: 'sm' %>" },
+    { size: nil, label: "Medium (40px) - Default", snippet: "<%= render 'shared/logo' %>" },
+    { size: "lg", label: "Large (56px)", snippet: "<%= render 'shared/logo', size: 'lg' %>" },
+    { size: "xl", label: "Extra Large (80px)", snippet: "<%= render 'shared/logo', size: 'xl' %>" }
+  ]
+
+  logo_variants = [
+    { label: "Icon + Text (Default)", snippet: "<%= render 'shared/logo', text: true %>", options: { text: true } },
+    { label: "Icon Only", snippet: "<%= render 'shared/logo', text: false %>", options: { text: false } },
+    { label: "Non-clickable", snippet: "<%= render 'shared/logo', link: false %>", options: { link: false } }
+  ]
+
+  color_swatches = [
+    { label: "Primary", hex: "#3b82f6", modifier: "primary" },
+    { label: "Success", hex: "#10b981", modifier: "success" },
+    { label: "Warning", hex: "#f59e0b", modifier: "warning" },
+    { label: "Error", hex: "#ef4444", modifier: "error" },
+    { label: "Dark", hex: "#111827", modifier: "dark" }
+  ]
+%>
+
+<section class="logo-demo" aria-labelledby="logo-demo-title">
+  <h1 id="logo-demo-title" class="logo-demo__title">🎨 Logo &amp; Branding Demo</h1>
+
+  <!-- Logo sizes -->
+  <section class="logo-demo__section" aria-labelledby="logo-sizes-title">
+    <h2 id="logo-sizes-title" class="logo-demo__section-title">📏 Logo Sizes</h2>
+    <div class="logo-demo__grid">
+      <% logo_sizes.each do |entry| %>
+        <div class="logo-demo__item">
+          <% options = entry[:size] ? { size: entry[:size] } : {} %>
+          <%= render "shared/logo", **options %>
+          <div class="logo-demo__label">
+            <%= entry[:label] %>
+            <code><%= h(entry[:snippet]) %></code>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <!-- Logo variants -->
+  <section class="logo-demo__section" aria-labelledby="logo-variants-title">
+    <h2 id="logo-variants-title" class="logo-demo__section-title">🎨 Logo Variants</h2>
+    <div class="logo-demo__grid">
+      <% logo_variants.each do |variant| %>
+        <div class="logo-demo__item">
+          <% variant_options = variant[:options] || {} %>
+          <%= render "shared/logo", **variant_options %>
+          <div class="logo-demo__label">
+            <%= variant[:label] %>
+            <code><%= h(variant[:snippet]) %></code>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <!-- Brand bar -->
+  <section class="logo-demo__section" aria-labelledby="brand-bar-title">
+    <h2 id="brand-bar-title" class="logo-demo__section-title">📱 Mobile Brand Bar</h2>
+    <div class="logo-demo__brand-frame">
+      <div class="brand-bar">
+        <div class="brand-bar-left">
+          <button class="btn btn-ghost btn-icon" type="button" aria-label="Open menu">
+            <span class="material-icons">menu</span>
+          </button>
+        </div>
+        <div class="brand-bar-center">
+          <%= render "shared/logo", size: "sm" %>
+        </div>
+        <div class="brand-bar-right">
+          <button class="btn btn-ghost btn-icon" type="button" aria-label="Notifications">
+            <span class="material-icons">notifications</span>
+          </button>
+          <button class="btn btn-ghost btn-icon" type="button" aria-label="Settings">
+            <span class="material-icons">settings</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <p class="logo-demo__brand-label">
+      <code><%= h("<%= render 'shared/brand_bar' %>") %></code>
+    </p>
+  </section>
+
+  <!-- Brand colors -->
+  <section class="logo-demo__section" aria-labelledby="brand-colors-title">
+    <h2 id="brand-colors-title" class="logo-demo__section-title">🎨 Brand Colors</h2>
+    <div class="logo-demo__color-row">
+      <% color_swatches.each do |swatch| %>
+        <div class="logo-demo__color-box logo-demo__color-box--<%= swatch[:modifier] %>">
+          <span><%= swatch[:label] %></span>
+          <span><%= swatch[:hex] %></span>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <!-- Quick reference -->
+  <section class="logo-demo__section" aria-labelledby="quick-reference-title">
+    <h2 id="quick-reference-title" class="logo-demo__section-title">📚 Quick Reference</h2>
+    <div class="logo-demo__reference-card">
+      <h3>Logo Files</h3>
+      <ul>
+        <li><code>/public/icon.svg</code> - Vector logo (recommended)</li>
+        <li><code>/public/icon.png</code> - Raster logo (512x512px)</li>
+      </ul>
+
+      <h3>Logo Component</h3>
+      <ul>
+        <li><code>/app/views/shared/_logo.html.erb</code> - Reusable partial</li>
+        <li><code>/app/assets/stylesheets/design-system/logo.css</code> - Styles</li>
+      </ul>
+
+      <h3>Usage Examples</h3>
+      <ul>
+        <li><code><%= h("<%= render 'shared/logo' %>") %></code> - Default logo</li>
+        <li><code><%= h("<%= render 'shared/logo', size: 'sm' %>") %></code> - Small</li>
+        <li><code><%= h("<%= render 'shared/logo', size: 'lg' %>") %></code> - Large</li>
+        <li><code><%= h("<%= render 'shared/logo', text: false %>") %></code> - Icon only</li>
+        <li><code><%= h("<%= render 'shared/logo', link: false %>") %></code> - Non-clickable</li>
+      </ul>
+
+      <h3>Where to Add</h3>
+      <ul>
+        <li>Sidebar: <code>app/views/shared/_sidebar.html.erb</code></li>
+        <li>Topbar: <code>app/views/shared/_topbar.html.erb</code></li>
+        <li>Mobile: <code><%= h("<%= render 'shared/brand_bar' %>") %></code></li>
+        <li>Login: <code>app/views/sessions/new.html.erb</code></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Next steps -->
+  <section class="logo-demo__section logo-demo__section--gradient" aria-labelledby="next-steps-title">
+    <h2 id="next-steps-title" class="logo-demo__section-title">🚀 Next Steps</h2>
+    <ol class="logo-demo__next-steps">
+      <li><strong>Replace logo files</strong> in <code>/public/</code></li>
+      <li><strong>Update logo text</strong> in <code>_logo.html.erb</code></li>
+      <li><strong>Add to sidebar/topbar</strong> in your layout</li>
+      <li><strong>Test on mobile</strong> using <code><%= h("<%= render 'shared/brand_bar' %>") %></code></li>
+      <li><strong>Customize colors</strong> in <code>logo.css</code></li>
+    </ol>
+    <p class="logo-demo__guide-note">
+      📖 Full guide: <code>LOGO_IMPLEMENTATION_GUIDE.md</code>
+    </p>
+  </section>
+
+  <footer class="logo-demo__footer">
+    <p>Built with ❤️ for Rails Fast Epost</p>
+    <p class="logo-demo__footer-note">Design System v1.0 | October 2025</p>
+  </footer>
+</section>

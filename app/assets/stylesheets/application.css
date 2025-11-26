@@ -196,4 +196,35 @@ html[dir="rtl"] .pl-9 { padding-left: 0 !important; padding-right: 2.25rem !impo
 .badge-danger  { background-color: #FEE2E2; color: #B91C1C; border-color: #FCA5A5; }
 .badge-default { background-color: var(--gray); color: var(--dark); border-color: var(--stroke); }
 
+/* Locale switcher tweaks */
+.locale-switcher {
+  position: relative;
+  display: inline-block;
+}
+
+.locale-switcher__icon {
+  transition: transform 150ms ease-in-out;
+}
+
+.locale-switcher__menu {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.locale-switcher.is-open .locale-switcher__menu,
+.locale-switcher:hover .locale-switcher__menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.locale-switcher.is-open .locale-switcher__icon,
+.locale-switcher:hover .locale-switcher__icon {
+  transform: rotate(180deg);
+}
+
 

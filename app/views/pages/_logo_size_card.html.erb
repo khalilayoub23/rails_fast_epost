@@ -1,0 +1,8 @@
+<div class="logo-size-card">
+  <%= image_tag "icon.png",
+    alt: "Fast Epost Logo",
+    width: logo_size.fetch(:size),
+    height: logo_size.fetch(:size),
+    class: "logo-size-card__image" %>
+  <div class="logo-size-card__label"><%= logo_size.fetch(:label) %></div>
+</div>

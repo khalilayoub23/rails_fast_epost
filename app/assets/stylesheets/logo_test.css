@@ -1,0 +1,69 @@
+/* Fast Epost Logo Test Page */
+body.logo-test-body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 2rem;
+  background: #f9fafb;
+  text-align: center;
+  color: #111827;
+}
+
+.logo-test {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo-test__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.logo-test__grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.logo-size-card {
+  background: #ffffff;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 180px;
+}
+
+.logo-size-card__image {
+  display: block;
+  border-radius: 50%;
+  background: #ffffff;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logo-size-card__label {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.logo-test__note {
+  margin-top: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  body.logo-test-body {
+    padding: 1.5rem 1rem;
+  }
+
+  .logo-size-card {
+    padding: 2rem;
+  }
+}

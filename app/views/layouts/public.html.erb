@@ -14,6 +14,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap&v=2" rel="stylesheet">
 
     <style>
+      .public-nav,
+      .public-nav * {
+        font-family: 'Inter', 'Heebo', 'Rubik', 'Noto Sans Arabic', 'Noto Sans', sans-serif;
+      }
+
+      .public-nav__bar {
+        min-height: 80px;
+      }
+
+      .public-nav__link {
+        font-size: 0.95rem;
+        line-height: 1.25rem;
+        padding: 0.25rem 0;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      body[dir="rtl"] .public-nav__link {
+        font-size: 0.92rem;
+        letter-spacing: 0.01em;
+      }
+
+      .public-nav__actions a,
+      .public-nav__actions button {
+        min-width: 7rem;
+        height: 44px;
+        border-radius: 9999px;
+      }
+
+      .public-nav__actions button {
+        border: none;
+      }
       
       @keyframes float-logo {
         0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
@@ -52,13 +84,36 @@
       <%= stylesheet_link_tag "rtl", "data-turbo-track": "reload" %>
     <% end %>
     <%= javascript_importmap_tags %>
+    <script>
+      (function() {
+        try {
+          var ls = localStorage.getItem('ui.dark');
+          var dark = (ls === 'true') || (ls === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          var serverDir = root.getAttribute('dir') || 'ltr';
+          var storedDir = localStorage.getItem('ui.direction');
+          var dir = storedDir;
+
+          if (!storedDir || storedDir !== serverDir) {
+            dir = serverDir;
+            localStorage.setItem('ui.direction', serverDir);
+          }
+
+          root.classList.toggle('dark', dark);
+          root.setAttribute('dir', dir || 'ltr');
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body class="bg-black text-white">
     <!-- Public Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800" dir="ltr">
+    <% nav_link_classes = "public-nav__link text-gray-300 hover:text-yellow-400 transition-colors font-medium whitespace-nowrap" %>
+    <% auth_link_classes = "public-nav__actions inline-flex items-center justify-center text-sm font-semibold" %>
+    <% primary_btn_classes = "public-nav__actions inline-flex items-center justify-center font-bold shadow-lg hover:shadow-yellow-400/50 transition-all" %>
+    <nav class="public-nav fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800" dir="<%= text_direction %>">
       <div class="container mx-auto px-4">
-        <div class="flex items-center justify-between h-20 gap-4">
+        <div class="public-nav__bar flex items-center justify-between gap-4 <%= rtl? ? 'flex-row-reverse' : '' %>">
           <!-- Logo - Compact -->
           <div class="flex items-center flex-shrink-0">
             <%= link_to pages_home_path, class: "group flex items-center rounded-lg hover:bg-white/5 transition-all duration-300 px-2 py-1 gap-2" do %>
@@ -75,39 +130,39 @@
           </div>
           
           <!-- Desktop Navigation - Centered -->
-          <div class="hidden md:flex items-center gap-6 flex-1 justify-center">
-            <%= link_to pages_privacy_policy_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
+          <div class="hidden md:flex items-center gap-6 flex-1 justify-center <%= rtl? ? 'flex-row-reverse' : '' %>">
+            <%= link_to pages_privacy_policy_path, class: nav_link_classes do %>
               <%= t("nav.privacy_policy") %>
             <% end %>
-            <%= link_to pages_services_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
+            <%= link_to pages_services_path, class: nav_link_classes do %>
               <%= t("nav.services") %>
             <% end %>
-            <%= link_to pages_track_parcel_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
+            <%= link_to pages_track_parcel_path, class: nav_link_classes do %>
               <%= t("nav.track") %>
             <% end %>
-            <%= link_to pages_law_firms_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
+            <%= link_to pages_law_firms_path, class: nav_link_classes do %>
               <%= t("nav.law_firms") %>
             <% end %>
-            <%= link_to pages_ecommerce_path, class: "text-gray-300 hover:text-yellow-400 transition-colors font-medium text-sm whitespace-nowrap" do %>
+            <%= link_to pages_ecommerce_path, class: nav_link_classes do %>
               <%= t("nav.ecommerce") %>
             <% end %>
           </div>
 
           <!-- Language & Auth Buttons -->
-          <div class="flex items-center gap-3 flex-shrink-0">
+          <div class="public-nav__actions flex items-center gap-3 flex-shrink-0 <%= rtl? ? 'flex-row-reverse' : '' %>">
             <!-- Server-side Locale Switcher -->
             <%= render "shared/locale_switcher" %>
 
             <% if user_signed_in? %>
-              <%= link_to t("nav.dashboard"), root_path, class: "text-sm font-medium text-white hover:text-yellow-400 transition-colors", style: "width: 100px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
-                <%= button_to t("nav.logout"), destroy_user_session_path,
-                  method: :delete,
-                  form: { class: "inline" },
-                  class: "bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50",
-                  style: "width: 130px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
+              <%= link_to t("nav.dashboard"), root_path, class: auth_link_classes + " text-white hover:text-yellow-400" %>
+              <%= button_to t("nav.logout"), destroy_user_session_path,
+                    method: :delete,
+                    form: { class: "inline" },
+                    class: primary_btn_classes + " bg-yellow-400 text-black hover:bg-yellow-500",
+                    data: { turbo: false } %>
             <% else %>
-              <%= link_to t("nav.login"), new_user_session_path, class: "text-sm font-medium text-white hover:text-yellow-400 transition-colors", style: "width: 100px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
-              <%= link_to t("nav.get_started"), new_user_registration_path, class: "bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50", style: "width: 130px; height: 40px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;" %>
+              <%= link_to t("nav.login"), new_user_session_path, class: auth_link_classes + " text-white hover:text-yellow-400" %>
+              <%= link_to t("nav.get_started"), new_user_registration_path, class: primary_btn_classes + " bg-yellow-400 text-black hover:bg-yellow-500" %>
             <% end %>
           </div>
 
@@ -121,9 +176,9 @@
       </div>
 
       <!-- Mobile Navigation Menu -->
-      <div id="mobile-menu" class="hidden bg-black/95 backdrop-blur-md border-t border-gray-800">
+      <div id="mobile-menu" class="hidden bg-black/95 backdrop-blur-md border-t border-gray-800" dir="<%= text_direction %>">
         <div class="container mx-auto px-4 py-6 space-y-4">
-            <%= link_to pages_privacy_policy_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
+        <%= link_to pages_privacy_policy_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
             <span data-i18n="nav_privacy_policy"><%= t("nav.privacy_policy") %></span>
           <% end %>
           <%= link_to pages_services_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
@@ -140,18 +195,24 @@
           <% end %>          <div class="pt-4 border-t border-gray-800 space-y-3">
             <!-- Simple Mobile Locale Links -->
             <div class="grid grid-cols-2 gap-3">
-              <%= link_to "🇺🇸 English", url_for(locale: :en), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
-              <%= link_to "🇮🇱 עברית", url_for(locale: :he), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
-              <%= link_to "🇸🇦 العربية", url_for(locale: :ar), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
-              <%= link_to "🇷🇺 Русский", url_for(locale: :ru), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+              <% [
+                { label: "🇺🇸 English", code: :en },
+                { label: "🇮🇱 עברית", code: :he },
+                { label: "🇸🇦 العربية", code: :ar },
+                { label: "🇷🇺 Русский", code: :ru }
+              ].each do |locale|
+              %>
+                <%= link_to locale[:label], switch_locale_path(locale[:code]), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+              <% end %>
             </div>
 
             <% if user_signed_in? %>
               <%= link_to t("nav.dashboard"), root_path, class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
-                <%= button_to t("nav.logout"), destroy_user_session_path,
-                  method: :delete,
-                  form: { class: "w-full" },
-                  class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>
+              <%= button_to t("nav.logout"), destroy_user_session_path,
+                    method: :delete,
+                    form: { class: "w-full" },
+                    class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all",
+                    data: { turbo: false } %>
             <% else %>
               <%= link_to t("nav.login"), new_user_session_path, class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
               <%= link_to t("nav.get_started"), new_user_registration_path, class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>

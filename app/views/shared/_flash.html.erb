@@ -1,9 +1,30 @@
-<% flash.each do |k, v| %>
+<% flash.each do |type, message| %>
+  <% next if message.blank? %>
+  <% tone = case type.to_sym
+    when :alert, :error
+      { title: t("flash_titles.alert", default: "Heads up"), icon: "warning_amber", bg: "bg-red-500/5", border: "border-red-400/30", icon_bg: "bg-red-500/20 text-red-200", text: "text-red-50" }
+    when :info
+      { title: t("flash_titles.info", default: "FYI"), icon: "info", bg: "bg-blue-500/5", border: "border-blue-400/30", icon_bg: "bg-blue-500/20 text-blue-100", text: "text-blue-50" }
+    else
+      { title: t("flash_titles.success", default: "All set"), icon: "check_circle", bg: "bg-emerald-500/5", border: "border-emerald-400/30", icon_bg: "bg-emerald-500/20 text-emerald-100", text: "text-emerald-50" }
+    end %>
+
   <div data-controller="flash"
-       class="mb-6 rounded-lg border px-4 py-3 <%= k.to_s == "alert" ? "bg-red-50 border-red-200 text-red-800" : "bg-green-50 border-green-200 text-green-800" %>">
-    <div class="flex items-center">
-      <span class="material-icons text-lg mr-2"><%= k.to_s == "alert" ? "error" : "check_circle" %></span>
-      <%= v %>
+       class="relative mb-6 w-full overflow-hidden rounded-2xl border px-5 py-4 shadow-lg shadow-black/30 backdrop-blur <%= tone[:bg] %> <%= tone[:border] %>">
+    <div class="absolute inset-y-0 <%= rtl? ? 'right-0' : 'left-0' %> w-1 bg-gradient-to-b from-white/60 to-transparent opacity-40"></div>
+    <div class="flex items-start gap-4">
+      <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl <%= tone[:icon_bg] %>">
+        <span class="material-icons text-2xl"><%= tone[:icon] %></span>
+      </div>
+      <div class="flex-1 text-sm text-white">
+        <p class="text-base font-semibold tracking-wide text-white"><%= tone[:title] %></p>
+        <p class="text-sm text-white/80"><%= message %></p>
+      </div>
+      <button type="button"
+              class="rounded-full p-1 text-white/50 transition hover:text-white"
+              data-action="click->flash#dismiss">
+        <span class="material-icons text-lg">close</span>
+      </button>
     </div>
   </div>
 <% end %>

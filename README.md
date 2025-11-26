@@ -7,6 +7,13 @@ A modern, full-featured postal and courier management system built with Rails 8,
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
+## 🆕 Recent Progress (Nov 2025)
+
+- **Role-Specific Control Panels**: Dedicated dashboards for carriers, senders, lawyers, operations, and sellers now share a uniform TailAdmin shell with contextual breadcrumbs.
+- **Carrier Payout Accuracy**: `CarrierPayoutSyncJob` plus rake tooling keep every carrier dashboard and API response aligned with real payment activity.
+- **Locale-Aware Navigation**: Public layouts read locale direction from storage on boot, ship a native `<details>` locale picker, and include a system test that exercises Hebrew switching end-to-end.
+- **Premium Feedback UI**: Gradient flash notices with dismiss buttons mirror TailAdmin cards and respect RTL/bi-directional layouts.
+
 ## ✨ Features
 
 ### 🎨 Modern UI/UX
@@ -15,6 +22,8 @@ A modern, full-featured postal and courier management system built with Rails 8,
 - **Dark Mode Ready**: TailAdmin color tokens with dark mode support
 - **Material Icons**: Self-hosted icons for CSP compliance
 - **Custom Typography**: Satoshi font family with fallback stack
+- **Gradient Flash Notices**: Luxe, dismissible alerts with TailAdmin shadows and RTL-safe layout.
+- **Locale-Aware Shell**: Layouts read `localStorage` and locale metadata to set `dir` + `lang` before paint, preventing flicker.
 
 ### 📊 Dashboard & Analytics
 - **Real-time KPI Cards**: Payments, pending items, revenue tracking, customer counts
@@ -28,6 +37,11 @@ A modern, full-featured postal and courier management system built with Rails 8,
 - **Refund History**: Track all refund transactions with status
 - **Webhook Integration**: Secure payment provider callbacks
 - **Status Tracking**: Visual badges for payment states (succeeded, pending, failed)
+
+### 💸 Carrier Payout Sync
+- **Automated Backfill**: `CarrierPayoutSyncJob` derives carrier-facing payouts from every `Payment` whose payable is a carrier, so control panels always show real amounts owed.
+- **Rake Task**: Run `bin/rails carrier_payouts:sync` to enqueue the job; add `PURGE=true` to drop any stale rows before rebuilding from payments.
+- **Live Updates**: Carrier payouts refresh automatically whenever a carrier payment is created, updated, or removed, keeping dashboards, APIs, and metrics consistent.
 
 ### 📦 Task Management
 - **Package Tracking**: Monitor shipments from creation to delivery
@@ -56,17 +70,17 @@ A modern, full-featured postal and courier management system built with Rails 8,
 - **Task History**: View all packages sent by each sender
 - **Contact Management**: Primary and secondary contact information
 
-### 🚴 Messenger Management (Admin Only)
-- **Delivery Personnel**: Track messengers/delivery persons
+### 🚴 Carrier Field Team (Admin Only)
+- **Field Personnel**: Track carrier couriers and delivery partners
 - **Real-time Status**: Available, busy, offline status tracking
 - **Vehicle Management**: Support for van, motorcycle, bicycle, car, truck
 - **GPS Tracking**: Current location tracking with JSONB storage
 - **Performance Metrics**: Total deliveries, on-time rate
-- **Carrier Association**: Link messengers to specific carriers
-- **Working Hours**: Track messenger availability schedules
+- **Carrier Association**: Link couriers to specific parent carriers
+- **Working Hours**: Track carrier field team availability schedules
 
 ### 🔔 Notification Orchestration
-- **Channel Preferences**: Inline Turbo forms on customer, messenger, and sender dashboards let operators mix email/SMS/in-app per recipient with quiet hours.
+- **Channel Preferences**: Inline Turbo forms on customer, carrier, and sender dashboards let operators mix email/SMS/in-app per recipient with quiet hours.
 - **SMS Delivery**: `SmsDelivery` routes texts through Twilio when `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_PHONE_NUMBER` are set; otherwise the stub keeps local/test runs deterministic.
 - **Audit Trail**: Every attempt is logged to `NotificationLog`, so admins can trace why something was sent or skipped.
 - **Quiet Hour Enforcement**: `NotificationPreference` automatically suppresses SMS during configured windows without requiring extra business logic.
@@ -163,7 +177,7 @@ A modern, full-featured postal and courier management system built with Rails 8,
   - **Core + URLs:** `APP_BASE_URL`, `APP_URL`, `HOST`, log level, and `PORT` control hostnames used in Stripe redirects, Telegram webhooks, etc.
   - **Database:** `DATABASE_HOST`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_URL` should match your local Postgres (defaults target the included docker-compose service).
   - **Email:** `SMTP_ADDRESS`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD` drive Action Mailer/NotificationService delivery.
-  - **SMS:** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` enable SmsDelivery so NotificationService can text messengers/customers and power the dashboard preference UI options.
+  - **SMS:** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` enable SmsDelivery so NotificationService can text carriers/customers and power the dashboard preference UI options.
   - **Payments:** `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`, and `LOCALPAY_APP_SECRET` are required for checkout flows and webhook verification.
   - **CRM + Integrations:** `ODOO_API_KEY`, `ODOO_URL`, `HUBSPOT_APP_SECRET`, `WEBSITES_SHARED_SECRET`, `META_VERIFY_TOKEN`, `META_APP_SECRET`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_SECRET_TOKEN`, `TIKTOK_APP_SECRET` secure the webhook controllers.
   - **Demo accounts:** `DEFAULT_*` values seed local admin/manager/viewer logins when `DefaultAccountsProvisioner` runs in development.
@@ -217,8 +231,8 @@ app/
 │   ├── carrier.rb          # Postal/courier carrier
 │   ├── customer.rb         # Customer with enum categories
 │   ├── sender.rb           # Package sender (individual/business/government)
-│   ├── messenger.rb        # Delivery personnel with GPS tracking
-│   ├── task.rb             # Shipment tracking with sender/messenger
+│   ├── messenger.rb        # Carrier field courier with GPS tracking
+│   ├── task.rb             # Shipment tracking with sender/carrier courier
 │   ├── payment.rb          # Payment with refunds
 │   └── current.rb          # Current user context
 └── views/
@@ -336,7 +350,7 @@ bin/rails db:schema:dump
 
 ### Priority Column Rollout (Nov 21, 2025)
 
-The `tasks` table now includes a `priority` enum (`normal`, `urgent`, `express`) that powers the updated UI badges and messenger alert emails.
+The `tasks` table now includes a `priority` enum (`normal`, `urgent`, `express`) that powers the updated UI badges and carrier alert emails.
 
 1. Run the migration after pulling:
 
@@ -664,10 +678,12 @@ end
 - [ ] API versioning (v2, v3, etc.)
 
 #### 9. **Internationalization (i18n)** 🌍
-**Status**: Planned | **Priority**: Low
+**Status**: In Progress | **Priority**: Medium
 
-- [ ] Multi-language support (English, Hebrew, Arabic, French)
-- [ ] RTL layout support for Arabic/Hebrew
+- [x] Multi-language support (English, Hebrew, Arabic, Russian) with locale-aware routing + content.
+- [x] RTL layout support for Arabic/Hebrew, including persisted `dir` + `lang` state.
+- [x] Native `<details>` locale picker with system test coverage (`LocaleSwitcherTest`).
+- [x] LocalStorage sync to keep public + dashboard shells in the correct direction pre-paint.
 - [ ] Currency localization
 - [ ] Date/time format per locale
 - [ ] Translatable admin interface

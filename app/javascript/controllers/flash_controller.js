@@ -2,6 +2,14 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    setTimeout(() => this.element.remove(), 3500)
+    this.timeout = setTimeout(() => this.dismiss(), 3500)
+  }
+
+  disconnect() {
+    if (this.timeout) clearTimeout(this.timeout)
+  }
+
+  dismiss() {
+    this.element.remove()
   }
 }

@@ -17,7 +17,12 @@
 
       <!-- Tracking Form -->
       <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 mb-8">
-        <%= form_with url: pages_track_parcel_path, method: :get, local: true, class: "space-y-6" do |f| %>
+        <%= form_with(
+              url: pages_track_parcel_path,
+              method: :get,
+              local: true,
+              class: "space-y-6"
+            ) do |f| %>
           <div>
             <%= f.label :tracking_number, t("track.tracking_number"), class: "block text-sm font-medium mb-2" %>
             <div class="flex gap-4">
@@ -41,232 +46,7 @@
         </div>
       </div>
 
-      <% if params[:tracking_number].present? %>
-        <% if @task %>
-          <!-- Tracking Results -->
-          <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
-            <div class="mb-6">
-              <h2 class="text-2xl font-bold text-yellow-400 mb-2"><%= t("track.tracking_details") %></h2>
-              <p class="text-gray-300"><%= t("track.tracking_number_label") %> <strong class="text-white"><%= @task.barcode %></strong></p>
-              <div class="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <p class="text-sm text-gray-400">Package Type</p>
-                  <p class="text-white font-semibold"><%= @task.package_type.titleize %></p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Status</p>
-                  <p class="text-white font-semibold">
-                    <span class="px-3 py-1 rounded-full text-sm 
-                      <%= case @task.status
-                          when 'delivered' then 'bg-green-600'
-                          when 'in_transit' then 'bg-blue-600'
-                          when 'pending' then 'bg-yellow-600'
-                          when 'failed' then 'bg-red-600'
-                          else 'bg-gray-600'
-                          end %>">
-                      <%= @task.status.humanize %>
-                    </span>
-                  </p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">From</p>
-                  <p class="text-white"><%= @task.start %></p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">To</p>
-                  <p class="text-white"><%= @task.target %></p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Expected Delivery</p>
-                  <p class="text-white"><%= @task.delivery_time.strftime("%b %d, %Y") %></p>
-                </div>
-                <div>
-                  <p class="text-sm text-gray-400">Carrier</p>
-                  <p class="text-white"><%= @task.carrier.name if @task.carrier %></p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Dynamic Timeline -->
-            <%
-              # Define status timeline stages based on actual Task enum
-              timeline_stages = [
-                { status: 'pending', label: 'Order Created', desc: 'Your shipment has been registered in our system', icon: 'package' },
-                { status: 'in_transit', label: 'In Transit', desc: 'Package is on its way to the destination', icon: 'plane' },
-                { status: 'delivered', label: 'Delivered', desc: 'Package has been successfully delivered', icon: 'check' }
-              ]
-              
-              # Determine current stage index based on actual status
-              status_order = ['pending', 'in_transit', 'delivered']
-              current_index = status_order.index(@task.status) || 0
-              
-              # Handle special cases (failed, returned)
-              if @task.status == 'failed'
-                timeline_stages << { status: 'failed', label: 'Delivery Failed', desc: 'Delivery attempt was unsuccessful', icon: 'warning' }
-                current_index = timeline_stages.length - 1
-              elsif @task.status == 'returned'
-                timeline_stages << { status: 'returned', label: 'Returned to Sender', desc: 'Package is being returned to origin', icon: 'return' }
-                current_index = timeline_stages.length - 1
-              end
-            %>
-
-            <div class="space-y-6">
-              <% timeline_stages.each_with_index do |stage, index| %>
-                <%
-                  is_completed = index < current_index
-                  is_current = index == current_index
-                  is_future = index > current_index
-                  is_last = index == timeline_stages.length - 1
-                %>
-                
-                <div class="flex gap-4">
-                  <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center <%= is_completed ? 'bg-green-500/20 ring-2 ring-green-500' : is_current ? 'bg-yellow-400/20 ring-2 ring-yellow-400 animate-pulse' : 'bg-gray-700/20 ring-2 ring-gray-700' %>">
-                      <% if is_completed %>
-                        <%= checkmark_icon(size: '32', css_class: 'filter brightness-125') %>
-                      <% elsif is_current %>
-                        <% case stage[:icon] %>
-                        <% when 'package' %>
-                          <%= package_icon(size: '32', css_class: 'filter brightness-125') %>
-                        <% when 'plane' %>
-                          <%= plane_icon(size: '32', css_class: 'filter brightness-125') %>
-                        <% when 'delivery' %>
-                          <%= delivery_icon(size: '32', css_class: 'filter brightness-125') %>
-                        <% when 'check' %>
-                          <%= checkmark_icon(size: '32', css_class: 'filter brightness-125') %>
-                        <% when 'warning' %>
-                          <%= warning_icon(size: '32', css_class: 'filter brightness-125') %>
-                        <% when 'return' %>
-                          <%= return_icon(size: '32', css_class: 'filter brightness-125') %>
-                        <% else %>
-                          <%= truck_icon(size: '32', css_class: 'filter brightness-125') %>
-                        <% end %>
-                      <% else %>
-                        <% case stage[:icon] %>
-                        <% when 'package' %>
-                          <%= package_icon(size: '28', css_class: 'opacity-30') %>
-                        <% when 'plane' %>
-                          <%= plane_icon(size: '28', css_class: 'opacity-30') %>
-                        <% when 'delivery' %>
-                          <%= delivery_icon(size: '28', css_class: 'opacity-30') %>
-                        <% when 'check' %>
-                          <%= checkmark_icon(size: '28', css_class: 'opacity-30') %>
-                        <% else %>
-                          <%= truck_icon(size: '28', css_class: 'opacity-30') %>
-                        <% end %>
-                      <% end %>
-                    </div>
-                    <% unless is_last %>
-                      <div class="w-0.5 h-16 <%= is_completed ? 'bg-green-500' : 'bg-gray-700' %> mt-2"></div>
-                    <% end %>
-                  </div>
-                  <div class="flex-1 pb-6">
-                    <p class="font-semibold text-lg <%= is_completed ? 'text-green-400' : is_current ? 'text-yellow-400' : 'text-gray-500' %>">
-                      <%= stage[:label] %>
-                      <% if is_current %>
-                        <span class="ml-2 text-xs bg-yellow-400 text-black px-2 py-1 rounded-full">Current</span>
-                      <% end %>
-                    </p>
-                    <p class="text-sm <%= is_future ? 'text-gray-600' : 'text-gray-400' %> mt-1">
-                      <%= stage[:desc] %>
-                    </p>
-                    <% if is_completed %>
-                      <p class="text-xs text-gray-500 mt-2">
-                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <%= time_ago_in_words(@task.updated_at) %> ago
-                      </p>
-                    <% elsif is_current %>
-                      <p class="text-xs text-yellow-400 mt-2 font-semibold">
-                        <svg class="w-4 h-4 inline mr-1 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                        </svg>
-                        Updated <%= time_ago_in_words(@task.updated_at) %> ago
-                      </p>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-
-          <!-- Shipment Details Card -->
-          <div class="mt-8 grid md:grid-cols-2 gap-6">
-            <div class="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-yellow-400/30 transition-colors">
-              <h3 class="text-lg font-semibold mb-4 flex items-center text-yellow-400">
-                <%= location_icon(size: '24', css_class: 'mr-2') %>
-                Origin
-              </h3>
-              <p class="text-white font-medium"><%= @task.start %></p>
-              <% if @task.pickup_address.present? %>
-                <p class="text-sm text-gray-400 mt-2">
-                  <%= [@task.pickup_address['street'], @task.pickup_address['city'], @task.pickup_address['postal_code']].compact.join(', ') %>
-                </p>
-              <% end %>
-            </div>
-
-            <div class="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-yellow-400/30 transition-colors">
-              <h3 class="text-lg font-semibold mb-4 flex items-center text-yellow-400">
-                <%= location_icon(size: '24', css_class: 'mr-2 transform rotate-180') %>
-                Destination
-              </h3>
-              <p class="text-white font-medium"><%= @task.target %></p>
-            </div>
-          </div>
-
-          <!-- Estimated Delivery -->
-          <div class="mt-6 p-6 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-lg border border-yellow-400/30 hover:border-yellow-400/50 transition-colors">
-            <div class="flex items-center gap-3">
-              <%= clock_icon(size: '40', css_class: '') %>
-              <div>
-                <p class="text-sm text-gray-400">Estimated Delivery</p>
-                <p class="text-xl font-bold text-white">
-                  <%= @task.delivery_time.strftime("%A, %B %d, %Y") %>
-                  <span class="text-sm text-gray-400">by <%= @task.delivery_time.strftime("%I:%M %p") %></span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Additional Info -->
-          <% if @task.carrier %>
-            <div class="mt-6 p-4 bg-gray-900 rounded-lg flex items-center gap-3 border border-gray-800 hover:border-yellow-400/30 transition-colors">
-              <%= delivery_icon(size: '32', css_class: '') %>
-              <div>
-                <p class="text-xs text-gray-400">Carrier</p>
-                <p class="text-white font-semibold"><%= @task.carrier.name %></p>
-                <% if @task.carrier.email.present? %>
-                  <a href="mailto:<%= @task.carrier.email %>" class="text-yellow-400 hover:text-yellow-500 text-sm">
-                    <%= @task.carrier.email %>
-                  </a>
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      <% elsif params[:tracking_number].present? %>
-        </div>
-            </div>
-          </div>
-        <% else %>
-          <!-- Tracking Number Not Found -->
-          <div class="bg-gray-800 rounded-2xl p-8 border border-red-700">
-          <div class="flex items-start gap-4">
-            <svg class="w-12 h-12 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-            <div class="flex-1">
-              <h3 class="text-xl font-bold text-red-400 mb-2">Tracking Number Not Found</h3>
-              <p class="text-gray-300">
-                We couldn't find a package with tracking number <strong class="text-white"><%= params[:tracking_number] %></strong>.
-              </p>
-              <p class="text-gray-400 mt-2 text-sm">
-                Please check the number and try again, or contact us for assistance.
-              </p>
-            </div>
-          </div>
-        <% end %>
-      <% else %>
+      <% if params[:tracking_number].blank? %>
         <!-- No Tracking Number -->
         <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 text-center">
           <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,6 +54,234 @@
           </svg>
           <p class="text-gray-400"><%= t("track.no_tracking") %></p>
         </div>
+      <% else %>
+        <% if @task %>
+        <!-- Tracking Results -->
+        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-2"><%= t("track.tracking_details") %></h2>
+            <p class="text-gray-300"><%= t("track.tracking_number_label") %> <strong class="text-white"><%= @task.barcode %></strong></p>
+            <div class="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <p class="text-sm text-gray-400">Package Type</p>
+                <p class="text-white font-semibold"><%= @task.package_type.titleize %></p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-400">Status</p>
+                <p class="text-white font-semibold">
+                  <span class="px-3 py-1 rounded-full text-sm 
+                    <%= case @task.status
+                        when 'delivered' then 'bg-green-600'
+                        when 'in_transit' then 'bg-blue-600'
+                        when 'pending' then 'bg-yellow-600'
+                        when 'failed' then 'bg-red-600'
+                        else 'bg-gray-600'
+                        end %>">
+                    <%= @task.status.humanize %>
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-400">From</p>
+                <p class="text-white"><%= @task.start %></p>
+              </div>
+              <div>
+                <!-- Dynamic Timeline -->
+                <% timeline_entries = @timeline_entries || [] %>
+                <% current_step_key = @current_timeline_key || timeline_entries.last&.dig(:key) %>
+                <% current_index = if timeline_entries.any?
+                                     timeline_entries.index { |entry| entry[:key] == current_step_key } || (timeline_entries.length - 1)
+                                   else
+                                     -1
+                                   end %>
+
+                <div class="space-y-6">
+                  <% timeline_entries.each_with_index do |entry, index| %>
+                    <% is_completed = index < current_index %>
+                    <% is_current = timeline_entries.length == 1 ? true : index == current_index %>
+                    <% is_future = index > current_index %>
+                    <% is_last = index == timeline_entries.length - 1 %>
+
+                    <div class="flex gap-4">
+                      <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center <%= is_completed ? 'bg-green-500/20 ring-2 ring-green-500' : is_current ? 'bg-yellow-400/20 ring-2 ring-yellow-400 animate-pulse' : 'bg-gray-700/20 ring-2 ring-gray-700' %>">
+                          <% if is_completed %>
+                            <%= checkmark_icon(size: '32', css_class: 'filter brightness-125') %>
+                          <% else %>
+                            <% case entry[:icon] %>
+                            <% when 'package' %>
+                              <%= package_icon(size: (is_current ? '32' : '28'), css_class: is_current ? 'filter brightness-125' : 'opacity-30') %>
+                            <% when 'plane' %>
+                              <%= plane_icon(size: (is_current ? '32' : '28'), css_class: is_current ? 'filter brightness-125' : 'opacity-30') %>
+                            <% when 'delivery' %>
+                              <%= delivery_icon(size: (is_current ? '32' : '28'), css_class: is_current ? 'filter brightness-125' : 'opacity-30') %>
+                            <% when 'check' %>
+                              <%= checkmark_icon(size: (is_current ? '32' : '28'), css_class: is_current ? 'filter brightness-125' : 'opacity-30') %>
+                            <% when 'warning' %>
+                              <%= warning_icon(size: (is_current ? '32' : '28'), css_class: is_current ? 'filter brightness-125' : 'opacity-30') %>
+                            <% when 'return' %>
+                              <%= return_icon(size: (is_current ? '32' : '28'), css_class: is_current ? 'filter brightness-125' : 'opacity-30') %>
+                            <% else %>
+                              <%= truck_icon(size: (is_current ? '32' : '28'), css_class: is_current ? 'filter brightness-125' : 'opacity-30') %>
+                            <% end %>
+                          <% end %>
+                        </div>
+                        <% unless is_last %>
+                          <div class="w-0.5 h-16 <%= is_completed ? 'bg-green-500' : 'bg-gray-700' %> mt-2"></div>
+                        <% end %>
+                      </div>
+                      <div class="flex-1 pb-6">
+                        <p class="font-semibold text-lg <%= is_completed ? 'text-green-400' : is_current ? 'text-yellow-400' : 'text-gray-500' %>">
+                          <%= entry[:label] %>
+                          <% if is_current %>
+                            <span class="ml-2 text-xs bg-yellow-400 text-black px-2 py-1 rounded-full">Current</span>
+                          <% end %>
+                        </p>
+                        <% if entry[:desc].present? %>
+                          <p class="text-sm <%= is_future ? 'text-gray-600' : 'text-gray-400' %> mt-1">
+                            <%= entry[:desc] %>
+                          </p>
+                        <% end %>
+                        <% if entry[:occurred_at].present? %>
+                          <% timestamp = time_ago_in_words(entry[:occurred_at]) %>
+                          <p class="text-xs <%= is_completed ? 'text-gray-500' : is_current ? 'text-yellow-400 font-semibold' : 'text-gray-600' %> mt-2">
+                            <svg class="w-4 h-4 inline mr-1 <%= is_current ? 'animate-pulse' : '' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <%= is_current ? "Updated #{timestamp} ago" : "Occurred #{timestamp} ago" %>
+                          </p>
+                        <% end %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+          </div>
+
+          <% if @task.failed_attempts.positive? %>
+            <div class="mt-8 rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+              <div class="flex items-center text-red-300 font-semibold mb-2 gap-2">
+                <%= warning_icon(size: '28', css_class: '') %>
+                Delivery issues reported
+              </div>
+              <p class="text-sm text-gray-200">
+                <strong>Failed attempts:</strong>
+                <%= @task.failed_attempts %> of <%= Task::MAX_FAILED_ATTEMPTS %>
+              </p>
+              <% if @task.last_failure_note.present? %>
+                <p class="text-sm text-gray-100 mt-2">
+                  <strong>Carrier note:</strong>
+                  <%= @task.last_failure_note %>
+                </p>
+              <% end %>
+              <% if @task.awaiting_customer_response? && @task.stored_until.present? %>
+                <p class="text-sm text-yellow-200 mt-2">
+                  <strong>Action needed:</strong>
+                  Please contact support before
+                  <%= l(@task.stored_until, format: :long) %>
+                  so we can schedule another attempt.
+                </p>
+              <% elsif @task.returned? %>
+                <p class="text-sm text-gray-200 mt-2">
+                  Parcel is returning to sender due to repeated failed attempts.
+                </p>
+              <% end %>
+              <% if @failed_attempt_history.present? %>
+                <div class="mt-4 space-y-3">
+                  <% @failed_attempt_history.each do |attempt| %>
+                    <div class="rounded border border-red-500/30 bg-red-950/30 p-3">
+                      <div class="text-sm font-semibold text-red-200">
+                        Attempt <%= attempt[:attempt_number] %>
+                        <% if attempt[:occurred_at].present? %>
+                          <span class="text-xs text-gray-400">
+                            (<%= l(attempt[:occurred_at], format: :short) %>)
+                          </span>
+                        <% end %>
+                      </div>
+                      <% if attempt[:note].present? %>
+                        <p class="text-sm text-gray-100 mt-1"><%= attempt[:note] %></p>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          </div>
+
+        <!-- Shipment Details Card -->
+        <div class="mt-8 grid md:grid-cols-2 gap-6">
+          <div class="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-yellow-400/30 transition-colors">
+            <h3 class="text-lg font-semibold mb-4 flex items-center text-yellow-400">
+              <%= location_icon(size: '24', css_class: 'mr-2') %>
+              Origin
+            </h3>
+            <p class="text-white font-medium"><%= @task.start %></p>
+            <% if @task.pickup_address.present? %>
+              <p class="text-sm text-gray-400 mt-2">
+                <%= [@task.pickup_address['street'], @task.pickup_address['city'], @task.pickup_address['postal_code']].compact.join(', ') %>
+              </p>
+            <% end %>
+          </div>
+
+          <div class="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-yellow-400/30 transition-colors">
+            <h3 class="text-lg font-semibold mb-4 flex items-center text-yellow-400">
+              <%= location_icon(size: '24', css_class: 'mr-2 transform rotate-180') %>
+              Destination
+            </h3>
+            <p class="text-white font-medium"><%= @task.target %></p>
+          </div>
+        </div>
+
+        <!-- Estimated Delivery -->
+        <div class="mt-6 p-6 bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 rounded-lg border border-yellow-400/30 hover:border-yellow-400/50 transition-colors">
+          <div class="flex items-center gap-3">
+            <%= clock_icon(size: '40', css_class: '') %>
+            <div>
+              <p class="text-sm text-gray-400">Estimated Delivery</p>
+              <p class="text-xl font-bold text-white">
+                <%= @task.delivery_time.strftime("%A, %B %d, %Y") %>
+                <span class="text-sm text-gray-400">by <%= @task.delivery_time.strftime("%I:%M %p") %></span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Info -->
+        <% if @task.carrier %>
+          <div class="mt-6 p-4 bg-gray-900 rounded-lg flex items-center gap-3 border border-gray-800 hover:border-yellow-400/30 transition-colors">
+            <%= delivery_icon(size: '32', css_class: '') %>
+            <div>
+              <p class="text-xs text-gray-400">Carrier</p>
+              <p class="text-white font-semibold"><%= @task.carrier.name %></p>
+              <% if @task.carrier.email.present? %>
+                <a href="mailto:<%= @task.carrier.email %>" class="text-yellow-400 hover:text-yellow-500 text-sm">
+                  <%= @task.carrier.email %>
+                </a>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+        <% else %>
+          <!-- Tracking Number Not Found -->
+          <div class="bg-gray-800 rounded-2xl p-8 border border-red-700">
+            <div class="flex items-start gap-4">
+              <svg class="w-12 h-12 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-red-400 mb-2">Tracking Number Not Found</h3>
+                <p class="text-gray-300">
+                  We couldn't find a package with tracking number <strong class="text-white"><%= params[:tracking_number] %></strong>.
+                </p>
+                <p class="text-gray-400 mt-2 text-sm">
+                  Please check the number and try again, or contact us for assistance.
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
       <% end %>
 
       <!-- Help Section -->
@@ -297,3 +305,4 @@
     </div>
   </div>
 </section>
+<%= @task.id if @task %>

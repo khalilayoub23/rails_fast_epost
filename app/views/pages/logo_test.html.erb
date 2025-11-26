@@ -1,0 +1,22 @@
+<% content_for :title, "Fast Epost Logo Test" %>
+
+<section class="logo-test" aria-labelledby="logo-test-title">
+  <h1 id="logo-test-title" class="logo-test__title">🎉 Fast Epost Logo - Successfully Integrated!</h1>
+
+  <% logo_sizes = [
+    { size: 80, label: "Large (80px)" },
+    { size: 56, label: "Medium (56px)" },
+    { size: 40, label: "Small (40px)" },
+    { size: 32, label: "Extra Small (32px)" }
+  ] %>
+
+  <div class="logo-test__grid" role="list">
+    <%= render partial: "logo_size_card", collection: logo_sizes, as: :logo_size %>
+  </div>
+
+  <p class="logo-test__note">
+    ✅ Logo file: <strong>87KB</strong> (transparent PNG)<br>
+    ✅ All sizes working correctly<br>
+    ✅ Ready to use in your Rails app!
+  </p>
+</section>

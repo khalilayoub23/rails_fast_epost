@@ -3,6 +3,8 @@
 one:
   customer: one
   carrier: one
+  sender: sender_two
+  lawyer: lawyer_one
   package_type: 'small'
   start: 'Start Address 1'
   target: 'Target Address 1'
@@ -15,6 +17,7 @@ task_one:
   customer: one
   carrier: one
   lawyer: lawyer_one
+  sender: sender_one
   package_type: 'medium'
   start: 'Legal Start Address'
   target: 'Legal Target Address'
@@ -26,6 +29,7 @@ task_one:
 two:
   customer: two
   carrier: two
+  sender: sender_three
   package_type: 'medium'
   start: 'Start Address 2'
   target: 'Target Address 2'
@@ -33,3 +37,17 @@ two:
   barcode: 'BARCODE2'
   delivery_time: <%= Time.current %>
   priority: normal
+
+failed_task:
+  customer: one
+  carrier: one
+  sender: sender_two
+  package_type: 'medium'
+  start: 'Start Address 3'
+  target: 'Target Address 3'
+  status: 3
+  failed_attempts: 1
+  last_failure_note: 'Recipient was not home'
+  barcode: 'FAILED001'
+  awaiting_customer_response: true
+  stored_until: <%= 2.days.from_now %>

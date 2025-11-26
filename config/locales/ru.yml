@@ -20,6 +20,10 @@ ru:
   service_ecommerce_1: "Ежедневные заборы"
   service_ecommerce_2: "Логистика последней мили"
   service_ecommerce_3: "Бесшовная интеграция с Shopify и VCommerce"
+  flash_titles:
+    success: "Все готово"
+    alert: "Внимание"
+    info: "Важно"
   feature_verified: "Проверенные курьеры"
   feature_tracking: "Отслеживание в реальном времени"
   feature_secure: "Безопасные передачи"

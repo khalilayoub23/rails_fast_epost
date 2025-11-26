@@ -1,8 +1,9 @@
 class DefaultAccountsProvisioner
   DEFAULT_ACCOUNTS = [
-    { role: "admin",   email_env: "DEFAULT_ADMIN_EMAIL",   fallback_email: "admin@example.com" },
-    { role: "manager", email_env: "DEFAULT_MANAGER_EMAIL", fallback_email: "manager@example.com" },
-    { role: "viewer",  email_env: "DEFAULT_VIEWER_EMAIL",  fallback_email: "viewer@example.com" }
+    { role: "admin",              email_env: "DEFAULT_ADMIN_EMAIL",              fallback_email: "admin@example.com" },
+    { role: "operations_manager", email_env: "DEFAULT_OPS_MANAGER_EMAIL",       fallback_email: "ops@example.com" },
+    { role: "manager",            email_env: "DEFAULT_MANAGER_EMAIL",           fallback_email: "manager@example.com" },
+    { role: "viewer",             email_env: "DEFAULT_VIEWER_EMAIL",            fallback_email: "viewer@example.com" }
   ].freeze
 
   def self.ensure!

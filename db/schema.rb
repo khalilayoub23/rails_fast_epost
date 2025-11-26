@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_23_195000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,33 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "carrier_memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "carrier_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["carrier_id"], name: "index_carrier_memberships_on_carrier_id"
+    t.index ["user_id", "carrier_id"], name: "index_carrier_memberships_on_user_id_and_carrier_id", unique: true
+    t.index ["user_id"], name: "index_carrier_memberships_on_user_id"
+  end
+
+  create_table "carrier_payouts", force: :cascade do |t|
+    t.bigint "carrier_id", null: false
+    t.bigint "task_id", null: false
+    t.integer "amount_cents", default: 0, null: false
+    t.string "currency", default: "USD", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "due_at"
+    t.datetime "paid_at"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["carrier_id", "task_id"], name: "index_carrier_payouts_on_carrier_id_and_task_id", unique: true
+    t.index ["carrier_id"], name: "index_carrier_payouts_on_carrier_id"
+    t.index ["status"], name: "index_carrier_payouts_on_status"
+    t.index ["task_id"], name: "index_carrier_payouts_on_task_id"
   end
 
   create_table "carrier_ratings", force: :cascade do |t|
@@ -97,6 +124,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_customers_on_email", unique: true
+    t.index ["name"], name: "index_customers_on_name"
   end
 
   create_table "document_templates", force: :cascade do |t|
@@ -200,6 +229,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
     t.index ["carrier_id"], name: "index_messengers_on_carrier_id"
     t.index ["employee_id"], name: "index_messengers_on_employee_id"
     t.index ["status"], name: "index_messengers_on_status"
+    t.index ["vehicle_type"], name: "index_messengers_on_vehicle_type"
   end
 
   create_table "notification_logs", force: :cascade do |t|
@@ -296,6 +326,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
     t.index ["carrier_id"], name: "index_preferences_on_carrier_id"
   end
 
+  create_table "proof_uploads", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "carrier_id", null: false
+    t.bigint "uploaded_by_id", null: false
+    t.string "category", default: "photo", null: false
+    t.text "notes"
+    t.datetime "recorded_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["carrier_id"], name: "index_proof_uploads_on_carrier_id"
+    t.index ["category"], name: "index_proof_uploads_on_category"
+    t.index ["task_id"], name: "index_proof_uploads_on_task_id"
+    t.index ["uploaded_by_id"], name: "index_proof_uploads_on_uploaded_by_id"
+  end
+
   create_table "refunds", force: :cascade do |t|
     t.bigint "payment_id", null: false
     t.string "provider", null: false
@@ -340,7 +385,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["company_name"], name: "index_senders_on_company_name"
-    t.index ["email"], name: "index_senders_on_email"
+    t.index ["email"], name: "index_senders_on_email", unique: true
     t.index ["sender_type"], name: "index_senders_on_sender_type"
   end
 
@@ -352,8 +397,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
     t.string "target"
     t.integer "failure_code"
     t.datetime "delivery_time"
-    t.integer "status"
-    t.string "barcode"
+    t.integer "status", default: 0, null: false
+    t.string "barcode", null: false
     t.string "filled_form_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -365,12 +410,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
     t.datetime "requested_pickup_time"
     t.bigint "lawyer_id"
     t.string "priority", default: "normal", null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.text "last_failure_note"
+    t.datetime "stored_until"
+    t.boolean "awaiting_customer_response", default: false, null: false
+    t.index ["barcode"], name: "index_tasks_on_barcode", unique: true
     t.index ["carrier_id"], name: "index_tasks_on_carrier_id"
+    t.index ["created_at"], name: "index_tasks_on_created_at"
     t.index ["customer_id"], name: "index_tasks_on_customer_id"
     t.index ["lawyer_id"], name: "index_tasks_on_lawyer_id"
     t.index ["messenger_id"], name: "index_tasks_on_messenger_id"
     t.index ["priority"], name: "index_tasks_on_priority"
     t.index ["sender_id"], name: "index_tasks_on_sender_id"
+    t.index ["status"], name: "index_tasks_on_status"
+  end
+
+  create_table "tracking_events", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.string "event_type", null: false
+    t.string "title", null: false
+    t.string "status"
+    t.string "location"
+    t.text "description"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "occurred_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["status"], name: "index_tracking_events_on_status"
+    t.index ["task_id", "occurred_at"], name: "index_tracking_events_on_task_id_and_occurred_at"
+    t.index ["task_id"], name: "index_tracking_events_on_task_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -393,6 +461,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "carrier_memberships", "carriers"
+  add_foreign_key "carrier_memberships", "users"
+  add_foreign_key "carrier_payouts", "carriers"
+  add_foreign_key "carrier_payouts", "tasks"
   add_foreign_key "carrier_ratings", "carriers"
   add_foreign_key "carrier_ratings", "tasks"
   add_foreign_key "cost_calcs", "tasks", on_delete: :cascade
@@ -408,6 +480,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
   add_foreign_key "payments_tasks", "tasks", on_delete: :cascade
   add_foreign_key "phones", "carriers", on_delete: :cascade
   add_foreign_key "preferences", "carriers", on_delete: :cascade
+  add_foreign_key "proof_uploads", "carriers"
+  add_foreign_key "proof_uploads", "tasks"
+  add_foreign_key "proof_uploads", "users", column: "uploaded_by_id"
   add_foreign_key "refunds", "payments", on_delete: :cascade
   add_foreign_key "remarks", "tasks", on_delete: :cascade
   add_foreign_key "tasks", "carriers", on_delete: :cascade
@@ -415,4 +490,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_23_000000) do
   add_foreign_key "tasks", "lawyers"
   add_foreign_key "tasks", "messengers"
   add_foreign_key "tasks", "senders"
+  add_foreign_key "tracking_events", "tasks", on_delete: :cascade
 end

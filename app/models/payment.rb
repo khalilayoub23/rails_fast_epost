@@ -35,6 +35,8 @@ class Payment < ApplicationRecord
   after_update_commit :broadcast_updated
   after_destroy_commit :broadcast_destroyed
   after_commit :generate_legal_forms_if_needed, if: :legal_form_trigger?
+  after_commit :sync_carrier_payout_if_needed, if: :carrier_payable?, on: [ :create, :update ]
+  after_destroy_commit :sync_carrier_payout_if_needed, if: :carrier_payable?
 
   private
 
@@ -62,5 +64,23 @@ class Payment < ApplicationRecord
   def broadcast_destroyed
     broadcast_remove_to "payments", target: ActionView::RecordIdentifier.dom_id(self)
     broadcast_replace_later_to "dashboard", target: "dashboard_kpis", partial: "dashboard/kpis"
+  end
+
+  def carrier_payable?
+    payable_type == "Carrier" && payable_id.present? && task_id.present?
+  end
+
+  def sync_carrier_payout_if_needed
+    CarrierPayoutSync.call(task_id: task_id, carrier_id: carrier_id_for_payout)
+  rescue => e
+    Rails.logger.error("[Payment #{id}] Failed to sync carrier payout: #{e.message}")
+  end
+
+  def carrier_id_for_payout
+    if payable_type == "Carrier" && payable_id.present?
+      payable_id
+    else
+      task&.carrier_id
+    end
   end
 end

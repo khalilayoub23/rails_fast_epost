@@ -1,0 +1,39 @@
+<% label = local_assigns.fetch(:label, "Control Panel") %>
+<% title = local_assigns.fetch(:title, @control_panel_title || "Control Panel") %>
+<% description = local_assigns[:description] %>
+<% entities = Array.wrap(local_assigns[:entities]) %>
+<% current_entity = local_assigns[:current_entity] %>
+<% param_key = local_assigns.fetch(:param_key, :entity_id) %>
+<% switch_path = local_assigns[:switch_path] || request.path %>
+
+<div class="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl shadow-black/30 backdrop-blur">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <p class="text-xs uppercase tracking-[0.35em] text-slate-300/80"><%= label %></p>
+      <h1 class="text-2xl font-semibold text-white"><%= title %></h1>
+    </div>
+    <% if entities.any? %>
+      <div class="flex flex-wrap items-center gap-2 text-sm text-white">
+        <%= form_with url: switch_path, method: :get, local: true, class: "flex flex-wrap items-center gap-2" do %>
+          <% request.query_parameters.except(param_key.to_s).each do |key, value| %>
+            <%= hidden_field_tag key, value %>
+          <% end %>
+          <label class="text-xs font-semibold uppercase tracking-wide text-slate-300" for="context_<%= param_key %>">
+            <%= entity_label = local_assigns.fetch(:entity_label, "Select") %>
+          </label>
+          <select id="context_<%= param_key %>" name="<%= param_key %>" class="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm text-white focus:border-yellow-300 focus:outline-none">
+            <% entities.each do |entity| %>
+              <option value="<%= entity.id %>" <%= "selected" if current_entity == entity %>><%= entity.try(:display_name) || entity.try(:name) || entity.id %></option>
+            <% end %>
+          </select>
+          <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 font-semibold text-gray-900 shadow-lg shadow-yellow-500/30 transition hover:-translate-y-0.5">
+            Switch
+          </button>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <% if description.present? %>
+    <p class="mt-4 text-sm text-slate-200/90"><%= description %></p>
+  <% end %>
+</div>

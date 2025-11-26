@@ -23,3 +23,29 @@ two:
   amount_cents: 25000
   currency: USD
   external_id: PAY-TEST-002
+
+carrier_pending:
+  category: 1
+  task: one
+  payable_type: 'Carrier'
+  payable: one
+  payment_type: 0
+  interval_start: <%= Date.today - 3.days %>
+  interval_end: <%= Date.today + 2.days %>
+  amount_cents: 7500
+  currency: USD
+  gateway_status: pending
+  external_id: PAY-CARRIER-001
+
+carrier_succeeded:
+  category: 1
+  task: task_one
+  payable_type: 'Carrier'
+  payable: one
+  payment_type: 0
+  interval_start: <%= Date.today - 5.days %>
+  interval_end: <%= Date.today - 1.day %>
+  amount_cents: 8200
+  currency: USD
+  gateway_status: succeeded
+  external_id: PAY-CARRIER-002

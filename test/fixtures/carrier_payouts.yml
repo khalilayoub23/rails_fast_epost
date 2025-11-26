@@ -1,0 +1,15 @@
+carrier_one_pending:
+  carrier: one
+  task: one
+  amount_cents: 5000
+  currency: "USD"
+  status: pending
+  due_at: <%= 2.days.from_now %>
+
+carrier_one_paid:
+  carrier: one
+  task: task_one
+  amount_cents: 6500
+  currency: "USD"
+  status: paid
+  paid_at: <%= 1.day.ago %>

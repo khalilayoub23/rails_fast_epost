@@ -46,6 +46,21 @@ class UserTest < ActiveSupport::TestCase
     assert admin.manager?
   end
 
+  test "manager? should return true for operations manager" do
+    ops = User.new(role: "operations_manager")
+    assert ops.manager?
+  end
+
+  test "operations_manager? helper" do
+    ops = User.new(role: "operations_manager")
+    admin = User.new(role: "admin")
+    viewer = User.new(role: "viewer")
+
+    assert ops.operations_manager?
+    assert admin.operations_manager?
+    assert_not viewer.operations_manager?
+  end
+
   test "manager? should return false for viewer" do
     user = User.new(role: "viewer")
     assert_not user.manager?

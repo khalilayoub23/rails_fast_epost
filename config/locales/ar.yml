@@ -20,6 +20,10 @@ ar:
   service_ecommerce_1: "استلام يومي"
   service_ecommerce_2: "لوجستيات الميل الأخير"
   service_ecommerce_3: "تكامل سلس مع Shopify و VCommerce"
+  flash_titles:
+    success: "تم بنجاح"
+    alert: "تنبيه"
+    info: "معلومة"
   feature_verified: "وكلاء توصيل موثقون"
   feature_tracking: "تتبع لحظي"
   feature_secure: "تحويلات آمنة"

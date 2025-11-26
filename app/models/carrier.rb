@@ -7,6 +7,9 @@ class Carrier < ApplicationRecord
   has_many :documents
   has_many :form_templates
   has_many :tasks
+  has_many :carrier_memberships, dependent: :destroy
+  has_many :users, through: :carrier_memberships
+  has_many :carrier_payouts, dependent: :destroy
   has_one :preference
   has_many :carrier_ratings, dependent: :destroy
 

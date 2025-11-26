@@ -21,6 +21,14 @@ User.find_or_create_by!(email: "manager@example.com") do |user|
 end
 puts "✅ Manager user created: manager@example.com / password"
 
+# Create operations manager user
+operations_manager = User.find_or_create_by!(email: "ops@example.com") do |user|
+  user.password = "password"
+  user.password_confirmation = "password"
+  user.role = "operations_manager"
+end
+puts "✅ Operations manager user created: ops@example.com / password"
+
 # Create viewer user
 User.find_or_create_by!(email: "viewer@example.com") do |user|
   user.password = "password"
@@ -49,6 +57,14 @@ carriers = [
   { name: "USPS Priority", email: "help@usps.gov", carrier_type: "standard", address: "321 Mail Route, Postal Plaza" }
 ].map do |attrs|
   Carrier.create!(attrs)
+end
+
+# Link operations manager to top carriers for dashboard scoping
+if defined?(operations_manager) && operations_manager.persisted?
+  carriers.first(2).each do |carrier|
+    CarrierMembership.find_or_create_by!(user: operations_manager, carrier: carrier)
+  end
+  puts "🔗 Operations manager assigned to #{carriers.first(2).map(&:name).join(', ')}"
 end
 
 # Create Senders

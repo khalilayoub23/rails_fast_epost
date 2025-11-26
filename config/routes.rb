@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get "home", to: "pages#home", as: :landing_page
 
   controller :pages do
-    %i[home about services track_parcel law_firms ecommerce privacy_policy icons].each do |action|
+    %i[home about services track_parcel law_firms ecommerce privacy_policy icons logo_test logo_demo].each do |action|
       get "pages/#{action}", action: action
     end
 
@@ -31,6 +31,36 @@ Rails.application.routes.draw do
   end
   
   root "pages#home"
+
+  namespace :control_panel, path: "/control", as: :control_panel do
+    namespace :carriers do
+      get "/", to: "dashboards#show", as: :dashboard
+      resources :tasks, only: [] do
+        member do
+          patch :status, to: "tasks#update_status"
+          patch :flag_issue, to: "tasks#flag_issue"
+        end
+        resources :proof_uploads, only: [ :create, :destroy ]
+      end
+      resources :payouts, only: [ :index, :show ]
+    end
+
+    namespace :operations do
+      get "/", to: "dashboards#show", as: :dashboard
+    end
+
+    namespace :senders do
+      get "/", to: "dashboards#show", as: :dashboard
+    end
+
+    namespace :lawyers do
+      get "/", to: "dashboards#show", as: :dashboard
+    end
+
+    namespace :sellers do
+      get "/", to: "dashboards#show", as: :dashboard
+    end
+  end
   
   # Dashboard for authenticated users
   get "/dashboard", to: "dashboard#index", as: :dashboard
@@ -109,16 +139,22 @@ Rails.application.routes.draw do
         get "track/:barcode", to: "tracking#show"
       end
 
+      namespace :carriers do
+        resources :tasks, only: [ :index, :update ]
+        resources :payouts, only: [ :index, :show ]
+        resources :events, only: [ :index ]
+      end
+
       resources :tasks
       resources :carriers
       resources :customers
 
       post "payments", to: "payments#create"
       post "payments/:provider/webhook", to: "payments#webhook"
-  post "payments/:id/refund", to: "payments#refund"
-  post "payments/:id/capture", to: "payments#capture"
-  post "payments/:id/cancel", to: "payments#cancel"
-  post "payments/:id/sync", to: "payments#sync"
+      post "payments/:id/refund", to: "payments#refund"
+      post "payments/:id/capture", to: "payments#capture"
+      post "payments/:id/cancel", to: "payments#cancel"
+      post "payments/:id/sync", to: "payments#sync"
 
       namespace :integrations do
         # Meta platforms: GET verify + POST receive

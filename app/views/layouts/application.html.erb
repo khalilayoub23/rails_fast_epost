@@ -38,9 +38,18 @@
         try {
           var ls = localStorage.getItem('ui.dark');
           var dark = (ls === 'true') || (ls === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          var dir = localStorage.getItem('ui.direction') || 'ltr';
-          document.documentElement.classList.toggle('dark', dark);
-          document.documentElement.setAttribute('dir', dir);
+          var root = document.documentElement;
+          var serverDir = root.getAttribute('dir') || 'ltr';
+          var storedDir = localStorage.getItem('ui.direction');
+          var dir = storedDir;
+
+          if (!storedDir || storedDir !== serverDir) {
+            dir = serverDir;
+            localStorage.setItem('ui.direction', serverDir);
+          }
+
+          root.classList.toggle('dark', dark);
+          root.setAttribute('dir', dir || 'ltr');
         } catch (e) {}
       })();
     </script>

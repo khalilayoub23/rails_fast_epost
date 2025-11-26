@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>" dir="<%= text_direction %>">
+  <head>
+    <title><%= content_for(:title) || "Carrier Control Panel" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1C2434">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <meta name="turbo-visit-control" content="reload">
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <% unless Rails.env.test? %>
+      <% if rtl? %>
+        <%= stylesheet_link_tag "tailwind", "fonts", "rtl", "application", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
+      <% else %>
+        <%= stylesheet_link_tag "tailwind", "fonts", "application", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
+      <% end %>
+      <%= javascript_importmap_tags %>
+    <% end %>
+    <meta name="color-scheme" content="light dark">
+    <script>
+      (function() {
+        try {
+          var ls = localStorage.getItem('ui.dark');
+          var dark = (ls === 'true') || (ls === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          var serverDir = root.getAttribute('dir') || 'ltr';
+          var storedDir = localStorage.getItem('ui.direction');
+          var dir = storedDir;
+
+          if (!storedDir || storedDir !== serverDir) {
+            dir = serverDir;
+            localStorage.setItem('ui.direction', serverDir);
+          }
+
+          root.classList.toggle('dark', dark);
+          root.setAttribute('dir', dir || 'ltr');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black font-satoshi text-base text-gray-200">
+    <% unless content_for?(:page_title) %>
+      <% content_for :page_title, (@control_panel_title.presence || "Carrier Control Panel") %>
+    <% end %>
+
+    <div class="flex h-screen overflow-hidden" data-controller="sidebar">
+      <% unless turbo_native_app? %>
+        <%= render "shared/sidebar" %>
+      <% end %>
+
+      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-transparent <%= 'pb-20' if turbo_native_app? %>">
+        <% unless turbo_native_app? %>
+          <%= render "shared/topbar" %>
+        <% end %>
+
+        <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 space-y-6">
+          <% if content_for?(:control_panel_context) %>
+            <%= yield :control_panel_context %>
+          <% else %>
+            <%= render "control_panel/shared/context_bar" %>
+          <% end %>
+          <%= render "shared/flash_messages" %>
+          <%= yield %>
+        </main>
+      </div>
+    </div>
+
+    <%= render "shared/mobile_bottom_nav" %>
+  </body>
+</html>

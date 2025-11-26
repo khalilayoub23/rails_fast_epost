@@ -1,0 +1,200 @@
+/* Logo Demo Showcase Styles */
+body.logo-demo-body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 2rem;
+  background: #f9fafb;
+  color: #111827;
+}
+
+.logo-demo {
+  max-width: 1200px;
+  margin: 0 auto 3rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.logo-demo__title {
+  text-align: center;
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.logo-demo__section {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.logo-demo__section-title {
+  margin-top: 0;
+  color: #111827;
+  border-bottom: 2px solid #3b82f6;
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.logo-demo__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.logo-demo__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  background: #fcfcfd;
+}
+
+.logo-demo__label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 600;
+  text-align: center;
+}
+
+.logo-demo code {
+  background: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  display: block;
+  margin-top: 0.5rem;
+  color: #111827;
+}
+
+.logo-demo__color-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.logo-demo__color-box {
+  width: 120px;
+  height: 90px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: center;
+  line-height: 1.4;
+  box-shadow: inset 0 -4px rgba(0, 0, 0, 0.1);
+}
+
+.logo-demo__color-box--primary { background: #3b82f6; }
+.logo-demo__color-box--success { background: #10b981; }
+.logo-demo__color-box--warning { background: #f59e0b; }
+.logo-demo__color-box--error { background: #ef4444; }
+.logo-demo__color-box--dark { background: #111827; }
+
+.logo-demo__reference-card {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.logo-demo__reference-card h3 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.logo-demo__reference-card ul {
+  margin: 0 0 1rem 1.25rem;
+  padding: 0;
+  list-style: disc;
+}
+
+.logo-demo__reference-card li {
+  margin-bottom: 0.4rem;
+  color: #374151;
+}
+
+.logo-demo__section--gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: none;
+}
+
+.logo-demo__section--gradient .logo-demo__section-title {
+  color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+
+.logo-demo__section--gradient code {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.logo-demo__next-steps {
+  margin: 0;
+  padding-left: 1.25rem;
+  line-height: 1.8;
+}
+
+.logo-demo__next-steps li {
+  margin-bottom: 0.5rem;
+}
+
+.logo-demo__brand-frame {
+  max-width: 375px;
+  margin: 0 auto;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.logo-demo__brand-frame .brand-bar {
+  padding: 0.75rem;
+}
+
+.logo-demo__brand-label {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.logo-demo__guide-note {
+  margin-top: 2rem;
+  text-align: center;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.logo-demo__footer {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 3rem;
+}
+
+.logo-demo__footer-note {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  body.logo-demo-body {
+    padding: 1.5rem 1rem;
+  }
+
+  .logo-demo__section {
+    padding: 1.5rem;
+  }
+
+  .logo-demo__grid {
+    grid-template-columns: 1fr;
+  }
+}

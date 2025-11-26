@@ -1,0 +1,64 @@
+<section class="space-y-6">
+  <div>
+    <%= link_to "← All payouts", control_panel_carriers_payouts_path, class: "text-sm text-yellow-300 hover:underline" %>
+  </div>
+  <div class="rounded-2xl border border-gray-800 bg-gray-900/60 p-6 space-y-4">
+    <header>
+      <p class="text-xs uppercase tracking-wide text-gray-400">Task</p>
+      <h1 class="text-3xl font-semibold"><%= @payout.task&.barcode %></h1>
+    </header>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <p class="text-xs text-gray-400">Amount</p>
+        <p class="text-2xl font-semibold text-yellow-300"><%= number_to_currency(@payout.amount_cents / 100.0, unit: @payout.currency) %></p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400">Status</p>
+        <p class="text-2xl font-semibold"><%= @payout.status.humanize %></p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400">Due date</p>
+        <p class="text-xl"><%= @payout.due_at ? l(@payout.due_at, format: :long) : "—" %></p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-400">Paid at</p>
+        <p class="text-xl"><%= @payout.paid_at ? l(@payout.paid_at, format: :long) : "Pending" %></p>
+      </div>
+    </div>
+    <% if @payout.metadata.present? %>
+      <div>
+        <p class="text-xs text-gray-400 mb-2">Metadata</p>
+        <pre class="rounded-lg bg-gray-950/50 p-4 text-xs text-gray-300"><%= JSON.pretty_generate(@payout.metadata) %></pre>
+      </div>
+    <% end %>
+    <% proofs = @payout.task&.proof_uploads&.order(recorded_at: :desc) %>
+    <% if proofs.present? %>
+      <div>
+        <p class="text-xs text-gray-400 mb-2">Proof uploads</p>
+        <ul class="space-y-2">
+          <% proofs.each do |proof| %>
+            <li class="flex items-center justify-between rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-4 py-2 text-sm text-gray-100">
+              <div>
+                <p class="font-semibold text-white">
+                  <% if proof.file.attached? %>
+                    <%= link_to proof.file.filename, rails_blob_path(proof.file, disposition: :attachment), class: "underline decoration-emerald-400/60" %>
+                  <% else %>
+                    Missing attachment
+                  <% end %>
+                </p>
+                <p class="text-xs text-gray-400">
+                  <%= proof.category.humanize %> • <%= l(proof.recorded_at, format: :short) %>
+                </p>
+                <% if proof.notes.present? %>
+                  <p class="text-xs text-gray-300"><%= proof.notes %></p>
+                <% end %>
+              </div>
+              <span class="text-[10px] text-gray-400">Uploaded by <%= proof.uploaded_by.email %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <p class="text-xs text-gray-500">This payout reflects compensation owed to your carrier team and excludes what the sender paid on checkout.</p>
+  </div>
+</section>

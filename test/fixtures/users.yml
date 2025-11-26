@@ -14,3 +14,8 @@ viewer:
   email: viewer@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   role: viewer
+
+operations_manager:
+  email: ops@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  role: operations_manager

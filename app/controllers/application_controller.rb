@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  layout :determine_layout
   include TurboNativeSupport
 
   protect_from_forgery with: :exception
@@ -7,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   skip_before_action :authenticate_user!, if: :devise_controller?
   before_action :set_current_attributes
-  helper_method :stripe_publishable_key
+  helper_method :stripe_publishable_key, :current_carrier_context
 
   # Add custom data to logs (used by Lograge)
   def append_info_to_payload(payload)
@@ -32,6 +33,12 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def determine_layout
+    return "public" if devise_controller?
+
+    "application"
+  end
 
   def allow_github_codespaces
     if Rails.env.development?
@@ -63,6 +70,23 @@ class ApplicationController < ActionController::Base
         ), status: :forbidden
       end
       format.any { head :forbidden }
+    end
+  end
+
+  def require_carrier_membership!
+    return if current_carrier_context.present?
+
+    message = t("messages.no_carrier_membership", default: "You are not assigned to any carriers yet.")
+    respond_to do |format|
+      format.json { render json: { error: message }, status: :forbidden }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.append(
+          "flash_messages",
+          partial: "shared/flash_message",
+          locals: { type: :alert, message: message }
+        ), status: :forbidden
+      end
+      format.any { redirect_to root_path, alert: message }
     end
   end
 
@@ -122,5 +146,20 @@ class ApplicationController < ActionController::Base
       .find { |l| I18n.available_locales.include?(l) }
 
     accepted
+  end
+
+  def current_carrier_context
+    return @current_carrier_context if defined?(@current_carrier_context)
+    return nil unless current_user
+
+    scope = current_user.carriers
+    return @current_carrier_context = nil if scope.none?
+
+    requested_id = params[:carrier_id] || session[:carrier_context_id]
+    carrier = scope.find_by(id: requested_id)
+    carrier ||= scope.first
+
+    session[:carrier_context_id] = carrier.id if carrier
+    @current_carrier_context = carrier
   end
 end

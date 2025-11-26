@@ -20,6 +20,10 @@ he:
   service_ecommerce_1: "איסופים יומיים מהמחסן שלך"
   service_ecommerce_2: "אופטימיזציה חכמה של מסלולי משלוח"
   service_ecommerce_3: "אינטגרציה מלאה עם Shopify ו-WooCommerce"
+  flash_titles:
+    success: "הכל מוכן"
+    alert: "שימו לב"
+    info: "עדכון"
   feature_verified: "שליחים מאומתים"
   feature_tracking: "מעקב בזמן אמת"
   feature_secure: "העברות מאובטחות"

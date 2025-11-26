@@ -3,6 +3,11 @@ require "securerandom"
 class Task < ApplicationRecord
   include AASM
 
+  MAX_FAILED_ATTEMPTS = 2
+  STORAGE_WINDOW = 3.days
+
+  attr_reader :current_failure_note
+
   SNAPSHOT_ATTRIBUTES = %w[
     customer_id carrier_id sender_id messenger_id lawyer_id
     package_type start target failure_code delivery_time status priority
@@ -21,6 +26,9 @@ class Task < ApplicationRecord
   has_one :cost_calc
   has_many :remarks
   has_many :forms
+  has_many :tracking_events, -> { order(occurred_at: :asc) }, dependent: :destroy
+  has_many :proof_uploads, dependent: :destroy
+  has_one :carrier_payout, dependent: :destroy
 
   # Define failure_code enum (positional syntax)
   enum :failure_code, { no_failure: 0, address_not_found: 1, recipient_unavailable: 2, package_damaged: 3, refused_delivery: 4 }, prefix: true
@@ -56,6 +64,18 @@ class Task < ApplicationRecord
     snapshot
   end
 
+  def record_tracking_event!(title:, event_type:, status: nil, description: nil, occurred_at: Time.current, location: nil, metadata: {})
+    tracking_events.create!(
+      title: title,
+      event_type: event_type,
+      status: status,
+      description: description,
+      location: location,
+      occurred_at: occurred_at,
+      metadata: metadata
+    )
+  end
+
   # Optional attributes for notification templates (return nil if not present)
 
   def scheduled_pickup_time
@@ -68,6 +88,10 @@ class Task < ApplicationRecord
 
   def signature_image
     nil  # Optional: Signature image URL or data
+  end
+
+  def proof_uploaded?
+    proof_uploads.exists?
   end
 
   def failure_code_text
@@ -92,7 +116,7 @@ class Task < ApplicationRecord
     end
 
     event :mark_failed do
-      transitions from: [ :pending, :in_transit ], to: :failed, after: :notify_customer_failed
+      transitions from: [ :pending, :in_transit ], to: :failed, after: [ :notify_customer_failed, :handle_failed_attempt ]
     end
 
     event :return_to_sender do
@@ -102,6 +126,19 @@ class Task < ApplicationRecord
     event :retry_delivery do
       transitions from: [ :failed, :returned ], to: :in_transit, after: :notify_customer_retry
     end
+  end
+
+  def mark_failed_with_note!(note, failure_code: nil)
+    self.failure_code = failure_code if failure_code.present?
+    @current_failure_note = note
+    mark_failed!
+  ensure
+    @current_failure_note = nil
+  end
+
+  def begin_retry_after_customer_response!
+    update!(awaiting_customer_response: false, stored_until: nil)
+    retry_delivery! if may_retry_delivery?
   end
 
   # Turbo Streams: broadcast task list updates
@@ -114,6 +151,36 @@ class Task < ApplicationRecord
   before_update :track_status_change
 
   private
+
+  def handle_failed_attempt
+    note = @current_failure_note.presence || last_failure_note
+    attempts = failed_attempts.to_i + 1
+    storage_deadline = attempts <= MAX_FAILED_ATTEMPTS ? STORAGE_WINDOW.from_now : nil
+
+    update!(
+      failed_attempts: attempts,
+      last_failure_note: note,
+      awaiting_customer_response: attempts <= MAX_FAILED_ATTEMPTS,
+      stored_until: storage_deadline
+    )
+
+    record_tracking_event!(
+      title: "Delivery Attempt Failed",
+      event_type: "failed",
+      status: "failed",
+      description: failure_event_description(note, attempts, storage_deadline),
+      metadata: {
+        attempt_number: attempts,
+        stored_until: storage_deadline&.iso8601
+      }.compact
+    )
+
+    handle_post_failure_routing(attempts)
+  rescue => e
+    Rails.logger.error("[Task #{id}] Failed to process failed attempt: #{e.message}")
+  ensure
+    @current_failure_note = nil
+  end
 
   def assign_generated_fields
     self.status ||= :pending
@@ -131,6 +198,26 @@ class Task < ApplicationRecord
   # Track status changes for notifications
   def track_status_change
     @old_status = status_was if status_changed?
+  end
+
+  def failure_event_description(note, attempts, storage_deadline)
+    parts = []
+    parts << note if note.present?
+    if attempts <= MAX_FAILED_ATTEMPTS && storage_deadline.present?
+      parts << "Parcel stored until #{storage_deadline.strftime('%B %d, %Y %I:%M %p %Z')} awaiting customer response"
+    elsif attempts > MAX_FAILED_ATTEMPTS
+      parts << "Exceeded #{MAX_FAILED_ATTEMPTS} failed attempts"
+    end
+    parts << "Attempt #{[attempts, MAX_FAILED_ATTEMPTS].min} of #{MAX_FAILED_ATTEMPTS}" if attempts <= MAX_FAILED_ATTEMPTS
+    description = parts.compact.join(" | ")
+    description.presence || "Delivery attempt unsuccessful"
+  end
+
+  def handle_post_failure_routing(attempts)
+    return unless attempts > MAX_FAILED_ATTEMPTS
+
+    update!(awaiting_customer_response: false, stored_until: nil)
+    return_to_sender! if may_return_to_sender?
   end
 
   # Send notification when task is assigned to messenger

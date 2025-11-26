@@ -1,64 +1,40 @@
 <!-- Locale Switcher Component -->
-<div class="relative inline-block" data-controller="dropdown" data-dropdown-hover-value="true"
-  data-action="mouseenter->dropdown#show mouseleave->dropdown#hide">
-  <!-- Trigger Button: Circle 1 - Just 2 letters -->
+<% locales = [
+  { code: :en, short: "EN", native: "English" },
+  { code: :he, short: "HE", native: "עברית" },
+  { code: :ar, short: "AR", native: "العربية" },
+  { code: :ru, short: "RU", native: "Русский" }
+] %>
+
+<div class="locale-switcher relative inline-block" data-controller="locale-switcher"
+     data-action="mouseenter->locale-switcher#open mouseleave->locale-switcher#close focusin->locale-switcher#open focusout->locale-switcher#handleFocusOut"
+     data-testid="locale-switcher">
   <button type="button"
-          class="flex items-center justify-center rounded-full bg-black/40 border-yellow-400 hover:bg-yellow-400/10 transition-all duration-300"
-          data-action="click->dropdown#toggle"
-    style="width: 48px; height: 48px; border-width: 2px; flex-shrink: 0;">
-    <span class="font-bold text-yellow-400" style="font-size: 14px;"><%= I18n.locale.to_s.upcase %></span>
+          class="locale-switcher__button flex items-center justify-center gap-2 rounded-full border-2 border-yellow-400 bg-black/40 px-4 py-2 text-sm font-semibold text-yellow-400 transition-all duration-300 hover:bg-yellow-400/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+          data-locale-switcher-target="button"
+          data-action="click->locale-switcher#toggle"
+          aria-haspopup="true" aria-expanded="false">
+    <span><%= I18n.locale.to_s.upcase %></span>
+    <svg class="locale-switcher__icon h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
   </button>
 
-  <!-- Dropdown Menu -->
-    <div data-dropdown-target="menu"
-      data-action="mouseenter->dropdown#show mouseleave->dropdown#hide"
-      class="hidden absolute <%= rtl? ? 'left-0' : 'right-0' %> mt-2 w-40 bg-black/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-700 z-50">
-    <div class="py-1">
-      <!-- English -->
-      <% css_classes = "flex items-center gap-3 px-4 py-2 hover:bg-yellow-400/10 transition-colors #{I18n.locale == :en ? 'bg-yellow-400/10' : ''}" %>
-      <%= link_to switch_locale_path(:en), class: css_classes do %>
-        <span class="text-xs font-bold text-yellow-400">EN</span>
-        <div class="flex-1">
-          <div class="text-xs font-medium text-white">English</div>
-        </div>
-        <% if I18n.locale == :en %>
-          <span class="text-yellow-400 text-sm">✓</span>
-        <% end %>
-      <% end %>
-
-      <!-- Arabic -->
-      <% css_classes = "flex items-center gap-3 px-4 py-2 hover:bg-yellow-400/10 transition-colors #{I18n.locale == :ar ? 'bg-yellow-400/10' : ''}" %>
-      <%= link_to switch_locale_path(:ar), class: css_classes do %>
-        <span class="text-xs font-bold text-yellow-400">AR</span>
-        <div class="flex-1">
-          <div class="text-xs font-medium text-white">العربية</div>
-        </div>
-        <% if I18n.locale == :ar %>
-          <span class="text-yellow-400 text-sm">✓</span>
-        <% end %>
-      <% end %>
-
-      <!-- Russian -->
-      <% css_classes = "flex items-center gap-3 px-4 py-2 hover:bg-yellow-400/10 transition-colors #{I18n.locale == :ru ? 'bg-yellow-400/10' : ''}" %>
-      <%= link_to switch_locale_path(:ru), class: css_classes do %>
-        <span class="text-xs font-bold text-yellow-400">RU</span>
-        <div class="flex-1">
-          <div class="text-xs font-medium text-white">Русский</div>
-        </div>
-        <% if I18n.locale == :ru %>
-          <span class="text-yellow-400 text-sm">✓</span>
-        <% end %>
-      <% end %>
-
-      <!-- Hebrew -->
-      <% css_classes = "flex items-center gap-3 px-4 py-2 hover:bg-yellow-400/10 transition-colors #{I18n.locale == :he ? 'bg-yellow-400/10' : ''}" %>
-      <%= link_to switch_locale_path(:he), class: css_classes do %>
-        <span class="text-xs font-bold text-yellow-400">HE</span>
-        <div class="flex-1">
-          <div class="text-xs font-medium text-white">עברית</div>
-        </div>
-        <% if I18n.locale == :he %>
-          <span class="text-yellow-400 text-sm">✓</span>
+  <div class="locale-switcher__menu absolute <%= rtl? ? 'left-0' : 'right-0' %> top-full mt-2 w-48 rounded-xl border border-gray-700 bg-black/95 backdrop-blur-md text-sm shadow-xl z-50"
+       data-locale-switcher-target="menu" role="menu">
+    <div class="py-2">
+      <% locales.each do |locale| %>
+        <% active = I18n.locale == locale[:code] %>
+        <% link_classes = [
+            "flex items-center gap-3 px-4 py-2 transition-all",
+            active ? "bg-yellow-400/10 text-yellow-200" : "text-white hover:bg-yellow-400/10"
+          ].join(' ') %>
+        <%= link_to switch_locale_path(locale[:code]), class: link_classes, role: "menuitem" do %>
+          <span class="text-xs font-bold text-yellow-400"><%= locale[:short] %></span>
+          <span class="flex-1 text-sm"><%= locale[:native] %></span>
+          <% if active %>
+            <span class="text-yellow-400 text-sm">✓</span>
+          <% end %>
         <% end %>
       <% end %>
     </div>
