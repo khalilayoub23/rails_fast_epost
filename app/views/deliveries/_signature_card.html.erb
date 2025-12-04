@@ -1,0 +1,52 @@
+<% user = delivery.public_send(role) %>
+<% data = delivery.signature_details_for(role) %>
+<% signed = data["signed"] %>
+<% role_label = role.to_s.titleize %>
+<% required = data.fetch("required", true) %>
+<% signed_at = data["signed_at"] && Time.zone.parse(data["signed_at"]) rescue nil %>
+<% can_sign = policy(delivery).sign? && current_user == user && !signed %>
+
+<% card_id = dom_id(delivery, "#{role}_signature_card") %>
+<div id="<%= card_id %>" class="rounded-2xl border border-gray-700 bg-gray-900/40 p-5 shadow-xl">
+  <div class="flex items-start justify-between">
+    <div>
+      <p class="text-xs uppercase tracking-widest text-gray-400"><%= role_label %></p>
+      <p class="text-lg font-semibold text-white"><%= user&.full_name || "Unassigned" %></p>
+      <p class="text-xs text-gray-500"><%= user&.email %></p>
+    </div>
+    <%= render "shared/status_badge", status: signed ? "completed" : "pending" %>
+  </div>
+
+  <dl class="mt-4 space-y-3 text-sm text-gray-300">
+    <div class="flex items-center justify-between">
+      <dt class="text-gray-400">Required</dt>
+      <dd class="font-medium"><%= required ? "Yes" : "Optional" %></dd>
+    </div>
+    <div class="flex items-center justify-between">
+      <dt class="text-gray-400">Status</dt>
+      <dd class="font-medium <%= signed ? 'text-green-400' : 'text-amber-300' %>">
+        <%= signed ? "Signed" : "Waiting" %>
+      </dd>
+    </div>
+    <div class="flex items-center justify-between">
+      <dt class="text-gray-400">Last update</dt>
+      <dd class="font-mono text-xs text-gray-400">
+        <%= signed_at ? l(signed_at, format: :short) : "Not yet" %>
+      </dd>
+    </div>
+  </dl>
+
+  <% if can_sign %>
+    <div class="mt-5">
+      <%= link_to t("signatures.cta", default: "Sign now"),
+        new_delivery_signature_path(delivery, role: role),
+        class: "inline-flex w-full items-center justify-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow-lg hover:bg-yellow-300",
+        data: { turbo_frame: "_top" } %>
+      <p class="mt-2 text-center text-xs text-gray-400">Submitting will use your saved signature.</p>
+    </div>
+  <% elsif signed && signed_at %>
+    <p class="mt-5 text-xs text-green-400">Signed on <%= l(signed_at, format: :long) %></p>
+  <% elsif current_user == user %>
+    <p class="mt-5 text-xs text-gray-400">Awaiting preceding roles.</p>
+  <% end %>
+</div>

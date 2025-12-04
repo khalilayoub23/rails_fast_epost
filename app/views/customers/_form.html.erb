@@ -1,0 +1,65 @@
+<div class="space-y-6">
+  <% if customer.errors.any? %>
+    <div class="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+      <p class="font-semibold">
+        <%= t("errors.messages.not_saved", count: customer.errors.count, resource: customer.class.model_name.human) %>
+      </p>
+      <ul class="mt-2 list-disc pl-5 text-xs">
+        <% customer.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: customer, data: { turbo_frame: "_top" }, class: "space-y-6" do |f| %>
+    <div class="grid gap-6 md:grid-cols-2">
+      <div>
+        <%= f.label :name, class: "mb-2 block text-sm font-semibold text-gray-200" %>
+        <%= f.text_field :name, class: "w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0" %>
+      </div>
+      <div>
+        <%= f.label :category, class: "mb-2 block text-sm font-semibold text-gray-200" %>
+        <%= f.select :category,
+              Customer.categories.keys.map { |key| [key.humanize, key] },
+              { include_blank: t("customers.form.category_placeholder", default: "Select category") },
+              class: "w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0" %>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <div>
+        <%= f.label :email, class: "mb-2 block text-sm font-semibold text-gray-200" %>
+        <%= f.email_field :email, class: "w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0" %>
+      </div>
+      <div>
+        <%= f.label :address, class: "mb-2 block text-sm font-semibold text-gray-200" %>
+        <%= f.text_field :address, class: "w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :phones, class: "mb-2 block text-sm font-semibold text-gray-200" %>
+      <% phone_values = Array(customer.phones).presence || [""] %>
+      <div class="space-y-3">
+        <% phone_values.each_with_index do |phone, idx| %>
+          <input type="tel" name="customer[phones][]" value="<%= phone %>"
+                 class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0"
+                 placeholder="<%= t("customers.form.phone_placeholder", default: "Phone ##{idx + 1}") %>">
+        <% end %>
+        <input type="tel" name="customer[phones][]" value=""
+               class="w-full rounded-xl border border-dashed border-gray-600 bg-gray-900/60 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0"
+               placeholder="<%= t("customers.form.phone_add_more", default: "Add another phone") %>">
+      </div>
+      <p class="mt-2 text-xs text-gray-400"><%= t("customers.form.phone_help", default: "Leave extra fields blank to ignore them.") %></p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-4">
+      <%= f.submit t("customers.save", default: customer.persisted? ? "Update customer" : "Create customer"),
+            class: "inline-flex items-center rounded-xl bg-yellow-400 px-6 py-3 text-sm font-semibold text-gray-900 shadow-lg hover:bg-yellow-300" %>
+      <%= link_to t("common.cancel", default: "Cancel"),
+            customer.persisted? ? customer_path(customer) : customers_path,
+            class: "inline-flex items-center rounded-xl border border-gray-700 px-6 py-3 text-sm font-semibold text-gray-200 hover:border-yellow-400 hover:text-yellow-300" %>
+    </div>
+  <% end %>
+</div>

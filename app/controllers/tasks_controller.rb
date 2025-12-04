@@ -47,9 +47,11 @@ class TasksController < ApplicationController
 
     if payment.payment_url.present?
       redirect_to payment.payment_url, allow_other_host: true, status: :see_other
-    else
+    elsif payment.gateway_status_succeeded?
       task = finalize_task_from_payment(payment)
       redirect_to task_path(task), notice: t("tasks.created_after_payment", default: "Task created after successful payment."), status: :see_other
+    else
+      raise TaskPaymentError, t("tasks.payment_checkout_missing", default: "Unable to start Stripe checkout. Please contact an administrator.")
     end
   rescue TaskPaymentError => e
     Rails.logger.warn("[Tasks#create] Payment error: #{e.message}")

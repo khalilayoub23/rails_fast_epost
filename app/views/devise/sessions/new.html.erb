@@ -10,17 +10,19 @@
       <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-2xl">
         <div class="flex items-center justify-between mb-10">
           <%= link_to pages_home_path do %>
-            <%= image_tag "fast epost transparent.png", alt: "FastEpost Logo", class: "h-16" %>
+                      <div class="mb-8 text-center">
+            <%= image_tag "fast_epost_transparent.png", alt: "FastEpost Logo", class: "h-16" %>
+          </div>
           <% end %>
           <span class="inline-flex items-center rounded-full border border-white/20 px-3 py-1 text-xs uppercase tracking-wide text-white/80">
             <%= t('login_badge', default: 'Secure Access') %>
           </span>
         </div>
         <h1 class="text-4xl font-semibold text-white mb-4">
-          <%= t('login_title', default: 'Welcome back to FastEpost') %>
+          <%= t('login_title', default: 'Log In to FastEpost') %>
         </h1>
         <p class="text-gray-300 text-lg mb-8">
-          <%= t('login_subtitle', default: 'Pick the sign-in option that matches how you already work.') %>
+          <%= t('login_subtitle', default: 'Access your dashboard and manage your deliveries.') %>
         </p>
 
         <ul class="space-y-4 mb-10 text-gray-200">
@@ -74,7 +76,7 @@
             </div>
           </div>
 
-          <div>
+          <div data-controller="password-visibility">
             <%= f.label :password, t('password', default: 'Password'), class: "mb-2 block text-sm font-medium text-gray-300" %>
             <div class="relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -84,7 +86,11 @@
               </div>
               <%= f.password_field :password, autocomplete: "current-password",
                   placeholder: t('password_placeholder', default: '••••••••'),
-                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
+                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 pr-10 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40",
+                  data: { password_visibility_target: "input" } %>
+              <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-white focus:outline-none" data-action="click->password-visibility#toggle">
+                <span class="material-icons text-xl" data-password-visibility-target="icon">visibility</span>
+              </button>
             </div>
           </div>
 
@@ -102,7 +108,16 @@
           </div>
 
           <div class="space-y-3">
-            <%= f.submit t('sign_in_button', default: 'Sign In'), class: "w-full rounded-2xl bg-yellow-400 px-4 py-3 text-base font-semibold text-gray-900 transition-all hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500" %>
+            <%= f.submit t('sign_in_button', default: 'Log In'), class: "w-full rounded-2xl bg-yellow-400 px-4 py-3 text-base font-semibold text-gray-900 transition-all hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500" %>
+            
+            <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-gray-700"></div>
+                <span class="flex-shrink-0 mx-4 text-gray-500 text-xs"><%= t('or', default: 'OR') %></span>
+                <div class="flex-grow border-t border-gray-700"></div>
+            </div>
+
+            <%= link_to t('sign_up', default: "Don't have an account? Sign up"), new_registration_path(resource_name), class: "flex w-full items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-base font-semibold text-white transition-all hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20" %>
+
             <p class="text-center text-xs text-gray-500">
               <%= t('login_security_note', default: 'Enterprise SSO is fully compliant with GDPR and ISO27001.') %>
             </p>
@@ -116,12 +131,6 @@
     </div>
 
     <div class="mt-8 text-center">
-      <%= link_to pages_home_path, class: "inline-flex items-center text-sm text-gray-400 hover:text-yellow-400" do %>
-        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        <%= t('back_to_home', default: 'Back to homepage') %>
-      <% end %>
     </div>
   </div>
 </div>

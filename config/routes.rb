@@ -89,6 +89,21 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :deliveries do
+    resources :signatures, only: [ :new, :create ] do
+      collection do
+        get :verify
+        get :status
+      end
+    end
+  end
+
+  resources :users, only: [] do
+    member do
+      patch :update_signature
+    end
+  end
+
   resources :customers do
     collection do
       get :search

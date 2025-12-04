@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   layout :determine_layout
   include TurboNativeSupport
+  include Pundit::Authorization
 
   protect_from_forgery with: :exception
   before_action :set_locale
@@ -9,6 +10,7 @@ class ApplicationController < ActionController::Base
   skip_before_action :authenticate_user!, if: :devise_controller?
   before_action :set_current_attributes
   helper_method :stripe_publishable_key, :current_carrier_context
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   # Add custom data to logs (used by Lograge)
   def append_info_to_payload(payload)
@@ -95,11 +97,35 @@ class ApplicationController < ActionController::Base
     Current.user = current_user
   end
 
+  def user_not_authorized
+    message = t("messages.unauthorized", default: "You are not authorized to perform this action.")
+    respond_to do |format|
+      format.html { redirect_back fallback_location: root_path, alert: message }
+      format.json { render json: { error: message }, status: :forbidden }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.append(
+          "flash_messages",
+          partial: "shared/flash_message",
+          locals: { type: :alert, message: message }
+        ), status: :forbidden
+      end
+      format.any { head :forbidden }
+    end
+  end
+
   # Set locale based on user preference, params, session, or browser
   def set_locale
     locale = extract_locale
     I18n.locale = locale
-    session[:locale] = locale if locale != session[:locale]
+    
+    if locale != session[:locale]
+      session[:locale] = locale
+    end
+    
+    # Update user preference if they explicitly switched via params
+    if params[:locale].present? && current_user && current_user.respond_to?(:preferred_language) && current_user.preferred_language != locale.to_s
+      current_user.update_column(:preferred_language, locale)
+    end
   end
 
   def default_signed_in_path(resource)

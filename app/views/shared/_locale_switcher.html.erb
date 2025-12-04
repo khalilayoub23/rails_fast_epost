@@ -6,34 +6,39 @@
   { code: :ru, short: "RU", native: "Русский" }
 ] %>
 
-<div class="locale-switcher relative inline-block" data-controller="locale-switcher"
-     data-action="mouseenter->locale-switcher#open mouseleave->locale-switcher#close focusin->locale-switcher#open focusout->locale-switcher#handleFocusOut"
-     data-testid="locale-switcher">
+<div class="locale-switcher relative inline-flex items-center"
+  data-controller="locale-switcher"
+  data-locale-switcher-delay-value="220"
+  data-action="mouseenter->locale-switcher#openFromHover mouseleave->locale-switcher#scheduleClose focusin->locale-switcher#openFromFocus"
+  data-locale-switcher-ready="false"
+  data-testid="locale-switcher">
   <button type="button"
-          class="locale-switcher__button flex items-center justify-center gap-2 rounded-full border-2 border-yellow-400 bg-black/40 px-4 py-2 text-sm font-semibold text-yellow-400 transition-all duration-300 hover:bg-yellow-400/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+          class="locale-switcher__button group flex h-10 min-w-[4rem] items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 px-3 transition-all hover:border-yellow-400/50 hover:bg-yellow-400/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/50"
           data-locale-switcher-target="button"
-          data-action="click->locale-switcher#toggle"
-          aria-haspopup="true" aria-expanded="false">
-    <span><%= I18n.locale.to_s.upcase %></span>
-    <svg class="locale-switcher__icon h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          data-action="click->locale-switcher#toggle mouseenter->locale-switcher#openFromHover"
+          aria-haspopup="true" aria-expanded="false"
+          aria-label="Language">
+    <span class="text-sm font-bold text-yellow-400"><%= I18n.locale.to_s.upcase %></span>
+    <svg class="h-4 w-4 text-gray-400 transition-colors group-hover:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
     </svg>
   </button>
 
-  <div class="locale-switcher__menu absolute <%= rtl? ? 'left-0' : 'right-0' %> top-full mt-2 w-48 rounded-xl border border-gray-700 bg-black/95 backdrop-blur-md text-sm shadow-xl z-50"
-       data-locale-switcher-target="menu" role="menu">
-    <div class="py-2">
+  <div class="locale-switcher__menu absolute <%= rtl? ? 'left-0' : 'right-0' %> top-full mt-2 sm:mt-3 w-44 sm:w-48 rounded-3xl bg-zinc-950/95 ring-1 ring-white/10 shadow-[0_30px_55px_rgba(0,0,0,0.7)] z-50"
+       data-locale-switcher-target="menu" role="menu"
+       data-action="mouseenter->locale-switcher#cancelClose mouseleave->locale-switcher#scheduleClose">
+    <div class="py-3 px-2.5">
       <% locales.each do |locale| %>
         <% active = I18n.locale == locale[:code] %>
         <% link_classes = [
-            "flex items-center gap-3 px-4 py-2 transition-all",
-            active ? "bg-yellow-400/10 text-yellow-200" : "text-white hover:bg-yellow-400/10"
+            "flex items-center gap-2 px-3.5 py-1.5 text-[11px] leading-tight rounded-xl transition-all",
+            active ? "bg-yellow-400/15 text-yellow-100 shadow-inner shadow-yellow-400/15" : "text-white/90 hover:bg-yellow-400/5"
           ].join(' ') %>
         <%= link_to switch_locale_path(locale[:code]), class: link_classes, role: "menuitem" do %>
-          <span class="text-xs font-bold text-yellow-400"><%= locale[:short] %></span>
-          <span class="flex-1 text-sm"><%= locale[:native] %></span>
+          <span class="text-[11px] font-bold text-yellow-300 tracking-wide"><%= locale[:short] %></span>
+          <span class="flex-1 text-[11px] font-medium text-white"><%= locale[:native] %></span>
           <% if active %>
-            <span class="text-yellow-400 text-sm">✓</span>
+            <span class="text-yellow-300 text-sm">✓</span>
           <% end %>
         <% end %>
       <% end %>

@@ -72,4 +72,10 @@ class UserTest < ActiveSupport::TestCase
     assert viewer.viewer?
     assert_not manager.viewer?
   end
+
+  test "should default to viewer role and sender type on initialize" do
+    user = User.new
+    assert_equal "viewer", user.role
+    assert_equal "sender", user.user_type
+  end
 end

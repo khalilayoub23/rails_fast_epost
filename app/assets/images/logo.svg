@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Fast Epost Law &amp; E-Com Delivery</title>
+  <desc id="desc">Circular badge logo for Fast Epost featuring a courier carrying a legal brief.</desc>
+  <defs>
+    <linearGradient id="badgeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+  </defs>
+  <circle cx="250" cy="250" r="235" fill="#fff" stroke="#0f172a" stroke-width="8" />
+  <circle cx="250" cy="250" r="190" fill="url(#badgeGradient)" opacity="0.05" />
+  <g font-family="'Poppins', 'Helvetica Neue', Arial, sans-serif" font-weight="600" font-size="30" letter-spacing="6" fill="#0f172a">
+    <text text-anchor="middle">
+      <textPath href="#arcTop" startOffset="50%">FASTEPOST</textPath>
+    </text>
+    <text text-anchor="middle" font-size="22" letter-spacing="4">
+      <textPath href="#arcBottom" startOffset="50%">LAW &amp; E-COM DELIVERY</textPath>
+    </text>
+  </g>
+  <path id="arcTop" d="M 120 170 A 150 150 0 0 1 380 170" fill="none" />
+  <path id="arcBottom" d="M 380 330 A 150 150 0 0 1 120 330" fill="none" />
+  <g id="runner" transform="translate(170 185)">
+    <path d="M60 30a20 20 0 1 1 40 0a20 20 0 1 1 -40 0" fill="#0f172a" />
+    <path d="M45 75c30-25 70-25 95 0l-15 15c-20-15-45-15-65 0z" fill="#fecf32" />
+    <path d="M30 120c25-35 50-55 85-55c15 0 35 7 45 15l-15 25c-10-6-25-10-33-10c-18 0-32 10-50 32z" fill="#0f172a" />
+    <path d="M90 145l-35 55c-6 10-19 13-29 7c-10-6-14-19-7-29l35-55z" fill="#0f172a" />
+    <path d="M145 115l35-25c10-7 24-4 30 7c6 11 3 24-7 30l-35 25z" fill="#0f172a" />
+    <circle cx="105" cy="90" r="18" fill="#fecf32" stroke="#0f172a" stroke-width="5" />
+    <text x="105" y="97" font-size="18" text-anchor="middle" font-weight="700" fill="#0f172a">⚖︎</text>
+  </g>
+  <g font-family="'Poppins', 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="600" letter-spacing="8" fill="#0f172a">
+    <text x="250" y="450" text-anchor="middle">EST. 2019</text>
+  </g>
+  <g stroke="#0f172a" stroke-width="8" stroke-linecap="round" opacity="0.7">
+    <line x1="160" y1="250" x2="220" y2="250" />
+    <line x1="150" y1="275" x2="210" y2="275" />
+    <line x1="170" y1="225" x2="230" y2="225" />
+  </g>
+</svg>

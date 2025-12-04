@@ -8,83 +8,18 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     
-    <!-- Google Fonts for Handwriting -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap&v=2" rel="stylesheet">
-
-    <style>
-      .public-nav,
-      .public-nav * {
-        font-family: 'Inter', 'Heebo', 'Rubik', 'Noto Sans Arabic', 'Noto Sans', sans-serif;
-      }
-
-      .public-nav__bar {
-        min-height: 80px;
-      }
-
-      .public-nav__link {
-        font-size: 0.95rem;
-        line-height: 1.25rem;
-        padding: 0.25rem 0;
-        display: inline-flex;
-        align-items: center;
-      }
-
-      body[dir="rtl"] .public-nav__link {
-        font-size: 0.92rem;
-        letter-spacing: 0.01em;
-      }
-
-      .public-nav__actions a,
-      .public-nav__actions button {
-        min-width: 7rem;
-        height: 44px;
-        border-radius: 9999px;
-      }
-
-      .public-nav__actions button {
-        border: none;
-      }
-      
-      @keyframes float-logo {
-        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-        25% { transform: translateY(-6px) rotate(-1deg) scale(1.02); }
-        50% { transform: translateY(-3px) rotate(1deg) scale(1.04); }
-        75% { transform: translateY(-8px) rotate(-0.5deg) scale(1.02); }
-      }
-
-      @keyframes pulse-glow {
-        0%, 100% { 
-          box-shadow: 0 8px 20px rgba(251, 191, 36, 0.5), 0 0 30px rgba(251, 191, 36, 0.3);
-        }
-        50% { 
-          box-shadow: 0 12px 30px rgba(251, 191, 36, 0.7), 0 0 40px rgba(251, 191, 36, 0.5);
-        }
-      }
-
-      .logo-animated {
-        animation: float-logo 4s ease-in-out infinite, pulse-glow 3s ease-in-out infinite;
-      }
-      
-      .handwriting-font {
-        font-family: 'Tangerine', cursive !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.1em !important;
-        font-size: 1.5rem !important;
-        line-height: 1 !important;
-      }
-      
-      /* Kaushan Script is self-hosted and scoped via .brand-script only */
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "material-icons", "data-turbo-track": "reload" %>
     <% if rtl? %>
       <%= stylesheet_link_tag "rtl", "data-turbo-track": "reload" %>
     <% end %>
     <%= javascript_importmap_tags %>
-    <script>
+    <script nonce="<%= content_security_policy_nonce %>">
       (function() {
         try {
           var ls = localStorage.getItem('ui.dark');
@@ -106,124 +41,62 @@
     </script>
   </head>
 
-  <body class="bg-black text-white">
-    <!-- Public Navigation -->
-    <% nav_link_classes = "public-nav__link text-gray-300 hover:text-yellow-400 transition-colors font-medium whitespace-nowrap" %>
-    <% auth_link_classes = "public-nav__actions inline-flex items-center justify-center text-sm font-semibold" %>
-    <% primary_btn_classes = "public-nav__actions inline-flex items-center justify-center font-bold shadow-lg hover:shadow-yellow-400/50 transition-all" %>
-    <nav class="public-nav fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800" dir="<%= text_direction %>">
+  <body class="public-layout">
+    <% nav_items = [
+      { label: t("nav.services"), path: pages_services_path },
+      { label: t("nav.track"), path: pages_track_parcel_path },
+      { label: t("nav.contact"), path: pages_contact_path },
+      { label: t("nav.law_firms"), path: pages_law_firms_path },
+      { label: t("nav.ecommerce"), path: pages_ecommerce_path },
+      { label: t("nav.privacy_policy"), path: pages_privacy_policy_path }
+    ] %>
+
+    <nav class="landing-nav" dir="<%= text_direction %>" data-testid="landing-nav">
       <div class="container mx-auto px-4">
-        <div class="public-nav__bar flex items-center justify-between gap-4 <%= rtl? ? 'flex-row-reverse' : '' %>">
-          <!-- Logo - Compact -->
-          <div class="flex items-center flex-shrink-0">
-            <%= link_to pages_home_path, class: "group flex items-center rounded-lg hover:bg-white/5 transition-all duration-300 px-2 py-1 gap-2" do %>
-              <!-- Icon with yellow background -->
-              <div class="relative rounded-xl flex items-center justify-center bg-yellow-400 shadow-lg shadow-yellow-400/50 group-hover:shadow-yellow-400/70 transition-all duration-300 logo-animated w-12 h-12">
-                <%= image_tag 'fast epost transparent.png', alt: 'Fast Epost', class: 'object-contain w-10 h-10', style: 'filter: brightness(0) saturate(100%) contrast(2);' %>
+        <div class="landing-nav__inner">
+          <div class="landing-nav__section">
+            <%= link_to pages_home_path, class: "landing-nav__brand", aria: { label: "Fast Epost" } do %>
+              <%= image_tag "fast_epost_transparent.png", class: "h-12 w-auto", alt: "Fast Epost" %>
+            <% end %>
+          </div>
+
+          <ul class="landing-nav__menu" role="menubar" data-testid="landing-nav-menu">
+            <% nav_items.each do |item| %>
+              <% active = current_page?(item[:path]) %>
+              <li>
+                <%= link_to item[:label], item[:path], class: ["landing-nav__link", (active ? "is-active" : nil)].compact.join(' '), role: "menuitem" %>
+              </li>
+            <% end %>
+          </ul>
+
+          <div class="landing-nav__section">
+            <div class="landing-nav__controls">
+              <div class="landing-nav__locale">
+                <%= render "shared/locale_switcher" %>
               </div>
-              <!-- Brand Name -->
-              <div class="hidden lg:flex flex-col">
-                <span class="text-white font-black text-lg leading-none group-hover:text-yellow-400 transition-colors duration-300 drop-shadow-lg whitespace-nowrap">Fast Epost</span>
-                <span class="text-yellow-400 text-xs leading-none mt-0.5 drop-shadow-md handwriting-font whitespace-nowrap">EXPRESS DELIVERY</span>
-              </div>
-            <% end %>
-          </div>
-          
-          <!-- Desktop Navigation - Centered -->
-          <div class="hidden md:flex items-center gap-6 flex-1 justify-center <%= rtl? ? 'flex-row-reverse' : '' %>">
-            <%= link_to pages_privacy_policy_path, class: nav_link_classes do %>
-              <%= t("nav.privacy_policy") %>
-            <% end %>
-            <%= link_to pages_services_path, class: nav_link_classes do %>
-              <%= t("nav.services") %>
-            <% end %>
-            <%= link_to pages_track_parcel_path, class: nav_link_classes do %>
-              <%= t("nav.track") %>
-            <% end %>
-            <%= link_to pages_law_firms_path, class: nav_link_classes do %>
-              <%= t("nav.law_firms") %>
-            <% end %>
-            <%= link_to pages_ecommerce_path, class: nav_link_classes do %>
-              <%= t("nav.ecommerce") %>
-            <% end %>
-          </div>
 
-          <!-- Language & Auth Buttons -->
-          <div class="public-nav__actions flex items-center gap-3 flex-shrink-0 <%= rtl? ? 'flex-row-reverse' : '' %>">
-            <!-- Server-side Locale Switcher -->
-            <%= render "shared/locale_switcher" %>
-
-            <% if user_signed_in? %>
-              <%= link_to t("nav.dashboard"), root_path, class: auth_link_classes + " text-white hover:text-yellow-400" %>
-              <%= button_to t("nav.logout"), destroy_user_session_path,
-                    method: :delete,
-                    form: { class: "inline" },
-                    class: primary_btn_classes + " bg-yellow-400 text-black hover:bg-yellow-500",
-                    data: { turbo: false } %>
-            <% else %>
-              <%= link_to t("nav.login"), new_user_session_path, class: auth_link_classes + " text-white hover:text-yellow-400" %>
-              <%= link_to t("nav.get_started"), new_user_registration_path, class: primary_btn_classes + " bg-yellow-400 text-black hover:bg-yellow-500" %>
-            <% end %>
-          </div>
-
-          <!-- Mobile Menu Button -->
-          <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors" aria-label="Toggle menu">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Mobile Navigation Menu -->
-      <div id="mobile-menu" class="hidden bg-black/95 backdrop-blur-md border-t border-gray-800" dir="<%= text_direction %>">
-        <div class="container mx-auto px-4 py-6 space-y-4">
-        <%= link_to pages_privacy_policy_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
-            <span data-i18n="nav_privacy_policy"><%= t("nav.privacy_policy") %></span>
-          <% end %>
-          <%= link_to pages_services_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
-            <span data-i18n="nav_services"><%= t("nav.services") %></span>
-          <% end %>
-          <%= link_to pages_track_parcel_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
-            <span data-i18n="nav_track"><%= t("nav.track") %></span>
-          <% end %>
-          <%= link_to pages_law_firms_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
-            <span data-i18n="nav_law_firms"><%= t("nav.law_firms") %></span>
-          <% end %>
-          <%= link_to pages_ecommerce_path, class: "block text-gray-300 hover:text-yellow-400 transition-colors font-medium py-3 px-4 rounded-lg hover:bg-white/5" do %>
-            <span data-i18n="nav_ecommerce"><%= t("nav.ecommerce") %></span>
-          <% end %>          <div class="pt-4 border-t border-gray-800 space-y-3">
-            <!-- Simple Mobile Locale Links -->
-            <div class="grid grid-cols-2 gap-3">
-              <% [
-                { label: "🇺🇸 English", code: :en },
-                { label: "🇮🇱 עברית", code: :he },
-                { label: "🇸🇦 العربية", code: :ar },
-                { label: "🇷🇺 Русский", code: :ru }
-              ].each do |locale|
-              %>
-                <%= link_to locale[:label], switch_locale_path(locale[:code]), class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
+              <% if user_signed_in? %>
+                <%= link_to t("nav.dashboard"), dashboard_path, class: "flex h-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 px-6 text-sm font-bold text-white transition-all hover:bg-white/10 hover:border-white/20" %>
+                <%= button_to t("nav.logout"), destroy_user_session_path,
+                      method: :delete,
+                      form: { class: "inline" },
+                      class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-gray-900 transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20",
+                      data: { turbo: false } %>
+              <% else %>
+                <% if controller_name == 'sessions' && (action_name == 'new' || action_name == 'create') %>
+                  <%= link_to t("nav.signup", default: "Sign Up"), new_user_registration_path, class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-gray-900 transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20", data: { turbo: false } %>
+                <% else %>
+                  <%= link_to t("nav.login", default: "Login"), new_user_session_path, class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-gray-900 transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20", data: { turbo: false } %>
+                <% end %>
               <% end %>
             </div>
-
-            <% if user_signed_in? %>
-              <%= link_to t("nav.dashboard"), root_path, class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
-              <%= button_to t("nav.logout"), destroy_user_session_path,
-                    method: :delete,
-                    form: { class: "w-full" },
-                    class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all",
-                    data: { turbo: false } %>
-            <% else %>
-              <%= link_to t("nav.login"), new_user_session_path, class: "block w-full text-center px-4 py-3 text-white hover:text-yellow-400 rounded-lg hover:bg-white/5 transition-colors font-medium" %>
-              <%= link_to t("nav.get_started"), new_user_registration_path, class: "block w-full text-center px-4 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>
-            <% end %>
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="pt-20">
+    <main class="pt-20 md:pt-24">
       <div class="container mx-auto px-4">
         <%= render "shared/flash" %>
       </div>
@@ -231,19 +104,31 @@
     </main>
 
     <%= render "shared/footer" %>
+    <%= render "shared/cookie_consent" %>
 
-    <!-- Mobile Menu Toggle Script -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        if (mobileMenuButton && mobileMenu) {
-          mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-          });
+    <!-- Navigation Interactions -->
+    <script nonce="<%= content_security_policy_nonce %>">
+      (function() {
+        function initLandingNav() {
+          var nav = document.querySelector('.landing-nav');
+          if (!nav) { return; }
+
+          function setShadow() {
+            nav.classList.toggle('is-scrolled', window.scrollY > 10);
+          }
+
+          setShadow();
+          window.addEventListener('scroll', setShadow, { passive: true });
         }
-      });
+
+        document.addEventListener('turbo:load', initLandingNav);
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initLandingNav);
+        } else {
+          initLandingNav();
+        }
+      })();
     </script>
   </body>
 </html>

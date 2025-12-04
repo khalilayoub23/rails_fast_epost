@@ -55,6 +55,84 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_match "tasks/payment/success", captured_metadata["success_url"]
   end
 
+  test "POST /tasks errors when checkout URL is missing" do
+    payment = Payment.create!(
+      provider: "stripe",
+      amount_cents: 2000,
+      currency: "USD",
+      payable: @customer,
+      category: :service_fee,
+      payment_type: :per_task,
+      gateway_status: :pending,
+      metadata: {}
+    )
+
+    Gateways::StripeGateway.stub :create_payment!, payment do
+      assert_no_changes -> { Task.count } do
+        post tasks_path, params: {
+          task: {
+            customer_id: @customer.id,
+            carrier_id: @carrier.id,
+            package_type: "Docs",
+            start: "A",
+            target: "B",
+            delivery_time: 2.days.from_now.iso8601,
+            status: :pending
+          },
+          payment: { amount: "20", currency: "USD" }
+        }
+      end
+    end
+
+    assert_response :unprocessable_entity
+    assert_equal I18n.t("tasks.payment_checkout_missing", default: "Unable to start Stripe checkout. Please contact an administrator."), flash[:alert]
+  end
+
+  test "POST /tasks materializes immediately when payment already succeeded" do
+    snapshot = {
+      "customer_id" => @customer.id,
+      "carrier_id" => @carrier.id,
+      "package_type" => "Express Docs",
+      "start" => "Tel Aviv",
+      "target" => "Haifa",
+      "delivery_time" => 1.day.from_now.iso8601,
+      "status" => Task.statuses[:pending]
+    }
+
+    payment = Payment.create!(
+      provider: "stripe",
+      amount_cents: 4000,
+      currency: "USD",
+      payable: @customer,
+      category: :service_fee,
+      payment_type: :per_task,
+      gateway_status: :succeeded,
+      metadata: { "task_snapshot" => snapshot }
+    )
+
+    Gateways::StripeGateway.stub :create_payment!, payment do
+      assert_difference -> { Task.count }, +1 do
+        post tasks_path, params: {
+          task: {
+            customer_id: @customer.id,
+            carrier_id: @carrier.id,
+            package_type: "Express Docs",
+            start: "Tel Aviv",
+            target: "Haifa",
+            delivery_time: 1.day.from_now.iso8601,
+            status: :pending
+          },
+          payment: { amount: "40", currency: "USD" }
+        }
+      end
+    end
+
+    task = Task.order(:created_at).last
+    assert_redirected_to task_path(task)
+    assert_equal task.id, payment.reload.task_id
+    assert_equal "Haifa", task.target
+  end
+
   test "GET /tasks/payment/success persists task when payment succeeded" do
     snapshot = {
       "customer_id" => @customer.id,

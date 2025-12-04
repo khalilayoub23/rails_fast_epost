@@ -1,0 +1,169 @@
+<article dir="rtl" lang="he" class="delivery-form">
+  <style>
+    .delivery-form {
+      font-family: 'Assistant', 'Helvetica Neue', Arial, sans-serif;
+      width: 100%;
+      max-width: 21cm;
+      margin: 0 auto;
+      padding: 2cm;
+      box-sizing: border-box;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      color: #111827;
+    }
+
+    .delivery-form__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .delivery-form__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .delivery-form__barcode {
+      text-align: center;
+    }
+
+    .delivery-form__barcode img {
+      width: 120px;
+      height: 120px;
+    }
+
+    .delivery-form__section {
+      border: 1px solid #e5e7eb;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .delivery-form__section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .delivery-form__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem 1.5rem;
+    }
+
+    .delivery-form__label {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 0.2rem;
+    }
+
+    .delivery-form__value {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .delivery-form__signatures {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .delivery-form__signature-box {
+      border: 1px dashed #9ca3af;
+      border-radius: 0.5rem;
+      width: 180px;
+      height: 120px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .delivery-form__signature-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .delivery-form__footer {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+  </style>
+
+  <header class="delivery-form__header">
+    <div>
+      <p class="delivery-form__title">מסירת מסמך משפטי</p>
+      <p>מספר תיק: <strong><%= delivery.case_number %></strong></p>
+      <p>תאריך יצירה: <strong><%= formatted_created_at %></strong></p>
+    </div>
+    <div class="delivery-form__barcode">
+      <img src="<%= qr_code_data_uri %>" alt="ברקוד משלוח" />
+      <p>DEL-<%= delivery.id || "___" %>-<%= delivery.case_number %></p>
+    </div>
+  </header>
+
+  <section class="delivery-form__section">
+    <p class="delivery-form__section-title">פרטי מסירה</p>
+    <div class="delivery-form__grid">
+      <div>
+        <p class="delivery-form__label">שולח / Sender</p>
+        <p class="delivery-form__value"><%= sender.full_name || sender.email %></p>
+      </div>
+      <div>
+        <p class="delivery-form__label">שליח / Courier</p>
+        <p class="delivery-form__value"><%= courier.full_name || courier.email %></p>
+      </div>
+      <div>
+        <p class="delivery-form__label">מקבל / Recipient</p>
+        <p class="delivery-form__value"><%= recipient.full_name || recipient.email %></p>
+      </div>
+      <div>
+        <p class="delivery-form__label">טלפון שליח</p>
+        <p class="delivery-form__value"><%= courier.phone || "-" %></p>
+      </div>
+      <div>
+        <p class="delivery-form__label">טלפון מקבל</p>
+        <p class="delivery-form__value"><%= recipient.phone || "-" %></p>
+      </div>
+      <div>
+        <p class="delivery-form__label">כתובת מקבל</p>
+        <p class="delivery-form__value"><%= recipient.address || "-" %></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="delivery-form__section">
+    <p class="delivery-form__section-title">הערות</p>
+    <p><%= delivery.notes.presence || "אין הערות נוספות" %></p>
+  </section>
+
+  <section class="delivery-form__section delivery-form__signatures">
+    <div class="delivery-form__signature-box">
+      <p class="delivery-form__signature-label">חתימת שולח / Sender</p>
+      <span>____________________</span>
+    </div>
+    <div class="delivery-form__signature-box">
+      <p class="delivery-form__signature-label">חתימת שליח / Courier</p>
+      <span>____________________</span>
+    </div>
+    <div class="delivery-form__signature-box">
+      <p class="delivery-form__signature-label">חתימת מקבל / Recipient</p>
+      <span>____________________</span>
+    </div>
+  </section>
+
+  <footer class="delivery-form__footer">
+    <p>
+      המסמך נוצר באופן דיגיטלי ונושא ברקוד אימות ייחודי. כל שינוי במסמך לאחר חתימה יזהה על-ידי המערכת
+      ויהווה פגיעה בתוקף המסירה. חתימות נשמרות במאגר מאובטח בהתאם לתקנות הגנת הפרטיות בישראל.
+    </p>
+  </footer>
+</article>

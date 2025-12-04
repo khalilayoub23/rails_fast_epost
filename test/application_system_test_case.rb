@@ -7,7 +7,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   include Warden::Test::Helpers
 
-  DRIVER = ENV.fetch("SYSTEM_TEST_DRIVER", "selenium_firefox_headless").to_sym
+  DRIVER = ENV.fetch("SYSTEM_TEST_DRIVER", "selenium_chrome_headless").to_sym
   DRIVER_MAP = {
     selenium: :chrome,
     selenium_chrome: :chrome,
@@ -60,6 +60,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       options.add_preference("dom.webnotifications.enabled", false)
       options.add_preference("media.autoplay.default", 0)
       options.add_preference("intl.accept_languages", "en-US,en")
+      options.add_preference("dom.importMaps.enabled", true)
 
       firefox_binary = ENV["FIREFOX_BIN"] || "/usr/local/bin/firefox"
       options.binary = firefox_binary if firefox_binary && File.exist?(firefox_binary)

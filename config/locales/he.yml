@@ -43,7 +43,7 @@ he:
   privacy_content: "ב-Fast Epost, אנו מחויבים להגן על פרטיותכם ולהבטיח את אבטחת המידע האישי שלכם. אנו אוספים ומשתמשים בנתונים שלכם אך ורק למטרת מתן שירותי המשלוחים שלנו. המידע שלכם לעולם לא משותף עם צדדים שלישיים ללא הסכמתכם."
   privacy_header_title: "מדיניות פרטיות - FastPost"
   privacy_header_subtitle: "FastPost Privacy Policy"
-  privacy_section_title: "מדיניות פרטיות (עברית)"
+  privacy_section_title: "מדיניות פרטיות"
   privacy_paragraph_1: "אנו ב-FastPost מכבדים את פרטיות המשתמשים ומתחייבים להגן על המידע האישי שלך. נתונים שנאספים כוללים שם, מספר טלפון, כתובת למשלוח, חתימה דיגיטלית ותמונות מסירה (אם יש)."
   privacy_paragraph_2: "המידע נשמר לצורכי מעקב, שיפור השירות וציות לחוק. הנתונים לא מועברים לגורמים חיצוניים ללא הסכמת המשתמש אלא אם כן נדרש על פי חוק."
   privacy_paragraph_3: "ניתן לפנות אלינו בכל עת להסרת נתונים, בירור או עיון במידע שנשמר."
@@ -128,9 +128,11 @@ he:
     privacy_policy: "מדיניות פרטיות"
     services: "שירותים"
     track: "מעקב חבילה"
+    contact: "צור קשר"
     law_firms: "משרדי עורכי דין"
     ecommerce: "מסחר אלקטרוני"
     login: "התחברות"
+    signup: "הרשמה"
     get_started: "התחל עכשיו"
 
   # Services Page - עמוד שירותים
@@ -266,6 +268,7 @@ he:
     create_shipment_desc: "מוכן לשלוח חבילה?"
     go_to_dashboard: "עבור ללוח הבקרה"
     sign_up_now: "הירשם עכשיו"
+    payment_checkout_missing: "לא ניתן לפתוח תשלום Stripe. אנא פנה למנהל."
 
   # Common - כללי
   common:
@@ -312,6 +315,10 @@ he:
     updated_successfully: "המשימה עודכנה בהצלחה!"
     deleted_successfully: "המשימה נמחקה בהצלחה!"
     status_updated: "סטטוס המשימה עודכן בהצלחה!"
+    payment_checkout_missing: "לא ניתן לפתוח תשלום Stripe. אנא פנה למנהל."
+
+  deliveries:
+    upload_pdf_cta: "העלה PDF לבית המשפט"
     
   # Customers - לקוחות
   customers:
@@ -388,7 +395,7 @@ he:
   remember_me: "זכור אותי"
   forgot_password: "שכחת סיסמה?"
   sign_in_button: "התחבר"
-  create_account_button: "צור חשבון"
+  create_account_button: "הרשמה"
   or: "או"
   back_to_home: "חזרה לעמוד הבית"
   log_in: "כבר יש לך חשבון? התחבר"

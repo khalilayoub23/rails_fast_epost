@@ -1,0 +1,11 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-2">
+    <p class="text-sm uppercase tracking-wide text-gray-400">Create Delivery</p>
+    <h1 class="text-3xl font-semibold text-white">New court delivery</h1>
+    <p class="text-sm text-gray-400">Define sender, courier, recipient, and upload optional court PDFs for barcode stamping.</p>
+  </div>
+
+  <div class="rounded-2xl border border-gray-700 bg-gray-800/70 p-6 shadow-2xl">
+    <%= render "form", delivery: @delivery %>
+  </div>
+</div>

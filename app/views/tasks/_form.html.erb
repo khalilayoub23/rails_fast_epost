@@ -4,8 +4,9 @@
 <% customers_collection = local_assigns.fetch(:customers) { @customer ? [@customer] : Customer.order(:name) } %>
 <% task_customer = @customer || task.customer %>
 <% payment_details = local_assigns.fetch(:payment_details) { @payment_details || { "currency" => "USD" } } %>
+<% form_model = task.new_record? && task_customer ? [task_customer, task] : task %>
 
-<%= form_with model: (task_customer ? [task_customer, task] : task), data: { turbo_frame: "_top" }, class: "space-y-6" do |f| %>
+<%= form_with model: form_model, data: { turbo_frame: "_top" }, class: "space-y-6" do |f| %>
   <% unless task_customer %>
     <div>
       <%= f.label :customer_id, t("tasks.customer"), class: "mb-2 block text-sm font-medium text-gray-200" %>

@@ -75,4 +75,19 @@
       </div>
     </div>
   </div>
+
+  <% if policy(Delivery).create? %>
+    <div class="rounded-sm border border-yellow-400/40 bg-yellow-50 px-5 py-4 shadow-lg">
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p class="text-sm font-semibold text-yellow-600">Need to attach court PDFs?</p>
+          <p class="text-sm text-gray-700">Launch the delivery workspace to upload stamped PDFs, inject barcodes, and route immutable signatures before this task goes out.</p>
+        </div>
+        <%= link_to t("deliveries.upload_pdf_cta", default: "Upload Court PDF"),
+          new_delivery_path,
+          class: "inline-flex items-center justify-center rounded-lg bg-yellow-500 px-4 py-2 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-400",
+          data: { turbo_frame: "_top" } %>
+      </div>
+    </div>
+  <% end %>
 </div>

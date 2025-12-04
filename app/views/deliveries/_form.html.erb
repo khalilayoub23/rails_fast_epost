@@ -1,0 +1,135 @@
+<%= form_with(model: delivery,
+              data: {
+                turbo_frame: "_top",
+                controller: "delivery-form",
+                action: "submit->delivery-form#submit"
+              },
+              class: "space-y-6") do |form| %>
+  <% if delivery.errors.any? %>
+    <div class="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+      <p class="font-semibold"><%= t("errors.messages.not_saved", default: "Could not save delivery") %></p>
+      <ul class="mt-2 list-disc pl-5 text-xs">
+        <% delivery.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-6 md:grid-cols-2">
+    <div>
+      <%= form.label :case_number, class: "text-sm font-medium text-gray-200" %>
+      <%= form.text_field :case_number,
+          class: form_input_classes(delivery, :case_number, base_classes: form_input_base_classes),
+          placeholder: "e.g., CASE-2024-01",
+          data: {
+            delivery_form_target: "field",
+            delivery_form_field_name: "case_number",
+            delivery_form_default_class: form_input_base_classes,
+            delivery_form_optional: "true"
+          } %>
+      <%= form_error_message(delivery, :case_number) %>
+    </div>
+    <div>
+      <%= form.label :notes, class: "text-sm font-medium text-gray-200" %>
+      <%= form.text_field :notes,
+          class: form_input_classes(delivery, :notes, base_classes: form_input_base_classes),
+          placeholder: "Optional courier instructions",
+          data: {
+            delivery_form_target: "field",
+            delivery_form_field_name: "notes",
+            delivery_form_default_class: form_input_base_classes,
+            delivery_form_optional: "true"
+          } %>
+      <%= form_error_message(delivery, :notes) %>
+    </div>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-3">
+    <div>
+      <%= form.label :sender_id, "Sender / Lawyer", class: "text-sm font-medium text-gray-200" %>
+      <%= form.collection_select :sender_id, @sender_options, :id, :full_name,
+            { prompt: "Choose sender" },
+            {
+              class: form_input_classes(delivery, :sender_id, base_classes: form_input_base_classes, errors_for: :sender),
+              required: true,
+              data: {
+                delivery_form_target: "field",
+                delivery_form_field_name: "sender",
+                delivery_form_default_class: form_input_base_classes,
+                delivery_form_required: "true",
+                delivery_form_required_message: t("deliveries.validation.sender_required", default: "Please choose a sender."),
+                delivery_form_unique_group: "participant",
+                delivery_form_unique_message: t("deliveries.validation.participant_unique", default: "Sender, courier, and recipient must be different people."),
+                delivery_form_role: "sender"
+              }
+            } %>
+      <%= form_error_message(delivery, :sender_id, errors_for: :sender) %>
+    </div>
+    <div>
+      <%= form.label :courier_id, class: "text-sm font-medium text-gray-200" %>
+      <%= form.collection_select :courier_id, @courier_options, :id, :full_name,
+            { prompt: "Choose courier" },
+            {
+              class: form_input_classes(delivery, :courier_id, base_classes: form_input_base_classes, errors_for: :courier),
+              required: true,
+              data: {
+                delivery_form_target: "field",
+                delivery_form_field_name: "courier",
+                delivery_form_default_class: form_input_base_classes,
+                delivery_form_required: "true",
+                delivery_form_required_message: t("deliveries.validation.courier_required", default: "Please choose a courier."),
+                delivery_form_unique_group: "participant",
+                delivery_form_unique_message: t("deliveries.validation.participant_unique", default: "Sender, courier, and recipient must be different people."),
+                delivery_form_role: "courier"
+              }
+            } %>
+      <%= form_error_message(delivery, :courier_id, errors_for: :courier) %>
+    </div>
+    <div>
+      <%= form.label :recipient_id, class: "text-sm font-medium text-gray-200" %>
+      <%= form.collection_select :recipient_id, @recipient_options, :id, :full_name,
+            { prompt: "Choose recipient" },
+            {
+              class: form_input_classes(delivery, :recipient_id, base_classes: form_input_base_classes, errors_for: :recipient),
+              required: true,
+              data: {
+                delivery_form_target: "field",
+                delivery_form_field_name: "recipient",
+                delivery_form_default_class: form_input_base_classes,
+                delivery_form_required: "true",
+                delivery_form_required_message: t("deliveries.validation.recipient_required", default: "Please choose a recipient."),
+                delivery_form_unique_group: "participant",
+                delivery_form_unique_message: t("deliveries.validation.participant_unique", default: "Sender, courier, and recipient must be different people."),
+                delivery_form_role: "recipient"
+              }
+            } %>
+      <%= form_error_message(delivery, :recipient_id, errors_for: :recipient) %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :original_court_pdf, class: "text-sm font-medium text-gray-200" %>
+    <%= form.file_field :original_court_pdf, direct_upload: true,
+          class: form_input_classes(delivery, :original_court_pdf, base_classes: "mt-2 block w-full cursor-pointer rounded-xl border border-dashed border-gray-600 bg-gray-900/60 px-3 py-10 text-center text-sm text-gray-400 hover:border-yellow-400"),
+          data: {
+            delivery_form_target: "field",
+            delivery_form_field_name: "original_court_pdf",
+            delivery_form_default_class: "mt-2 block w-full cursor-pointer rounded-xl border border-dashed border-gray-600 bg-gray-900/60 px-3 py-10 text-center text-sm text-gray-400 hover:border-yellow-400",
+            delivery_form_optional: "true"
+          } %>
+    <%= form_error_message(delivery, :original_court_pdf) %>
+    <p class="mt-2 text-xs text-gray-500">Optional: upload the stamped court PDF to inject barcodes before signature routing.</p>
+  </div>
+
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <%= link_to t("deliveries.back", default: "Cancel"), deliveries_path,
+      class: "inline-flex items-center justify-center rounded-xl border border-gray-600 px-4 py-2 text-sm font-medium text-gray-300 hover:border-yellow-400 hover:text-yellow-300" %>
+    <%= form.submit t("deliveries.save", default: delivery.new_record? ? "Create Delivery" : "Update Delivery"),
+      class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-2 text-sm font-semibold text-gray-900 shadow-lg transition hover:bg-yellow-300 opacity-60 cursor-not-allowed",
+      disabled: true,
+      data: {
+        delivery_form_target: "submit"
+      } %>
+  </div>
+<% end %>

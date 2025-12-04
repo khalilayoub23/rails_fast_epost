@@ -1,0 +1,6 @@
+שלום <%= @user.full_name || @user.email %>,
+
+נדרש ממך לחתום על מסירת מסמך עבור תיק <%= @delivery.case_number %> בתור <%= @role %>.
+גש לקישור: <%= delivery_url(@delivery) %>
+
+צוות Fast Epost

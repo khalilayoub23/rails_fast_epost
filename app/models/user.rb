@@ -15,6 +15,12 @@ class User < ApplicationRecord
   has_many :carrier_memberships, dependent: :destroy
   has_many :carriers, through: :carrier_memberships
 
+  has_many :sent_deliveries, class_name: "Delivery", foreign_key: :sender_id, inverse_of: :sender
+  has_many :received_deliveries, class_name: "Delivery", foreign_key: :recipient_id, inverse_of: :recipient
+  has_many :courier_deliveries, class_name: "Delivery", foreign_key: :courier_id, inverse_of: :courier
+
+  has_one_attached :saved_signature
+
   # Role-based access control
   enum :role, {
     viewer: "viewer",
@@ -23,8 +29,23 @@ class User < ApplicationRecord
     admin: "admin"
   }, prefix: true
 
+  enum :user_type, {
+    sender: 0,
+    lawyer: 1,
+    courier: 2,
+    recipient: 3
+  }, prefix: true
+
   # Validations
   validates :role, presence: true, inclusion: { in: roles.keys }
+  validates :user_type, presence: true
+
+  after_initialize :set_default_role, if: :new_record?
+
+  def set_default_role
+    self.role ||= :viewer
+    self.user_type ||= :sender
+  end
 
   # Locate or create a user record for OmniAuth callback data
   def self.from_omniauth(auth)
@@ -58,6 +79,14 @@ class User < ApplicationRecord
 
   def viewer?
     role == "viewer"
+  end
+
+  def has_saved_signature?
+    saved_signature.attached?
+  end
+
+  def signature_required_on_registration?
+    user_type_lawyer? || user_type_courier?
   end
 
   private_class_method def self.default_email_for(auth)

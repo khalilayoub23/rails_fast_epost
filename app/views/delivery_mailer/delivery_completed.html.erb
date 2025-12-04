@@ -1,0 +1,6 @@
+<p>כל החתימות הנדרשות עבור תיק <strong><%= @delivery.case_number %></strong> הושלמו.</p>
+<p>
+  ניתן להוריד את המסמך הסופי באמצעות הקישור הבא:
+  <%= link_to t("mailers.delivery.completed.cta", default: "הורד PDF חתום"), delivery_url(@delivery) %>
+</p>
+<p>תודה על שימושכם ב-Fast Epost.</p>

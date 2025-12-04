@@ -1,0 +1,82 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="text-sm uppercase tracking-wide text-gray-400">Delivery Tracking</p>
+      <h1 class="text-3xl font-semibold text-white">Court Deliveries</h1>
+      <p class="text-sm text-gray-400">Monitor case PDFs, barcodes, and immutable signatures in one TailAdmin workspace.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%= link_to t("deliveries.new", default: "New Delivery"), new_delivery_path,
+        class: "inline-flex items-center rounded-xl border border-yellow-400/40 bg-yellow-400/10 px-4 py-2 text-sm font-medium text-yellow-300 shadow-lg shadow-yellow-500/20 transition hover:bg-yellow-400/20",
+        data: { turbo_frame: "_top" } if policy(Delivery).create? %>
+    </div>
+  </div>
+
+  <div class="rounded-2xl border border-gray-700 bg-gray-800/60 shadow-2xl">
+    <% if @deliveries.any? %>
+      <div class="max-w-full overflow-x-auto">
+        <table class="w-full table-auto">
+          <thead>
+            <tr class="border-b border-gray-700 bg-gray-900/40 text-left text-sm text-gray-300">
+              <th class="px-4 py-4 font-medium">Case</th>
+              <th class="px-4 py-4 font-medium">Participants</th>
+              <th class="px-4 py-4 font-medium">Status</th>
+              <th class="px-4 py-4 font-medium">Signatures</th>
+              <th class="px-4 py-4 font-medium">Updated</th>
+              <th class="px-4 py-4 text-right font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @deliveries.each do |delivery| %>
+              <% progress = delivery.signature_progress %>
+              <tr class="border-b border-gray-700/70 text-sm text-gray-200 last:border-b-0 hover:bg-gray-900/40">
+                <td class="px-4 py-4 align-top">
+                  <p class="font-semibold text-white"><%= delivery.case_number %></p>
+                  <p class="text-xs text-gray-400">ID: <%= delivery.id %></p>
+                </td>
+                <td class="px-4 py-4 align-top">
+                  <div class="space-y-1 text-xs">
+                    <p><span class="font-semibold text-gray-300">Sender:</span> <%= delivery.sender&.full_name || "-" %></p>
+                    <p><span class="font-semibold text-gray-300">Courier:</span> <%= delivery.courier&.full_name || "-" %></p>
+                    <p><span class="font-semibold text-gray-300">Recipient:</span> <%= delivery.recipient&.full_name || "-" %></p>
+                  </div>
+                </td>
+                <td class="px-4 py-4 align-top">
+                  <%= render "shared/status_badge", status: delivery.status %>
+                </td>
+                <td class="px-4 py-4 align-top">
+                  <div class="flex flex-col gap-2">
+                    <div class="h-2 w-32 overflow-hidden rounded-full bg-gray-700">
+                      <div class="h-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-500" style="width: <%= progress[:percentage] %>%"></div>
+                    </div>
+                    <p class="text-xs text-gray-400">
+                      <%= progress[:completed] %> / <%= progress[:total] %> required
+                    </p>
+                  </div>
+                </td>
+                <td class="px-4 py-4 align-top text-sm text-gray-400">
+                  <%= l(delivery.updated_at, format: :short) %>
+                </td>
+                <td class="px-4 py-4 align-top text-right">
+                  <%= link_to "View", delivery_path(delivery), class: "inline-flex items-center rounded-lg border border-gray-600 px-3 py-1 text-xs font-medium text-gray-200 hover:border-yellow-400 hover:text-yellow-300", data: { turbo_frame: "_top" } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="px-6 py-12 text-center text-gray-400">
+        <p class="text-lg font-semibold text-white">No deliveries yet</p>
+        <p class="mt-2 text-sm text-gray-400">Create your first court delivery to generate PDFs, barcodes, and signature tracking.</p>
+        <% if policy(Delivery).create? %>
+          <div class="mt-6">
+            <%= link_to t("deliveries.new", default: "Schedule delivery"), new_delivery_path,
+              class: "inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow-lg hover:bg-yellow-300",
+              data: { turbo_frame: "_top" } %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -43,7 +43,7 @@ ar:
   privacy_content: "في Fast Epost، نحن ملتزمون بحماية خصوصيتك وضمان أمان معلوماتك الشخصية. نقوم بجمع واستخدام بياناتك فقط لغرض تقديم خدمات التوصيل الخاصة بنا. لن يتم مشاركة معلوماتك مع أطراف ثالثة أبداً دون موافقتك."
   privacy_header_title: "سياسة الخصوصية - FastPost"
   privacy_header_subtitle: "FastPost Privacy Policy"
-  privacy_section_title: "سياسة الخصوصية (عربي)"
+  privacy_section_title: "سياسة الخصوصية"
   privacy_paragraph_1: "في FastPost، نحترم خصوصية المستخدمين ونلتزم بحماية معلوماتك الشخصية. تشمل البيانات المُجمعة الاسم ورقم الهاتف وعنوان التسليم والتوقيع الرقمي وصور التسليم (إن وجدت)."
   privacy_paragraph_2: "يتم حفظ المعلومات لأغراض التتبع وتحسين الخدمة والامتثال للقانون. لا يتم نقل البيانات إلى أطراف خارجية دون موافقة المستخدم ما لم يكن ذلك مطلوباً قانونياً."
   privacy_paragraph_3: "يمكنك الاتصال بنا في أي وقت لحذف البيانات أو الاستفسار أو الاطلاع على المعلومات المحفوظة."
@@ -130,9 +130,11 @@ ar:
     privacy_policy: "سياسة الخصوصية"
     services: "الخدمات"
     track: "تتبع الشحنة"
+    contact: "طلب المساعدة"
     law_firms: "مكاتب المحاماة"
     ecommerce: "التجارة الإلكترونية"
     login: "تسجيل الدخول"
+    signup: "تسجيل"
     get_started: "ابدأ الآن"
 
   # Services Page - صفحة الخدمات
@@ -268,6 +270,10 @@ ar:
     create_shipment_desc: "هل أنت مستعد لإرسال طرد؟"
     go_to_dashboard: "انتقل إلى لوحة التحكم"
     sign_up_now: "سجل الآن"
+    payment_checkout_missing: "تعذر بدء دفعة Stripe. يرجى التواصل مع المسؤول."
+
+  deliveries:
+    upload_pdf_cta: "حمّل ملف PDF للمحكمة"
   
   # Common - عام
   common:
@@ -314,6 +320,7 @@ ar:
     updated_successfully: "تم تحديث المهمة بنجاح!"
     deleted_successfully: "تم حذف المهمة بنجاح!"
     status_updated: "تم تحديث حالة المهمة بنجاح!"
+    payment_checkout_missing: "تعذر بدء دفعة Stripe. يرجى التواصل مع المسؤول."
     
   # Customers - العملاء
   customers:
@@ -390,7 +397,7 @@ ar:
   remember_me: "تذكرني"
   forgot_password: "هل نسيت كلمة المرور؟"
   sign_in_button: "تسجيل الدخول"
-  create_account_button: "إنشاء حساب"
+  create_account_button: "تسجيل"
   or: "أو"
   back_to_home: "العودة إلى الصفحة الرئيسية"
   log_in: "لديك حساب بالفعل؟ سجّل الدخول"

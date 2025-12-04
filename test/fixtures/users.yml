@@ -4,18 +4,58 @@ admin:
   email: admin@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   role: admin
+  full_name: Admin User
 
 manager:
   email: manager@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   role: manager
+  full_name: Manager User
 
 viewer:
   email: viewer@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   role: viewer
+  full_name: Viewer User
 
 operations_manager:
   email: ops@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   role: operations_manager
+  full_name: Ops User
+
+sender_user:
+  email: sender@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  role: viewer
+  user_type: sender
+  full_name: Sender Example
+  phone: "+972501111111"
+  address: "Herzl 10, Tel Aviv"
+
+lawyer_user:
+  email: lawyer@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  role: viewer
+  user_type: lawyer
+  full_name: Lawyer Example
+  phone: "+972502222222"
+  address: "Jabotinsky 5, Tel Aviv"
+
+courier_user:
+  email: courier@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  role: viewer
+  user_type: courier
+  full_name: Courier Example
+  phone: "+972503333333"
+  address: "Ben Gurion 1, Ramat Gan"
+
+recipient_user:
+  email: recipient@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  role: viewer
+  user_type: recipient
+  full_name: Recipient Example
+  phone: "+972504444444"
+  address: "Rothschild 20, Tel Aviv"

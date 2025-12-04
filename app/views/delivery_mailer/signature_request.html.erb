@@ -1,0 +1,10 @@
+<p>שלום <strong><%= @user.full_name || @user.email %></strong>,</p>
+<p>
+  נדרש ממך לחתום על מסירת מסמך עבור תיק <strong><%= @delivery.case_number %></strong> בתור
+  <%= @role.capitalize %>.
+</p>
+<p>
+  לחץ על הקישור הבא להשלמת החתימה:
+  <%= link_to t("mailers.delivery.signature_request.cta", default: "פתח מסירת מסמך"), delivery_url(@delivery) %>
+</p>
+<p>תודה,<br/>צוות Fast Epost</p>

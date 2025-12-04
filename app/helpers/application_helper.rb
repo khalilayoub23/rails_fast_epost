@@ -136,4 +136,71 @@ module ApplicationHelper
   def dom_id_for_flash(type)
     "flash-#{type}-#{Time.current.to_i}"
   end
+
+  def form_input_base_classes
+    "mt-2 w-full rounded-xl border border-gray-600 bg-gray-900/60 px-3 py-2 text-white focus:border-yellow-400 focus:ring-0"
+  end
+
+  def form_input_classes(object, method, base_classes: form_input_base_classes, errors_for: nil)
+    return base_classes unless object.respond_to?(:errors)
+
+    if (messages = field_errors_for(object, method, errors_for)).any?
+      updated = base_classes
+        .gsub("border-gray-600", "border-red-500")
+        .gsub("focus:border-yellow-400", "focus:border-red-500")
+        .gsub("focus:ring-0", "focus:ring-1 focus:ring-red-500")
+
+      updated.include?("bg-red-900/10") ? updated : "#{updated} bg-red-900/10"
+    else
+      base_classes
+    end
+  end
+
+  def form_error_message(object, method, errors_for: nil)
+    return unless object.respond_to?(:errors)
+
+    messages = field_errors_for(object, method, errors_for)
+    field_name = (errors_for.presence || method).to_s
+    dom_id = form_field_dom_id(object, method)
+    content = messages.first.to_s
+    classes = [ "mt-1", "text-xs", "text-red-400", "font-medium" ]
+    classes << "hidden" if content.blank?
+
+    tag.p(content,
+          class: classes.join(" "),
+          data: {
+            delivery_form_target: "error",
+            delivery_form_error_name: field_name,
+            delivery_form_error_present: content.present?.to_s,
+            form_validation_target: "message",
+            field: dom_id,
+            form_validation_state: (content.present? ? "visible" : "hidden"),
+            server_message: (content.present? ? "true" : "false")
+          })
+  end
+
+  def form_field_dom_id(object, method)
+    base = object.try(:model_name)&.param_key
+    return method.to_s unless base.present?
+
+    "#{base}_#{method}"
+  end
+
+  def field_errors_for(object, method, errors_for)
+    return [] unless object.respond_to?(:errors)
+
+    keys = []
+    keys << (errors_for.present? ? errors_for.to_sym : method.to_sym)
+
+    if errors_for.nil? && method.to_s.end_with?("_id")
+      keys << method.to_s.delete_suffix("_id").to_sym
+    end
+
+    keys.uniq.each do |key|
+      messages = Array.wrap(object.errors[key])
+      return messages if messages.present?
+    end
+
+    []
+  end
 end

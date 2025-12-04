@@ -68,7 +68,7 @@ en:
   privacy_content: "At Fast Epost, we are committed to protecting your privacy and ensuring the security of your personal information. We collect and use your data solely for the purpose of providing our delivery services. Your information is never shared with third parties without your consent."
   privacy_header_title: "Privacy Policy - FastPost"
   privacy_header_subtitle: "FastPost Privacy Policy"
-  privacy_section_title: "Privacy Policy (English)"
+  privacy_section_title: "Privacy Policy"
   privacy_paragraph_1: "At FastPost, we respect your privacy and are committed to protecting your personal information. The data collected includes name, phone number, delivery address, digital signature, and delivery proof photos (if applicable)."
   privacy_paragraph_2: "This information is stored for tracking, service improvement, and legal compliance. It is not shared with third parties without consent unless required by law."
   privacy_paragraph_3: "You may contact us anytime to request data removal, inspection, or clarification."
@@ -153,9 +153,11 @@ en:
     privacy_policy: "Privacy Policy"
     services: "Services"
     track: "Track Parcel"
+    contact: "Contact Support"
     law_firms: "Law Firms"
     ecommerce: "E-commerce"
     login: "Login"
+    signup: "Sign Up"
     get_started: "Get Started"
 
   # Services Page
@@ -291,6 +293,7 @@ en:
     create_shipment_desc: "Ready to send a package?"
     go_to_dashboard: "Go to Dashboard"
     sign_up_now: "Sign Up Now"
+    payment_checkout_missing: "Unable to start Stripe checkout. Please contact an administrator."
 
   # Common
   common:
@@ -336,6 +339,10 @@ en:
     updated_successfully: "Task updated successfully!"
     deleted_successfully: "Task deleted successfully!"
     status_updated: "Task status updated successfully!"
+    payment_checkout_missing: "Unable to start Stripe checkout. Please contact an administrator."
+
+  deliveries:
+    upload_pdf_cta: "Upload Court PDF"
     
   customers:
     title: "Customers"
@@ -409,8 +416,8 @@ en:
   password_placeholder: "••••••••"
   remember_me: "Remember me"
   forgot_password: "Forgot password?"
-  sign_in_button: "Sign In"
-  create_account_button: "Create Account"
+  sign_in_button: "Log In"
+  create_account_button: "Sign Up"
   or: "or"
   back_to_home: "Back to homepage"
   log_in: "Already have an account? Log in"

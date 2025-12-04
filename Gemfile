@@ -35,6 +35,9 @@ gem "twilio-ruby"
 # Forms helper (optional; improves form builders)
 gem "simple_form"
 
+# Authorization / policies
+gem "pundit"
+
 # Authentication solution for Rails
 gem "devise"
 gem "omniauth"
@@ -48,8 +51,20 @@ gem "aasm"
 # Retry failed operations with exponential backoff
 gem "retriable"
 
+# Background processing
+gem "sidekiq"
+
 # Structured logging for production
 gem "lograge"
+
+# View components for PDF templates/forms
+gem "view_component"
+
+# Barcode and PDF helpers
+gem "rqrcode"
+gem "barby"
+gem "chunky_png"
+gem "grover"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -104,3 +119,5 @@ group :test do
   # Rails controller testing helpers (assigns, assert_template, etc.)
   gem "rails-controller-testing"
 end
+
+gem "colorize", "~> 1.1"

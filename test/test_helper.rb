@@ -2,6 +2,9 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/mock"
+require "action_mailer/test_helper"
+require "base64"
+require "securerandom"
 
 if Rails.env.test?
   module SafeReferentialIntegrity
@@ -77,6 +80,8 @@ ActiveRecord::FixtureSet.singleton_class.prepend(SequentialFixtureLoader)
 
 module ActiveSupport
   class TestCase
+    include ActiveJob::TestHelper
+    include ActionMailer::TestHelper
     # Run tests in parallel with specified workers
     system_driver = ENV["SYSTEM_TEST_DRIVER"]
     parallel_env = ENV["PARALLEL_WORKERS"]
@@ -98,8 +103,50 @@ module ActiveSupport
     setup_fixture_accessors(ordered_tables)
 
     # Add more helper methods to be used by all tests here...
+    setup do
+      clear_enqueued_jobs
+      clear_performed_jobs
+    end
   end
 end
+
+module SignatureFixtureHelpers
+  def attach_signature_fixture(user, fixture_name: "signature.png")
+    File.open(file_fixture(fixture_name)) do |io|
+      user.saved_signature.attach(io: io, filename: fixture_name, content_type: "image/png")
+    end
+  end
+
+  def ensure_signature_fixture(user)
+    attach_signature_fixture(user) unless user.saved_signature.attached?
+  end
+
+  def fixture_signature_data_uri(fixture_name = "signature.png")
+    payload = File.binread(file_fixture(fixture_name))
+    "data:image/png;base64,#{Base64.strict_encode64(payload)}"
+  end
+end
+
+module DeliveryTestHelper
+  def build_delivery!(case_number: "CASE-#{SecureRandom.alphanumeric(6).upcase}")
+    sender = users(:lawyer_user)
+    courier = users(:courier_user)
+    recipient = users(:recipient_user)
+    ensure_signature_fixture(sender)
+    ensure_signature_fixture(courier)
+
+    Delivery.create!(
+      case_number: case_number,
+      sender: sender,
+      courier: courier,
+      recipient: recipient,
+      notes: "Test delivery"
+    )
+  end
+end
+
+ActiveSupport::TestCase.include(SignatureFixtureHelpers)
+ActiveSupport::TestCase.include(DeliveryTestHelper)
 
 # Devise test helpers for integration and controller tests
 class ActionDispatch::IntegrationTest

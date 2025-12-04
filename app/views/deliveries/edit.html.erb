@@ -1,0 +1,11 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-2">
+    <p class="text-sm uppercase tracking-wide text-gray-400">Update Delivery</p>
+    <h1 class="text-3xl font-semibold text-white">Edit <%= @delivery.case_number %></h1>
+    <p class="text-sm text-gray-400">Adjust participants or upload a new court PDF before signatures are finalized.</p>
+  </div>
+
+  <div class="rounded-2xl border border-gray-700 bg-gray-800/70 p-6 shadow-2xl">
+    <%= render "form", delivery: @delivery %>
+  </div>
+</div>

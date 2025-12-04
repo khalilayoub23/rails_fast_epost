@@ -16,7 +16,7 @@
 <% if link %>
   <%= link_to root_path, class: logo_classes.join(' '), data: { turbo: false } do %>
     <div class="logo-icon">
-      <%= image_tag 'fast epost transparent.png', alt: 'Fast Epost - Law&E-com Delivery', class: 'logo-light' %>
+      <%= image_tag 'fast_epost_transparent.png', alt: 'Fast Epost - Law&E-com Delivery', class: 'logo-light' %>
       <%# You can add a separate dark mode logo here if needed %>
       <%#= image_tag 'logo-dark.png', alt: 'Fast Epost', class: 'logo-dark' %>
     </div>
@@ -31,7 +31,7 @@
 <% else %>
   <div class="<%= logo_classes.join(' ') %>">
     <div class="logo-icon">
-      <%= image_tag 'fast epost transparent.png', alt: 'Fast Epost - Law&E-com Delivery', class: 'logo-light' %>
+      <%= image_tag 'fast_epost_transparent.png', alt: 'Fast Epost - Law&E-com Delivery', class: 'logo-light' %>
     </div>
     
     <% if show_text %>

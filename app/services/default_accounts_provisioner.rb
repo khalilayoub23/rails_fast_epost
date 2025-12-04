@@ -16,7 +16,11 @@ class DefaultAccountsProvisioner
 
     DEFAULT_ACCOUNTS.each do |config|
       desired_email = ENV.fetch(config[:email_env], config[:fallback_email])
-      ensure_account(email: desired_email, role: config[:role])
+      ensure_account(
+        email: desired_email,
+        fallback_email: config[:fallback_email],
+        role: config[:role]
+      )
     end
   end
 
@@ -32,17 +36,17 @@ class DefaultAccountsProvisioner
     false
   end
 
-  def ensure_account(email:, role:)
-    user = User.find_by(email: email)
-    return user if user.present?
+  def ensure_account(email:, fallback_email:, role:)
+    password = ENV.fetch("DEFAULT_USER_PASSWORD", "password")
 
-    user = User.find_by(role: role)
-    if user.present?
-      user.update!(email: email)
-      return user
+    if (user = User.find_by(email: email))
+      return sync_role(user, role)
     end
 
-    password = ENV.fetch("DEFAULT_USER_PASSWORD", "password")
+    if (fallback_user = find_fallback_user(email: email, fallback_email: fallback_email))
+      return sync_fallback(fallback_user, email: email, role: role)
+    end
+
     User.create!(
       email: email,
       password: password,
@@ -52,5 +56,25 @@ class DefaultAccountsProvisioner
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.warn("[DefaultAccountsProvisioner] Unable to provision #{role}: #{e.message}")
     nil
+  end
+
+  def find_fallback_user(email:, fallback_email:)
+    return nil if fallback_email.blank? || fallback_email == email
+
+    User.find_by(email: fallback_email)
+  end
+
+  def sync_role(user, role)
+    return user unless user
+
+    user.update!(role: role) if user.role != role
+    user
+  end
+
+  def sync_fallback(user, email:, role:)
+    return unless user
+
+    user.update!(email: email) if user.email != email
+    sync_role(user, role)
   end
 end

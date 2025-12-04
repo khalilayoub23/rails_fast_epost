@@ -1,118 +1,173 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Form validation controller
+// Provides client-side validation feedback for forms. Highlights invalid inputs,
+// displays inline error messages, and blocks submission until the form passes
+// basic checks. Pairs with server-rendered error messages so styling is
+// consistent across both validation paths.
 export default class extends Controller {
-  static targets = ["input", "error", "submit"]
-  static values = {
-    required: Boolean,
-    pattern: String,
-    minLength: Number,
-    maxLength: Number
-  }
+  static targets = ["input", "message"]
 
   connect() {
-    this.validateOnInput()
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleInput = this.handleInput.bind(this)
+
+    this.element.addEventListener("submit", this.handleSubmit)
+
+    this.inputTargets.forEach((input) => {
+      if (!input.dataset.formValidationOriginalClass) {
+        const base = input.dataset.formValidationBaseClass || input.className
+        input.dataset.formValidationOriginalClass = (base || "").trim()
+      }
+
+      input.addEventListener("input", this.handleInput)
+      input.addEventListener("change", this.handleInput)
+    })
+
+    this.initializeServerErrors()
   }
 
-  validateOnInput() {
-    this.inputTargets.forEach(input => {
-      input.addEventListener("input", () => this.validateField(input))
-      input.addEventListener("blur", () => this.validateField(input))
+  disconnect() {
+    this.element.removeEventListener("submit", this.handleSubmit)
+    this.inputTargets.forEach((input) => {
+      input.removeEventListener("input", this.handleInput)
+      input.removeEventListener("change", this.handleInput)
     })
+  }
+
+  handleSubmit(event) {
+    const invalidFields = this.validateForm()
+
+    if (invalidFields.length > 0) {
+      event.preventDefault()
+      invalidFields[0].focus({ preventScroll: false })
+    }
+  }
+
+  handleInput(event) {
+    this.validateField(event.target)
+  }
+
+  validateForm() {
+    const invalid = []
+
+    this.inputTargets.forEach((input) => {
+      if (!this.validateField(input)) {
+        invalid.push(input)
+      }
+    })
+
+    return invalid
   }
 
   validateField(input) {
-    const errorElement = input.parentElement.querySelector("[data-form-validation-target='error']")
-    let isValid = true
-    let errorMessage = ""
+    const rules = (input.dataset.formValidationRules || "")
+      .split(" ")
+      .map((rule) => rule.trim())
+      .filter(Boolean)
 
-    // Required validation
-    if (input.required && !input.value.trim()) {
-      isValid = false
-      errorMessage = `${input.placeholder || "This field"} is required`
+    if (rules.length === 0) {
+      this.clearError(input)
+      return true
     }
 
-    // Min length validation
-    if (input.minLength && input.value.length < input.minLength && input.value.length > 0) {
-      isValid = false
-      errorMessage = `Minimum ${input.minLength} characters required`
-    }
-
-    // Max length validation
-    if (input.maxLength && input.value.length > input.maxLength) {
-      isValid = false
-      errorMessage = `Maximum ${input.maxLength} characters allowed`
-    }
-
-    // Email validation
-    if (input.type === "email" && input.value) {
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailPattern.test(input.value)) {
-        isValid = false
-        errorMessage = "Please enter a valid email address"
+    for (const rule of rules) {
+      switch (rule) {
+        case "presence":
+          if (this.blank(input)) {
+            this.showError(
+              input,
+              input.dataset.formValidationMessagePresence || "This field is required."
+            )
+            return false
+          }
+          break
+        default:
+          break
       }
     }
 
-    // Pattern validation
-    if (input.pattern && input.value) {
-      const pattern = new RegExp(input.pattern)
-      if (!pattern.test(input.value)) {
-        isValid = false
-        errorMessage = input.title || "Invalid format"
-      }
-    }
-
-    // Update UI
-    if (isValid) {
-      input.classList.remove("border-red-500")
-      input.classList.add("border-stroke")
-      if (errorElement) {
-        errorElement.textContent = ""
-        errorElement.classList.add("hidden")
-      }
-    } else {
-      input.classList.add("border-red-500")
-      input.classList.remove("border-stroke")
-      if (errorElement) {
-        errorElement.textContent = errorMessage
-        errorElement.classList.remove("hidden")
-      }
-    }
-
-    this.updateSubmitButton()
-    return isValid
+    this.clearError(input)
+    return true
   }
 
-  validate(event) {
-    let isValid = true
+  blank(input) {
+    const value = input.value ?? ""
 
-    this.inputTargets.forEach(input => {
-      if (!this.validateField(input)) {
-        isValid = false
-      }
-    })
-
-    if (!isValid) {
-      event.preventDefault()
-      event.stopPropagation()
+    if (input.type === "checkbox" || input.type === "radio") {
+      return !input.checked
     }
 
-    return isValid
+    if (input.tagName === "SELECT") {
+      return value === "" || value === null
+    }
+
+    return value.trim() === ""
   }
 
-  updateSubmitButton() {
-    if (!this.hasSubmitTarget) return
+  showError(input, message) {
+    this.applyErrorStyles(input)
 
-    const allValid = this.inputTargets.every(input => {
-      return !input.classList.contains("border-red-500")
+    const messageElement = this.findMessageElement(input)
+    if (!messageElement) return
+
+    messageElement.textContent = message
+    messageElement.classList.remove("hidden")
+    messageElement.dataset.formValidationState = "visible"
+    messageElement.dataset.serverMessage = "false"
+  }
+
+  clearError(input) {
+    this.removeErrorStyles(input)
+
+    const messageElement = this.findMessageElement(input)
+    if (!messageElement) return
+
+    messageElement.textContent = ""
+    messageElement.classList.add("hidden")
+    messageElement.dataset.formValidationState = "hidden"
+    messageElement.dataset.serverMessage = "false"
+  }
+
+  applyErrorStyles(input) {
+    const baseClass = this.baseClassFor(input)
+    input.className = baseClass
+
+    input.classList.remove("border-gray-600", "focus:border-yellow-400", "focus:ring-0")
+    input.classList.add(
+      "border-red-500",
+      "focus:border-red-500",
+      "focus:ring-1",
+      "focus:ring-red-500",
+      "bg-red-900/10"
+    )
+  }
+
+  removeErrorStyles(input) {
+    const baseClass = this.baseClassFor(input)
+    input.className = baseClass
+  }
+
+  baseClassFor(input) {
+    return (input.dataset.formValidationOriginalClass || input.dataset.formValidationBaseClass || input.className || "").trim()
+  }
+
+  findMessageElement(input) {
+    const fieldId = input.dataset.formValidationField || input.id
+    return this.messageTargets.find((message) => message.dataset.field === fieldId)
+  }
+
+  initializeServerErrors() {
+    this.messageTargets.forEach((message) => {
+      if (message.dataset.formValidationState === "visible") {
+        const field = this.inputTargets.find((input) => {
+          const fieldId = input.dataset.formValidationField || input.id
+          return fieldId === message.dataset.field
+        })
+
+        if (field) {
+          this.applyErrorStyles(field)
+        }
+      }
     })
-
-    if (allValid) {
-      this.submitTarget.disabled = false
-      this.submitTarget.classList.remove("opacity-50", "cursor-not-allowed")
-    } else {
-      this.submitTarget.disabled = true
-      this.submitTarget.classList.add("opacity-50", "cursor-not-allowed")
-    }
   }
 }

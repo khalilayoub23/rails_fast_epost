@@ -1,0 +1,6 @@
+<p>עדכון עבור תיק <strong><%= @delivery.case_number %></strong>:</p>
+<p>החתימה של <strong><%= @role.capitalize %></strong> נשמרה בהצלחה.</p>
+<p>
+  ניתן לצפות במסמך העדכני כאן:
+  <%= link_to t("mailers.delivery.signature_added.cta", default: "צפה במסמך"), delivery_url(@delivery) %>
+</p>

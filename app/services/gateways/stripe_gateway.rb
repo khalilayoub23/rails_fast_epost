@@ -34,6 +34,15 @@ module Gateways
             checkout_url = session.url
             cs_id = session.id
             pi_id = session.payment_intent if session.respond_to?(:payment_intent)
+          elsif Rails.env.development? || Rails.env.test?
+            # Simulate Stripe in development/test if keys are missing
+            external_id = "sim_cs_#{SecureRandom.hex(10)}"
+            cs_id = external_id
+            pi_id = "sim_pi_#{SecureRandom.hex(10)}"
+            
+            # Construct a local success URL
+            success_template = default_success_url(data)
+            checkout_url = success_template.gsub("{CHECKOUT_SESSION_ID}", external_id)
           end
         end
 
@@ -193,6 +202,11 @@ module Gateways
       end
 
       def sync!(payment:)
+        if payment.checkout_session_id.to_s.start_with?("sim_cs_")
+          payment.update!(gateway_status: "succeeded")
+          return payment
+        end
+
         configure_stripe!
         if payment.checkout_session_id.present?
           cs = ::Stripe::Checkout::Session.retrieve(payment.checkout_session_id)

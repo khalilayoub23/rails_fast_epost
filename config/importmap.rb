@@ -6,6 +6,7 @@ pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin "stripe_checkout", to: "stripe_checkout/index.js"
+pin "@stripe/stripe-js", to: "@stripe--stripe-js.js"
 
 # Advanced features
 pin "sortablejs" # @1.15.6

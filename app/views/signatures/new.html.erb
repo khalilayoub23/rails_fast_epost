@@ -1,0 +1,64 @@
+<div class="space-y-6">
+  <div class="flex flex-col gap-2">
+    <p class="text-sm uppercase tracking-wide text-gray-400">Immutable signature</p>
+    <h1 class="text-3xl font-semibold text-white">
+      Sign as <%= @role.titleize %>
+    </h1>
+    <p class="text-sm text-gray-400">Delivery <%= @delivery.case_number %> • Hash-locked ledger with IP capture.</p>
+  </div>
+
+  <div class="rounded-2xl border border-gray-700 bg-gray-900/40 p-6 shadow-2xl">
+    <%= form_with url: delivery_signatures_path(@delivery), method: :post, data: { turbo: true }, class: "space-y-6" do |form| %>
+      <%= hidden_field_tag :signature_role, @role %>
+
+      <% if @role == "recipient" %>
+        <div data-controller="signature-pad"
+             data-signature-pad-background-value="#111827"
+             data-signature-pad-pen-value="#fbbf24">
+          <div class="rounded-2xl border border-dashed border-gray-600 bg-gray-900/60 p-4">
+            <p class="text-sm font-semibold text-gray-200">Draw signature</p>
+            <p class="text-xs text-gray-500">Use mouse, stylus, or touch. Clearing resets the canvas.</p>
+            <canvas data-signature-pad-target="canvas"
+                    class="mt-4 h-48 w-full rounded-xl bg-gray-800 shadow-inner"></canvas>
+            <%= hidden_field_tag :signature_data, nil, data: { signature_pad_target: "input" } %>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <button type="button"
+                      class="inline-flex items-center rounded-xl border border-gray-600 px-4 py-2 text-sm text-gray-300 hover:border-yellow-400"
+                      data-action="signature-pad#clear">
+                Clear
+              </button>
+              <button type="button"
+                      class="inline-flex items-center rounded-xl border border-gray-600 px-4 py-2 text-sm text-gray-300 hover:border-yellow-400"
+                      data-action="signature-pad#undo">
+                Undo stroke
+              </button>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="rounded-2xl border border-dashed border-gray-600 bg-gray-900/60 p-4 text-sm text-gray-300">
+          <p class="font-semibold text-white">Saved signature will be applied</p>
+          <p class="mt-2 text-xs text-gray-400">
+            Confirming will hash your stored signature on file and update the PDF automatically.
+          </p>
+        </div>
+      <% end %>
+
+      <div class="rounded-2xl border border-gray-800 bg-gray-800/40 p-4 text-sm text-gray-300">
+        <p class="font-semibold text-white">Audit summary</p>
+        <ul class="mt-3 space-y-2 text-xs text-gray-400">
+          <li>IP is logged from <code class="text-amber-200"><%= request.remote_ip %></code></li>
+          <li>Signing user: <%= current_user.full_name %> (<%= current_user.email %>)</li>
+          <li>Hash stored as SHA-256 with Turbo updates for progress widgets.</li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <%= link_to t("signatures.cancel", default: "Back"), @delivery,
+          class: "inline-flex items-center rounded-xl border border-gray-600 px-4 py-2 text-sm font-medium text-gray-300 hover:border-yellow-400 hover:text-yellow-300" %>
+        <%= form.submit t("signatures.submit", default: "Confirm signature"),
+          class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-2 text-sm font-semibold text-gray-900 shadow-lg hover:bg-yellow-300" %>
+      </div>
+    <% end %>
+  </div>
+</div>
