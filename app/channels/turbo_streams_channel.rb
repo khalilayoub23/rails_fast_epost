@@ -1,13 +1,32 @@
 # Turbo Streams Channel for real-time updates
 class TurboStreamsChannel < ApplicationCable::Channel
+  # Allowlist of streamable types that can be subscribed to
+  ALLOWED_STREAMABLE_TYPES = %w[
+    Delivery
+    Task
+    Payment
+    Document
+    Customer
+    Sender
+    Messenger
+    Carrier
+  ].freeze
+
   def subscribed
     # Subscribe to user-specific stream
     stream_for current_user if current_user
 
     # Subscribe to broadcast streams based on params
     if params[:streamable_type] && params[:streamable_id]
-      streamable = params[:streamable_type].constantize.find(params[:streamable_id])
-      stream_for streamable
+      streamable_type = params[:streamable_type].to_s
+
+      unless ALLOWED_STREAMABLE_TYPES.include?(streamable_type)
+        reject
+        return
+      end
+
+      streamable = streamable_type.constantize.find_by(id: params[:streamable_id])
+      stream_for streamable if streamable
     end
   end
 

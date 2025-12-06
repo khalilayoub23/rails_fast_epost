@@ -2,6 +2,41 @@ module Admin
   class DatabaseController < ApplicationController
     before_action :require_admin!
 
+    # Allowlist of model classes that can be accessed via the database admin
+    ALLOWED_MODEL_CLASSES = %w[
+      AuditLog
+      Carrier
+      CarrierMembership
+      CarrierPayout
+      CarrierRating
+      ContactInquiry
+      CostCalc
+      Customer
+      Delivery
+      Document
+      DocumentTemplate
+      Form
+      FormTemplate
+      IntegrationEvent
+      Lawyer
+      Messenger
+      NotificationLog
+      NotificationPreference
+      Payment
+      PaymentIntent
+      PaymentsTask
+      Phone
+      Preference
+      ProofUpload
+      Refund
+      Remark
+      Sender
+      SignatureEvent
+      Task
+      TrackingEvent
+      User
+    ].freeze
+
     # GET /admin/database
     def index
       @stats = {
@@ -89,6 +124,16 @@ module Admin
 
     private
 
+    # Safely get model class for a table name, using allowlist validation
+    def safe_model_class_for(table_name)
+      return nil if table_name.blank?
+      model_name = table_name.to_s.singularize.camelize
+      return nil unless ALLOWED_MODEL_CLASSES.include?(model_name)
+      model_name.constantize
+    rescue NameError
+      nil
+    end
+
     def export_sql(table = nil)
       timestamp = Time.current.strftime("%Y%m%d_%H%M%S")
       db_name = ActiveRecord::Base.connection.current_database
@@ -112,15 +157,18 @@ module Admin
         return
       end
 
-      model_class = table.singularize.camelize.constantize
+      model_class = safe_model_class_for(table)
+      unless model_class
+        redirect_to admin_database_path, alert: "Invalid table name"
+        return
+      end
+
       csv_data = generate_csv(model_class)
 
       send_data csv_data,
         filename: "#{table}_#{Time.current.strftime('%Y%m%d_%H%M%S')}.csv",
         type: "text/csv",
         disposition: "attachment"
-    rescue NameError
-      redirect_to admin_database_path, alert: "Invalid table name"
     end
 
     def export_json(table)
@@ -129,33 +177,37 @@ module Admin
         return
       end
 
-      model_class = table.singularize.camelize.constantize
+      model_class = safe_model_class_for(table)
+      unless model_class
+        redirect_to admin_database_path, alert: "Invalid table name"
+        return
+      end
+
       data = model_class.all.as_json
 
       send_data JSON.pretty_generate(data),
         filename: "#{table}_#{Time.current.strftime('%Y%m%d_%H%M%S')}.json",
         type: "application/json",
         disposition: "attachment"
-    rescue NameError
-      redirect_to admin_database_path, alert: "Invalid table name"
     end
 
     def export_table_sql(table)
-      model_class = table.singularize.camelize.constantize
-      records = model_class.all
+      model_class = safe_model_class_for(table)
+      return "-- Error: Invalid table name" unless model_class
 
-      sql = "-- Export of #{table} table\n"
+      records = model_class.all
+      actual_table_name = model_class.table_name
+
+      sql = "-- Export of #{actual_table_name} table\n"
       sql += "-- Generated at #{Time.current}\n\n"
 
       records.each do |record|
         columns = record.attributes.keys.join(", ")
         values = record.attributes.values.map { |v| ActiveRecord::Base.connection.quote(v) }.join(", ")
-        sql += "INSERT INTO #{table} (#{columns}) VALUES (#{values});\n"
+        sql += "INSERT INTO #{actual_table_name} (#{columns}) VALUES (#{values});\n"
       end
 
       sql
-    rescue NameError
-      "-- Error: Invalid table name"
     end
 
     def export_full_sql
@@ -165,13 +217,11 @@ module Admin
       ActiveRecord::Base.connection.tables.each do |table|
         next if table == "schema_migrations" || table == "ar_internal_metadata"
 
-        begin
-          model_class = table.singularize.camelize.constantize
-          sql += "\n-- Table: #{table}\n"
-          sql += export_table_sql(table)
-        rescue NameError
-          # Skip tables without models
-        end
+        model_class = safe_model_class_for(table)
+        next unless model_class
+
+        sql += "\n-- Table: #{model_class.table_name}\n"
+        sql += export_table_sql(table)
       end
 
       sql
@@ -205,8 +255,13 @@ module Admin
         return
       end
 
+      model_class = safe_model_class_for(table)
+      unless model_class
+        redirect_to admin_database_path, alert: "Invalid table name"
+        return
+      end
+
       begin
-        model_class = table.singularize.camelize.constantize
         require "csv"
 
         csv_content = file.read
@@ -219,8 +274,6 @@ module Admin
         end
 
         redirect_to admin_database_path, notice: "Successfully imported #{imported} records into #{table}"
-      rescue NameError
-        redirect_to admin_database_path, alert: "Invalid table name"
       rescue => e
         redirect_to admin_database_path, alert: "Import failed: #{e.message}"
       end
@@ -235,12 +288,17 @@ module Admin
 
     def table_statistics
       stats = []
-      ActiveRecord::Base.connection.tables.sort.each do |table|
+      connection = ActiveRecord::Base.connection
+
+      connection.tables.sort.each do |table|
         next if table == "schema_migrations" || table == "ar_internal_metadata"
 
         begin
-          count = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{table}").first["count"]
-          size = ActiveRecord::Base.connection.execute("SELECT pg_size_pretty(pg_total_relation_size('#{table}'))").first["pg_size_pretty"]
+          # Use quote_table_name for SQL identifiers (table names in FROM clause)
+          # Use quote for string values passed as arguments to PostgreSQL functions
+          quoted_table = connection.quote_table_name(table)
+          count = connection.execute("SELECT COUNT(*) FROM #{quoted_table}").first["count"]
+          size = connection.execute("SELECT pg_size_pretty(pg_total_relation_size(#{connection.quote(table)}))").first["pg_size_pretty"]
 
           stats << {
             name: table,
