@@ -134,12 +134,6 @@ module Admin
       nil
     end
 
-    # Validate that a table name is safe for SQL queries
-    # Only allows alphanumeric characters and underscores
-    def safe_table_name?(table_name)
-      table_name.present? && table_name.to_s.match?(/\A[a-z_][a-z0-9_]*\z/i)
-    end
-
     def export_sql(table = nil)
       timestamp = Time.current.strftime("%Y%m%d_%H%M%S")
       db_name = ActiveRecord::Base.connection.current_database
@@ -300,7 +294,8 @@ module Admin
         next if table == "schema_migrations" || table == "ar_internal_metadata"
 
         begin
-          # Use quote_table_name to safely escape the table name for SQL
+          # Use quote_table_name for SQL identifiers (table names in FROM clause)
+          # Use quote for string values passed as arguments to PostgreSQL functions
           quoted_table = connection.quote_table_name(table)
           count = connection.execute("SELECT COUNT(*) FROM #{quoted_table}").first["count"]
           size = connection.execute("SELECT pg_size_pretty(pg_total_relation_size(#{connection.quote(table)}))").first["pg_size_pretty"]
