@@ -20,9 +20,15 @@
 }
 
 /* Primary Color - Change to Yellow */
-.bg-primary, .text-primary, .border-primary {
+.bg-primary {
   background-color: #fbbf24 !important;
+}
+
+.text-primary {
   color: #fbbf24 !important;
+}
+
+.border-primary {
   border-color: #fbbf24 !important;
 }
 

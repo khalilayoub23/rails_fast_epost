@@ -11,10 +11,13 @@ class ProcessDeliveryPdfJob < ApplicationJob
       processor.generate_delivery_form_with_barcode
     end
 
+    AuthorizationPdfService.new(delivery).generate_and_attach
+
     delivery.update!(status: :awaiting_signatures)
     delivery.audit_logs.create!(action: "pdf_ready", user: delivery.sender)
 
     notify_signers(delivery)
+    notify_lawyer(delivery)
   end
 
   private
@@ -25,5 +28,12 @@ class ProcessDeliveryPdfJob < ApplicationJob
       message = DeliveryMailer.signature_request(delivery, user, role)
       message&.deliver_later
     end
+  end
+
+  def notify_lawyer(delivery)
+    lawyer = delivery.try(:lawyer)
+    return unless lawyer&.email.present?
+
+    DeliveryMailer.delivery_completed(delivery)&.deliver_later if delivery.completed?
   end
 end

@@ -1,3 +1,7 @@
 primary_assignment:
   user: operations_manager
   carrier: one
+
+carrier_one_membership:
+  user: carrier_one
+  carrier: one

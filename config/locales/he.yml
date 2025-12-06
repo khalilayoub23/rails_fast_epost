@@ -3,6 +3,112 @@ he:
   language_name: "עברית"
   direction: "rtl"
 
+  # Dashboard
+  dashboard:
+    total_revenue: "סה״כ הכנסות"
+    total_sales: "סה״כ מכירות"
+    total_payments: "סה״כ תשלומים"
+    pending_orders: "הזמנות ממתינות"
+    total_customers: "סה״כ לקוחות"
+    day: "יום"
+    week: "שבוע"
+    month: "חודש"
+    monthly_target: "יעד חודשי"
+    this_month: "החודש"
+    last_month: "חודש שעבר"
+    monthly_target_description: "היעד שהגדרת לכל חודש"
+    earnings_today: "הרווחת %{amount}$ היום, זה גבוה יותר מהחודש שעבר"
+    keep_up_work: "המשך בעבודה הטובה!"
+    target: "יעד"
+    revenue: "הכנסות"
+    today: "היום"
+    recent_payments: "תשלומים אחרונים"
+    view_all: "הצג הכל"
+    id: "מזהה"
+    provider: "ספק"
+    status: "סטטוס"
+    amount: "סכום"
+    currency: "מטבע"
+    actions: "פעולות"
+    recent_tasks: "משימות אחרונות"
+    no_customer: "אין לקוח"
+    view: "צפה"
+
+  # Sidebar
+  sidebar:
+    dashboard: "לוח בקרה"
+    payments: "תשלומים"
+    customers: "לקוחות"
+    tasks: "משימות"
+    court_deliveries: "מסירות משפטיות"
+    carriers: "שליחים"
+    senders: "שולחים"
+    messengers: "שליחים (אופניים)"
+    lawyers: "עורכי דין"
+    document_templates: "תבניות מסמכים"
+    contact_inquiries: "פניות יצירת קשר"
+    branding: "מיתוג"
+    admin_dashboard: "לוח בקרה למנהלים"
+
+  # Topbar
+  topbar:
+    welcome_back: "ברוך שובך,"
+    search_placeholder: "חפש או הקלד פקודה..."
+    logout: "התנתק"
+    account: "חשבון"
+    admin: "מנהל"
+    my_profile: "הפרופיל שלי"
+    account_settings: "הגדרות חשבון"
+
+  # Deliveries
+  deliveries:
+    new:
+      subtitle: "צור משלוח"
+      title: "משלוח משפטי חדש"
+      description: "הגדר שולח, שליח, נמען והעלה מסמכי בית משפט אופציונליים להחתמת ברקוד."
+    form:
+      case_number_placeholder: "לדוגמה: CASE-2024-01"
+      notes_placeholder: "הוראות שליח אופציונליות"
+      sender_label: "שולח / עורך דין"
+      choose_sender: "בחר שולח"
+      choose_courier: "בחר שליח"
+      choose_recipient: "בחר נמען"
+      pdf_help: "אופציונלי: העלה את ה-PDF החתום מבית המשפט להזרקת ברקודים לפני ניתוב לחתימה."
+    index:
+      subtitle: "מעקב משלוחים"
+      title: "משלוחים משפטיים"
+      description: "עקוב אחר מסמכי תיק, ברקודים וחתימות בלתי ניתנות לשינוי בסביבת עבודה אחת."
+      sender: "שולח"
+      courier: "שליח"
+      recipient: "נמען"
+      table:
+        case: "תיק"
+        participants: "משתתפים"
+        status: "סטטוס"
+        signatures: "חתימות"
+        updated: "עודכן"
+        actions: "פעולות"
+    show:
+      subtitle: "סקירת משלוח"
+      title: "תיק %{case_number}"
+      description: "תהליך PDF בלתי ניתן לשינוי עם אימות ברקוד וגיבוב חתימות."
+      participants_title: "משתתפים"
+      sender: "שולח"
+      courier: "שליח"
+      recipient: "נמען"
+      notes: "הערות"
+      no_notes: "אין הוראות מיוחדות"
+      documents: "מסמכים"
+      docs:
+        original: "PDF מקורי מבית המשפט"
+        base: "תבנית בסיס"
+        current: "PDF נוכחי"
+        final: "PDF סופי"
+    edit:
+      subtitle: "עדכן משלוח"
+      title: "ערוך %{case_number}"
+      description: "התאם משתתפים או העלה PDF חדש מבית המשפט לפני סיום החתימות."
+
   # Landing page
   hero_title_1: "מהירות פוגשת"
   hero_title_trust: "אמינות."
@@ -287,6 +393,7 @@ he:
     previous: "הקודם"
     submit: "שלח"
     close: "סגור"
+    view: "צפה"
     yes: "כן"
     no: "לא"
     confirm: "אישור"
@@ -315,6 +422,7 @@ he:
     updated_successfully: "המשימה עודכנה בהצלחה!"
     deleted_successfully: "המשימה נמחקה בהצלחה!"
     status_updated: "סטטוס המשימה עודכן בהצלחה!"
+    mark_in_progress: "סמן בביצוע"
     payment_checkout_missing: "לא ניתן לפתוח תשלום Stripe. אנא פנה למנהל."
 
   deliveries:

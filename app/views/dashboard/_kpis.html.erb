@@ -1,7 +1,23 @@
 <!-- ====== Cards Section Start - Dark Theme with Yellow Accents -->
+<%
+  # Defaults with fallbacks to instance variables
+  card1_value = local_assigns[:card1_value] || @payments_count
+  card1_label = local_assigns[:card1_label] || t('dashboard.total_payments', default: 'Total Payments')
+  
+  card2_value = local_assigns[:card2_value] || (@pending_payments.respond_to?(:size) ? @pending_payments.size : 0)
+  card2_label = local_assigns[:card2_label] || t('dashboard.pending_orders', default: 'Pending Orders')
+
+  card3_value = local_assigns[:card3_value] || @customers_count
+  card3_label = local_assigns[:card3_label] || t('dashboard.total_customers', default: 'Total Customers')
+
+  card4_value = local_assigns[:card4_value] || @revenue_total_cents
+  card4_label = local_assigns[:card4_label] || t('dashboard.total_revenue', default: 'Total Revenue')
+  card4_currency = local_assigns.fetch(:card4_currency, true)
+%>
+
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5" id="dashboard_kpis">
   
-  <!-- Card Item Start - Total Payments -->
+  <!-- Card Item Start - Card 1 -->
   <div class="group rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm px-7.5 py-6 shadow-2xl hover:border-yellow-400/50 transition-all duration-300">
     <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-yellow-400/20 group-hover:bg-yellow-400/30 transition-colors">
       <svg class="fill-yellow-400" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,9 +29,9 @@
     <div class="mt-4 flex items-end justify-between">
       <div>
         <h4 class="text-title-md font-bold text-white group-hover:text-yellow-400 transition-colors">
-          <%= number_with_delimiter(@payments_count) %>
+          <%= number_with_delimiter(card1_value) %>
         </h4>
-        <span class="text-sm font-medium text-gray-400">Total Payments</span>
+        <span class="text-sm font-medium text-gray-400"><%= card1_label %></span>
       </div>
 
       <span class="flex items-center gap-1 text-sm font-medium text-green-400">
@@ -28,7 +44,7 @@
   </div>
   <!-- Card Item End -->
 
-  <!-- Card Item Start - Orders -->
+  <!-- Card Item Start - Card 2 -->
   <div class="group rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm px-7.5 py-6 shadow-2xl hover:border-yellow-400/50 transition-all duration-300">
     <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-yellow-400/20 group-hover:bg-yellow-400/30 transition-colors">
       <svg class="fill-yellow-400" width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,9 +57,9 @@
     <div class="mt-4 flex items-end justify-between">
       <div>
         <h4 class="text-title-md font-bold text-white group-hover:text-yellow-400 transition-colors">
-          <%= number_with_delimiter(@pending_payments.size) %>
+          <%= number_with_delimiter(card2_value) %>
         </h4>
-        <span class="text-sm font-medium text-gray-400">Pending Orders</span>
+        <span class="text-sm font-medium text-gray-400"><%= card2_label %></span>
       </div>
 
       <span class="flex items-center gap-1 text-sm font-medium text-red-400">
@@ -56,7 +72,7 @@
   </div>
   <!-- Card Item End -->
 
-  <!-- Card Item Start - Total Customers -->
+  <!-- Card Item Start - Card 3 -->
   <div class="group rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm py-6 px-7.5 shadow-2xl hover:border-yellow-400/50 transition-all duration-300">
     <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-yellow-400/20 group-hover:bg-yellow-400/30 transition-colors">
       <svg class="fill-yellow-400" width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -69,9 +85,9 @@
     <div class="mt-4 flex items-end justify-between">
       <div>
         <h4 class="text-title-md font-bold text-white group-hover:text-yellow-400 transition-colors">
-          <%= @customers_count %>
+          <%= number_with_delimiter(card3_value) %>
         </h4>
-        <span class="text-sm font-medium text-gray-400">Total Customers</span>
+        <span class="text-sm font-medium text-gray-400"><%= card3_label %></span>
       </div>
 
       <span class="flex items-center gap-1 text-sm font-medium text-green-400">
@@ -84,7 +100,7 @@
   </div>
   <!-- Card Item End -->
 
-  <!-- Card Item Start - Total Revenue -->
+  <!-- Card Item Start - Card 4 -->
   <div class="group rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm py-6 px-7.5 shadow-2xl hover:border-yellow-400/50 transition-all duration-300">
     <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-yellow-400/20 group-hover:bg-yellow-400/30 transition-colors">
       <svg class="fill-yellow-400" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,9 +112,13 @@
     <div class="mt-4 flex items-end justify-between">
       <div>
         <h4 class="text-title-md font-bold text-white group-hover:text-yellow-400 transition-colors">
-          $<%= number_with_delimiter(@revenue_total_cents / 100.0, delimiter: ',') %>
+          <% if card4_currency %>
+            <%= format_sek(card4_value) %>
+          <% else %>
+            <%= number_with_delimiter(card4_value) %>
+          <% end %>
         </h4>
-        <span class="text-sm font-medium text-gray-400">Total Revenue</span>
+        <span class="text-sm font-medium text-gray-400"><%= card4_label %></span>
       </div>
 
       <span class="flex items-center gap-1 text-sm font-medium text-green-400">

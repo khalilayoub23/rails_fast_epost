@@ -1,4 +1,6 @@
-<aside id="sidebar" class="absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white dark:bg-boxdark border-r border-stroke dark:border-strokedark duration-300 ease-linear lg:static lg:translate-x-0 -translate-x-full">
+<aside id="sidebar" 
+       data-hidden-class="<%= rtl? ? 'translate-x-full' : '-translate-x-full' %>"
+       class="absolute <%= rtl? ? 'right-0 border-l translate-x-full' : 'left-0 border-r -translate-x-full' %> top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white dark:bg-boxdark border-stroke dark:border-strokedark duration-300 ease-linear lg:static lg:translate-x-0">
   <!-- SIDEBAR HEADER -->
   <div class="flex items-center justify-between gap-2 px-4 py-6 lg:py-7">
     <%= render 'shared/logo', size: 'md', text: true %>
@@ -11,93 +13,88 @@
       <div>
         <ul class="mb-6 flex flex-col gap-1.5">
           <li>
-            <%= link_to root_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(root_path)}" do %>
+            <%= link_to root_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(root_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(root_path)}">space_dashboard</span>
-              Dashboard
+              <%= t('sidebar.dashboard', default: 'Dashboard') %>
             <% end %>
           </li>
           <% if current_user&.manager? %>
           <li>
-            <%= link_to payments_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(payments_path)}" do %>
+            <%= link_to payments_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(payments_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(payments_path)}">payment</span>
-              Payments
+              <%= t('sidebar.payments', default: 'Payments') %>
             <% end %>
           </li>
           <% end %>
           <li>
-            <%= link_to customers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(customers_path)}" do %>
+            <%= link_to customers_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(customers_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(customers_path)}">people</span>
-              Customers
+              <%= t('sidebar.customers', default: 'Customers') %>
             <% end %>
           </li>
           <li>
-            <%= link_to tasks_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(tasks_path)}" do %>
+            <%= link_to tasks_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(tasks_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(tasks_path)}">task</span>
-              Tasks
+              <%= t('sidebar.tasks', default: 'Tasks') %>
             <% end %>
           </li>
           <% if policy(Delivery).index? %>
           <li>
-            <%= link_to deliveries_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(deliveries_path)}" do %>
+            <%= link_to deliveries_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(deliveries_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(deliveries_path)}">picture_as_pdf</span>
-              Court Deliveries
+              <%= t('sidebar.court_deliveries', default: 'Court Deliveries') %>
             <% end %>
           </li>
           <% end %>
           <% if current_user&.admin? %>
           <li>
-            <%= link_to carriers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(carriers_path)}" do %>
-              <span class="material-icons text-lg #{'text-primary' if current_page?(carriers_path)}">local_shipping</span>
-              Carriers
-            <% end %>
-          </li>
-          <li>
-            <%= link_to admin_senders_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_senders_path)}" do %>
-              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_senders_path)}">send</span>
-              Senders
-            <% end %>
-          </li>
-          <li>
-            <%= link_to admin_messengers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_messengers_path)}" do %>
-              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_messengers_path)}">pedal_bike</span>
-              Messengers
-            <% end %>
-          </li>
-          <li>
-            <%= link_to admin_lawyers_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_lawyers_path)}" do %>
-              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_lawyers_path)}">gavel</span>
-              Lawyers
-            <% end %>
-          </li>
-          <li>
-            <%= link_to admin_document_templates_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_document_templates_path)}" do %>
+            <%= link_to admin_document_templates_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_document_templates_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(admin_document_templates_path)}">description</span>
-              Document Templates
+              <%= t('sidebar.document_templates', default: 'Document Templates') %>
             <% end %>
           </li>
           <li>
-            <%= link_to admin_contact_inquiries_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_contact_inquiries_path)}" do %>
+            <%= link_to carriers_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(carriers_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(carriers_path)}">local_shipping</span>
+              <%= t('sidebar.carriers', default: 'Carriers') %>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_senders_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_senders_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_senders_path)}">send</span>
+              <%= t('sidebar.senders', default: 'Senders') %>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_messengers_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_messengers_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_messengers_path)}">pedal_bike</span>
+              <%= t('sidebar.messengers', default: 'Messengers') %>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_lawyers_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_lawyers_path)}" do %>
+              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_lawyers_path)}">gavel</span>
+              <%= t('sidebar.lawyers', default: 'Lawyers') %>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_contact_inquiries_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_contact_inquiries_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(admin_contact_inquiries_path)}">mail</span>
-              Contact Inquiries
+              <%= t('sidebar.contact_inquiries', default: 'Contact Inquiries') %>
               <% if @pending_count ||= ContactInquiry.pending.count > 0 %>
                 <span class="ml-auto bg-warning text-white rounded-full px-2 py-0.5 text-xs"><%= @pending_count %></span>
               <% end %>
             <% end %>
           </li>
           <li>
-            <%= link_to admin_branding_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_branding_path)}" do %>
+            <%= link_to admin_branding_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_branding_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(admin_branding_path)}">brush</span>
-              Branding
+              <%= t('sidebar.branding', default: 'Branding') %>
             <% end %>
           </li>
+          <%# Admin Dashboard link removed as it is redundant with the main Dashboard %>
           <li>
-            <%= link_to admin_dashboard_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(admin_dashboard_path)}" do %>
-              <span class="material-icons text-lg #{'text-primary' if current_page?(admin_dashboard_path)}">admin_panel_settings</span>
-              Admin Dashboard
-            <% end %>
-          </li>
-          <li>
-            <%= link_to new_admin_pdfs_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(new_admin_pdfs_path)}" do %>
+            <%= link_to new_admin_pdfs_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(new_admin_pdfs_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(new_admin_pdfs_path)}">picture_as_pdf</span>
               PDF Tools
             <% end %>
@@ -105,13 +102,13 @@
           <% end %>
           <li class="mt-2 border-t border-stroke"></li>
           <li>
-            <%= link_to profile_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(profile_path)}" do %>
+            <%= link_to profile_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(profile_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(profile_path)}">person</span>
               Profile
             <% end %>
           </li>
           <li>
-            <%= link_to settings_path, class: "group relative flex items-center gap-2.5 rounded-md py-2 px-4 font-medium text-body duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(settings_path)}" do %>
+            <%= link_to settings_path, class: "group relative z-10 flex w-full items-center justify-center gap-2.5 text-center sidebar-nav-link rounded-md py-2 px-4 font-medium text-gray-900 dark:text-gray-100 duration-300 ease-in-out hover:bg-whiter #{'bg-whiter text-primary' if current_page?(settings_path)}" do %>
               <span class="material-icons text-lg #{'text-primary' if current_page?(settings_path)}">settings</span>
               Settings
             <% end %>

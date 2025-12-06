@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_03_220000) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_06_000300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -153,6 +153,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_03_220000) do
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "authorization_generated_at"
     t.index ["case_number"], name: "index_deliveries_on_case_number", unique: true
     t.index ["completed_at"], name: "index_deliveries_on_completed_at"
     t.index ["courier_id"], name: "index_deliveries_on_courier_id"
@@ -586,6 +587,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_03_220000) do
     t.text "last_failure_note"
     t.datetime "stored_until"
     t.boolean "awaiting_customer_response", default: false, null: false
+    t.boolean "door_affix_authorized", default: false, null: false
+    t.boolean "door_affix_completed", default: false, null: false
+    t.datetime "door_affix_completed_at"
+    t.decimal "last_success_lat", precision: 10, scale: 6
+    t.decimal "last_success_lng", precision: 10, scale: 6
+    t.decimal "last_success_accuracy", precision: 8, scale: 2
     t.index ["barcode"], name: "index_tasks_on_barcode", unique: true
     t.index ["carrier_id"], name: "index_tasks_on_carrier_id"
     t.index ["created_at"], name: "index_tasks_on_created_at"

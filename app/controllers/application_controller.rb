@@ -23,10 +23,22 @@ class ApplicationController < ActionController::Base
   # Ensure Devise always returns to the sign-in screen after logout, even
   # when locale-scoped routes are used.
   def after_sign_out_path_for(_resource_or_scope)
-    new_user_session_path
+    new_user_session_path(locale: nil)
   end
 
   def after_sign_in_path_for(resource)
+    # Sync the current active locale to the user's profile if they differ.
+    # This ensures that the language the user is currently viewing (from params, cookie, or headers)
+    # becomes their saved preference upon login.
+    if resource.respond_to?(:preferred_language)
+      current_locale = I18n.locale.to_s
+      if I18n.available_locales.map(&:to_s).include?(current_locale)
+        if resource.preferred_language != current_locale
+          resource.update_column(:preferred_language, current_locale)
+        end
+      end
+    end
+
     stored_location_for(resource) || default_signed_in_path(resource)
   end
 
@@ -129,8 +141,6 @@ class ApplicationController < ActionController::Base
   end
 
   def default_signed_in_path(resource)
-    return admin_dashboard_path if resource.respond_to?(:admin?) && resource.admin?
-
     dashboard_path
   end
 
@@ -149,11 +159,15 @@ class ApplicationController < ActionController::Base
     parsed_locale = parse_locale(session[:locale])
     return parsed_locale if parsed_locale
 
-    # 4. Check browser Accept-Language header
+    # 4. Check cookie
+    parsed_locale = parse_locale(cookies[:locale])
+    return parsed_locale if parsed_locale
+
+    # 5. Check browser Accept-Language header
     parsed_locale = parse_locale_from_header
     return parsed_locale if parsed_locale
 
-    # 5. Default locale
+    # 6. Default locale
     I18n.default_locale
   end
 

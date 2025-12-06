@@ -55,7 +55,12 @@
     </script>
   </head>
 
-  <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black font-satoshi text-base text-gray-200">
+    <body
+    class="bg-whiten dark:bg-boxdark-2 dark:text-bodydark"
+    data-controller="sidebar layout"
+    data-direction="<%= text_direction %>"
+    data-lang="<%= I18n.locale %>"
+  >
     <div class="flex h-screen overflow-hidden" data-controller="sidebar">
       <!-- Hide sidebar on mobile/Turbo Native -->
       <% unless turbo_native_app? %>

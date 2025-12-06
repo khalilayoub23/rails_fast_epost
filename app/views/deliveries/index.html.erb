@@ -1,9 +1,9 @@
 <div class="space-y-6">
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <div>
-      <p class="text-sm uppercase tracking-wide text-gray-400">Delivery Tracking</p>
-      <h1 class="text-3xl font-semibold text-white">Court Deliveries</h1>
-      <p class="text-sm text-gray-400">Monitor case PDFs, barcodes, and immutable signatures in one TailAdmin workspace.</p>
+      <p class="text-sm uppercase tracking-wide text-gray-400"><%= t("deliveries.index.subtitle") %></p>
+      <h1 class="text-3xl font-semibold text-white"><%= t("deliveries.index.title") %></h1>
+      <p class="text-sm text-gray-400"><%= t("deliveries.index.description") %></p>
     </div>
     <div class="flex flex-wrap gap-3">
       <%= link_to t("deliveries.new", default: "New Delivery"), new_delivery_path,
@@ -13,17 +13,41 @@
   </div>
 
   <div class="rounded-2xl border border-gray-700 bg-gray-800/60 shadow-2xl">
+    <div class="border-b border-gray-700 px-4 py-4">
+      <%= form_with url: deliveries_path, method: :get, scope: :delivery_filter, local: true, class: "grid grid-cols-1 gap-3 md:grid-cols-5" do |f| %>
+        <div>
+          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
+          <%= f.select :status, options_for_select(Delivery.statuses.keys.map { |s| [s.titleize, s] }, @delivery_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+        </div>
+        <div>
+          <%= f.label :courier_id, t("dashboard.courier", default: "Courier"), class: "text-xs text-gray-400" %>
+          <%= f.select :courier_id, options_from_collection_for_select(@filter_courier_options, :id, :full_name, @delivery_filters[:courier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+        </div>
+        <div>
+          <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-gray-400" %>
+          <%= f.select :sender_id, options_from_collection_for_select(@filter_sender_options, :id, :full_name, @delivery_filters[:sender_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+        </div>
+        <div>
+          <%= f.label :recipient_id, t("dashboard.recipient", default: "Recipient"), class: "text-xs text-gray-400" %>
+          <%= f.select :recipient_id, options_from_collection_for_select(@filter_recipient_options, :id, :full_name, @delivery_filters[:recipient_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+        </div>
+        <div class="flex items-end justify-end">
+          <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-300" %>
+        </div>
+      <% end %>
+    </div>
+
     <% if @deliveries.any? %>
       <div class="max-w-full overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
             <tr class="border-b border-gray-700 bg-gray-900/40 text-left text-sm text-gray-300">
-              <th class="px-4 py-4 font-medium">Case</th>
-              <th class="px-4 py-4 font-medium">Participants</th>
-              <th class="px-4 py-4 font-medium">Status</th>
-              <th class="px-4 py-4 font-medium">Signatures</th>
-              <th class="px-4 py-4 font-medium">Updated</th>
-              <th class="px-4 py-4 text-right font-medium">Actions</th>
+              <th class="px-4 py-4 font-medium"><%= t("deliveries.index.table.case") %></th>
+              <th class="px-4 py-4 font-medium"><%= t("deliveries.index.table.participants") %></th>
+              <th class="px-4 py-4 font-medium"><%= t("deliveries.index.table.status") %></th>
+              <th class="px-4 py-4 font-medium"><%= t("deliveries.index.table.signatures") %></th>
+              <th class="px-4 py-4 font-medium"><%= t("deliveries.index.table.updated") %></th>
+              <th class="px-4 py-4 text-right font-medium"><%= t("deliveries.index.table.actions") %></th>
             </tr>
           </thead>
           <tbody>
@@ -36,9 +60,9 @@
                 </td>
                 <td class="px-4 py-4 align-top">
                   <div class="space-y-1 text-xs">
-                    <p><span class="font-semibold text-gray-300">Sender:</span> <%= delivery.sender&.full_name || "-" %></p>
-                    <p><span class="font-semibold text-gray-300">Courier:</span> <%= delivery.courier&.full_name || "-" %></p>
-                    <p><span class="font-semibold text-gray-300">Recipient:</span> <%= delivery.recipient&.full_name || "-" %></p>
+                    <p><span class="font-semibold text-gray-300"><%= t("deliveries.index.sender") %>:</span> <%= delivery.sender&.full_name || "-" %></p>
+                    <p><span class="font-semibold text-gray-300"><%= t("deliveries.index.courier") %>:</span> <%= delivery.courier&.full_name || "-" %></p>
+                    <p><span class="font-semibold text-gray-300"><%= t("deliveries.index.recipient") %>:</span> <%= delivery.recipient&.full_name || "-" %></p>
                   </div>
                 </td>
                 <td class="px-4 py-4 align-top">

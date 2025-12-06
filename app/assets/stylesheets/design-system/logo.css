@@ -35,6 +35,12 @@
   border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
+.dark .logo-icon {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
 .logo:hover .logo-icon {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.06);
   transform: translateY(-1px);
@@ -412,9 +418,9 @@
 }
 
 /* Automatically invert logo in dark mode if needed */
-[data-theme="dark"] .logo-auto-invert img,
-[data-theme="dark"] .logo-auto-invert svg {
-  filter: invert(1);
+.dark .logo-auto-invert img,
+.dark .logo-auto-invert svg {
+  filter: brightness(0) invert(1) !important;
 }
 
 /* Or use separate logos for dark mode */
@@ -426,11 +432,11 @@
   display: none;
 }
 
-[data-theme="dark"] .logo-light {
+.dark .logo-light {
   display: none;
 }
 
-[data-theme="dark"] .logo-dark {
+.dark .logo-dark {
   display: block;
 }
 

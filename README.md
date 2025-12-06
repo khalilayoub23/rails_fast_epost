@@ -7,12 +7,12 @@ A modern, full-featured postal and courier management system built with Rails 8,
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-## 🆕 Recent Progress (Nov 2025)
+## 🆕 Recent Progress (Dec 2025)
 
-- **Role-Specific Control Panels**: Dedicated dashboards for carriers, senders, lawyers, operations, and sellers now share a uniform TailAdmin shell with contextual breadcrumbs.
-- **Carrier Payout Accuracy**: `CarrierPayoutSyncJob` plus rake tooling keep every carrier dashboard and API response aligned with real payment activity.
-- **Locale-Aware Navigation**: Public layouts read locale direction from storage on boot, ship a native `<details>` locale picker, and include a system test that exercises Hebrew switching end-to-end.
-- **Premium Feedback UI**: Gradient flash notices with dismiss buttons mirror TailAdmin cards and respect RTL/bi-directional layouts.
+- **Payments & Webhooks Stabilized**: API now allows `Customer` payables for payments and webhooks; fixtures load dependencies deterministically to keep the suite green.
+- **PDF Generation Reliability**: Authorization PDFs render without the app layout, and tests stub Grover to avoid local Puppeteer requirements while still validating attachment.
+- **Proof Upload Coverage**: Added proof upload fixture and controller test stability for carrier control panel flows.
+- **Test Suite Health**: Full suite passes (`bin/rails test`); use it after fixture or payment-related changes.
 
 ## ✨ Features
 

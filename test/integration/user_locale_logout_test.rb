@@ -2,7 +2,7 @@ require "test_helper"
 
 class UserLocaleLogoutTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
-  fixtures :users
+  fixtures :all
 
   setup do
     @user = users(:admin)

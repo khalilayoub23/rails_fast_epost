@@ -2,15 +2,40 @@ import { Controller } from "@hotwired/stimulus"
 
 // Renders a simple inline SVG bar chart matching TailAdmin style, CSP-safe.
 export default class extends Controller {
-  static values = {
-    seriesA: Array,
-    seriesB: Array
-  }
+  static targets = ["chartContainer"]
 
   connect() {
-    const a = this.seriesAValue?.length ? this.seriesAValue : [120, 380, 220, 180, 260, 140, 80, 300, 190, 280, 220, 110]
-    const b = this.seriesBValue?.length ? this.seriesBValue : [100, 320, 200, 150, 210, 120, 60, 260, 160, 250, 190, 90]
-    this.element.innerHTML = this.renderBars(a, b)
+    this.renderChart('day')
+  }
+
+  update(event) {
+    // Reset all buttons style
+    this.element.querySelectorAll('button').forEach(btn => {
+      btn.className = "flex items-center justify-center min-w-[80px] px-3 py-2 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-white rounded-md transition-colors leading-tight"
+    })
+
+    // Set active style
+    event.currentTarget.className = "flex items-center justify-center min-w-[80px] rounded-md bg-yellow-400 px-3 py-2 text-xs font-medium text-gray-900 shadow-lg hover:bg-yellow-500 transition-colors leading-tight"
+
+    const period = event.params.period
+    this.renderChart(period)
+  }
+
+  renderChart(period) {
+    let a, b
+    
+    if (period === 'day') {
+       a = [120, 380, 220, 180, 260, 140, 80, 300, 190, 280, 220, 110]
+       b = [100, 320, 200, 150, 210, 120, 60, 260, 160, 250, 190, 90]
+    } else if (period === 'week') {
+       a = [180, 260, 140, 80, 300, 190, 280, 220, 110, 120, 380, 220]
+       b = [150, 210, 120, 60, 260, 160, 250, 190, 90, 100, 320, 200]
+    } else {
+       a = [220, 110, 120, 380, 220, 180, 260, 140, 80, 300, 190, 280]
+       b = [190, 90, 100, 320, 200, 150, 210, 120, 60, 260, 160, 250]
+    }
+
+    this.chartContainerTarget.innerHTML = this.renderBars(a, b)
   }
 
   renderBars(a, b) {

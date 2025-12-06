@@ -3,6 +3,112 @@ ru:
   language_name: "Русский"
   direction: "ltr"
 
+  # Dashboard
+  dashboard:
+    total_revenue: "Общий доход"
+    total_sales: "Общие продажи"
+    total_payments: "Всего платежей"
+    pending_orders: "Ожидающие заказы"
+    total_customers: "Всего клиентов"
+    day: "День"
+    week: "Неделя"
+    month: "Месяц"
+    monthly_target: "Ежемесячная цель"
+    this_month: "Этот месяц"
+    last_month: "Прошлый месяц"
+    monthly_target_description: "Цель, которую вы установили на каждый месяц"
+    earnings_today: "Вы заработали $%{amount} сегодня, это больше, чем в прошлом месяце"
+    keep_up_work: "Продолжайте в том же духе!"
+    target: "Цель"
+    revenue: "Доход"
+    today: "Сегодня"
+    recent_payments: "Последние платежи"
+    view_all: "Посмотреть все"
+    id: "ID"
+    provider: "Провайдер"
+    status: "Статус"
+    amount: "Сумма"
+    currency: "Валюта"
+    actions: "Действия"
+    recent_tasks: "Последние задачи"
+    no_customer: "Нет клиента"
+    view: "Просмотр"
+
+  # Sidebar
+  sidebar:
+    dashboard: "Панель управления"
+    payments: "Платежи"
+    customers: "Клиенты"
+    tasks: "Задачи"
+    court_deliveries: "Судебные доставки"
+    carriers: "Курьеры"
+    senders: "Отправители"
+    messengers: "Курьеры (вело)"
+    lawyers: "Адвокаты"
+    document_templates: "Шаблоны документов"
+    contact_inquiries: "Запросы контактов"
+    branding: "Брендинг"
+    admin_dashboard: "Панель администратора"
+
+  # Topbar
+  topbar:
+    welcome_back: "С возвращением,"
+    search_placeholder: "Поиск или введите команду..."
+    logout: "Выйти"
+    account: "Аккаунт"
+    admin: "Админ"
+    my_profile: "Мой профиль"
+    account_settings: "Настройки аккаунта"
+
+  # Deliveries
+  deliveries:
+    new:
+      subtitle: "Создать доставку"
+      title: "Новая судебная доставка"
+      description: "Определите отправителя, курьера, получателя и загрузите необязательные судебные документы для штрих-кодирования."
+    form:
+      case_number_placeholder: "например, CASE-2024-01"
+      notes_placeholder: "Дополнительные инструкции для курьера"
+      sender_label: "Отправитель / Адвокат"
+      choose_sender: "Выберите отправителя"
+      choose_courier: "Выберите курьера"
+      choose_recipient: "Выберите получателя"
+      pdf_help: "Необязательно: загрузите проштампованный PDF суда для внедрения штрих-кодов перед маршрутизацией подписи."
+    index:
+      subtitle: "Отслеживание доставки"
+      title: "Судебные доставки"
+      description: "Отслеживайте файлы дел, штрих-коды и неизменяемые подписи в одном рабочем пространстве."
+      sender: "Отправитель"
+      courier: "Курьер"
+      recipient: "Получатель"
+      table:
+        case: "Дело"
+        participants: "Участники"
+        status: "Статус"
+        signatures: "Подписи"
+        updated: "Обновлено"
+        actions: "Действия"
+    show:
+      subtitle: "Обзор доставки"
+      title: "Дело %{case_number}"
+      description: "Неизменяемый конвейер PDF с проверкой штрих-кода и хешированием подписей."
+      participants_title: "Участники"
+      sender: "Отправитель"
+      courier: "Курьер"
+      recipient: "Получатель"
+      notes: "Заметки"
+      no_notes: "Нет особых инструкций"
+      documents: "Документы"
+      docs:
+        original: "Оригинальный PDF суда"
+        base: "Базовый шаблон"
+        current: "Текущий PDF"
+        final: "Финальный PDF"
+    edit:
+      subtitle: "Обновить доставку"
+      title: "Редактировать %{case_number}"
+      description: "Настройте участников или загрузите новый PDF суда перед завершением подписей."
+
   # Landing page
   hero_title_1: "СКОРОСТЬ ВСТРЕЧАЕТ"
   hero_title_trust: "ДОВЕРИЕ."
@@ -290,6 +396,7 @@ ru:
     previous: "Предыдущий"
     submit: "Отправить"
     close: "Закрыть"
+    view: "Просмотр"
     yes: "Да"
     no: "Нет"
     confirm: "Подтвердить"
@@ -318,6 +425,7 @@ ru:
     updated_successfully: "Задача успешно обновлена!"
     deleted_successfully: "Задача успешно удалена!"
     status_updated: "Статус задачи успешно обновлён!"
+    mark_in_progress: "Отметить как выполняемое"
     payment_checkout_missing: "Не удалось запустить оплату через Stripe. Свяжитесь с администратором."
     
   # Customers - Клиенты

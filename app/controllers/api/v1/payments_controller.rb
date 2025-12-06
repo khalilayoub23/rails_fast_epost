@@ -99,6 +99,11 @@ module Api
         type = safe_string(params[:payable_type])
         id = params[:payable_id]
         return nil if type.blank? || id.blank?
+
+        # Whitelist allowed payable types
+        allowed_types = %w[Task Order Subscription Customer]
+        return nil unless allowed_types.include?(type)
+
         type.constantize.find_by(id: id)
       rescue NameError
         nil

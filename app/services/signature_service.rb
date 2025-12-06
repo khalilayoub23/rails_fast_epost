@@ -75,6 +75,7 @@ class SignatureService
       end
 
       add_watermark(document) if delivery.all_required_signatures_completed?
+      embed_attempt_metadata(document)
 
       Tempfile.create(["delivery-current", ".pdf"]) do |output|
         document.write(output.path, optimize: true)
@@ -104,6 +105,8 @@ class SignatureService
       message = DeliveryMailer.delivery_completed(delivery)
       message&.deliver_later
     end
+
+    notify_whatsapp_completion
   end
 
   def save_user_signature(user:, signature_file:)
@@ -223,6 +226,28 @@ class SignatureService
     end
   end
 
+  def embed_attempt_metadata(document)
+    attempts = delivery.tracking_events.where(event_type: "failed").order(:occurred_at).limit(5)
+    return if attempts.empty?
+
+    page = document.pages.first || document.pages.add
+    canvas = page.canvas
+    canvas.font_size(8)
+    canvas.fill_color("#555555")
+
+    attempts.each_with_index do |attempt, idx|
+      y = page.box.top - 80 - (idx * 12)
+      meta = attempt.metadata || {}
+      location = meta["location"] || {}
+      text = [
+        "Attempt ##{meta["attempt_number"] || idx + 1}",
+        attempt.occurred_at&.iso8601,
+        (location.present? ? "(#{location["lat"]}, #{location["lng"]})" : nil)
+      ].compact.join(" ")
+      canvas.text(text, at: [50, y])
+    end
+  end
+
   def attach_current_pdf(file)
     File.open(file.path, "rb") do |f|
       delivery.current_pdf.attach(
@@ -254,6 +279,14 @@ class SignatureService
     return unless delivery.recipient_signature_copy.attached?
 
     delivery.recipient.saved_signature.attach(delivery.recipient_signature_copy.blob)
+  end
+
+  def notify_whatsapp_completion
+    lawyer = delivery.sender
+    return unless lawyer&.respond_to?(:phone)
+
+    message = "Delivery #{delivery.case_number} completed"
+    WhatsappNotifier.notify(number: lawyer.phone, message: message)
   end
 
   def read_binary(file)

@@ -154,4 +154,28 @@ class TaskTest < ActiveSupport::TestCase
     task.priority = :express
     assert task.express?
   end
+
+  test "failed attempts record GPS metadata and increment" do
+    task = Task.create!(
+      customer: customers(:one),
+      carrier: carriers(:one),
+      package_type: "box",
+      start: "HQ",
+      target: "Court",
+      delivery_time: 1.day.from_now,
+      status: :pending,
+      barcode: "GPS123"
+    )
+
+    location = { lat: 32.1, lng: 34.8, accuracy: 5.0 }
+
+    assert_changes -> { task.reload.failed_attempts }, from: 0, to: 1 do
+      task.mark_failed_with_note!("No answer", location: location)
+    end
+
+    event = task.tracking_events.where(event_type: "failed").last
+    assert_equal location[:lat], event.metadata["location"]["lat"]
+    assert_equal location[:lng], event.metadata["location"]["lng"]
+    assert_equal 1, event.metadata["attempt_number"]
+  end
 end

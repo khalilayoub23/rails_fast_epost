@@ -1,5 +1,20 @@
 # Changelog - Database Schema Updates
 
+# Changelog - Database Schema Updates
+
+## [2025-12-06] - Payments Fixture & PDF Stability
+
+### Added
+- Proof upload fixture restored (`proof_uploads.yml`) to back controller destroy/create flows.
+
+### Changed
+- Payments API/webhook now accepts `Customer` as a payable type to match request specs.
+- Authorization PDF rendering skips the application layout; Grover is stubbed in tests to remove Puppeteer dependency while keeping PDF attachment coverage.
+- Fixture ordering ensures tasks load after senders/messengers/lawyers, eliminating FK violations during test boot.
+
+### Notes
+- Full suite passes locally: `bin/rails test`.
+
 ## [2025-11-21] - Task Priority Rollout
 
 ### Added

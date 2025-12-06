@@ -1,0 +1,24 @@
+
+/* Force sidebar link centering */
+.sidebar-nav-link {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Force logo white in dark mode - Extra Specificity */
+/* Removed aggressive filter to allow original colors if needed, but keeping brightness for now as requested by 'clean the logo' */
+html.dark .logo-auto-invert img,
+html.dark .logo-auto-invert svg,
+[data-theme="dark"] .logo-auto-invert img,
+[data-theme="dark"] .logo-auto-invert svg {
+  /* filter: brightness(0) invert(1) !important; */
+  /* Just remove background */
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Ensure avatar border is visible */
+html.dark .rounded-full.border-2 {
+  border-color: #6b7280 !important; /* gray-500 */
+}

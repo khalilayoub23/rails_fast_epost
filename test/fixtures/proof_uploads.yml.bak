@@ -1,0 +1,7 @@
+delivered_photo:
+  task: task_one
+  carrier: one
+  uploaded_by: operations_manager
+  category: photo
+  notes: "Signed by receiver"
+  recorded_at: <%= 1.hour.ago %>

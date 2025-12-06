@@ -32,6 +32,31 @@ class DeliveriesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to delivery_path(created)
   end
 
+  test "non participant cannot view delivery" do
+    sign_out @manager
+    outsider = users(:viewer)
+    sign_in outsider
+
+    get delivery_path(@delivery)
+    assert_response :not_found
+  end
+
+  test "manager can filter deliveries by sender" do
+    alternate_delivery = Delivery.create!(
+      case_number: "CASE-FILTER-001",
+      sender: users(:sender_user),
+      courier: @delivery.courier,
+      recipient: @delivery.recipient,
+      notes: "Filtered delivery"
+    )
+
+    get deliveries_path, params: { delivery_filter: { sender_id: @delivery.sender_id } }
+
+    assert_response :success
+    assert_includes response.body, @delivery.case_number
+    refute_includes response.body, alternate_delivery.case_number
+  end
+
   test "recipient cannot create delivery due to pundit policy" do
     recipient = users(:recipient_user)
     sign_out @manager

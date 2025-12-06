@@ -4,7 +4,6 @@ one:
   customer: one
   carrier: one
   sender: sender_two
-  lawyer: lawyer_one
   package_type: 'small'
   start: 'Start Address 1'
   target: 'Target Address 1'
@@ -16,7 +15,6 @@ one:
 task_one:
   customer: one
   carrier: one
-  lawyer: lawyer_one
   sender: sender_one
   package_type: 'medium'
   start: 'Legal Start Address'

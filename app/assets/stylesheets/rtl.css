@@ -158,6 +158,17 @@ html[dir="rtl"] #sidebar.-translate-x-full {
   transform: translateX(100%);
 }
 
+/* Fix for sidebar visibility on large screens in RTL */
+@media (min-width: 1024px) {
+  html[dir="rtl"] .lg\:translate-x-0 {
+    transform: translateX(0) !important;
+  }
+  
+  html[dir="rtl"] .lg\:static {
+    position: static !important;
+  }
+}
+
 /* Dropdown menu positioning for RTL */
 html[dir="rtl"] .dropdown-menu-right {
   left: 0;

@@ -42,6 +42,18 @@ class ApplicationPolicy
     user&.manager?
   end
 
+  def support_agent?
+    user&.support_agent?
+  end
+
+  def warehouse_agent?
+    user&.warehouse_agent?
+  end
+
+  def carrier_staff?
+    user&.carrier_staff?
+  end
+
   class Scope
     attr_reader :user, :scope
 

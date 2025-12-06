@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :sent_deliveries, class_name: "Delivery", foreign_key: :sender_id, inverse_of: :sender
   has_many :received_deliveries, class_name: "Delivery", foreign_key: :recipient_id, inverse_of: :recipient
   has_many :courier_deliveries, class_name: "Delivery", foreign_key: :courier_id, inverse_of: :courier
+  has_many :proof_uploads, foreign_key: :uploaded_by_id, dependent: :destroy
 
   has_one_attached :saved_signature
 
@@ -26,14 +27,18 @@ class User < ApplicationRecord
     viewer: "viewer",
     manager: "manager",
     operations_manager: "operations_manager",
-    admin: "admin"
+    admin: "admin",
+    support_agent: "support_agent",
+    warehouse_agent: "warehouse_agent",
+    carrier_staff: "carrier_staff"
   }, prefix: true
 
   enum :user_type, {
     sender: 0,
     lawyer: 1,
     courier: 2,
-    recipient: 3
+    recipient: 3,
+    ecommerce_seller: 4
   }, prefix: true
 
   # Validations
@@ -79,6 +84,18 @@ class User < ApplicationRecord
 
   def viewer?
     role == "viewer"
+  end
+
+  def support_agent?
+    role == "support_agent"
+  end
+
+  def warehouse_agent?
+    role == "warehouse_agent"
+  end
+
+  def carrier_staff?
+    role == "carrier_staff"
   end
 
   def has_saved_signature?

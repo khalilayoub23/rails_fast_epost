@@ -14,8 +14,11 @@
 
     <div class="hidden sm:block">
       <h1 class="text-title-md2 font-semibold text-black dark:text-white">
-        <%= content_for?(:page_title) ? yield(:page_title) : "Dashboard" %>
+        <%= content_for?(:page_title) ? yield(:page_title) : t('dashboard_title', default: 'Dashboard') %>
       </h1>
+      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+        <%= t('topbar.welcome_back', default: 'Welcome back,') %> <%= current_user&.full_name || current_user&.email || "User" %>
+      </p>
     </div>
 
   <div class="flex items-center gap-4 md:gap-7" data-controller="ui-prefs">
@@ -28,17 +31,22 @@
           <path fill-rule="evenodd" clip-rule="evenodd" d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"/>
           <path fill-rule="evenodd" clip-rule="evenodd" d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"/>
         </svg>
-        <input type="text" placeholder="Search or type command..." class="w-full bg-transparent text-black placeholder:text-body focus:outline-none dark:text-white xl:w-125" />
+        <input type="text" placeholder="<%= t('topbar.search_placeholder', default: 'Search or type command...') %>" class="w-full bg-transparent text-black placeholder:text-body focus:outline-none dark:text-white xl:w-125" />
         <span class="ml-2 hidden rounded-md border border-stroke px-1.5 py-0.5 text-xs text-body dark:border-strokedark sm:block">⌘K</span>
       </div>
 
       <!-- UI Pref Toggles -->
       <div class="hidden items-center gap-2 sm:flex">
-        <button class="rounded border border-stroke bg-white px-2.5 py-1.5 text-sm dark:bg-boxdark" data-action="click->ui-prefs#toggleDark">
-          <span class="material-icons text-dark dark:text-white" data-ui-prefs-target="darkIcon">dark_mode</span>
-        </button>
-        <button class="rounded border border-stroke bg-white px-2.5 py-1.5 text-sm dark:bg-boxdark" data-action="click->ui-prefs#toggleRtl">
-          <span class="material-icons text-dark dark:text-white" data-ui-prefs-target="rtlIcon">format_textdirection_r_to_l</span>
+        <button class="rounded border border-stroke bg-white px-2.5 py-1.5 text-sm dark:bg-boxdark hover:text-primary dark:hover:text-primary transition-colors" 
+                data-action="click->ui-prefs#toggleDark">
+          <!-- Sun Icon (for dark mode) -->
+          <svg class="hidden dark:block w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+            <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
+          </svg>
+          <!-- Moon Icon (for light mode) -->
+          <svg class="block dark:hidden w-5 h-5 fill-current text-dark" viewBox="0 0 24 24">
+            <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+          </svg>
         </button>
       </div>
 
@@ -46,24 +54,24 @@
       <%= button_to destroy_user_session_path,
             method: :delete,
             form: { class: "inline" },
-            class: "hidden items-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-bold text-black hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50 md:inline-flex" do %>
+            class: "hidden items-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-bold text-gray-900 hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50 md:inline-flex" do %>
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
         </svg>
-        Logout
+        <%= t('topbar.logout', default: 'Logout') %>
       <% end %>
 
       <!-- User Area -->
       <div class="relative" data-controller="dropdown">
-        <button class="flex items-center gap-4" data-action="click->dropdown#toggle">
+        <button class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 hover:border-yellow-400/50 hover:bg-yellow-400/10 transition-all duration-300" data-action="click->dropdown#toggle">
           <span class="hidden text-right lg:block">
-            <span class="block text-sm font-medium text-black dark:text-white">Account</span>
-            <span class="block text-xs">Admin</span>
+            <span class="block text-sm font-medium text-black dark:text-white"><%= t('topbar.account', default: 'Account') %></span>
+            <span class="block text-xs text-gray-500 dark:text-gray-400"><%= current_user&.role&.humanize&.titleize || t('topbar.admin', default: 'Admin') %></span>
           </span>
-          <span class="h-12 w-12 rounded-full">
-            <img src="data:image/svg+xml,%3Csvg width='112' height='112' viewBox='0 0 112 112' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='56' cy='56' r='56' fill='url(%23paint0_linear_25_319)'/%3E%3Cpath d='M42 84V74.5C42 66.4919 48.4919 60 56.5 60H69.5C77.5081 60 84 66.4919 84 74.5V84' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='63' cy='44' r='14' stroke='white' stroke-width='4'/%3E%3Cdefs%3E%3ClinearGradient id='paint0_linear_25_319' x1='56' y1='0' x2='56' y2='112' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233C50E0'/%3E%3Cstop offset='1' stop-color='%23809CFF'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E" alt="User" class="h-12 w-12 rounded-full" />
+          <span class="h-10 w-10 rounded-full border border-white/10 shadow-sm overflow-hidden">
+            <img src="data:image/svg+xml,%3Csvg width='112' height='112' viewBox='0 0 112 112' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='56' cy='56' r='56' fill='url(%23paint0_linear_25_319)'/%3E%3Cpath d='M42 84V74.5C42 66.4919 48.4919 60 56.5 60H69.5C77.5081 60 84 66.4919 84 74.5V84' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='63' cy='44' r='14' stroke='white' stroke-width='4'/%3E%3Cdefs%3E%3ClinearGradient id='paint0_linear_25_319' x1='56' y1='0' x2='56' y2='112' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233C50E0'/%3E%3Cstop offset='1' stop-color='%23809CFF'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E" alt="User" class="h-full w-full object-cover" />
           </span>
-          <svg class="hidden fill-current sm:block" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="hidden fill-current text-gray-500 sm:block" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M0.410765 0.910734C0.736202 0.585297 1.26384 0.585297 1.58928 0.910734L6.00002 5.32148L10.4108 0.910734C10.7362 0.585297 11.2638 0.585297 11.5893 0.910734C11.9147 1.23617 11.9147 1.76381 11.5893 2.08924L6.58928 7.08924C6.26384 7.41468 5.7362 7.41468 5.41077 7.08924L0.410765 2.08924C0.0853277 1.76381 0.0853277 1.23617 0.410765 0.910734Z"/>
           </svg>
         </button>
@@ -73,13 +81,13 @@
             <li>
               <%= link_to profile_path, class: "flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" do %>
                 <span class="material-icons text-lg">person</span>
-                My Profile
+                <%= t('topbar.my_profile', default: 'My Profile') %>
               <% end %>
             </li>
             <li>
               <%= link_to settings_path, class: "flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" do %>
                 <span class="material-icons text-lg">settings</span>
-                Account Settings
+                <%= t('topbar.account_settings', default: 'Account Settings') %>
               <% end %>
             </li>
             <li>
@@ -88,7 +96,7 @@
                     form: { class: "w-full text-left" },
                     class: "flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" do %>
                 <span class="material-icons text-lg">logout</span>
-                Logout
+                <%= t('topbar.logout', default: 'Logout') %>
               <% end %>
             </li>
           </ul>

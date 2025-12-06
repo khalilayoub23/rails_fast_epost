@@ -3,6 +3,112 @@ ar:
   language_name: "العربية"
   direction: "rtl"
 
+  # Dashboard
+  dashboard:
+    total_revenue: "إجمالي الإيرادات"
+    total_sales: "إجمالي المبيعات"
+    total_payments: "إجمالي المدفوعات"
+    pending_orders: "الطلبات المعلقة"
+    total_customers: "إجمالي العملاء"
+    day: "يوم"
+    week: "أسبوع"
+    month: "شهر"
+    monthly_target: "الهدف الشهري"
+    this_month: "هذا الشهر"
+    last_month: "الشهر الماضي"
+    monthly_target_description: "الهدف الذي حددته لكل شهر"
+    earnings_today: "لقد كسبت %{amount}$ اليوم، وهو أعلى من الشهر الماضي"
+    keep_up_work: "استمر في العمل الجيد!"
+    target: "الهدف"
+    revenue: "الإيرادات"
+    today: "اليوم"
+    recent_payments: "المدفوعات الأخيرة"
+    view_all: "عرض الكل"
+    id: "المعرف"
+    provider: "المزود"
+    status: "الحالة"
+    amount: "المبلغ"
+    currency: "العملة"
+    actions: "الإجراءات"
+    recent_tasks: "المهام الأخيرة"
+    no_customer: "لا يوجد عميل"
+    view: "عرض"
+
+  # Sidebar
+  sidebar:
+    dashboard: "لوحة التحكم"
+    payments: "المدفوعات"
+    customers: "العملاء"
+    tasks: "المهام"
+    court_deliveries: "تسليمات المحكمة"
+    carriers: "شركات النقل"
+    senders: "المرسلون"
+    messengers: "السعاة"
+    lawyers: "المحامون"
+    document_templates: "قوالب المستندات"
+    contact_inquiries: "استفسارات الاتصال"
+    branding: "العلامة التجارية"
+    admin_dashboard: "لوحة تحكم المسؤول"
+
+  # Topbar
+  topbar:
+    welcome_back: "مرحبًا بعودتك،"
+    search_placeholder: "ابحث أو اكتب أمرًا..."
+    logout: "تسجيل الخروج"
+    account: "الحساب"
+    admin: "مسؤول"
+    my_profile: "ملفي الشخصي"
+    account_settings: "إعدادات الحساب"
+
+  # Deliveries
+  deliveries:
+    new:
+      subtitle: "إنشاء توصيل"
+      title: "توصيل محكمة جديد"
+      description: "حدد المرسل والساعي والمستلم وقم بتحميل مستندات المحكمة الاختيارية لختم الباركود."
+    form:
+      case_number_placeholder: "مثال: CASE-2024-01"
+      notes_placeholder: "تعليمات الساعي الاختيارية"
+      sender_label: "المرسل / المحامي"
+      choose_sender: "اختر المرسل"
+      choose_courier: "اختر الساعي"
+      choose_recipient: "اختر المستلم"
+      pdf_help: "اختياري: قم بتحميل ملف PDF المحكمة المختوم لإدخال الباركود قبل توجيه التوقيع."
+    index:
+      subtitle: "تتبع التوصيل"
+      title: "توصيلات المحكمة"
+      description: "مراقبة ملفات القضايا والباركود والتوقيعات غير القابلة للتغيير في مساحة عمل واحدة."
+      sender: "المرسل"
+      courier: "الساعي"
+      recipient: "المستلم"
+      table:
+        case: "القضية"
+        participants: "المشاركين"
+        status: "الحالة"
+        signatures: "التوقيعات"
+        updated: "تم التحديث"
+        actions: "إجراءات"
+    show:
+      subtitle: "نظرة عامة على التوصيل"
+      title: "القضية %{case_number}"
+      description: "خط أنابيب PDF غير قابل للتغيير مع التحقق من الباركود وتجزئة التوقيع."
+      participants_title: "المشاركين"
+      sender: "المرسل"
+      courier: "الساعي"
+      recipient: "المستلم"
+      notes: "ملاحظات"
+      no_notes: "لا توجد تعليمات خاصة"
+      documents: "المستندات"
+      docs:
+        original: "PDF المحكمة الأصلي"
+        base: "القالب الأساسي"
+        current: "PDF الحالي"
+        final: "PDF النهائي"
+    edit:
+      subtitle: "تحديث التوصيل"
+      title: "تعديل %{case_number}"
+      description: "تعديل المشاركين أو تحميل PDF محكمة جديد قبل الانتهاء من التوقيعات."
+
   # Landing page
   hero_title_1: "السرعة تلتقي"
   hero_title_trust: "الثقة."
@@ -292,6 +398,7 @@ ar:
     previous: "السابق"
     submit: "إرسال"
     close: "إغلاق"
+    view: "عرض"
     yes: "نعم"
     no: "لا"
     confirm: "تأكيد"
@@ -320,6 +427,7 @@ ar:
     updated_successfully: "تم تحديث المهمة بنجاح!"
     deleted_successfully: "تم حذف المهمة بنجاح!"
     status_updated: "تم تحديث حالة المهمة بنجاح!"
+    mark_in_progress: "تحديد قيد التنفيذ"
     payment_checkout_missing: "تعذر بدء دفعة Stripe. يرجى التواصل مع المسؤول."
     
   # Customers - العملاء

@@ -45,6 +45,42 @@
     </div>
   <% end %>
 
+  <% if task.door_affix_authorized? %>
+    <div class="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 space-y-2">
+      <p class="text-[10px] uppercase tracking-wide text-amber-200">Door affix (available after 3 failed attempts)</p>
+      <p class="text-[11px] text-amber-100">Upload required evidence: door photo and address photo. Extras optional. Video optional.</p>
+      <%= form_with url: door_affix_control_panel_carriers_task_path(task), method: :post, data: { turbo: false }, html: { enctype: "multipart/form-data" }, class: "space-y-2 text-xs" do |form| %>
+        <div class="grid grid-cols-1 gap-2">
+          <div>
+            <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Door photo (required)</label>
+            <input type="file" name="proof_uploads[][file]" accept="image/*" required class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" />
+            <input type="hidden" name="proof_uploads[][category]" value="door_affix_photo" />
+          </div>
+          <div>
+            <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Address photo (required)</label>
+            <input type="file" name="proof_uploads[][file]" accept="image/*" required class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" />
+            <input type="hidden" name="proof_uploads[][category]" value="door_affix_address" />
+          </div>
+          <div>
+            <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Extra photo (optional)</label>
+            <input type="file" name="proof_uploads[][file]" accept="image/*" class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" />
+            <input type="hidden" name="proof_uploads[][category]" value="door_affix_extra" />
+          </div>
+          <div>
+            <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Video (optional)</label>
+            <input type="file" name="proof_uploads[][file]" accept="video/*" class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" />
+            <input type="hidden" name="proof_uploads[][category]" value="door_affix_video" />
+          </div>
+          <div>
+            <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Notes</label>
+            <textarea name="proof_uploads[][notes]" rows="2" class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-100" placeholder="Notes (optional)"></textarea>
+          </div>
+        </div>
+        <%= form.submit "Submit door affix", class: "rounded-md border border-amber-500/50 bg-amber-500/10 px-2 py-1 text-amber-100" %>
+      <% end %>
+    </div>
+  <% end %>
+
   <%= form_with url: control_panel_carriers_task_proof_uploads_path(task), method: :post, data: { turbo: false }, html: { enctype: "multipart/form-data" }, class: "space-y-2 text-xs" do |form| %>
     <div>
       <label class="mb-1 block text-gray-300 text-xxs uppercase tracking-wide">Upload proof</label>

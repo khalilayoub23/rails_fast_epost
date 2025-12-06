@@ -5,6 +5,8 @@ class DeliveryMailer < ApplicationMailer
     @delivery = delivery
     @user = user
     @role = role
+    token = SignatureToken.generate(delivery: delivery, user: user, role: role)
+    @signature_url = new_delivery_signature_url(delivery, role: role, token: token)
     mail(to: user.email, subject: t("mailers.delivery.signature_request.subject", default: "Signature requested for case #{delivery.case_number}"))
   end
 

@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         member do
           patch :status, to: "tasks#update_status"
           patch :flag_issue, to: "tasks#flag_issue"
+          post :door_affix, to: "tasks#door_affix"
         end
         resources :proof_uploads, only: [ :create, :destroy ]
       end
@@ -158,6 +159,7 @@ Rails.application.routes.draw do
         resources :tasks, only: [ :index, :update ]
         resources :payouts, only: [ :index, :show ]
         resources :events, only: [ :index ]
+        post "tasks/:id/door_affix", to: "tasks#door_affix", as: :door_affix_task
       end
 
       resources :tasks

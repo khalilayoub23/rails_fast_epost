@@ -32,6 +32,112 @@ en:
   language_name: "English"
   direction: "ltr"
 
+  # Dashboard
+  dashboard:
+    total_revenue: "Total Revenue"
+    total_sales: "Total Sales"
+    total_payments: "Total Payments"
+    pending_orders: "Pending Orders"
+    total_customers: "Total Customers"
+    day: "Day"
+    week: "Week"
+    month: "Month"
+    monthly_target: "Monthly Target"
+    this_month: "This Month"
+    last_month: "Last Month"
+    monthly_target_description: "Target you've set for each month"
+    earnings_today: "You earn $%{amount} today, it's higher than last month"
+    keep_up_work: "Keep up your good work!"
+    target: "Target"
+    revenue: "Revenue"
+    today: "Today"
+    recent_payments: "Recent Payments"
+    view_all: "View all"
+    id: "ID"
+    provider: "Provider"
+    status: "Status"
+    amount: "Amount"
+    currency: "Currency"
+    actions: "Actions"
+    recent_tasks: "Recent Tasks"
+    no_customer: "No Customer"
+    view: "View"
+
+  # Sidebar
+  sidebar:
+    dashboard: "Dashboard"
+    payments: "Payments"
+    customers: "Customers"
+    tasks: "Tasks"
+    court_deliveries: "Court Deliveries"
+    carriers: "Carriers"
+    senders: "Senders"
+    messengers: "Messengers"
+    lawyers: "Lawyers"
+    document_templates: "Document Templates"
+    contact_inquiries: "Contact Inquiries"
+    branding: "Branding"
+    admin_dashboard: "Admin Dashboard"
+
+  # Topbar
+  topbar:
+    welcome_back: "Welcome back,"
+    search_placeholder: "Search or type command..."
+    logout: "Logout"
+    account: "Account"
+    admin: "Admin"
+    my_profile: "My Profile"
+    account_settings: "Account Settings"
+
+  # Deliveries
+  deliveries:
+    new:
+      subtitle: "Create Delivery"
+      title: "New court delivery"
+      description: "Define sender, courier, recipient, and upload optional court PDFs for barcode stamping."
+    form:
+      case_number_placeholder: "e.g., CASE-2024-01"
+      notes_placeholder: "Optional courier instructions"
+      sender_label: "Sender / Lawyer"
+      choose_sender: "Choose sender"
+      choose_courier: "Choose courier"
+      choose_recipient: "Choose recipient"
+      pdf_help: "Optional: upload the stamped court PDF to inject barcodes before signature routing."
+    index:
+      subtitle: "Delivery Tracking"
+      title: "Court Deliveries"
+      description: "Monitor case PDFs, barcodes, and immutable signatures in one TailAdmin workspace."
+      sender: "Sender"
+      courier: "Courier"
+      recipient: "Recipient"
+      table:
+        case: "Case"
+        participants: "Participants"
+        status: "Status"
+        signatures: "Signatures"
+        updated: "Updated"
+        actions: "Actions"
+    show:
+      subtitle: "Delivery overview"
+      title: "Case %{case_number}"
+      description: "Immutable PDF pipeline with barcode verification and signature hashing."
+      participants_title: "Participants"
+      sender: "Sender"
+      courier: "Courier"
+      recipient: "Recipient"
+      notes: "Notes"
+      no_notes: "No special instructions"
+      documents: "Documents"
+      docs:
+        original: "Original court PDF"
+        base: "Base template"
+        current: "Current PDF"
+        final: "Final PDF"
+    edit:
+      subtitle: "Update Delivery"
+      title: "Edit %{case_number}"
+      description: "Adjust participants or upload a new court PDF before signatures are finalized."
+
   # Landing page / marketing hero
   hero_title_1: "SPEED MEETS"
   hero_title_trust: "TRUST."
@@ -312,6 +418,7 @@ en:
     previous: "Previous"
     submit: "Submit"
     close: "Close"
+    view: "View"
     yes: "Yes"
     no: "No"
     confirm: "Confirm"
@@ -339,6 +446,7 @@ en:
     updated_successfully: "Task updated successfully!"
     deleted_successfully: "Task deleted successfully!"
     status_updated: "Task status updated successfully!"
+    mark_in_progress: "Mark In Progress"
     payment_checkout_missing: "Unable to start Stripe checkout. Please contact an administrator."
 
   deliveries:

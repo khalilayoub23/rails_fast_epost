@@ -6,8 +6,12 @@ class TurboStreamsChannel < ApplicationCable::Channel
 
     # Subscribe to broadcast streams based on params
     if params[:streamable_type] && params[:streamable_id]
-      streamable = params[:streamable_type].constantize.find(params[:streamable_id])
-      stream_for streamable
+      # Whitelist allowed streamable types to prevent RCE
+      allowed_types = %w[Task Payment Notification Delivery]
+      if allowed_types.include?(params[:streamable_type])
+        streamable = params[:streamable_type].constantize.find(params[:streamable_id])
+        stream_for streamable
+      end
     end
   end
 

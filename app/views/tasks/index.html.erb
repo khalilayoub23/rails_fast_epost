@@ -71,7 +71,7 @@
         <%= t('tasks.title') %> <%= "for #{@customer.name}" if @customer %>
       </h2>
       <%= link_to (@customer ? new_customer_task_path(@customer) : new_task_path),
-          class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-4 text-center font-medium text-white hover:bg-opacity-90" do %>
+          class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-4 text-center font-medium text-gray-900 hover:bg-opacity-90" do %>
         <span class="material-icons <%= margin_end_class('2') %> text-xl">add</span>
         <%= t('tasks.new') %>
       <% end %>
@@ -86,13 +86,13 @@
         <%= f.text_field :q,
             value: params[:q],
             placeholder: t('common.search'),
-            class: "flex-1 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
+            class: "flex-1 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-[#1d2a39] dark:text-white dark:focus:border-primary" %>
           <%= f.select :priority,
             Task.priorities.keys.map { |priority| [priority.titleize, priority] },
             { include_blank: t('tasks.priority_all', default: 'All priorities'), selected: params[:priority] },
-              class: "md:w-52 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
+              class: "md:w-52 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-[#1d2a39] dark:text-white dark:focus:border-primary" %>
         <%= f.submit t('common.search'),
-            class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-6 text-center font-medium text-white hover:bg-opacity-90" %>
+            class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-6 text-center font-medium text-gray-900 hover:bg-opacity-90" %>
       <% end %>
     </div>
 
@@ -100,14 +100,14 @@
       <div class="max-w-full overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
-            <tr class="bg-gray-2 text-left dark:bg-meta-4">
-              <th class="min-w-[100px] px-4 py-4 font-medium text-dark dark:text-white">ID</th>
-              <th class="min-w-[140px] px-4 py-4 font-medium text-dark dark:text-white">Status</th>
-              <th class="min-w-[120px] px-4 py-4 font-medium text-dark dark:text-white">Priority</th>
-              <th class="min-w-[180px] px-4 py-4 font-medium text-dark dark:text-white">Customer</th>
-              <th class="min-w-[120px] px-4 py-4 font-medium text-dark dark:text-white">Carrier</th>
-              <th class="min-w-[160px] px-4 py-4 font-medium text-dark dark:text-white">Created</th>
-              <th class="px-4 py-4 text-right font-medium text-dark dark:text-white">Actions</th>
+            <tr class="bg-gray-100 text-left dark:bg-gray-800 border-b border-gray-700">
+              <th class="min-w-[100px] px-4 py-4 font-medium text-gray-900 dark:text-white">ID</th>
+              <th class="min-w-[140px] px-4 py-4 font-medium text-gray-900 dark:text-white">Status</th>
+              <th class="min-w-[120px] px-4 py-4 font-medium text-gray-900 dark:text-white">Priority</th>
+              <th class="min-w-[180px] px-4 py-4 font-medium text-gray-900 dark:text-white">Customer</th>
+              <th class="min-w-[120px] px-4 py-4 font-medium text-gray-900 dark:text-white">Carrier</th>
+              <th class="min-w-[160px] px-4 py-4 font-medium text-gray-900 dark:text-white">Created</th>
+              <th class="px-4 py-4 text-right font-medium text-gray-900 dark:text-white">Actions</th>
             </tr>
           </thead>
           <tbody id="tasks_list">

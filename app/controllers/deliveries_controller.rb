@@ -4,7 +4,12 @@ class DeliveriesController < ApplicationController
 
   def index
     authorize Delivery
-    @deliveries = policy_scope(Delivery).includes(:sender, :courier, :recipient).order(created_at: :desc)
+    scope = policy_scope(Delivery).includes(:sender, :courier, :recipient).order(created_at: :desc)
+    @delivery_filters = delivery_filter_params
+    @filter_sender_options = User.where(user_type: User.user_types.slice(:sender, :lawyer, :ecommerce_seller).values).order(:full_name)
+    @filter_courier_options = User.where(user_type: User.user_types[:courier]).order(:full_name)
+    @filter_recipient_options = User.where(user_type: User.user_types[:recipient]).order(:full_name)
+    @deliveries = apply_filters(scope)
   end
 
   def show
@@ -61,7 +66,7 @@ class DeliveriesController < ApplicationController
   private
 
   def set_delivery
-    @delivery = Delivery.find(params[:id])
+    @delivery = policy_scope(Delivery).find(params[:id])
   end
 
   def delivery_params
@@ -73,5 +78,18 @@ class DeliveriesController < ApplicationController
       .order(:full_name)
     @courier_options = User.where(user_type: User.user_types[:courier]).order(:full_name)
     @recipient_options = User.where(user_type: User.user_types[:recipient]).order(:full_name)
+  end
+
+  def delivery_filter_params
+    params.fetch(:delivery_filter, {}).permit(:status, :courier_id, :sender_id, :recipient_id)
+  end
+
+  def apply_filters(scope)
+    filters = delivery_filter_params
+    scope = scope.where(status: filters[:status]) if filters[:status].present?
+    scope = scope.where(courier_id: filters[:courier_id]) if filters[:courier_id].present?
+    scope = scope.where(sender_id: filters[:sender_id]) if filters[:sender_id].present?
+    scope = scope.where(recipient_id: filters[:recipient_id]) if filters[:recipient_id].present?
+    scope
   end
 end

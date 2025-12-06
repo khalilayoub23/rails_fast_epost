@@ -1,0 +1,5 @@
+class AddAuthorizationPdfToDeliveries < ActiveRecord::Migration[8.0]
+  def change
+    add_column :deliveries, :authorization_generated_at, :datetime
+  end
+end

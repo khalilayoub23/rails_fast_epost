@@ -12,6 +12,7 @@
 @import "design-system/components.css";
 @import "design-system/mobile.css";
 @import "design-system/logo.css";
+@import "sidebar_overrides.css";
 
 /* Fast Epost Landing System */
 :root {
@@ -759,5 +760,12 @@ html[dir="rtl"] .pl-9 { padding-left: 0 !important; padding-right: 2.25rem !impo
 .locale-switcher:hover .locale-switcher__icon {
   transform: rotate(180deg);
 }
+
+/* Dark mode select option fix */
+.dark select option {
+  background-color: #1d2a39;
+  color: white;
+}
+
 
 

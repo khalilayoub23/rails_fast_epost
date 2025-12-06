@@ -8,43 +8,31 @@ export default class extends Controller {
   static targets = ["input", "message"]
 
   connect() {
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleInput = this.handleInput.bind(this)
-
-    this.element.addEventListener("submit", this.handleSubmit)
-
-    this.inputTargets.forEach((input) => {
-      if (!input.dataset.formValidationOriginalClass) {
-        const base = input.dataset.formValidationBaseClass || input.className
-        input.dataset.formValidationOriginalClass = (base || "").trim()
-      }
-
-      input.addEventListener("input", this.handleInput)
-      input.addEventListener("change", this.handleInput)
+    this.validateOnInput()
+    this.element.addEventListener("submit", this.validate.bind(this))
+    this.inputTargets.forEach(input => {
+      const hasValue = this.fieldHasValue(input)
+      input.dataset.formValidationState = hasValue || !input.required ? "valid" : "invalid"
     })
-
-    this.initializeServerErrors()
+    this.updateSubmitButton()
   }
 
-  disconnect() {
-    this.element.removeEventListener("submit", this.handleSubmit)
-    this.inputTargets.forEach((input) => {
-      input.removeEventListener("input", this.handleInput)
-      input.removeEventListener("change", this.handleInput)
+  validateOnInput() {
+    this.inputTargets.forEach(input => {
+      const handler = () => this.validateField(input)
+      input.addEventListener("input", handler)
+      input.addEventListener("blur", handler)
+      input.addEventListener("change", handler)
     })
   }
 
-  handleSubmit(event) {
+  validate(event) {
     const invalidFields = this.validateForm()
 
     if (invalidFields.length > 0) {
       event.preventDefault()
       invalidFields[0].focus({ preventScroll: false })
     }
-  }
-
-  handleInput(event) {
-    this.validateField(event.target)
   }
 
   validateForm() {
@@ -60,6 +48,10 @@ export default class extends Controller {
   }
 
   validateField(input) {
+    const errorElement = input.parentElement.querySelector("[data-form-validation-target='error']")
+    let isValid = true
+    let errorMessage = ""
+
     const rules = (input.dataset.formValidationRules || "")
       .split(" ")
       .map((rule) => rule.trim())
@@ -74,11 +66,8 @@ export default class extends Controller {
       switch (rule) {
         case "presence":
           if (this.blank(input)) {
-            this.showError(
-              input,
-              input.dataset.formValidationMessagePresence || "This field is required."
-            )
-            return false
+            errorMessage = input.dataset.formValidationMessagePresence || "This field is required."
+            isValid = false
           }
           break
         default:
@@ -86,8 +75,15 @@ export default class extends Controller {
       }
     }
 
-    this.clearError(input)
-    return true
+    if (isValid) {
+      this.clearError(input)
+    } else {
+      this.showError(input, errorMessage)
+    }
+
+    input.dataset.formValidationState = isValid ? "valid" : "invalid"
+    this.updateSubmitButton()
+    return isValid
   }
 
   blank(input) {
@@ -169,5 +165,31 @@ export default class extends Controller {
         }
       }
     })
+  }
+
+  updateSubmitButton() {
+    if (!this.hasSubmitTarget) return
+
+    const allValid = this.inputTargets.every(input => input.dataset.formValidationState !== "invalid")
+
+    if (allValid) {
+      this.submitTarget.disabled = false
+      this.submitTarget.classList.remove("opacity-50", "cursor-not-allowed")
+    } else {
+      this.submitTarget.disabled = true
+      this.submitTarget.classList.add("opacity-50", "cursor-not-allowed")
+    }
+  }
+
+  fieldHasValue(input) {
+    if (input.type === "checkbox" || input.type === "radio") {
+      return input.checked
+    }
+
+    if (input.tagName === "SELECT") {
+      return input.value !== "" && input.value !== null
+    }
+
+    return input.value?.trim().length > 0
   }
 }

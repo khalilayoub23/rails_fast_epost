@@ -3,8 +3,11 @@ require "stringio"
 
 class SignaturesController < ApplicationController
   include ActionView::RecordIdentifier
+
+  skip_before_action :authenticate_user!, only: [ :new, :create, :verify, :status ]
   before_action :set_delivery
   before_action :set_role
+  before_action :set_signature_actor
 
   def new
     authorize @delivery, :sign?
@@ -18,7 +21,7 @@ class SignaturesController < ApplicationController
     signature_file = signature_io_for_role
     SignatureService.new(@delivery).add_signature(
       role: @role,
-      signed_by_user: current_user,
+      signed_by_user: @signature_actor,
       ip_address: request.remote_ip,
       signature_file: signature_file
     )
@@ -84,11 +87,37 @@ class SignaturesController < ApplicationController
     @role = (params[:role] || params[:signature_role]).to_s.downcase
   end
 
+  def set_signature_actor
+    @signature_actor = current_user if user_signed_in?
+
+    token = params[:token].presence
+    return unless token
+
+    data = SignatureToken.verify(token)
+    raise Pundit::NotAuthorizedError unless data
+
+    delivery_id = data[:delivery_id]
+    role = data[:role]&.to_s
+    user_id = data[:user_id]
+
+    raise Pundit::NotAuthorizedError unless delivery_id == @delivery.id && role == @role
+
+    user = User.find_by(id: user_id)
+    raise Pundit::NotAuthorizedError unless user
+
+    @signature_actor = user
+  end
+
+  def pundit_user
+    @signature_actor || super
+  end
+
   def ensure_user_matches_role!
     unless Delivery::SIGNATURE_ROLES.include?(@role)
       raise ActionController::BadRequest, "Unknown signature role"
     end
-    raise Pundit::NotAuthorizedError unless @delivery.public_send(@role) == current_user
+    user_for_role = @delivery.public_send(@role)
+    raise Pundit::NotAuthorizedError unless user_for_role.present? && user_for_role == @signature_actor
     raise StandardError, t("signatures.already_signed", default: "Signature already recorded for this role") if @delivery.signature_completed?(@role)
   end
 

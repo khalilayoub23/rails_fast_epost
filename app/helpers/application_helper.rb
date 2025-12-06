@@ -137,6 +137,14 @@ module ApplicationHelper
     "flash-#{type}-#{Time.current.to_i}"
   end
 
+  def format_sek(amount_cents, precision: 0)
+    return number_to_currency(0, unit: "SEK", precision: precision) if amount_cents.nil?
+
+    rate = ENV.fetch("SEK_EXCHANGE_RATE", "11.0").to_f
+    amount_sek = (amount_cents.to_i / 100.0) * rate
+    number_to_currency(amount_sek, unit: "SEK", precision: precision)
+  end
+
   def form_input_base_classes
     "mt-2 w-full rounded-xl border border-gray-600 bg-gray-900/60 px-3 py-2 text-white focus:border-yellow-400 focus:ring-0"
   end

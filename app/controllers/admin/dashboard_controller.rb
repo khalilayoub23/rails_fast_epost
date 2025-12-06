@@ -3,9 +3,7 @@ module Admin
     before_action :require_admin!
 
     def index
-      @payments_count = Payment.count
-      @customers_count = Customer.count
-      @revenue_total_cents = Payment.where(gateway_status: :succeeded).sum(:amount_cents).to_i
+      redirect_to dashboard_path
     end
 
     private

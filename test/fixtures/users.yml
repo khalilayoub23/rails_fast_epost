@@ -59,3 +59,12 @@ recipient_user:
   full_name: Recipient Example
   phone: "+972504444444"
   address: "Rothschild 20, Tel Aviv"
+
+carrier_one:
+  email: carrier1_user@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+  role: viewer
+  user_type: courier
+  full_name: Carrier One User
+  phone: "+15550000001"
+  address: "1 Carrier Way"

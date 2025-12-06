@@ -1,14 +1,14 @@
-<tr id="<%= dom_id(payment) %>" class="border-b border-stroke hover:bg-gray-2">
+<tr id="<%= dom_id(payment) %>" class="border-b border-gray-700 hover:bg-gray-900/30 transition-colors">
   <td class="px-4 py-4">
-    <%= link_to payment_path(payment), class: "text-sm font-medium text-primary hover:underline" do %>
+    <%= link_to payment_path(payment), class: "text-sm font-medium text-yellow-400 hover:text-yellow-300 transition-colors" do %>
       #<%= payment.id %>
     <% end %>
   </td>
-  <td class="px-4 py-4 text-sm text-dark"><%= payment.provider.presence || "-" %></td>
+  <td class="px-4 py-4 text-sm text-gray-300"><%= payment.provider.presence || "-" %></td>
   <td class="px-4 py-4"><%= render "shared/status_badge", status: payment.gateway_status %></td>
-  <td class="px-4 py-4 text-sm text-dark"><%= payment.amount_cents ? ("%.2f" % (payment.amount_cents / 100.0)) : "-" %></td>
-  <td class="px-4 py-4 text-sm text-body"><%= payment.currency %></td>
+  <td class="px-4 py-4 text-sm text-gray-300"><%= payment.amount_cents ? ("%.2f" % (payment.amount_cents / 100.0)) : "-" %></td>
+  <td class="px-4 py-4 text-sm text-gray-400"><%= payment.currency %></td>
   <td class="px-4 py-4 text-right text-sm font-medium">
-    <%= link_to 'View', payment_path(payment), class: "inline-flex items-center rounded border border-stroke px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+    <%= link_to t('dashboard.view', default: 'View'), payment_path(payment), class: "inline-flex items-center justify-center rounded-lg border border-gray-600 bg-gray-800/50 px-3 py-1.5 text-xs font-medium text-gray-300 hover:bg-gray-700 hover:border-yellow-400/50 hover:text-yellow-400 transition-all" %>
   </td>
 </tr>

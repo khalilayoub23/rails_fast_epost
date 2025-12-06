@@ -206,6 +206,13 @@ module Admin
       end
 
       begin
+        # Whitelist allowed tables for import
+        allowed_tables = ActiveRecord::Base.connection.tables
+        unless allowed_tables.include?(table)
+          redirect_to admin_database_path, alert: "Invalid table name"
+          return
+        end
+
         model_class = table.singularize.camelize.constantize
         require "csv"
 
@@ -239,8 +246,13 @@ module Admin
         next if table == "schema_migrations" || table == "ar_internal_metadata"
 
         begin
-          count = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{table}").first["count"]
-          size = ActiveRecord::Base.connection.execute("SELECT pg_size_pretty(pg_total_relation_size('#{table}'))").first["pg_size_pretty"]
+          # Use quote_table_name to prevent SQL injection
+          quoted_table = ActiveRecord::Base.connection.quote_table_name(table)
+          count = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{quoted_table}").first["count"]
+          
+          # For size, we use quote for the string literal
+          quoted_table_str = ActiveRecord::Base.connection.quote(table)
+          size = ActiveRecord::Base.connection.execute("SELECT pg_size_pretty(pg_total_relation_size(#{quoted_table_str}))").first["pg_size_pretty"]
 
           stats << {
             name: table,

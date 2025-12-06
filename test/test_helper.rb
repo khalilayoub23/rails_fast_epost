@@ -9,6 +9,11 @@ require "securerandom"
 if Rails.env.test?
   module SafeReferentialIntegrity
     def disable_referential_integrity
+      transaction(requires_new: true) do
+        execute("SET CONSTRAINTS ALL DEFERRED")
+        yield
+      end
+    rescue StandardError
       transaction(requires_new: true) { yield }
     end
   end
@@ -70,7 +75,30 @@ module SequentialFixtureLoader
     names = Array(fixture_set_names)
     return super if names.length <= 1
 
-    names.flat_map do |name|
+    if names.any? { |n| %w[remarks carrier_payouts payments].include?(n.to_s) }
+      names |= %w[tasks users customers carriers senders lawyers messengers]
+    end
+
+    if names.any? { |n| n.to_s == "tasks" }
+      names |= %w[customers carriers senders messengers lawyers]
+    end
+
+    priority = lambda do |name|
+      case name.to_s
+      when "carriers" then 0
+      when "customers" then 1
+      when "senders" then 2
+      when "messengers" then 3
+      when "lawyers" then 4
+      when "users" then 5
+      when "tasks" then 6
+      when "payments" then 7
+      when "carrier_payouts" then 8
+      else 10
+      end
+    end
+
+    names.sort_by(&priority).flat_map do |name|
       super(fixtures_directories, [ name ], class_names, config)
     end
   end

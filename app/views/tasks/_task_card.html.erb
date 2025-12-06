@@ -1,5 +1,5 @@
 <%= turbo_frame_tag task do %>
-  <tr class="border-b border-stroke hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4">
+  <tr class="border-b border-gray-200 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800">
     <td class="px-4 py-4">
       <%= link_to task_path(task), class: "text-sm font-medium text-primary hover:underline" do %>
         #<%= task.id %>
@@ -11,13 +11,13 @@
     <td class="px-4 py-4">
         <%= render "shared/priority_badge", priority: task.priority %>
     </td>
-    <td class="px-4 py-4 text-sm text-dark dark:text-white">
+    <td class="px-4 py-4 text-sm text-gray-900 dark:text-white">
       <%= task.customer&.name || "-" %>
     </td>
-    <td class="px-4 py-4 text-sm text-body dark:text-bodydark">
+    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-400">
       <%= task.carrier&.name || "##{task.carrier_id}" %>
     </td>
-    <td class="px-4 py-4 text-sm text-body dark:text-bodydark">
+    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-400">
       <%= l(task.created_at, format: :short) %>
     </td>
     <td class="px-4 py-4 text-right">

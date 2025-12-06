@@ -17,6 +17,7 @@ class Delivery < ApplicationRecord
   has_one_attached :sender_signature_copy
   has_one_attached :courier_signature_copy
   has_one_attached :recipient_signature_copy
+  has_one_attached :authorization_pdf
 
   enum :status, {
     draft: 0,

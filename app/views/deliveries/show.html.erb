@@ -1,9 +1,9 @@
 <div class="space-y-6">
   <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
     <div>
-      <p class="text-sm uppercase tracking-wide text-gray-400">Delivery overview</p>
-      <h1 class="text-3xl font-semibold text-white">Case <%= @delivery.case_number %></h1>
-      <p class="text-sm text-gray-400">Immutable PDF pipeline with barcode verification and signature hashing.</p>
+      <p class="text-sm uppercase tracking-wide text-gray-400"><%= t("deliveries.show.subtitle") %></p>
+      <h1 class="text-3xl font-semibold text-white"><%= t("deliveries.show.title", case_number: @delivery.case_number) %></h1>
+      <p class="text-sm text-gray-400"><%= t("deliveries.show.description") %></p>
     </div>
     <div class="flex flex-wrap gap-3">
       <%= link_to t("deliveries.back", default: "Back"), deliveries_path,
@@ -40,24 +40,24 @@
 
   <div class="grid gap-6 md:grid-cols-2">
     <div class="rounded-2xl border border-gray-700 bg-gray-900/40 p-6 shadow-xl">
-      <h2 class="text-xl font-semibold text-white">Participants</h2>
+      <h2 class="text-xl font-semibold text-white"><%= t("deliveries.show.participants_title") %></h2>
       <dl class="mt-4 space-y-4 text-sm text-gray-300">
         <div class="flex items-start justify-between">
-          <dt class="text-gray-400">Sender</dt>
+          <dt class="text-gray-400"><%= t("deliveries.show.sender") %></dt>
           <dd class="text-right">
             <p class="font-semibold text-white"><%= @delivery.sender&.full_name %></p>
             <p class="text-xs text-gray-500"><%= @delivery.sender&.email %></p>
           </dd>
         </div>
         <div class="flex items-start justify-between">
-          <dt class="text-gray-400">Courier</dt>
+          <dt class="text-gray-400"><%= t("deliveries.show.courier") %></dt>
           <dd class="text-right">
             <p class="font-semibold text-white"><%= @delivery.courier&.full_name %></p>
             <p class="text-xs text-gray-500"><%= @delivery.courier&.email %></p>
           </dd>
         </div>
         <div class="flex items-start justify-between">
-          <dt class="text-gray-400">Recipient</dt>
+          <dt class="text-gray-400"><%= t("deliveries.show.recipient") %></dt>
           <dd class="text-right">
             <p class="font-semibold text-white"><%= @delivery.recipient&.full_name %></p>
             <p class="text-xs text-gray-500"><%= @delivery.recipient&.email %></p>
@@ -65,19 +65,19 @@
         </div>
       </dl>
       <div class="mt-6 rounded-xl border border-dashed border-gray-600 px-4 py-3 text-xs text-gray-400">
-        <p class="font-semibold text-gray-200">Notes</p>
-        <p><%= @delivery.notes.presence || "No special instructions" %></p>
+        <p class="font-semibold text-gray-200"><%= t("deliveries.show.notes") %></p>
+        <p><%= @delivery.notes.presence || t("deliveries.show.no_notes") %></p>
       </div>
     </div>
 
     <div class="rounded-2xl border border-gray-700 bg-gray-900/40 p-6 shadow-xl">
-      <h2 class="text-xl font-semibold text-white">Documents</h2>
+      <h2 class="text-xl font-semibold text-white"><%= t("deliveries.show.documents") %></h2>
       <ul class="mt-4 space-y-4 text-sm">
         <% {
-          "Original court PDF" => @delivery.original_court_pdf,
-          "Base template" => @delivery.base_pdf,
-          "Current PDF" => @delivery.current_pdf,
-          "Final PDF" => @delivery.final_pdf
+          t("deliveries.show.docs.original") => @delivery.original_court_pdf,
+          t("deliveries.show.docs.base") => @delivery.base_pdf,
+          t("deliveries.show.docs.current") => @delivery.current_pdf,
+          t("deliveries.show.docs.final") => @delivery.final_pdf
         }.each do |label, blob| %>
           <li class="flex items-center justify-between rounded-xl border border-gray-800/80 bg-gray-800/40 px-4 py-3">
             <div>

@@ -19,6 +19,7 @@ class PdfProcessorService
 
       document = HexaPDF::Document.open(input.path)
       inject_barcode(document)
+      embed_attempt_metadata(document)
 
       Tempfile.create(["delivery-base", ".pdf"]) do |output|
         document.write(output.path, optimize: true)
@@ -42,6 +43,29 @@ class PdfProcessorService
 
     attach_as_base_and_current(StringIO.new(pdf_binary), source: "generated")
     create_pdf_generated_event("generated")
+  end
+
+  def embed_attempt_metadata(document)
+    page = document.pages.first || document.pages.add
+    canvas = page.canvas
+
+    attempts = delivery.tracking_events.where(event_type: "failed").order(:occurred_at).limit(5)
+    return if attempts.empty?
+
+    canvas.font_size(8)
+    canvas.fill_color("#555555")
+
+    attempts.each_with_index do |attempt, idx|
+      y = page.box.top - 100 - (idx * 12)
+      meta = attempt.metadata || {}
+      location = meta["location"] || {}
+      text = [
+        "Attempt ##{meta["attempt_number"] || idx + 1}",
+        attempt.occurred_at&.iso8601,
+        (location.present? ? "(#{location["lat"]}, #{location["lng"]})" : nil)
+      ].compact.join(" ")
+      canvas.text(text, at: [50, y])
+    end
   end
 
   private

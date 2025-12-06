@@ -3,7 +3,7 @@ require "securerandom"
 
 class AuthFlowsTest < ApplicationSystemTestCase
   def setup
-    User.delete_all
+    User.destroy_all
     @viewer = User.create!(email: "viewer@example.com", password: "password", role: "viewer")
     @admin = User.create!(email: "admin@example.com", password: "password", role: "admin")
   end
@@ -21,7 +21,7 @@ class AuthFlowsTest < ApplicationSystemTestCase
     assert_text I18n.t("dashboard_title", default: "Dashboard")
   end
 
-  test "admin lands on admin dashboard after login" do
+  test "admin lands on main dashboard after login" do
     visit new_user_session_path
 
     within "form#new_user" do
@@ -30,8 +30,8 @@ class AuthFlowsTest < ApplicationSystemTestCase
       submit_devise_form
     end
 
-    assert_current_path admin_dashboard_path
-    assert_text "Admin Dashboard"
+    assert_current_path dashboard_path
+    assert_text I18n.t("dashboard_title", default: "Dashboard")
   end
 
   test "new signup redirects straight to dashboard" do

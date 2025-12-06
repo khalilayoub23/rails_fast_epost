@@ -49,7 +49,7 @@
     </script>
   </head>
 
-  <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black font-satoshi text-base text-gray-200">
+  <body class="bg-gray-100 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-black font-satoshi text-base text-body dark:text-gray-200 transition-colors duration-300">
     <% unless content_for?(:page_title) %>
       <% content_for :page_title, (@control_panel_title.presence || "Carrier Control Panel") %>
     <% end %>

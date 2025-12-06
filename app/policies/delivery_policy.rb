@@ -4,15 +4,15 @@ class DeliveryPolicy < ApplicationPolicy
   end
 
   def show?
-    manager? || participant?
+    manager? || support_agent? || warehouse_agent? || participant?
   end
 
   def create?
-    manager? || user&.user_type_sender? || user&.user_type_lawyer?
+    manager? || user&.user_type_sender? || user&.user_type_lawyer? || user&.user_type_ecommerce_seller?
   end
 
   def update?
-    manager?
+    manager? || warehouse_agent?
   end
 
   def destroy?
@@ -29,8 +29,8 @@ class DeliveryPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.all if user&.manager?
       return scope.none unless user
+      return scope.all if user.manager? || user.support_agent? || user.warehouse_agent?
 
       scope.where("sender_id = :id OR courier_id = :id OR recipient_id = :id", id: user.id)
     end

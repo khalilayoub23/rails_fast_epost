@@ -36,7 +36,10 @@ export default class extends Controller {
 
   applyDark(dark) {
     document.documentElement.classList.toggle("dark", dark)
+    // Icon toggling is now handled by CSS classes (hidden/block dark:hidden/dark:block) in the SVG
+    // so we don't need to manually update textContent anymore.
     if (this.hasDarkIconTarget) {
+      // Legacy support if we revert to span
       this.darkIconTarget.textContent = dark ? "light_mode" : "dark_mode"
     }
   }

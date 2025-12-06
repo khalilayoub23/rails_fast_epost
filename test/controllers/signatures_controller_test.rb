@@ -27,4 +27,19 @@ class SignaturesControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, dom_id(@delivery, :progress)
     assert_includes response.body, dom_id(@delivery, "recipient_signature_card")
   end
+
+  test "unauthenticated recipient can sign with valid token" do
+    sign_out @recipient
+    data_uri = fixture_signature_data_uri
+    token = SignatureToken.generate(delivery: @delivery, user: @recipient, role: "recipient")
+
+    assert_difference("SignatureEvent.count", 1) do
+      post delivery_signatures_path(@delivery, format: :json),
+        params: { signature_role: "recipient", signature_data: data_uri, token: token }
+    end
+
+    assert_response :success
+    @delivery.reload
+    assert @delivery.signature_completed?("recipient")
+  end
 end

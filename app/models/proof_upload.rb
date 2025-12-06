@@ -10,7 +10,11 @@ class ProofUpload < ApplicationRecord
     signature: "signature",
     id_check: "id_check",
     document: "document",
-    other: "other"
+    other: "other",
+    door_affix_photo: "door_affix_photo",
+    door_affix_address: "door_affix_address",
+    door_affix_extra: "door_affix_extra",
+    door_affix_video: "door_affix_video"
   }, default: :photo
 
   validates :file, presence: true

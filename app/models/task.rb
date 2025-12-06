@@ -3,10 +3,10 @@ require "securerandom"
 class Task < ApplicationRecord
   include AASM
 
-  MAX_FAILED_ATTEMPTS = 2
+  MAX_FAILED_ATTEMPTS = 3
   STORAGE_WINDOW = 3.days
 
-  attr_reader :current_failure_note
+  attr_reader :current_failure_note, :current_failure_location
 
   SNAPSHOT_ATTRIBUTES = %w[
     customer_id carrier_id sender_id messenger_id lawyer_id
@@ -128,12 +128,14 @@ class Task < ApplicationRecord
     end
   end
 
-  def mark_failed_with_note!(note, failure_code: nil)
+  def mark_failed_with_note!(note, failure_code: nil, location: nil)
     self.failure_code = failure_code if failure_code.present?
     @current_failure_note = note
+    @current_failure_location = location
     mark_failed!
   ensure
     @current_failure_note = nil
+    @current_failure_location = nil
   end
 
   def begin_retry_after_customer_response!
@@ -154,6 +156,7 @@ class Task < ApplicationRecord
 
   def handle_failed_attempt
     note = @current_failure_note.presence || last_failure_note
+    location = @current_failure_location
     attempts = failed_attempts.to_i + 1
     storage_deadline = attempts <= MAX_FAILED_ATTEMPTS ? STORAGE_WINDOW.from_now : nil
 
@@ -171,7 +174,8 @@ class Task < ApplicationRecord
       description: failure_event_description(note, attempts, storage_deadline),
       metadata: {
         attempt_number: attempts,
-        stored_until: storage_deadline&.iso8601
+        stored_until: storage_deadline&.iso8601,
+        location: location&.slice(:lat, :lng, :accuracy)
       }.compact
     )
 

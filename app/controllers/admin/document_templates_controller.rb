@@ -88,7 +88,7 @@ class Admin::DocumentTemplatesController < ApplicationController
   # POST /admin/document_templates/:id/generate
   def generate
     variable_values = params[:variables] || {}
-    action_type = params[:action] # "preview" or "download"
+    action_type = params[:mode].presence || "download" # "preview" or "download"
 
     begin
       pdf_data = @document_template.generate_pdf(variable_values)

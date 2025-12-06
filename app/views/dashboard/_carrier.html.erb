@@ -1,0 +1,72 @@
+<div class="grid grid-cols-1 gap-6">
+  <%= render "dashboard/kpis",
+    card1_value: @payouts_count,
+    card1_label: t("dashboard.total_payouts", default: "Payouts"),
+    card2_value: @pending_payouts.size,
+    card2_label: t("dashboard.pending_payouts", default: "Pending"),
+    card3_value: @completed_tasks_count,
+    card3_label: t("dashboard.completed_tasks", default: "Delivered"),
+    card4_value: @earnings_total_cents,
+    card4_label: t("dashboard.total_earnings", default: "Earnings"),
+    card4_currency: true %>
+
+  <div class="rounded-2xl border border-gray-700 bg-gray-800/60 p-6 shadow-xl">
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg font-semibold text-white"><%= t("dashboard.recent_payouts", default: "Payouts") %></h3>
+    </div>
+    <div class="mt-4 max-w-full overflow-x-auto">
+      <table class="w-full text-sm text-gray-200">
+        <thead class="border-b border-gray-700 text-left text-yellow-300">
+          <tr>
+            <th class="px-4 py-2">ID</th>
+            <th class="px-4 py-2"><%= t("dashboard.status", default: "Status") %></th>
+            <th class="px-4 py-2"><%= t("dashboard.amount", default: "Amount") %></th>
+            <th class="px-4 py-2"><%= t("dashboard.date", default: "Date") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @recent_payouts.each do |payout| %>
+            <tr class="border-b border-gray-800 hover:bg-gray-900/40">
+              <td class="px-4 py-2"><%= payout.id %></td>
+              <td class="px-4 py-2"><%= payout.status %></td>
+              <td class="px-4 py-2"><%= format_sek(payout.amount_cents) %></td>
+              <td class="px-4 py-2"><%= l(payout.created_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rounded-2xl border border-gray-700 bg-gray-800/60 p-6 shadow-xl">
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg font-semibold text-white"><%= t("dashboard.recent_tasks", default: "Tasks") %></h3>
+    </div>
+
+    <%= form_with url: dashboard_path, method: :get, scope: :task_filter, local: true, class: "mt-4 grid grid-cols-1 gap-3 md:grid-cols-3" do |f| %>
+      <div>
+        <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
+        <%= f.select :status, options_for_select(@task_statuses.map { |s| [s.titleize, s] }, @task_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+      </div>
+      <div>
+        <%= f.label :carrier_id, t("dashboard.carrier", default: "Carrier"), class: "text-xs text-gray-400" %>
+        <%= f.select :carrier_id, options_from_collection_for_select(@carrier_options, :id, :name, @task_filters[:carrier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+      </div>
+      <div class="flex items-end justify-end">
+        <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-300" %>
+      </div>
+    <% end %>
+
+    <div class="mt-4 grid grid-cols-1 gap-3">
+      <% @recent_tasks.each do |task| %>
+        <div class="flex items-center justify-between rounded-xl border border-gray-700/50 bg-gray-900/40 px-4 py-3">
+          <div>
+            <p class="text-sm font-semibold text-white"><%= link_to(task.title.presence || "Task ##{task.id}", task_path(task), class: "hover:text-yellow-300") %></p>
+            <p class="text-xs text-gray-400"><%= task.status %> • <%= task.carrier&.name || t("dashboard.no_carrier", default: "No carrier") %></p>
+          </div>
+          <%= render "shared/status_badge", status: task.status %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
