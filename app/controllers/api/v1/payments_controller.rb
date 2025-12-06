@@ -95,10 +95,16 @@ module Api
 
       private
 
+      # Allowlist of payable types to prevent Remote Code Execution
+      ALLOWED_PAYABLE_TYPES = %w[
+        Task Delivery User Customer Carrier
+      ].freeze
+
       def find_payable
         type = safe_string(params[:payable_type])
         id = params[:payable_id]
         return nil if type.blank? || id.blank?
+        return nil unless ALLOWED_PAYABLE_TYPES.include?(type)
         type.constantize.find_by(id: id)
       rescue NameError
         nil
