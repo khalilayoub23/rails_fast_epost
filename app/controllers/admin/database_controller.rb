@@ -184,7 +184,7 @@ module Admin
 
     def export_table_sql(table)
       model_class = safe_model_class(table)
-      return "-- Error: Invalid table name" unless model_class
+      return "-- Error: Export failed" unless model_class
 
       records = model_class.all
 

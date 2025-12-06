@@ -16,7 +16,8 @@ class TurboStreamsChannel < ApplicationCable::Channel
         reject
         return
       end
-      streamable = streamable_type.constantize.find(params[:streamable_id])
+      streamable = streamable_type.constantize.find_by(id: params[:streamable_id])
+      return reject unless streamable
       stream_for streamable
     end
   end
