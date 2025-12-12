@@ -3,18 +3,18 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
+      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <%= link_to root_path, class: "text-gray-500 hover:text-gray-700" do %>
+            <%= link_to root_path, class: "text-body hover:text-dark" do %>
               <span class="material-icons text-sm mr-1">home</span>
               Home
             <% end %>
           </li>
           <li>
             <div class="flex items-center">
-              <span class="material-icons text-sm text-gray-400 mx-1">chevron_right</span>
-              <span class="text-gray-700 font-medium">Settings</span>
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <span class="text-dark font-medium">Settings</span>
             </div>
           </li>
         </ol>
@@ -22,14 +22,177 @@
     </div>
   </div>
 
-  <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-lg font-semibold text-gray-900">Application Settings</h2>
+  <div class="grid grid-cols-1 gap-6">
+    <!-- General Settings -->
+    <div class="rounded-sm border border-stroke bg-white shadow-default">
+      <div class="border-b border-stroke px-5 py-4">
+        <h3 class="text-title-md font-semibold text-dark">General Settings</h3>
+      </div>
+      <div class="px-5 pt-6 pb-6">
+        <div class="mb-5">
+          <label class="mb-3 block text-sm font-medium text-dark">Application Name</label>
+          <input
+            type="text"
+            placeholder="Fast Epost 3"
+            value="Fast Epost 3"
+            disabled
+            class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none"
+          />
+        </div>
+        <div class="mb-5">
+          <label class="mb-3 block text-sm font-medium text-dark">Default Language</label>
+          <select disabled class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none">
+            <option>English</option>
+            <option>Hebrew</option>
+            <option>Arabic</option>
+            <option>French</option>
+          </select>
+        </div>
+        <div class="mb-5">
+          <label class="mb-3 block text-sm font-medium text-dark">Timezone</label>
+          <select disabled class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none">
+            <option>UTC</option>
+            <option>America/New_York</option>
+            <option>Europe/London</option>
+            <option>Asia/Jerusalem</option>
+          </select>
+        </div>
+      </div>
     </div>
-    <div class="px-6 py-8 text-center">
-      <span class="material-icons text-gray-400 text-4xl mb-2">settings</span>
-      <h3 class="text-sm font-medium text-gray-900 mb-1">System Configuration</h3>
-      <p class="text-sm text-gray-500">Application settings panel coming soon.</p>
+
+    <!-- Notification Settings -->
+    <div class="rounded-sm border border-stroke bg-white shadow-default">
+      <div class="border-b border-stroke px-5 py-4">
+        <h3 class="text-title-md font-semibold text-dark">Notification Preferences</h3>
+      </div>
+      <div class="px-5 pt-6 pb-6">
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <h4 class="text-sm font-medium text-dark">Email Notifications</h4>
+            <p class="text-sm text-body">Receive email alerts for important events</p>
+          </div>
+          <label class="relative inline-flex cursor-pointer items-center">
+            <input type="checkbox" class="sr-only peer" disabled checked />
+            <div class="peer h-6 w-11 rounded-full bg-gray after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300"></div>
+          </label>
+        </div>
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <h4 class="text-sm font-medium text-dark">Payment Alerts</h4>
+            <p class="text-sm text-body">Get notified about payment status changes</p>
+          </div>
+          <label class="relative inline-flex cursor-pointer items-center">
+            <input type="checkbox" class="sr-only peer" disabled checked />
+            <div class="peer h-6 w-11 rounded-full bg-gray after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300"></div>
+          </label>
+        </div>
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <h4 class="text-sm font-medium text-dark">Task Updates</h4>
+            <p class="text-sm text-body">Receive notifications for task status changes</p>
+          </div>
+          <label class="relative inline-flex cursor-pointer items-center">
+            <input type="checkbox" class="sr-only peer" disabled />
+            <div class="peer h-6 w-11 rounded-full bg-gray after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Gateway Settings (Admin Only) -->
+    <% if current_user&.admin? %>
+    <div class="rounded-sm border border-stroke bg-white shadow-default">
+      <div class="border-b border-stroke px-5 py-4">
+        <h3 class="text-title-md font-semibold text-dark">Payment Gateway Configuration</h3>
+      </div>
+      <div class="px-5 pt-6 pb-6">
+        <div class="mb-5">
+          <label class="mb-3 block text-sm font-medium text-dark">Stripe API Key</label>
+          <input
+            type="password"
+            placeholder="sk_test_..."
+            disabled
+            class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none"
+          />
+        </div>
+        <div class="mb-5">
+          <label class="mb-3 block text-sm font-medium text-dark">PayPal Client ID</label>
+          <input
+            type="text"
+            placeholder="AaB..."
+            disabled
+            class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none"
+          />
+        </div>
+        <div class="mb-5">
+          <label class="mb-3 block text-sm font-medium text-dark">PayPal Client Secret</label>
+          <input
+            type="password"
+            placeholder="ECD..."
+            disabled
+            class="w-full rounded border border-stroke bg-gray px-4 py-2.5 text-dark focus:border-primary focus:outline-none"
+          />
+        </div>
+      </div>
+    </div>
+    <% end %>
+
+    <!-- System Information -->
+    <div class="rounded-sm border border-stroke bg-white shadow-default">
+      <div class="border-b border-stroke px-5 py-4">
+        <h3 class="text-title-md font-semibold text-dark">System Information</h3>
+      </div>
+      <div class="px-5 pt-6 pb-6">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-whiter">
+              <span class="material-icons text-primary">info</span>
+            </div>
+            <div>
+              <p class="text-sm text-body">Rails Version</p>
+              <p class="font-medium text-dark">8.0.1</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-whiter">
+              <span class="material-icons text-primary">code</span>
+            </div>
+            <div>
+              <p class="text-sm text-body">Ruby Version</p>
+              <p class="font-medium text-dark">3.3.4</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-whiter">
+              <span class="material-icons text-primary">storage</span>
+            </div>
+            <div>
+              <p class="text-sm text-body">Database</p>
+              <p class="font-medium text-dark">PostgreSQL 16</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-whiter">
+              <span class="material-icons text-primary">palette</span>
+            </div>
+            <div>
+              <p class="text-sm text-body">Design System</p>
+              <p class="font-medium text-dark">TailAdmin</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Notice -->
+    <div class="rounded-sm border border-stroke bg-whiten px-5 py-4">
+      <div class="flex items-start gap-3">
+        <span class="material-icons text-warning text-xl">info</span>
+        <div>
+          <p class="text-sm font-medium text-dark">Settings Management Coming Soon</p>
+          <p class="text-sm text-body mt-1">Full settings management features will be available in a future update. This includes email configuration, webhook management, and more.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
