@@ -107,7 +107,8 @@ class User < ApplicationRecord
   end
 
   def viewer?
-    role.in?(%w[sender lawyer ecommerce_seller])
+    role.in?(%w[sender lawyer ecommerce_seller]) ||
+      user_type_sender? || user_type_lawyer? || user_type_ecommerce_seller?
   end
 
   def lawyer?

@@ -113,7 +113,22 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     message = t("messages.unauthorized", default: "You are not authorized to perform this action.")
     respond_to do |format|
-      format.html { redirect_back fallback_location: root_path, alert: message }
+      format.html do
+        referer_path = nil
+        if request.referer.present?
+          begin
+            referer_path = URI.parse(request.referer).path
+          rescue URI::InvalidURIError
+            referer_path = nil
+          end
+        end
+
+        if referer_path.present? && referer_path != request.path
+          redirect_back fallback_location: landing_page_path, alert: message
+        else
+          redirect_to landing_page_path, alert: message
+        end
+      end
       format.json { render json: { error: message }, status: :forbidden }
       format.turbo_stream do
         render turbo_stream: turbo_stream.append(
