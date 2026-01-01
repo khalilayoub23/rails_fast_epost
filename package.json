@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@stripe/stripe-js": "^4.0.0"
+    "@stripe/stripe-js": "^4.0.0",
+    "puppeteer": "^23.9.0"
   },
   "scripts": {
     "test": "echo \"No JS tests defined\" && exit 0",

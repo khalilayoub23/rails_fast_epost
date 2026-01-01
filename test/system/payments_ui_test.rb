@@ -24,8 +24,8 @@ class PaymentsUiTest < ApplicationSystemTestCase
     assert_text @payment.category
   end
 
-  test "viewer attempting to open payment form is blocked" do
-    authenticate_as(@viewer)
+  test "sender attempting to open payment form is blocked" do
+    authenticate_as(@sender)
 
     visit new_payment_path
 
@@ -52,10 +52,10 @@ class PaymentsUiTest < ApplicationSystemTestCase
       role: :manager
     )
 
-    @viewer = User.create!(
-      email: "viewer-#{SecureRandom.hex(4)}@example.com",
+    @sender = User.create!(
+      email: "sender-#{SecureRandom.hex(4)}@example.com",
       password: "password",
-      role: :viewer
+      role: :sender
     )
 
     carrier = Carrier.create!(

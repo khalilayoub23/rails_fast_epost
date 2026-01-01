@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_06_000300) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_23_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -138,6 +138,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_06_000300) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "bulk_discount", precision: 5, scale: 2
     t.index ["email"], name: "index_customers_on_email", unique: true
     t.index ["name"], name: "index_customers_on_name"
   end
@@ -593,15 +594,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_06_000300) do
     t.decimal "last_success_lat", precision: 10, scale: 6
     t.decimal "last_success_lng", precision: 10, scale: 6
     t.decimal "last_success_accuracy", precision: 8, scale: 2
+    t.bigint "created_by_id"
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at"
+    t.decimal "distance", precision: 10, scale: 2
+    t.integer "task_type", default: 1, null: false
     t.index ["barcode"], name: "index_tasks_on_barcode", unique: true
     t.index ["carrier_id"], name: "index_tasks_on_carrier_id"
     t.index ["created_at"], name: "index_tasks_on_created_at"
+    t.index ["created_by_id"], name: "index_tasks_on_created_by_id"
     t.index ["customer_id"], name: "index_tasks_on_customer_id"
+    t.index ["distance"], name: "index_tasks_on_distance"
     t.index ["lawyer_id"], name: "index_tasks_on_lawyer_id"
     t.index ["messenger_id"], name: "index_tasks_on_messenger_id"
     t.index ["priority"], name: "index_tasks_on_priority"
+    t.index ["published"], name: "index_tasks_on_published"
     t.index ["sender_id"], name: "index_tasks_on_sender_id"
     t.index ["status"], name: "index_tasks_on_status"
+    t.index ["task_type"], name: "index_tasks_on_task_type"
   end
 
   create_table "tracking_events", force: :cascade do |t|
@@ -628,14 +638,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_06_000300) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "role", default: "viewer", null: false
+    t.string "role", default: "sender", null: false
     t.string "preferred_language"
     t.string "provider"
     t.string "uid"
     t.string "full_name"
     t.string "phone"
     t.text "address"
-    t.integer "user_type", default: 0, null: false, comment: "0=sender,1=lawyer,2=courier,3=recipient"
+    t.integer "user_type", null: false, comment: "0=sender,1=lawyer,2=courier,3=recipient"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -687,5 +697,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_06_000300) do
   add_foreign_key "tasks", "lawyers"
   add_foreign_key "tasks", "messengers"
   add_foreign_key "tasks", "senders"
+  add_foreign_key "tasks", "users", column: "created_by_id"
   add_foreign_key "tracking_events", "tasks", on_delete: :cascade
 end

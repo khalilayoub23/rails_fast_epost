@@ -53,6 +53,8 @@ module Api
             uploads.each do |upload_params|
               next unless upload_params[:file].present?
 
+              validate_upload!(upload_params[:file])
+
               task.proof_uploads.create!(
                 file: upload_params[:file],
                 notes: upload_params[:notes],
@@ -79,6 +81,17 @@ module Api
         end
 
         private
+
+        def validate_upload!(file)
+          allowed_types = %w[image/jpeg image/png application/pdf]
+          max_size_bytes = 5.megabytes
+
+          content_type = file.content_type if file.respond_to?(:content_type)
+          size_bytes = file.size if file.respond_to?(:size)
+
+          raise StandardError, "Unsupported file type" unless allowed_types.include?(content_type)
+          raise StandardError, "File too large" if size_bytes.present? && size_bytes > max_size_bytes
+        end
 
         def extract_location(task_params)
           return nil unless task_params

@@ -1,6 +1,6 @@
 <tr id="<%= dom_id(task) %>" class="border-b border-stroke hover:bg-gray-2">
   <td class="px-4 py-4">
-    <%= link_to task_path(task), class: "text-sm font-medium text-primary hover:underline" do %>
+    <%= link_to main_app.task_path(task), class: "text-sm font-medium text-primary hover:underline" do %>
       #<%= task.id %>
     <% end %>
   </td>
@@ -10,6 +10,6 @@
   <td class="px-4 py-4 text-sm text-body">#<%= task.carrier_id %></td>
   <td class="px-4 py-4 text-sm text-body"><%= l(task.created_at, format: :short) %></td>
   <td class="px-4 py-4 text-right text-sm font-medium">
-    <%= link_to "View", task_path(task), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+    <%= link_to "View", main_app.task_path(task), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
   </td>
 </tr>

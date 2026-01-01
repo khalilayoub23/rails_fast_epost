@@ -6,7 +6,28 @@
 <% payment_details = local_assigns.fetch(:payment_details) { @payment_details || { "currency" => "USD" } } %>
 <% form_model = task.new_record? && task_customer ? [task_customer, task] : task %>
 
-<%= form_with model: form_model, data: { turbo_frame: "_top" }, class: "space-y-6" do |f| %>
+<%= form_with model: form_model,
+      data: { turbo_frame: "_top", controller: "form-wizard" },
+      class: "space-y-6" do |f| %>
+  <div class="flex items-center justify-between">
+    <p class="text-sm font-medium text-gray-300" data-form-wizard-target="indicator">Step 1 of 2</p>
+    <div class="flex items-center gap-2">
+      <button type="button"
+              class="hidden inline-flex items-center justify-center rounded-lg border border-gray-600 px-4 py-2 text-sm font-semibold text-gray-200 hover:border-yellow-400 hover:text-yellow-400"
+              data-form-wizard-target="backButton"
+              data-action="form-wizard#back">
+        <%= t("common.back", default: "Back") %>
+      </button>
+      <button type="button"
+              class="inline-flex items-center justify-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow-lg transition hover:bg-yellow-300"
+              data-form-wizard-target="nextButton"
+              data-action="form-wizard#next">
+        <%= t("common.next", default: "Next") %>
+      </button>
+    </div>
+  </div>
+
+  <div data-form-wizard-target="step" class="space-y-6">
   <% unless task_customer %>
     <div>
       <%= f.label :customer_id, t("tasks.customer"), class: "mb-2 block text-sm font-medium text-gray-200" %>
@@ -81,13 +102,6 @@
     <p class="mt-2 text-xs text-gray-400"><%= t("tasks.priority_help", default: "Urgent or express tasks trigger warning banners in alerts and emails.") %></p>
   </div>
 
-  <div>
-    <%= f.label :priority, t("tasks.priority", default: "Priority"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-    <%= f.select :priority, Task.priorities.keys.map { |priority| [priority.humanize, priority] }, {},
-          class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
-    <p class="mt-2 text-xs text-gray-400"><%= t("tasks.priority_help", default: "Express shipments alert messengers immediately; normal stays in the standard queue.") %></p>
-  </div>
-
   <div class="grid gap-6 md:grid-cols-2">
     <div>
       <%= f.label :delivery_time, t("tasks.delivery_time", default: "Delivery time"), class: "mb-2 block text-sm font-medium text-gray-200" %>
@@ -98,6 +112,10 @@
       <%= f.url_field :filled_form_url, class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
     </div>
   </div>
+
+  </div>
+
+  <div data-form-wizard-target="step" class="hidden space-y-6">
 
   <div class="grid gap-6 md:grid-cols-2">
     <div>
@@ -189,5 +207,7 @@
     <%= link_to t("common.cancel", default: "Cancel"),
           task.persisted? ? task_path(task) : tasks_path,
           class: "inline-flex items-center justify-center rounded-lg border border-gray-600 px-6 py-3 text-sm font-semibold text-gray-200 hover:border-yellow-400 hover:text-yellow-400" %>
+  </div>
+
   </div>
 <% end %>

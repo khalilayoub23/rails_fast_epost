@@ -3,7 +3,7 @@ class DefaultAccountsProvisioner
     { role: "admin",              email_env: "DEFAULT_ADMIN_EMAIL",              fallback_email: "admin@example.com" },
     { role: "operations_manager", email_env: "DEFAULT_OPS_MANAGER_EMAIL",       fallback_email: "ops@example.com" },
     { role: "manager",            email_env: "DEFAULT_MANAGER_EMAIL",           fallback_email: "manager@example.com" },
-    { role: "viewer",             email_env: "DEFAULT_VIEWER_EMAIL",            fallback_email: "viewer@example.com" }
+    { role: "sender",             email_env: "DEFAULT_VIEWER_EMAIL",            fallback_email: "viewer@example.com" }
   ].freeze
 
   def self.ensure!
@@ -66,6 +66,7 @@ class DefaultAccountsProvisioner
 
   def sync_role(user, role)
     return user unless user
+    return user unless enforce_role_sync?
 
     user.update!(role: role) if user.role != role
     user
@@ -73,8 +74,13 @@ class DefaultAccountsProvisioner
 
   def sync_fallback(user, email:, role:)
     return unless user
+    return unless enforce_role_sync?
 
     user.update!(email: email) if user.email != email
     sync_role(user, role)
+  end
+
+  def enforce_role_sync?
+    ENV.fetch("DEFAULT_ACCOUNT_ENFORCE_ROLES", "false") == "true"
   end
 end

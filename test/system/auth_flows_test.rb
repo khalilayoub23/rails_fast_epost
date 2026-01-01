@@ -4,7 +4,7 @@ require "securerandom"
 class AuthFlowsTest < ApplicationSystemTestCase
   def setup
     User.destroy_all
-    @viewer = User.create!(email: "viewer@example.com", password: "password", role: "viewer")
+    @viewer = User.create!(email: "viewer@example.com", password: "password", role: "sender", user_type: :sender)
     @admin = User.create!(email: "admin@example.com", password: "password", role: "admin")
   end
 

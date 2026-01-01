@@ -50,6 +50,34 @@ he:
     branding: "מיתוג"
     admin_dashboard: "לוח בקרה למנהלים"
 
+  document_templates:
+    index:
+      title: "תבניות מסמכים"
+      new: "תבנית חדשה"
+      category: "קטגוריה"
+      all_categories: "כל הקטגוריות"
+      type: "סוג"
+      all_types: "כל הסוגים"
+      status: "סטטוס"
+      status_all: "הכל"
+      status_active: "פעילות בלבד"
+      filter: "סינון"
+      empty: "לא נמצאו תבניות מסמכים."
+      create_first: "צרו תבנית ראשונה"
+    labels:
+      category: "קטגוריה:"
+      type: "סוג:"
+    types:
+      prawn_template: "תבנית Prawn"
+      fillable_form: "טופס ניתן למילוי"
+      hybrid: "היברידי"
+    status:
+      active: "פעיל"
+      inactive: "לא פעיל"
+    actions:
+      view: "צפייה"
+      edit: "עריכה"
+
   # Topbar
   topbar:
     welcome_back: "ברוך שובך,"

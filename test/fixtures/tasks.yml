@@ -11,6 +11,7 @@ one:
   barcode: 'BARCODE1'
   delivery_time: <%= Time.current %>
   priority: urgent
+  published: true
 
 task_one:
   customer: one
@@ -23,6 +24,7 @@ task_one:
   barcode: 'LEGAL001'
   delivery_time: <%= Time.current %>
   priority: express
+  published: true
 
 two:
   customer: two
@@ -35,6 +37,7 @@ two:
   barcode: 'BARCODE2'
   delivery_time: <%= Time.current %>
   priority: normal
+  published: true
 
 failed_task:
   customer: one
@@ -49,3 +52,4 @@ failed_task:
   barcode: 'FAILED001'
   awaiting_customer_response: true
   stored_until: <%= 2.days.from_now %>
+  published: true

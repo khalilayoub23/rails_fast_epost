@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :allow_github_codespaces
   before_action :authenticate_user!
   skip_before_action :authenticate_user!, if: :devise_controller?
+  before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_current_attributes
   helper_method :stripe_publishable_key, :current_carrier_context
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -112,7 +113,22 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     message = t("messages.unauthorized", default: "You are not authorized to perform this action.")
     respond_to do |format|
-      format.html { redirect_back fallback_location: root_path, alert: message }
+      format.html do
+        referer_path = nil
+        if request.referer.present?
+          begin
+            referer_path = URI.parse(request.referer).path
+          rescue URI::InvalidURIError
+            referer_path = nil
+          end
+        end
+
+        if referer_path.present? && referer_path != request.path
+          redirect_back fallback_location: landing_page_path, alert: message
+        else
+          redirect_to landing_page_path, alert: message
+        end
+      end
       format.json { render json: { error: message }, status: :forbidden }
       format.turbo_stream do
         render turbo_stream: turbo_stream.append(
@@ -186,6 +202,16 @@ class ApplicationController < ActionController::Base
       .find { |l| I18n.available_locales.include?(l) }
 
     accepted
+  end
+
+  protected
+
+  # Permit additional Devise params so user roles/types persist on sign up & edit
+  def configure_permitted_parameters
+    extra_keys = [ :full_name, :phone, :role, :user_type, :preferred_language ]
+
+    devise_parameter_sanitizer.permit(:sign_up, keys: extra_keys)
+    devise_parameter_sanitizer.permit(:account_update, keys: extra_keys)
   end
 
   def current_carrier_context

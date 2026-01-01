@@ -20,16 +20,16 @@ class DefaultAccountsProvisionerTest < ActiveSupport::TestCase
 
   test "does not override existing user with same role" do
     existing = User.create!(
-      email: "custom-viewer-#{SecureRandom.hex(3)}@example.com",
+      email: "custom-sender-#{SecureRandom.hex(3)}@example.com",
       password: "password123",
       password_confirmation: "password123",
-      role: "viewer"
+      role: "sender"
     )
 
-    default_email = "viewer-demo-#{SecureRandom.hex(3)}@example.com"
+    default_email = "sender-demo-#{SecureRandom.hex(3)}@example.com"
 
     assert_difference("User.count", 1) do
-      create_default_account(email: default_email, role: "viewer", fallback_email: nil)
+      create_default_account(email: default_email, role: "sender", fallback_email: nil)
     end
 
     assert_equal existing.email, existing.reload.email

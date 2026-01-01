@@ -44,9 +44,13 @@
     </nav>
   </div>
 
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
-    <div class="mb-4">
+  <div data-controller="task-details" class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+    <div class="mb-4 flex items-center justify-between gap-3">
       <h2 class="text-title-md font-semibold text-dark">Task #<%= @task.id %></h2>
+      <button type="button" class="inline-flex items-center gap-2 rounded-lg border border-stroke bg-white px-3 py-2 text-sm font-semibold text-dark shadow hover:bg-gray-2" data-action="task-details#toggle">
+        <span class="material-icons text-base" aria-hidden="true" data-task-details-target="icon">unfold_more</span>
+        <span data-task-details-target="label">Show details</span>
+      </button>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
@@ -67,14 +71,87 @@
       </div>
       <div>
         <div class="text-sm text-body">Created</div>
-        <div class="text-dark"><%= l(@task.created_at, format: :long) %></div>
+        <div class="text-dark"><%= @task.created_at ? l(@task.created_at, format: :long) : t("tasks.not_available", default: "N/A") %></div>
       </div>
       <div class="sm:col-span-2">
         <div class="text-sm text-body">Barcode</div>
         <div class="text-dark"><%= @task.barcode %></div>
       </div>
     </div>
+
+    <div class="mt-4 hidden" data-task-details-target="panel">
+      <div class="border-t border-stroke pt-4">
+        <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-sm text-body">Task type</dt>
+            <dd class="text-dark font-medium"><%= @task.task_type&.humanize || "-" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm text-body">Package type</dt>
+            <dd class="text-dark font-medium"><%= @task.package_type.presence || "-" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm text-body">Pickup location</dt>
+            <dd class="text-dark"><%= @task.start.presence || t("tasks.not_available", default: "N/A") %></dd>
+          </div>
+          <div>
+            <dt class="text-sm text-body">Drop-off location</dt>
+            <dd class="text-dark"><%= @task.target.presence || t("tasks.not_available", default: "N/A") %></dd>
+          </div>
+          <div>
+            <dt class="text-sm text-body">Delivery time</dt>
+            <dd class="text-dark"><%= @task.delivery_time ? l(@task.delivery_time, format: :long) : t("tasks.not_available", default: "N/A") %></dd>
+          </div>
+          <div>
+            <dt class="text-sm text-body">Distance</dt>
+            <dd class="text-dark">
+              <% if @task.distance.present? %>
+                <%= "#{number_with_precision(@task.distance, precision: 2)} km" %>
+              <% else %>
+                <%= t("tasks.not_available", default: "N/A") %>
+              <% end %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm text-body">Published</dt>
+            <dd class="text-dark"><%= @task.published? ? t("common.yes", default: "Yes") : t("common.no", default: "No") %></dd>
+          </div>
+          <div>
+            <dt class="text-sm text-body">Failure code</dt>
+            <dd class="text-dark"><%= @task.failure_code_text.presence || @task.failure_code&.humanize || "No failure" %></dd>
+          </div>
+          <% if @task.pickup_notes.present? %>
+            <div class="sm:col-span-2">
+              <dt class="text-sm text-body">Pickup notes</dt>
+              <dd class="text-dark"><%= @task.pickup_notes %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
   </div>
+
+  <% if @task.draft? %>
+    <div class="rounded-sm border border-yellow-400/40 bg-yellow-50 px-5 py-4 shadow-lg">
+      <p class="text-sm font-semibold text-yellow-600"><%= t("tasks.draft_notice_title", default: "Task saved as a draft") %></p>
+      <p class="text-sm text-gray-700"><%= t("tasks.draft_notice_body", default: "Complete the payment below to publish the task and make it available for carriers to book.") %></p>
+    </div>
+    <% if @checkout_payment&.payment_url.present? %>
+      <div class="rounded-sm border border-blue-400/40 bg-blue-50 px-5 py-4 shadow-md flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm font-semibold text-blue-700"><%= t("tasks.pending_checkout_title", default: "Existing checkout in progress") %></p>
+          <p class="text-sm text-blue-800"><%= t("tasks.pending_checkout_body", default: "You can reopen the Stripe checkout if you closed it earlier.") %></p>
+        </div>
+        <%= link_to t("tasks.pending_checkout_cta", default: "Open checkout"), @checkout_payment.payment_url, target: "_blank", rel: "noopener", class: "inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-500" %>
+      </div>
+    <% end %>
+    <%= render "payment_panel", task: @task, payment_details: @payment_details %>
+  <% else %>
+    <div class="rounded-sm border border-green-400/40 bg-green-50 px-5 py-4 text-sm text-green-800 shadow-lg">
+      <p class="font-semibold text-green-700"><%= t("tasks.published_notice_title", default: "Task published") %></p>
+      <p><%= t("tasks.published_notice_body", default: "Carriers can now see this task in their queue and pick it up.") %></p>
+    </div>
+  <% end %>
 
   <% if policy(Delivery).create? %>
     <div class="rounded-sm border border-yellow-400/40 bg-yellow-50 px-5 py-4 shadow-lg">

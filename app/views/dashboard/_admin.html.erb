@@ -1,5 +1,7 @@
-<div class="grid grid-cols-1 gap-6">
-  <%= render "dashboard/kpis",
+<% stack_text = rtl? ? 'text-right' : 'text-left' %>
+
+<div class="space-y-6">
+  <% kpi_locals = {
     card1_value: @payments_count,
     card1_label: t("dashboard.total_payments", default: "Payments"),
     card2_value: @pending_payments.size,
@@ -8,139 +10,111 @@
     card3_label: t("dashboard.total_customers", default: "Customers"),
     card4_value: @revenue_total_cents,
     card4_label: t("dashboard.total_revenue", default: "Revenue"),
-    card4_currency: true %>
+    card4_currency: true
+  } %>
 
-  <div class="rounded-2xl border border-gray-700 bg-gray-800/60 p-6 shadow-xl">
-    <div class="flex items-center justify-between">
-      <h3 class="text-lg font-semibold text-white"><%= t("dashboard.recent_payments", default: "Payments") %></h3>
-      <%= link_to t("dashboard.view_all", default: "View all"), payments_path, class: "text-sm font-medium text-yellow-400 hover:text-yellow-300" %>
-    </div>
+  <%= render partial: "dashboard/kpis", locals: kpi_locals %>
 
-    <%= form_with url: dashboard_path, method: :get, scope: :payment_filter, local: true, class: "mt-4 grid grid-cols-1 gap-3 md:grid-cols-4" do |f| %>
-      <div>
-        <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
-        <%= f.select :status, options_for_select(Payment.gateway_statuses.keys.map { |k| [k.titleize, k] }, @payment_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div>
-        <%= f.label :gateway, t("dashboard.provider", default: "Gateway"), class: "text-xs text-gray-400" %>
-        <%= f.select :gateway, options_for_select(@payment_gateways, @payment_filters[:gateway]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div>
-        <%= f.label :task_association, t("dashboard.task", default: "Task"), class: "text-xs text-gray-400" %>
-        <%= f.select :task_association, options_for_select([[t("dashboard.any", default: "Any"), nil], [t("dashboard.with_task", default: "With task"), "with_task"], [t("dashboard.without_task", default: "Without task"), "without_task"]], @payment_filters[:task_association]), {}, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div class="flex items-end justify-end">
-        <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-300" %>
-      </div>
-    <% end %>
+  <div class="grid gap-6 xl:grid-cols-2">
+    <%= render layout: "dashboard/section_wrapper", locals: {
+      title_key: "dashboard.recent_payments",
+      title_default: "Payments",
+      subtitle_key: "dashboard.financials",
+      subtitle_default: "Financials",
+      link_path: payments_path,
+      link_label_key: "dashboard.view_all",
+      link_label_default: "View all"
+    } do %>
+      <%= form_with url: dashboard_path, method: :get, scope: :payment_filter, local: true, class: "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4" do |f| %>
+        <div>
+          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
+          <%= f.select :status, options_for_select(Payment.gateway_statuses.keys.map { |k| [k.titleize, k] }, @payment_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
+        </div>
+        <div>
+          <%= f.label :gateway, t("dashboard.provider", default: "Gateway"), class: "text-xs text-gray-400" %>
+          <%= f.select :gateway, options_for_select(@payment_gateways, @payment_filters[:gateway]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
+        </div>
+        <div>
+          <%= f.label :task_association, t("dashboard.task", default: "Task"), class: "text-xs text-gray-400" %>
+          <%= f.select :task_association, options_for_select([[t("dashboard.any", default: "Any"), nil], [t("dashboard.with_task", default: "With task"), "with_task"], [t("dashboard.without_task", default: "Without task"), "without_task"]], @payment_filters[:task_association]), {}, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
+        </div>
+        <div class="flex items-end <%= rtl? ? 'justify-start' : 'justify-end' %>">
+          <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-amber-300" %>
+        </div>
+      <% end %>
 
-    <div class="mt-4 max-w-full overflow-x-auto">
-      <table class="w-full text-sm text-gray-200">
-        <thead class="border-b border-gray-700 text-left text-yellow-300">
-          <tr>
-            <th class="px-4 py-2">ID</th>
-            <th class="px-4 py-2"><%= t("dashboard.provider", default: "Provider") %></th>
-            <th class="px-4 py-2"><%= t("dashboard.status", default: "Status") %></th>
-            <th class="px-4 py-2"><%= t("dashboard.amount", default: "Amount") %></th>
-            <th class="px-4 py-2"><%= t("dashboard.task", default: "Task") %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @recent_payments.each do |payment| %>
-            <tr class="border-b border-gray-800 hover:bg-gray-900/40">
-              <td class="px-4 py-2"><%= payment.id %></td>
-              <td class="px-4 py-2"><%= payment.provider.presence || "-" %></td>
-              <td class="px-4 py-2"><%= payment.gateway_status %></td>
-              <td class="px-4 py-2"><%= format_sek(payment.amount_cents) %></td>
-              <td class="px-4 py-2">
-                <% if payment.task_id.present? %>
-                  <%= link_to payment.task_id, task_path(payment.task_id), class: "text-yellow-400 hover:text-yellow-300" %>
-                <% else %>
-                  -
-                <% end %>
-              </td>
+      <div class="mt-4 max-w-full overflow-x-auto">
+        <table class="w-full text-xs text-gray-200 md:text-sm">
+          <thead class="border-b border-white/10 bg-white/5 text-amber-200">
+            <tr class="<%= rtl? ? 'text-right' : 'text-left' %>">
+              <th class="px-4 py-2">ID</th>
+              <th class="px-4 py-2"><%= t("dashboard.provider", default: "Provider") %></th>
+              <th class="px-4 py-2"><%= t("dashboard.status", default: "Status") %></th>
+              <th class="px-4 py-2"><%= t("dashboard.amount", default: "Amount") %></th>
+              <th class="px-4 py-2"><%= t("dashboard.task", default: "Task") %></th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="rounded-2xl border border-gray-700 bg-gray-800/60 p-6 shadow-xl">
-    <div class="flex items-center justify-between">
-      <h3 class="text-lg font-semibold text-white"><%= t("dashboard.recent_tasks", default: "Tasks") %></h3>
-      <%= link_to t("dashboard.view_all", default: "View all"), tasks_path, class: "text-sm font-medium text-yellow-400 hover:text-yellow-300" %>
-    </div>
-
-    <%= form_with url: dashboard_path, method: :get, scope: :task_filter, local: true, class: "mt-4 grid grid-cols-1 gap-3 md:grid-cols-4" do |f| %>
-      <div>
-        <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
-        <%= f.select :status, options_for_select(@task_statuses.map { |s| [s.titleize, s] }, @task_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div>
-        <%= f.label :carrier_id, t("dashboard.carrier", default: "Carrier"), class: "text-xs text-gray-400" %>
-        <%= f.select :carrier_id, options_from_collection_for_select(@carrier_options, :id, :name, @task_filters[:carrier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div>
-        <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-gray-400" %>
-        <%= f.select :sender_id, options_from_collection_for_select(@sender_options, :id, :full_name, @task_filters[:sender_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div class="flex items-end justify-end">
-        <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-300" %>
+          </thead>
+          <tbody>
+            <% @recent_payments.each do |payment| %>
+              <tr class="border-b border-white/5 bg-white/0 hover:bg-white/5">
+                <td class="px-4 py-2"><%= payment.id %></td>
+                <td class="px-4 py-2"><%= payment.provider.presence || "-" %></td>
+                <td class="px-4 py-2"><%= payment.gateway_status %></td>
+                <td class="px-4 py-2"><%= format_sek(payment.amount_cents) %></td>
+                <td class="px-4 py-2">
+                  <% if payment.task_id.present? %>
+                    <%= link_to payment.task_id, task_path(payment.task_id), class: "text-amber-300 hover:text-amber-200" %>
+                  <% else %>
+                    -
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     <% end %>
 
-    <div class="mt-4 grid grid-cols-1 gap-3">
-      <% @recent_tasks.each do |task| %>
-        <div class="flex items-center justify-between rounded-xl border border-gray-700/50 bg-gray-900/40 px-4 py-3">
-          <div>
-            <p class="text-sm font-semibold text-white"><%= link_to(task.title.presence || "Task ##{task.id}", task_path(task), class: "hover:text-yellow-300") %></p>
-            <p class="text-xs text-gray-400"><%= task.status %> • <%= task.carrier&.name || t("dashboard.no_carrier", default: "No carrier") %></p>
-          </div>
-          <%= render "shared/status_badge", status: task.status %>
+    <%= render layout: "dashboard/section_wrapper", locals: {
+      title_key: "dashboard.recent_tasks",
+      title_default: "Tasks",
+      subtitle_key: "dashboard.operations",
+      subtitle_default: "Operations",
+      link_path: tasks_path,
+      link_label_key: "dashboard.view_all",
+      link_label_default: "View all"
+    } do %>
+      <%= form_with url: dashboard_path, method: :get, scope: :task_filter, local: true, class: "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4" do |f| %>
+        <div>
+          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
+          <%= f.select :status, options_for_select(@task_statuses.map { |s| [s.titleize, s] }, @task_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
+        </div>
+        <div>
+          <%= f.label :carrier_id, t("dashboard.carrier", default: "Carrier"), class: "text-xs text-gray-400" %>
+          <%= f.select :carrier_id, options_from_collection_for_select(@carrier_options, :id, :name, @task_filters[:carrier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
+        </div>
+        <div>
+          <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-gray-400" %>
+          <%= f.select :sender_id, options_from_collection_for_select(@sender_options, :id, :full_name, @task_filters[:sender_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
+        </div>
+        <div class="flex items-end <%= rtl? ? 'justify-start' : 'justify-end' %>">
+          <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-amber-300" %>
         </div>
       <% end %>
-    </div>
-  </div>
 
-  <div class="rounded-2xl border border-gray-700 bg-gray-800/60 p-6 shadow-xl">
-    <div class="flex items-center justify-between">
-      <h3 class="text-lg font-semibold text-white"><%= t("deliveries.index.title", default: "Deliveries") %></h3>
-      <%= link_to t("dashboard.view_all", default: "View all"), deliveries_path, class: "text-sm font-medium text-yellow-400 hover:text-yellow-300" %>
-    </div>
-
-    <%= form_with url: dashboard_path, method: :get, scope: :delivery_filter, local: true, class: "mt-4 grid grid-cols-1 gap-3 md:grid-cols-5" do |f| %>
-      <div>
-        <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
-        <%= f.select :status, options_for_select(@delivery_statuses.map { |s| [s.titleize, s] }, @delivery_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div>
-        <%= f.label :courier_id, t("dashboard.courier", default: "Courier"), class: "text-xs text-gray-400" %>
-        <%= f.select :courier_id, options_from_collection_for_select(@courier_options, :id, :full_name, @delivery_filters[:courier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div>
-        <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-gray-400" %>
-        <%= f.select :sender_id, options_from_collection_for_select(@sender_options, :id, :full_name, @delivery_filters[:sender_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div>
-        <%= f.label :recipient_id, t("dashboard.recipient", default: "Recipient"), class: "text-xs text-gray-400" %>
-        <%= f.select :recipient_id, options_from_collection_for_select(@recipient_options, :id, :full_name, @delivery_filters[:recipient_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div class="flex items-end justify-end">
-        <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-300" %>
+      <div class="mt-4 grid grid-cols-1 gap-3">
+        <% @recent_tasks.each do |task| %>
+          <div class="flex items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/5 px-4 py-3">
+            <div class="<%= stack_text %>">
+              <p class="text-sm font-semibold text-white"><%= link_to(task.title.presence || "Task ##{task.id}", task_path(task), class: "hover:text-amber-200") %></p>
+              <p class="text-xs text-gray-400">
+                <%= task.status %> • <%= task.carrier&.name || t("dashboard.no_carrier", default: "No carrier") %>
+              </p>
+            </div>
+            <%= render "shared/status_badge", status: task.status %>
+          </div>
+        <% end %>
       </div>
     <% end %>
-
-    <div class="mt-4 grid grid-cols-1 gap-3">
-      <% @delivery_samples.each do |delivery| %>
-        <div class="flex items-center justify-between rounded-xl border border-gray-700/50 bg-gray-900/40 px-4 py-3">
-          <div>
-            <p class="text-sm font-semibold text-white"><%= link_to("Case #{delivery.case_number}", delivery_path(delivery), class: "hover:text-yellow-300") %></p>
-            <p class="text-xs text-gray-400"><%= delivery.status %> • <%= delivery.courier.full_name %></p>
-          </div>
-          <span class="rounded-full bg-gray-700 px-3 py-1 text-xs text-yellow-200"><%= delivery.status.humanize %></span>
-        </div>
-      <% end %>
-    </div>
   </div>
 </div>

@@ -2,6 +2,7 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "stripe_checkout"
+import "google_autocomplete"
 
 // Turbo configuration
 import { Turbo } from "@hotwired/turbo-rails"

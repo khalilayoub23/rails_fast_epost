@@ -82,7 +82,8 @@ class Admin::DocumentTemplatesController < ApplicationController
 
   # GET /admin/document_templates/:id/generate
   def new_generate
-    # Renders the generate.html.erb form
+    # Reuse the generate form template
+    render :generate
   end
 
   # POST /admin/document_templates/:id/generate

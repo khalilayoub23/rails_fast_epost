@@ -112,12 +112,7 @@ class CheckoutController < ApplicationController
   end
 
   def default_carrier
-    Carrier.order(:id).first || Carrier.create!(
-      name: "Fast Epost Carrier",
-      email: "public-carrier@fast-epost.local",
-      carrier_type: "VirtualCarrier",
-      address: "Online"
-    )
+    Carrier.default_system_carrier
   end
 
   def generate_barcode

@@ -79,7 +79,7 @@ class DeliveriesClientValidationTest < ApplicationSystemTestCase
     @sender = User.create!(
       email: "sender-#{SecureRandom.hex(4)}@example.com",
       password: "password123",
-      role: :viewer,
+      role: :sender,
       user_type: :sender,
       full_name: "Sender Primary"
     )
@@ -87,7 +87,7 @@ class DeliveriesClientValidationTest < ApplicationSystemTestCase
     @courier = User.create!(
       email: "courier-alt-#{SecureRandom.hex(4)}@example.com",
       password: "password123",
-      role: :viewer,
+      role: :carrier_staff,
       user_type: :courier,
       full_name: "Courier Alternate"
     )
@@ -95,7 +95,7 @@ class DeliveriesClientValidationTest < ApplicationSystemTestCase
     @recipient = User.create!(
       email: "recipient-#{SecureRandom.hex(4)}@example.com",
       password: "password123",
-      role: :viewer,
+      role: :sender,
       user_type: :recipient,
       full_name: "Recipient Primary"
     )

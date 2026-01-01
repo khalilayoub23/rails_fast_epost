@@ -101,7 +101,7 @@ module Api
         return nil if type.blank? || id.blank?
 
         # Whitelist allowed payable types
-        allowed_types = %w[Task Order Subscription Customer]
+        allowed_types = %w[Task Order Subscription]
         return nil unless allowed_types.include?(type)
 
         type.constantize.find_by(id: id)

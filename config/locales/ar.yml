@@ -50,6 +50,34 @@ ar:
     branding: "العلامة التجارية"
     admin_dashboard: "لوحة تحكم المسؤول"
 
+  document_templates:
+    index:
+      title: "قوالب المستندات"
+      new: "قالب جديد"
+      category: "الفئة"
+      all_categories: "كل الفئات"
+      type: "النوع"
+      all_types: "كل الأنواع"
+      status: "الحالة"
+      status_all: "الكل"
+      status_active: "النشطة فقط"
+      filter: "تصفية"
+      empty: "لم يتم العثور على قوالب مستندات."
+      create_first: "أنشئ قالبك الأول"
+    labels:
+      category: "الفئة:"
+      type: "النوع:"
+    types:
+      prawn_template: "قالب Prawn"
+      fillable_form: "نموذج قابل للتعبئة"
+      hybrid: "هجينة"
+    status:
+      active: "نشط"
+      inactive: "غير نشط"
+    actions:
+      view: "عرض"
+      edit: "تحرير"
+
   # Topbar
   topbar:
     welcome_back: "مرحبًا بعودتك،"

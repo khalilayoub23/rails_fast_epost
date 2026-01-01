@@ -5,3 +5,7 @@ primary_assignment:
 carrier_one_membership:
   user: carrier_one
   carrier: one
+
+carrier_staff_membership:
+  user: carrier_staff_user
+  carrier: one

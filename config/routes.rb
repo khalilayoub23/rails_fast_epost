@@ -68,6 +68,8 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
+  post "/csp-report", to: "csp_reports#create"
+
   # Main resources
   resources :carriers do
     resources :documents
@@ -87,6 +89,7 @@ Rails.application.routes.draw do
     member do
       patch :update_status
       patch :update_delivery
+      post :publish
     end
   end
 

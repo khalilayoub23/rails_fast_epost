@@ -54,6 +54,10 @@ class ApplicationPolicy
     user&.carrier_staff?
   end
 
+  def viewer?
+    user&.viewer?
+  end
+
   class Scope
     attr_reader :user, :scope
 
