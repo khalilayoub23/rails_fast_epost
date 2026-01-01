@@ -138,7 +138,7 @@
 
     <div class="mt-7">
       <p class="mb-3 font-medium text-dark dark:text-white">
-        You earn $<%= number_with_delimiter((@revenue_total_cents / 100.0).to_i) %> today, it's higher than last month.
+        You earn $<%= number_with_delimiter(((@revenue_total_cents || 0) / 100.0).to_i) %> today, it's higher than last month.
       </p>
       <p class="text-sm text-body dark:text-bodydark">Keep up your good work!</p>
     </div>
