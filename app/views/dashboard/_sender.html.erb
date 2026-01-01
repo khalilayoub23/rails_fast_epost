@@ -1,5 +1,5 @@
-<div class="grid grid-cols-1 gap-6">
-  <%= render "dashboard/kpis",
+<div class="space-y-6">
+  <% kpi_locals = {
     card1_value: @payments_count,
     card1_label: t("dashboard.total_payments", default: "My payments"),
     card2_value: @pending_payments.size,
@@ -8,48 +8,23 @@
     card3_label: t("dashboard.total_tasks", default: "My tasks"),
     card4_value: @total_spend_cents,
     card4_label: t("dashboard.total_spend", default: "Total spend"),
-    card4_currency: true %>
+    card4_currency: true
+  } %>
 
-  <div class="rounded-2xl border border-gray-700 bg-gray-800/60 p-6 shadow-xl">
-    <div class="flex items-center justify-between">
-      <h3 class="text-lg font-semibold text-white"><%= t("dashboard.recent_payments", default: "Recent payments") %></h3>
-    </div>
+  <%= render partial: "dashboard/kpis", locals: kpi_locals %>
 
-    <%= form_with url: dashboard_path, method: :get, scope: :payment_filter, local: true, class: "mt-4 grid grid-cols-1 gap-3 md:grid-cols-3" do |f| %>
-      <div>
-        <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
-        <%= f.select :status, options_for_select(Payment.gateway_statuses.keys.map { |k| [k.titleize, k] }, @payment_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div>
-        <%= f.label :task_association, t("dashboard.task", default: "Task"), class: "text-xs text-gray-400" %>
-        <%= f.select :task_association, options_for_select([[t("dashboard.any", default: "Any"), nil], [t("dashboard.with_task", default: "With task"), "with_task"], [t("dashboard.without_task", default: "Without task"), "without_task"]], @payment_filters[:task_association]), {}, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
-      </div>
-      <div class="flex items-end justify-end">
-        <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-300" %>
-      </div>
+  <div class="grid gap-6 xl:grid-cols-2">
+    <% Rails.logger.info("[Dashboard Sender] about to render section_wrapper" ) %>
+    <%= render layout: "dashboard/section_wrapper", locals: {
+      title_key: "dashboard.recent_payments",
+      title_default: "Recent payments",
+      subtitle_key: "dashboard.financials",
+      subtitle_default: "Financials",
+      link_path: payments_path,
+      link_label_key: "dashboard.view_all",
+      link_label_default: "View all"
+    } do %>
+      <p>Test block</p>
     <% end %>
-
-    <div class="mt-4 max-w-full overflow-x-auto">
-      <table class="w-full text-sm text-gray-200">
-        <thead class="border-b border-gray-700 text-left text-yellow-300">
-          <tr>
-            <th class="px-4 py-2">ID</th>
-            <th class="px-4 py-2"><%= t("dashboard.status", default: "Status") %></th>
-            <th class="px-4 py-2"><%= t("dashboard.amount", default: "Amount") %></th>
-            <th class="px-4 py-2"><%= t("dashboard.date", default: "Date") %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @recent_payments.each do |payment| %>
-            <tr class="border-b border-gray-800 hover:bg-gray-900/40">
-              <td class="px-4 py-2"><%= payment.id %></td>
-              <td class="px-4 py-2"><%= payment.gateway_status %></td>
-              <td class="px-4 py-2"><%= format_sek(payment.amount_cents) %></td>
-              <td class="px-4 py-2"><%= l(payment.created_at, format: :short) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
   </div>
 </div>

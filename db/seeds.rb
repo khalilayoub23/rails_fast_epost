@@ -29,13 +29,13 @@ operations_manager = User.find_or_create_by!(email: "ops@example.com") do |user|
 end
 puts "✅ Operations manager user created: ops@example.com / password"
 
-# Create viewer user
+# Create viewer-style user (now uses sender role)
 User.find_or_create_by!(email: "viewer@example.com") do |user|
   user.password = "password"
   user.password_confirmation = "password"
-  user.role = "viewer"
+  user.role = "sender"
 end
-puts "✅ Viewer user created: viewer@example.com / password"
+puts "✅ Viewer-style user created: viewer@example.com / password (role: sender)"
 
 # Clear existing data for clean seeding
 puts "Clearing existing data..."

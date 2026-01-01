@@ -15,7 +15,7 @@ class DeliveriesFormErrorHandlingTest < ActionDispatch::IntegrationTest
     @sender = User.create!(
       email: "sender-form-test@example.com",
       password: "password123",
-      role: :viewer,
+      role: :sender,
       user_type: :sender,
       full_name: "Sender Person"
     )
@@ -23,7 +23,7 @@ class DeliveriesFormErrorHandlingTest < ActionDispatch::IntegrationTest
     @courier = User.create!(
       email: "courier-form-test@example.com",
       password: "password123",
-      role: :viewer,
+      role: :carrier_staff,
       user_type: :courier,
       full_name: "Courier Person"
     )
@@ -31,7 +31,7 @@ class DeliveriesFormErrorHandlingTest < ActionDispatch::IntegrationTest
     @recipient = User.create!(
       email: "recipient-form-test@example.com",
       password: "password123",
-      role: :viewer,
+      role: :sender,
       user_type: :recipient,
       full_name: "Recipient Person"
     )

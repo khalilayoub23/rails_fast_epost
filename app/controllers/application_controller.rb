@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :allow_github_codespaces
   before_action :authenticate_user!
   skip_before_action :authenticate_user!, if: :devise_controller?
+  before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_current_attributes
   helper_method :stripe_publishable_key, :current_carrier_context
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -186,6 +187,16 @@ class ApplicationController < ActionController::Base
       .find { |l| I18n.available_locales.include?(l) }
 
     accepted
+  end
+
+  protected
+
+  # Permit additional Devise params so user roles/types persist on sign up & edit
+  def configure_permitted_parameters
+    extra_keys = [ :full_name, :phone, :role, :user_type, :preferred_language ]
+
+    devise_parameter_sanitizer.permit(:sign_up, keys: extra_keys)
+    devise_parameter_sanitizer.permit(:account_update, keys: extra_keys)
   end
 
   def current_carrier_context

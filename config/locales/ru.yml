@@ -50,6 +50,34 @@ ru:
     branding: "Брендинг"
     admin_dashboard: "Панель администратора"
 
+  document_templates:
+    index:
+      title: "Шаблоны документов"
+      new: "Новый шаблон"
+      category: "Категория"
+      all_categories: "Все категории"
+      type: "Тип"
+      all_types: "Все типы"
+      status: "Статус"
+      status_all: "Все"
+      status_active: "Только активные"
+      filter: "Фильтр"
+      empty: "Не найдено шаблонов документов."
+      create_first: "Создайте свой первый шаблон"
+    labels:
+      category: "Категория:"
+      type: "Тип:"
+    types:
+      prawn_template: "Шаблон Prawn"
+      fillable_form: "Заполняемая форма"
+      hybrid: "Гибридный"
+    status:
+      active: "Активный"
+      inactive: "Неактивный"
+    actions:
+      view: "Просмотр"
+      edit: "Редактировать"
+
   # Topbar
   topbar:
     welcome_back: "С возвращением,"

@@ -75,6 +75,20 @@
           <% end %>
 
           <div>
+            <%= f.label :full_name, t('full_name', default: 'Full name'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.567 3-3.5S13.657 4 12 4 9 5.567 9 7.5 10.343 11 12 11zm0 2c-2.485 0-7 1.243-7 3.5V19a1 1 0 001 1h12a1 1 0 001-1v-2.5c0-2.257-4.515-3.5-7-3.5z" />
+                </svg>
+              </div>
+              <%= f.text_field :full_name, autocomplete: "name",
+                  placeholder: t('full_name_placeholder', default: 'Alex Doe'),
+                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
+            </div>
+          </div>
+
+          <div>
             <%= f.label :email, t('email', default: 'Email'), class: "mb-2 block text-sm font-medium text-gray-300" %>
             <div class="relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -119,6 +133,21 @@
                   placeholder: t('password_placeholder', default: '••••••••'),
                   class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
             </div>
+          </div>
+
+          <%= f.hidden_field :role, value: resource.role.presence || 'sender' %>
+
+          <div>
+            <%= f.label :user_type, t('user_type', default: 'User type'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <%= f.collection_radio_buttons(:user_type, User.user_types.keys, :to_s, ->(k) { k.humanize }) do |b| %>
+                <div class="relative">
+                  <%= b.radio_button(class: "peer sr-only", required: true) %>
+                  <%= b.label(class: "block cursor-pointer rounded-xl border px-4 py-3 text-sm font-semibold transition-all peer-checked:border-amber-400 peer-checked:bg-amber-400/10 peer-checked:text-white border-white/10 bg-white/5 text-gray-300 hover:border-amber-300/60") %>
+                </div>
+              <% end %>
+            </div>
+            <p class="mt-2 text-xs text-gray-400"><%= t('user_type_hint', default: 'Choose how you plan to use FastEpost (sender, courier, recipient, etc.)') %></p>
           </div>
 
           <div class="space-y-3">

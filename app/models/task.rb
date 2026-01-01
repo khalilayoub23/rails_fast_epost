@@ -20,6 +20,7 @@ class Task < ApplicationRecord
   belongs_to :sender, optional: true  # NEW: Who sends the package
   belongs_to :messenger, optional: true  # NEW: Who delivers the package
   belongs_to :lawyer, optional: true  # NEW: Legal professional for customs/legal tasks
+  belongs_to :created_by, class_name: "User", optional: true
 
   has_many :payments_tasks
   has_many :payments, through: :payments_tasks
@@ -37,8 +38,20 @@ class Task < ApplicationRecord
   enum :status, { pending: 0, in_transit: 1, delivered: 2, failed: 3, returned: 4 }
 
   enum :priority, { normal: "normal", urgent: "urgent", express: "express" }, default: :normal
+  enum :task_type, {
+    letter: 0,
+    package: 1,
+    case_creation: 2,
+    case_copy: 3,
+    pod: 4,
+    deliver_collect: 5
+  }, default: :package
+
+  scope :published, -> { where(published: true) }
+  scope :draft, -> { where(published: false) }
 
   validates :package_type, presence: true
+  validates :task_type, presence: true
   validates :start, presence: true
   validates :target, presence: true
   validates :delivery_time, presence: true
@@ -51,6 +64,7 @@ class Task < ApplicationRecord
   alias_attribute :drop_off_location, :target
 
   before_validation :assign_generated_fields, on: :create
+  after_commit :calculate_route_distance, on: :create
 
   # Generate a display title for the task
   def title
@@ -62,6 +76,14 @@ class Task < ApplicationRecord
     snapshot["customer_id"] ||= customer_id
     snapshot["status"] ||= status
     snapshot
+  end
+
+  def draft?
+    !published?
+  end
+
+  def publish!(timestamp = Time.current)
+    update!(published: true, published_at: timestamp)
   end
 
   def record_tracking_event!(title:, event_type:, status: nil, description: nil, occurred_at: Time.current, location: nil, metadata: {})
@@ -190,6 +212,16 @@ class Task < ApplicationRecord
     self.status ||= :pending
     self.delivery_time ||= Time.current
     self.barcode ||= self.class.generate_unique_barcode
+  end
+
+  def calculate_route_distance
+    return if distance.present?
+    return if start.blank? || target.blank?
+
+    km = RouteDistanceService.new(origin: start, destination: target).fetch_distance_km
+    update_column(:distance, km) if km.present?
+  rescue => e
+    Rails.logger.warn("[Task #{id}] Route distance calculation failed: #{e.message}")
   end
 
   def self.generate_unique_barcode(prefix: "TSK")

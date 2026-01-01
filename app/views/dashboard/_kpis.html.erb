@@ -1,135 +1,49 @@
-<!-- ====== Cards Section Start - Dark Theme with Yellow Accents -->
 <%
-  # Defaults with fallbacks to instance variables
   card1_value = local_assigns[:card1_value] || @payments_count
   card1_label = local_assigns[:card1_label] || t('dashboard.total_payments', default: 'Total Payments')
-  
   card2_value = local_assigns[:card2_value] || (@pending_payments.respond_to?(:size) ? @pending_payments.size : 0)
   card2_label = local_assigns[:card2_label] || t('dashboard.pending_orders', default: 'Pending Orders')
-
   card3_value = local_assigns[:card3_value] || @customers_count
   card3_label = local_assigns[:card3_label] || t('dashboard.total_customers', default: 'Total Customers')
-
   card4_value = local_assigns[:card4_value] || @revenue_total_cents
   card4_label = local_assigns[:card4_label] || t('dashboard.total_revenue', default: 'Total Revenue')
   card4_currency = local_assigns.fetch(:card4_currency, true)
+  text_align = rtl? ? 'text-right' : 'text-left'
 %>
 
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5" id="dashboard_kpis">
-  
-  <!-- Card Item Start - Card 1 -->
-  <div class="group rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm px-7.5 py-6 shadow-2xl hover:border-yellow-400/50 transition-all duration-300">
-    <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-yellow-400/20 group-hover:bg-yellow-400/30 transition-colors">
-      <svg class="fill-yellow-400" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11 15.1156C4.19376 15.1156 0.825012 8.61876 0.687512 8.34376C0.584387 8.13751 0.584387 7.86251 0.687512 7.65626C0.825012 7.38126 4.19376 0.918762 11 0.918762C17.8063 0.918762 21.175 7.38126 21.3125 7.65626C21.4156 7.86251 21.4156 8.13751 21.3125 8.34376C21.175 8.61876 17.8063 15.1156 11 15.1156ZM2.26876 8.00001C3.02501 9.27189 5.98126 13.5688 11 13.5688C16.0188 13.5688 18.975 9.27189 19.7313 8.00001C18.975 6.72814 16.0188 2.43126 11 2.43126C5.98126 2.43126 3.02501 6.72814 2.26876 8.00001Z"/>
-        <path d="M11 10.9219C9.38438 10.9219 8.07812 9.61562 8.07812 8C8.07812 6.38438 9.38438 5.07812 11 5.07812C12.6156 5.07812 13.9219 6.38438 13.9219 8C13.9219 9.61562 12.6156 10.9219 11 10.9219ZM11 6.625C10.2437 6.625 9.625 7.24375 9.625 8C9.625 8.75625 10.2437 9.375 11 9.375C11.7563 9.375 12.375 8.75625 12.375 8C12.375 7.24375 11.7563 6.625 11 6.625Z"/>
-      </svg>
-    </div>
+  <% cards = [
+    { value: card1_value, label: card1_label, icon: 'space_dashboard', trend: '+11.0%', trend_class: 'text-emerald-400' },
+    { value: card2_value, label: card2_label, icon: 'pending_actions', trend: '-9.0%', trend_class: 'text-rose-400' },
+    { value: card3_value, label: card3_label, icon: 'groups', trend: '+0.9%', trend_class: 'text-emerald-400' },
+    { value: card4_value, label: card4_label, icon: 'payments', trend: '+4.3%', trend_class: 'text-emerald-400', currency: card4_currency }
+  ] %>
 
-    <div class="mt-4 flex items-end justify-between">
-      <div>
-        <h4 class="text-title-md font-bold text-white group-hover:text-yellow-400 transition-colors">
-          <%= number_with_delimiter(card1_value) %>
-        </h4>
-        <span class="text-sm font-medium text-gray-400"><%= card1_label %></span>
+  <% cards.each do |card| %>
+    <div class="group rounded-2xl border border-white/10 bg-slate-900/70 px-6 py-5 shadow-lg shadow-black/30 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-300/60 min-w-0" role="status">
+      <div class="flex items-center justify-between gap-3 <%= rtl? ? 'flex-row-reverse' : '' %>">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-400/20 text-amber-300">
+          <span class="material-icons text-xl"><%= card[:icon] %></span>
+        </div>
+        <span class="text-xs font-semibold text-slate-400"><%= t('dashboard.widget', default: 'Widget') %></span>
       </div>
 
-      <span class="flex items-center gap-1 text-sm font-medium text-green-400">
-        11.01%
-        <svg class="fill-green-400" width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.35716 2.47737L0.908974 5.82987L5.0443e-07 4.94612L5 0.0848689L10 4.94612L9.09103 5.82987L5.64284 2.47737L5.64284 10.0849L4.35716 10.0849L4.35716 2.47737Z" fill=""/>
-        </svg>
-      </span>
-    </div>
-  </div>
-  <!-- Card Item End -->
-
-  <!-- Card Item Start - Card 2 -->
-  <div class="group rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm px-7.5 py-6 shadow-2xl hover:border-yellow-400/50 transition-all duration-300">
-    <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-yellow-400/20 group-hover:bg-yellow-400/30 transition-colors">
-      <svg class="fill-yellow-400" width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.7531 16.4312C10.3781 16.4312 9.27808 17.5312 9.27808 18.9062C9.27808 20.2812 10.3781 21.3812 11.7531 21.3812C13.1281 21.3812 14.2281 20.2812 14.2281 18.9062C14.2281 17.5656 13.1281 16.4312 11.7531 16.4312ZM11.7531 19.8687C11.2375 19.8687 10.825 19.4562 10.825 18.9406C10.825 18.425 11.2375 18.0125 11.7531 18.0125C12.2687 18.0125 12.6812 18.425 12.6812 18.9406C12.6812 19.4219 12.2343 19.8687 11.7531 19.8687Z"/>
-        <path d="M5.22183 16.4312C3.84683 16.4312 2.74683 17.5312 2.74683 18.9062C2.74683 20.2812 3.84683 21.3812 5.22183 21.3812C6.59683 21.3812 7.69683 20.2812 7.69683 18.9062C7.69683 17.5656 6.59683 16.4312 5.22183 16.4312ZM5.22183 19.8687C4.7062 19.8687 4.2937 19.4562 4.2937 18.9406C4.2937 18.425 4.7062 18.0125 5.22183 18.0125C5.73745 18.0125 6.14995 18.425 6.14995 18.9406C6.14995 19.4219 5.73745 19.8687 5.22183 19.8687Z"/>
-        <path d="M19.0062 0.618744H17.15C16.325 0.618744 15.6031 1.23749 15.5 2.06249L14.95 6.01562H2.37185C1.51248 6.01562 0.618729 6.77187 0.618729 7.66249C0.618729 8.02812 0.753104 8.39374 0.987416 8.69999L4.8406 14.4375C5.25623 15.0875 5.90935 15.4531 6.67185 15.4531H14.2281C14.8781 15.4531 15.4594 15.1219 15.8406 14.5406L19.9781 7.70312C20.2125 7.37499 20.3469 6.97812 20.3469 6.58124C20.3469 5.99062 19.9781 5.28437 19.0062 4.17499V0.618744ZM17.7812 6.625L14.3937 12.5781C14.2594 12.8125 13.9281 13.0125 13.5281 13.0125H6.67185C6.32185 13.0125 6.0906 12.8781 5.9906 12.6437L2.37185 7.21562H14.7094L15.2594 3.36874C15.3281 2.92499 15.6594 2.59374 16.0594 2.59374H17.7812V6.625Z"/>
-      </svg>
-    </div>
-
-    <div class="mt-4 flex items-end justify-between">
-      <div>
-        <h4 class="text-title-md font-bold text-white group-hover:text-yellow-400 transition-colors">
-          <%= number_with_delimiter(card2_value) %>
-        </h4>
-        <span class="text-sm font-medium text-gray-400"><%= card2_label %></span>
+      <div class="mt-4 flex items-end justify-between gap-3 <%= rtl? ? 'flex-row-reverse' : '' %>">
+        <div class="<%= text_align %>">
+          <h4 class="text-xl font-bold text-white">
+            <% if card[:currency] %>
+              <%= format_sek(card[:value]) %>
+            <% else %>
+              <%= number_with_delimiter(card[:value]) %>
+            <% end %>
+          </h4>
+          <p class="text-sm text-slate-400"><%= card[:label] %></p>
+        </div>
+        <span class="flex items-center gap-1 rounded-full bg-white/5 px-2.5 py-1 text-xs font-semibold <%= card[:trend_class] %>">
+          <span class="material-icons text-base"><%= card[:trend_class].include?('rose') ? 'south' : 'north' %></span>
+          <%= card[:trend] %>
+        </span>
       </div>
-
-      <span class="flex items-center gap-1 text-sm font-medium text-red-400">
-        9.05%
-        <svg class="fill-red-400" width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5.64284 7.69237L9.09102 4.33987L10 5.22362L5 10.0849L-8.98488e-07 5.22362L0.908973 4.33987L4.35716 7.69237L4.35716 0.0848701L5.64284 0.0848701L5.64284 7.69237Z" fill=""/>
-        </svg>
-      </span>
     </div>
-  </div>
-  <!-- Card Item End -->
-
-  <!-- Card Item Start - Card 3 -->
-  <div class="group rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm py-6 px-7.5 shadow-2xl hover:border-yellow-400/50 transition-all duration-300">
-    <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-yellow-400/20 group-hover:bg-yellow-400/30 transition-colors">
-      <svg class="fill-yellow-400" width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.18418 8.03751C9.31543 8.03751 11.0686 6.35313 11.0686 4.25626C11.0686 2.15938 9.31543 0.475006 7.18418 0.475006C5.05293 0.475006 3.2998 2.15938 3.2998 4.25626C3.2998 6.35313 5.05293 8.03751 7.18418 8.03751ZM7.18418 2.05626C8.45605 2.05626 9.52168 3.05313 9.52168 4.29063C9.52168 5.52813 8.49043 6.52501 7.18418 6.52501C5.87793 6.52501 4.84668 5.52813 4.84668 4.29063C4.84668 3.05313 5.9123 2.05626 7.18418 2.05626Z"/>
-        <path d="M15.8124 9.6875C17.6687 9.6875 19.1468 8.24375 19.1468 6.42188C19.1468 4.6 17.6343 3.15625 15.8124 3.15625C13.9905 3.15625 12.478 4.6 12.478 6.42188C12.478 8.24375 13.9905 9.6875 15.8124 9.6875ZM15.8124 4.7375C16.8093 4.7375 17.5999 5.49375 17.5999 6.45625C17.5999 7.41875 16.8093 8.175 15.8124 8.175C14.8155 8.175 14.0249 7.41875 14.0249 6.45625C14.0249 5.49375 14.8155 4.7375 15.8124 4.7375Z"/>
-        <path d="M15.9843 10.0313H15.6749C14.6437 10.0313 13.6468 10.3906 12.7781 11.0781C11.2312 9.32812 8.91243 8.76562 7.18418 8.76562C3.79793 8.76562 0.953125 11.5781 0.953125 14.9219V16.3469C0.953125 16.9219 1.40918 17.3781 1.98418 17.3781H20.0624C20.6374 17.3781 21.0937 16.9219 21.0937 16.3469V15.4531C21.0937 12.8062 18.9405 10.0313 15.9843 10.0313ZM2.4999 15.8438V14.9219C2.4999 12.4375 4.59668 10.3125 7.18418 10.3125C9.77168 10.3125 11.8687 12.4375 11.8687 14.9219V15.8438H2.4999ZM19.5468 15.8438H13.4155V14.9219C13.4155 13.2969 12.7968 11.8281 11.7781 10.7188C12.2718 10.3906 12.8468 10.1875 13.4499 10.1875H15.9843C18.0155 10.1875 19.5468 12.4219 19.5468 15.4531V15.8438Z"/>
-      </svg>
-    </div>
-
-    <div class="mt-4 flex items-end justify-between">
-      <div>
-        <h4 class="text-title-md font-bold text-white group-hover:text-yellow-400 transition-colors">
-          <%= number_with_delimiter(card3_value) %>
-        </h4>
-        <span class="text-sm font-medium text-gray-400"><%= card3_label %></span>
-      </div>
-
-      <span class="flex items-center gap-1 text-sm font-medium text-green-400">
-        0.95%
-        <svg class="fill-green-400" width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.35716 2.47737L0.908974 5.82987L5.0443e-07 4.94612L5 0.0848689L10 4.94612L9.09103 5.82987L5.64284 2.47737L5.64284 10.0849L4.35716 10.0849L4.35716 2.47737Z" fill=""/>
-        </svg>
-      </span>
-    </div>
-  </div>
-  <!-- Card Item End -->
-
-  <!-- Card Item Start - Card 4 -->
-  <div class="group rounded-2xl border border-gray-700 bg-gray-800/50 backdrop-blur-sm py-6 px-7.5 shadow-2xl hover:border-yellow-400/50 transition-all duration-300">
-    <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-yellow-400/20 group-hover:bg-yellow-400/30 transition-colors">
-      <svg class="fill-yellow-400" width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11 15.1156C4.19376 15.1156 0.825012 8.61876 0.687512 8.34376C0.584387 8.13751 0.584387 7.86251 0.687512 7.65626C0.825012 7.38126 4.19376 0.918762 11 0.918762C17.8063 0.918762 21.175 7.38126 21.3125 7.65626C21.4156 7.86251 21.4156 8.13751 21.3125 8.34376C21.175 8.61876 17.8063 15.1156 11 15.1156ZM2.26876 8.00001C3.02501 9.27189 5.98126 13.5688 11 13.5688C16.0188 13.5688 18.975 9.27189 19.7313 8.00001C18.975 6.72814 16.0188 2.43126 11 2.43126C5.98126 2.43126 3.02501 6.72814 2.26876 8.00001Z"/>
-        <path d="M11 10.9219C9.38438 10.9219 8.07812 9.61562 8.07812 8C8.07812 6.38438 9.38438 5.07812 11 5.07812C12.6156 5.07812 13.9219 6.38438 13.9219 8C13.9219 9.61562 12.6156 10.9219 11 10.9219ZM11 6.625C10.2437 6.625 9.625 7.24375 9.625 8C9.625 8.75625 10.2437 9.375 11 9.375C11.7563 9.375 12.375 8.75625 12.375 8C12.375 7.24375 11.7563 6.625 11 6.625Z"/>
-      </svg>
-    </div>
-
-    <div class="mt-4 flex items-end justify-between">
-      <div>
-        <h4 class="text-title-md font-bold text-white group-hover:text-yellow-400 transition-colors">
-          <% if card4_currency %>
-            <%= format_sek(card4_value) %>
-          <% else %>
-            <%= number_with_delimiter(card4_value) %>
-          <% end %>
-        </h4>
-        <span class="text-sm font-medium text-gray-400"><%= card4_label %></span>
-      </div>
-
-      <span class="flex items-center gap-1 text-sm font-medium text-green-400">
-        4.35%
-        <svg class="fill-green-400" width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.35716 2.47737L0.908974 5.82987L5.0443e-07 4.94612L5 0.0848689L10 4.94612L9.09103 5.82987L5.64284 2.47737L5.64284 10.0849L4.35716 10.0849L4.35716 2.47737Z" fill=""/>
-        </svg>
-      </span>
-    </div>
-  </div>
-  <!-- Card Item End -->
-  
+  <% end %>
 </div>
-<!-- ====== Cards Section End -->

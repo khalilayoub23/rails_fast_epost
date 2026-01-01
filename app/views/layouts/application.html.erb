@@ -12,6 +12,7 @@
     
     <%# Turbo Native bridge %>
     <meta name="turbo-visit-control" content="reload">
+    <%= tag.meta name: "google-maps-key", content: ENV.fetch("GOOGLE_MAPS_API_KEY", "") %>
 
     <%= yield :head %>
 

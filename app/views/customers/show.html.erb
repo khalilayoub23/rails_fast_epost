@@ -39,6 +39,16 @@
         <div class="text-sm text-body">Category</div>
         <div class="text-dark capitalize"><%= @customer.category %></div>
       </div>
+      <div>
+        <div class="text-sm text-body">Bulk discount</div>
+        <div class="text-dark">
+          <% if @customer.bulk_discount.present? %>
+            <%= number_to_percentage(@customer.bulk_discount, precision: 2) %>
+          <% else %>
+            -
+          <% end %>
+        </div>
+      </div>
       <div class="sm:col-span-2">
         <div class="text-sm text-body">Address</div>
         <div class="text-dark"><%= @customer.address %></div>

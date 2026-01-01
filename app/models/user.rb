@@ -24,13 +24,16 @@ class User < ApplicationRecord
 
   # Role-based access control
   enum :role, {
-    viewer: "viewer",
     manager: "manager",
     operations_manager: "operations_manager",
     admin: "admin",
     support_agent: "support_agent",
     warehouse_agent: "warehouse_agent",
-    carrier_staff: "carrier_staff"
+    carrier_staff: "carrier_staff",
+    carrier: "carrier",
+    sender: "sender",
+    lawyer: "lawyer",
+    ecommerce_seller: "ecommerce_seller"
   }, prefix: true
 
   enum :user_type, {
@@ -48,7 +51,7 @@ class User < ApplicationRecord
   after_initialize :set_default_role, if: :new_record?
 
   def set_default_role
-    self.role ||= :viewer
+    self.role ||= :sender
     self.user_type ||= :sender
   end
 
@@ -63,7 +66,8 @@ class User < ApplicationRecord
 
     user.provider = auth.provider
     user.uid = auth.uid
-    user.role ||= "viewer"
+    user.role ||= "sender"
+    user.user_type ||= :sender
     user.password = Devise.friendly_token.first(20) if user.encrypted_password.blank?
     user.save(validate: user.email.present?)
     user
@@ -82,8 +86,12 @@ class User < ApplicationRecord
     role == "operations_manager" || admin?
   end
 
-  def viewer?
-    role == "viewer"
+  def carrier?
+    role == "carrier"
+  end
+
+  def sender_role?
+    role == "sender"
   end
 
   def support_agent?
@@ -95,7 +103,19 @@ class User < ApplicationRecord
   end
 
   def carrier_staff?
-    role == "carrier_staff"
+    role.in?(%w[carrier_staff carrier])
+  end
+
+  def viewer?
+    role.in?(%w[sender lawyer ecommerce_seller])
+  end
+
+  def lawyer?
+    role == "lawyer"
+  end
+
+  def ecommerce_seller?
+    role == "ecommerce_seller"
   end
 
   def has_saved_signature?

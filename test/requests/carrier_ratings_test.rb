@@ -83,7 +83,8 @@ class CarrierRatingsTest < ActionDispatch::IntegrationTest
     user = User.create!(
       email: "viewer-#{SecureRandom.hex(2)}@example.com",
       password: "password123",
-      role: "viewer"
+      role: "sender",
+      user_type: :sender
     )
     @created_users << user
     user

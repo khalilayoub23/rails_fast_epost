@@ -1,0 +1,66 @@
+<section class="space-y-6">
+  <header class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+    <div>
+      <p class="text-xs uppercase tracking-[0.2em] text-slate-400"><%= t('admin.branding.subtitle', default: 'Brand assets') %></p>
+      <h1 class="text-2xl font-bold text-white"><%= t('admin.branding.title', default: 'Branding') %></h1>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+    <section class="rounded-2xl border border-white/10 bg-slate-900/70 px-6 py-5 shadow-lg shadow-black/30 backdrop-blur min-w-0">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-slate-400"><%= t('admin.branding.uploads', default: 'Uploads') %></p>
+          <h2 class="text-lg font-semibold text-white"><%= t('admin.branding.logos', default: 'Logos') %></h2>
+        </div>
+      </div>
+
+      <%= form_with url: admin_branding_path, method: :patch, html: { multipart: true, class: 'mt-4 space-y-4' } do |f| %>
+        <div class="space-y-2">
+          <%= f.label :light_logo, t('admin.branding.light_logo', default: 'Light logo'), class: 'text-sm font-semibold text-slate-200' %>
+          <%= f.file_field :light_logo, accept: '.svg,.png,.jpg,.jpeg', class: 'block w-full cursor-pointer rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 shadow-inner shadow-black/20' %>
+          <p class="text-xs text-slate-400"><%= t('admin.branding.hint', default: 'SVG, PNG, JPG. Old logo is replaced on upload.') %></p>
+        </div>
+
+        <div class="space-y-2">
+          <%= f.label :dark_logo, t('admin.branding.dark_logo', default: 'Dark logo'), class: 'text-sm font-semibold text-slate-200' %>
+          <%= f.file_field :dark_logo, accept: '.svg,.png,.jpg,.jpeg', class: 'block w-full cursor-pointer rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 shadow-inner shadow-black/20' %>
+          <p class="text-xs text-slate-400"><%= t('admin.branding.hint', default: 'SVG, PNG, JPG. Old logo is replaced on upload.') %></p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <%= f.submit t('admin.branding.save', default: 'Save branding'), class: 'inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-amber-300' %>
+          <p class="text-xs text-slate-400"><%= t('admin.branding.tip', default: 'Uploads overwrite the existing public/logo files.') %></p>
+        </div>
+      <% end %>
+    </section>
+
+    <section class="rounded-2xl border border-white/10 bg-slate-900/70 px-6 py-5 shadow-lg shadow-black/30 backdrop-blur min-w-0">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-slate-400"><%= t('admin.branding.preview', default: 'Preview') %></p>
+          <h2 class="text-lg font-semibold text-white"><%= t('admin.branding.current_assets', default: 'Current assets') %></h2>
+        </div>
+      </div>
+
+      <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-4">
+          <span class="text-xs uppercase tracking-[0.2em] text-slate-400"><%= t('admin.branding.light', default: 'Light') %></span>
+          <div class="flex h-20 w-full items-center justify-center rounded-lg bg-white">
+            <img src="/logo.svg" alt="Light logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
+            <img src="/logo.png" alt="Light logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
+            <img src="/logo.jpg" alt="Light logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
+          </div>
+        </div>
+        <div class="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-4">
+          <span class="text-xs uppercase tracking-[0.2em] text-slate-400"><%= t('admin.branding.dark', default: 'Dark') %></span>
+          <div class="flex h-20 w-full items-center justify-center rounded-lg bg-slate-900">
+            <img src="/logo-dark.svg" alt="Dark logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
+            <img src="/logo-dark.png" alt="Dark logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
+            <img src="/logo-dark.jpg" alt="Dark logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

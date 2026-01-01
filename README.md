@@ -631,6 +631,20 @@ Create dedicated admin-only sections:
 - [ ] Analytics dashboard (advanced metrics)
 - [ ] Audit logs (who did what, when)
 - [ ] Background job monitoring (Solid Queue UI)
+
+## Demo data for background jobs
+
+Create sample tasks, payments, and queued jobs for local inspection:
+
+```bash
+bin/rails demo:setup
+```
+
+What it does:
+- Seeds a carrier, customer, sender, messenger, lawyer, and three demo tasks tied to that carrier.
+- Creates per-task payments (payable to the carrier) so payouts and KPIs populate.
+- Adds a demo delivery record for PDF processing.
+- Enqueues `CarrierPayoutSyncJob`, `PaymentsSyncJob`, and `ProcessDeliveryPdfJob` (Solid Queue). Run `bin/jobs` or start the server with `SOLID_QUEUE_IN_PUMA=1` to process them, then view `/admin/monitoring/jobs`.
 - [ ] Cache management (Solid Cache UI)
 - [ ] Database query analyzer
 - [ ] API usage statistics

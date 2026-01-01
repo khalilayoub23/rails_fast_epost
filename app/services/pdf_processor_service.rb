@@ -36,7 +36,8 @@ class PdfProcessorService
     qr_data_uri = "data:image/png;base64,#{Base64.strict_encode64(qr_png)}"
 
     html = ApplicationController.render(
-      CourtForms::DeliveryFormComponent.new(delivery: delivery, qr_code_data_uri: qr_data_uri)
+      CourtForms::DeliveryFormComponent.new(delivery: delivery, qr_code_data_uri: qr_data_uri),
+      layout: false
     )
 
     pdf_binary = Grover.new(html, format: "A4", margin: { top: "2cm", bottom: "2cm", left: "2cm", right: "2cm" }, print_background: true).to_pdf

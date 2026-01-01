@@ -8,5 +8,8 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin "stripe_checkout", to: "stripe_checkout/index.js"
 pin "@stripe/stripe-js", to: "@stripe--stripe-js.js"
 
+# Google Places autocomplete (frontend only)
+pin "google_autocomplete", to: "google_autocomplete.js"
+
 # Advanced features
 pin "sortablejs" # @1.15.6

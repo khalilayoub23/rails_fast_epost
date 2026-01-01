@@ -9,6 +9,7 @@ class DashboardController < ApplicationController
     elsif current_user.support_agent? || current_user.warehouse_agent?
       load_operational_data
     else
+      authorize :viewer, :access_dashboard?
       load_sender_data
     end
   end
@@ -18,9 +19,9 @@ class DashboardController < ApplicationController
   def load_admin_data
     @dashboard_view = "admin"
     load_filter_options
-    payments_scope = apply_payment_filters(policy_scope(Payment))
-    tasks_scope = apply_task_filters(policy_scope(Task))
-    deliveries_scope = apply_delivery_filters(policy_scope(Delivery))
+    payments_scope = safe_relation(apply_payment_filters(policy_scope(Payment)), Payment)
+    tasks_scope = safe_relation(apply_task_filters(policy_scope(Task)), Task)
+    deliveries_scope = safe_relation(apply_delivery_filters(policy_scope(Delivery)), Delivery)
 
     @payments_count = payments_scope.count
     @pending_payments = payments_scope.where(gateway_status: :pending).limit(5)
@@ -71,19 +72,20 @@ class DashboardController < ApplicationController
   def load_sender_data
     @dashboard_view = "sender"
     load_filter_options(minimal: true)
-    # Filter payments for tasks where the current user is the sender
-    # We join tasks to filter by sender_id
-    @my_payments = apply_payment_filters(
-      Payment.joins(:task).where(tasks: { sender_id: current_user.id })
-    )
+    Rails.logger.info("[Dashboard] load_sender_data for #{current_user&.email} (role: #{current_user&.role})")
+    # Filter payments for tasks where the current user is the sender (use Payment.none as fallback)
+    payments_scope = Payment.joins(:task).where(tasks: { sender_id: current_user.id })
+    payments_scope = safe_relation(payments_scope, Payment)
+    @my_payments = apply_payment_filters(payments_scope)
     
     @payments_count = @my_payments.count
     @pending_payments = @my_payments.where(gateway_status: :pending).limit(5)
     @recent_payments = @my_payments.order(created_at: :desc).limit(5)
     @total_spend_cents = @my_payments.where(gateway_status: :succeeded).sum(:amount_cents).to_i
     @refunds_total_cents = Refund.where(payment_id: @my_payments.select(:id)).sum(:amount_cents).to_i
-    task_scope = apply_task_filters(policy_scope(Task))
+    task_scope = safe_relation(apply_task_filters(policy_scope(Task)), Task)
     @tasks_count = task_scope.where(sender_id: current_user.id).count
+    @recent_tasks = task_scope.where(sender_id: current_user.id).order(created_at: :desc).limit(5)
     @task_filters = task_filter_params
     @payment_filters = payment_filter_params
   end
@@ -92,6 +94,10 @@ class DashboardController < ApplicationController
     @dashboard_view = "manager"
     load_admin_data
     @dashboard_view = "manager"
+  end
+
+  def safe_relation(scope, model_class)
+    scope || model_class.none
   end
 
   def load_filter_options(minimal: false)
@@ -122,6 +128,7 @@ class DashboardController < ApplicationController
 
   def apply_payment_filters(scope)
     filters = payment_filter_params
+    scope ||= Payment.none
     scope = scope.where(gateway_status: filters[:status]) if filters[:status].present?
     scope = scope.where(provider: filters[:gateway]) if filters[:gateway].present?
 
@@ -137,6 +144,7 @@ class DashboardController < ApplicationController
 
   def apply_task_filters(scope)
     filters = task_filter_params
+    scope ||= Task.none
     scope = scope.where(status: filters[:status]) if filters[:status].present?
     scope = scope.where(carrier_id: filters[:carrier_id]) if filters[:carrier_id].present?
     scope = scope.where(sender_id: filters[:sender_id]) if filters[:sender_id].present?
@@ -145,6 +153,7 @@ class DashboardController < ApplicationController
 
   def apply_delivery_filters(scope)
     filters = delivery_filter_params
+    scope ||= Delivery.none
     scope = scope.where(status: filters[:status]) if filters[:status].present?
     scope = scope.where(courier_id: filters[:courier_id]) if filters[:courier_id].present?
     scope = scope.where(sender_id: filters[:sender_id]) if filters[:sender_id].present?

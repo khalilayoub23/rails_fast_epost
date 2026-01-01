@@ -44,7 +44,7 @@ class DeliveriesControllerTest < ActionDispatch::IntegrationTest
   test "manager can filter deliveries by sender" do
     alternate_delivery = Delivery.create!(
       case_number: "CASE-FILTER-001",
-      sender: users(:sender_user),
+      sender: users(:sender),
       courier: @delivery.courier,
       recipient: @delivery.recipient,
       notes: "Filtered delivery"

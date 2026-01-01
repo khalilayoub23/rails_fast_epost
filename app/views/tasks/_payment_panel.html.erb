@@ -1,0 +1,64 @@
+<%= form_with url: publish_task_path(task), method: :post, data: { turbo: false, turbo_frame: "_top" }, html: { target: "_blank" }, class: "mt-10 space-y-6 rounded-2xl border border-gray-800 bg-gray-950/70 p-6" do %>
+  <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+    <div>
+      <h2 class="text-xl font-semibold text-white"><%= t("tasks.payment_section_title", default: "Checkout & Payment") %></h2>
+      <p class="text-sm text-gray-400"><%= t("tasks.payment_section_help", default: "Pay now or later to publish this task and open it up for carriers to bid.") %></p>
+    </div>
+    <div class="flex items-center text-yellow-300">
+      <span class="material-icons mr-2 text-base">lock</span>
+      <span class="text-xs font-semibold"><%= t("tasks.payment_secure", default: "Secure Stripe Checkout") %></span>
+    </div>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-2">
+    <div>
+      <label class="mb-2 block text-sm font-medium text-gray-200" for="payment_amount"><%= t("tasks.payment_amount", default: "Amount (USD)") %></label>
+      <input type="number" step="0.01" min="1" name="payment[amount]" id="payment_amount"
+             value="<%= payment_details["amount"] %>"
+             class="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400"
+             placeholder="99.00" required>
+    </div>
+    <div>
+      <label class="mb-2 block text-sm font-medium text-gray-200" for="payment_currency"><%= t("tasks.payment_currency", default: "Currency") %></label>
+      <select name="payment[currency]" id="payment_currency"
+              class="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400">
+        <% [["USD", "USD"], ["EUR", "EUR"], ["ILS", "ILS"]].each do |label, value| %>
+          <option value="<%= value %>" <%= "selected" if payment_details["currency"] == value %>><%= label %></option>
+        <% end %>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-2">
+    <div>
+      <label class="mb-2 block text-sm font-medium text-gray-200" for="payment_service_type"><%= t("tasks.payment_service_type", default: "Service Type") %></label>
+      <select name="payment[service_type]" id="payment_service_type"
+              class="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400">
+        <% [
+          [t("service_standard", default: "Standard Delivery"), "standard_delivery"],
+          [t("service_express", default: "Express Delivery"), "express_delivery"],
+          [t("service_legal_title", default: "Legal Document"), "legal_documents"],
+          [t("service_ecommerce_title", default: "E-commerce"), "ecommerce"]
+        ].each do |label, value| %>
+          <option value="<%= value %>" <%= "selected" if payment_details["service_type"] == value %>><%= label %></option>
+        <% end %>
+      </select>
+    </div>
+    <div>
+      <label class="mb-2 block text-sm font-medium text-gray-200" for="payment_description"><%= t("tasks.payment_description", default: "Payment Description") %></label>
+      <input type="text" name="payment[description]" id="payment_description"
+             value="<%= payment_details["description"] %>"
+             class="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400"
+             placeholder="eg. Priority delivery">
+    </div>
+  </div>
+
+  <div class="rounded-lg border border-gray-800 bg-gray-900/70 p-4 text-sm text-gray-300">
+    <p class="font-semibold text-white mb-1"><%= t("tasks.payment_info_title", default: "How this works") %></p>
+    <p><%= t("tasks.payment_info_body", default: "Submitting this payment publishes the task so carriers can book it. You can also pay later from this page.") %></p>
+  </div>
+
+  <div class="flex items-center justify-end gap-3">
+    <%= submit_tag t("tasks.publish_and_pay", default: "Pay & Publish Task"), class: "inline-flex items-center justify-center rounded-lg bg-yellow-400 px-6 py-3 font-semibold text-black shadow-lg transition hover:bg-yellow-300" %>
+  </div>
+<% end %>

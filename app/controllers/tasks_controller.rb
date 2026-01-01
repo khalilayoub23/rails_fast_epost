@@ -7,8 +7,9 @@ class TasksController < ApplicationController
   TaskPaymentError = Class.new(StandardError)
 
   before_action :set_customer, only: %i[index new create]
-  before_action :set_task, only: %i[show edit update destroy update_status update_delivery]
+  before_action :set_task, only: %i[show edit update destroy update_status update_delivery publish]
   before_action :load_form_collections, only: %i[new create payment_cancel]
+  before_action :require_task_creator!, only: %i[new create payment_cancel publish]
 
   def index
     base_scope = @customer ? @customer.tasks : Task.all
@@ -20,46 +21,71 @@ class TasksController < ApplicationController
       @priority_filter = nil
     end
 
-    @tasks = base_scope
+    @tasks = apply_visibility_filter(base_scope)
     respond_with_index(@tasks)
   end
 
   def show
+    @payment_details ||= default_payment_details
+    @checkout_payment = Payment.where("metadata ->> 'task_id' = ?", @task.id.to_s)
+      .where(provider: "stripe", gateway_status: %w[pending created])
+      .order(created_at: :desc)
+      .first
     respond_with_show(@task)
   end
 
-  def new
-    @task = (@customer ? @customer.tasks : Task).new
-    @payment_details = default_payment_details
-  end
 
-  def create
-    scope = @customer ? @customer.tasks : Task
-    @task = scope.new(task_params)
-    @payment_details = default_payment_details.merge(payment_form_params.to_h)
-
-    unless @task.valid?
-      flash.now[:alert] = t("tasks.form_error", default: "Please correct the highlighted errors.")
-      render :new, status: :unprocessable_entity and return
+  def publish
+    unless current_user&.manager? || current_user&.support_agent? || @task.created_by_id == current_user&.id
+      message = t("messages.unauthorized", default: "You are not authorized to perform this action.")
+      redirect_to task_path(@task), alert: message and return
     end
 
+    if @task.published?
+      redirect_to task_path(@task), notice: t("tasks.already_published", default: "Task already published."), status: :see_other and return
+    end
+
+    @payment_details = default_payment_details.merge(payment_form_params.to_h)
     payment = initiate_task_checkout!(@task, @payment_details)
 
     if payment.payment_url.present?
       redirect_to payment.payment_url, allow_other_host: true, status: :see_other
     elsif payment.gateway_status_succeeded?
       task = finalize_task_from_payment(payment)
-      redirect_to task_path(task), notice: t("tasks.created_after_payment", default: "Task created after successful payment."), status: :see_other
+      redirect_to task_path(task), notice: t("tasks.published_after_payment", default: "Payment confirmed. Task is now published."), status: :see_other
     else
       raise TaskPaymentError, t("tasks.payment_checkout_missing", default: "Unable to start Stripe checkout. Please contact an administrator.")
     end
   rescue TaskPaymentError => e
-    Rails.logger.warn("[Tasks#create] Payment error: #{e.message}")
+    Rails.logger.warn("[Tasks#publish] Payment error: #{e.message}")
     flash.now[:alert] = e.message
-    render :new, status: :unprocessable_entity
+    render :show, status: :unprocessable_entity
+  rescue => e
+    Rails.logger.error("[Tasks#publish] Unexpected error: #{e.message}")
+    flash.now[:alert] = t("tasks.payment_unexpected_error", default: "Unable to start checkout. Please try again.")
+    render :show, status: :internal_server_error
+  end
+  def new
+    @task = (@customer ? @customer.tasks : Task).new
+  end
+
+  def create
+    scope = @customer ? @customer.tasks : Task
+    @task = scope.new(task_params)
+    assign_default_carrier(@task)
+    @task.created_by = current_user
+    log_task_creation_attempt(@task)
+
+    if @task.save
+      redirect_to task_path(@task), notice: t("tasks.draft_saved", default: "Task saved as a draft. Complete payment to publish it."), status: :see_other
+    else
+      log_task_creation_failure(@task)
+      flash.now[:alert] = t("tasks.form_error", default: "Please correct the highlighted errors.")
+      render :new, status: :unprocessable_entity
+    end
   rescue => e
     Rails.logger.error("[Tasks#create] Unexpected error: #{e.message}")
-    flash.now[:alert] = t("tasks.payment_unexpected_error", default: "Unable to start checkout. Please try again.")
+    flash.now[:alert] = t("tasks.general_creation_error", default: "Unable to save the task. Please try again.")
     render :new, status: :internal_server_error
   end
 
@@ -156,12 +182,19 @@ class TasksController < ApplicationController
 
     task_form = payment.metadata.fetch("task_form", {})
     payment_form = payment.metadata.fetch("payment_form", {})
-    @task = Task.new(task_form)
-    @payment_details = default_payment_details.merge(payment_form)
-    @task.customer ||= Customer.find_by(id: task_form["customer_id"]) if task_form["customer_id"].present?
-    @customer = @task.customer if @task.customer
-    flash.now[:alert] = t("tasks.payment_canceled", default: "Payment canceled. Review the details and try again.")
-    render :new, status: :unprocessable_entity
+    @task = payment.task || Task.find_by(id: payment.metadata["task_id"])
+
+    if @task.present?
+      @payment_details = default_payment_details.merge(payment_form)
+      flash.now[:alert] = t("tasks.payment_canceled", default: "Payment canceled. Review the details and try again.")
+      render :show, status: :unprocessable_entity
+    else
+      @task = Task.new(task_form)
+      @task.customer ||= Customer.find_by(id: task_form["customer_id"]) if task_form["customer_id"].present?
+      @payment_details = default_payment_details.merge(payment_form)
+      flash.now[:alert] = t("tasks.payment_canceled", default: "Payment canceled. Review the details and try again.")
+      render :new, status: :unprocessable_entity
+    end
   end
 
   private
@@ -181,20 +214,60 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(
+    permitted = params.require(:task).permit(
       :customer_id, :carrier_id, :sender_id, :messenger_id, :lawyer_id,
-      :package_type, :start, :target, :failure_code, :delivery_time, :status, :priority, :filled_form_url,
+      :package_type, :task_type, :start, :target, :failure_code, :delivery_time, :status, :priority, :filled_form_url,
       :pickup_address, :pickup_contact_phone, :pickup_notes, :requested_pickup_time
     )
+
+    permitted.delete(:carrier_id) if current_user&.sender_role?
+    unless current_user&.carrier?
+      permitted.delete(:status)
+      permitted.delete(:failure_code)
+    end
+    unless current_user&.admin? || current_user&.support_agent?
+      permitted.delete(:messenger_id)
+    end
+    permitted
+  end
+
+  def apply_visibility_filter(scope)
+    return scope if current_user&.manager? || current_user&.support_agent?
+
+    published_scope = scope.where(published: true)
+    return published_scope unless current_user&.sender_role?
+
+    published_scope.or(scope.where(created_by_id: current_user.id))
+  end
+
+  def assign_default_carrier(task)
+    return if task.carrier_id.present?
+
+    task.carrier = Carrier.default_system_carrier
+  end
+
+  def log_task_creation_attempt(task)
+    role = current_user&.role || "n/a"
+    user_info = "user_id=#{current_user&.id || 'guest'} role=#{role}"
+    params_info = task_params.slice(:customer_id, :sender_id, :messenger_id, :carrier_id).to_h
+    carrier_name = task.carrier&.name || "none"
+    Rails.logger.info("\e[36m[TaskCreation]\e[0m Attempt by \e[35m#{user_info}\e[0m params=#{params_info} status=#{task.status} carrier=#{carrier_name}")
+  end
+
+  def log_task_creation_failure(task)
+    Rails.logger.error("\e[31m[TaskCreation] validation failed: #{task.errors.full_messages.join(' | ')}\e[0m")
+    Rails.logger.error("\e[33m[TaskCreation] incoming task params=#{task_params.to_h}\e[0m")
   end
 
   def payment_form_params
     params.fetch(:payment, {}).permit(:amount, :currency, :service_type, :description)
   end
 
-  def default_payment_details
+  def default_payment_details(task = @task)
+    amount = task_checkout_amount(task)
+
     {
-      "amount" => nil,
+      "amount" => amount || "100.00",
       "currency" => "USD",
       "service_type" => "standard_delivery",
       "description" => nil
@@ -208,9 +281,11 @@ class TasksController < ApplicationController
     currency = payment_details["currency"].presence || "USD"
     cancel_token = SecureRandom.hex(12)
 
+    task_snapshot = serialize_task_snapshot(task)
     metadata = {
-      "task_snapshot" => serialize_task_snapshot(task),
-      "task_form" => task_params.to_h,
+      "task_id" => task.id,
+      "task_snapshot" => task_snapshot,
+      "task_form" => task_snapshot,
       "payment_form" => payment_details,
       "task_cancel_token" => cancel_token,
       "success_url" => task_payment_success_template_url,
@@ -227,6 +302,16 @@ class TasksController < ApplicationController
       payable: task.customer,
       metadata: metadata
     )
+  rescue Stripe::AuthenticationError => e
+    Rails.logger.warn("[Tasks#publish] Stripe authentication error: #{e.message}")
+    raise TaskPaymentError, t("tasks.payment_gateway_auth_error", default: "Payment provider credentials are invalid. Please contact an administrator.")
+  end
+
+  def require_task_creator!
+    return if current_user&.manager? || current_user&.sender_role?
+
+    message = t("messages.unauthorized", default: "You are not authorized to perform this action.")
+    redirect_to root_path, alert: message
   end
 
   def parse_amount_cents(amount_value)
@@ -234,6 +319,18 @@ class TasksController < ApplicationController
     (amount * 100).to_i
   rescue ArgumentError, TypeError
     0
+  end
+
+  def task_checkout_amount(task)
+    return nil unless task
+
+    cost = CostCalculator.new(task).total_cost
+    return nil unless cost.present? && cost.positive?
+
+    format("%.2f", cost)
+  rescue => e
+    Rails.logger.warn("[Tasks] Failed to compute checkout amount for task #{task.id}: #{e.message}")
+    nil
   end
 
   def serialize_task_snapshot(task)

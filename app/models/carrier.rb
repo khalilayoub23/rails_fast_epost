@@ -3,6 +3,11 @@ class Carrier < ApplicationRecord
   # The DB migration renames `type` -> `carrier_type` and tests/fixtures must
   # use `carrier_type` going forward.
 
+  DEFAULT_SYSTEM_NAME = "Fast Epost Carrier".freeze
+  DEFAULT_SYSTEM_EMAIL = "public-carrier@fast-epost.local".freeze
+  DEFAULT_SYSTEM_TYPE = "VirtualCarrier".freeze
+  DEFAULT_SYSTEM_ADDRESS = "Operations".freeze
+
   has_many :phones
   has_many :documents
   has_many :form_templates
@@ -46,6 +51,15 @@ class Carrier < ApplicationRecord
       average_completion_rating: completion_avg.round(2),
       average_overall_rating: overall_avg,
       updated_at: Time.current
+    )
+  end
+
+  def self.default_system_carrier
+    find_by(name: DEFAULT_SYSTEM_NAME) || order(:id).first || create!(
+      name: DEFAULT_SYSTEM_NAME,
+      email: DEFAULT_SYSTEM_EMAIL,
+      carrier_type: DEFAULT_SYSTEM_TYPE,
+      address: DEFAULT_SYSTEM_ADDRESS
     )
   end
 

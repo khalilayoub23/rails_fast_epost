@@ -1,7 +1,19 @@
 <%= turbo_stream_from "dashboard" %>
 
-<h2 class="text-xl font-semibold text-dark">Dashboard Overview</h2>
+<section class="space-y-6">
+  <header class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between">
+    <div>
+      <p class="text-xs uppercase tracking-[0.2em] text-slate-400"><%= t('dashboard.subtitle', default: 'Control panel') %></p>
+      <h1 class="text-2xl font-bold text-white"><%= t('dashboard.title', default: 'Dashboard Overview') %></h1>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 text-sm text-slate-400">
+      <span class="inline-flex items-center gap-1 rounded-full bg-slate-900/60 px-3 py-1 ring-1 ring-white/10"><span class="material-icons text-base text-amber-300">visibility</span><%= t('dashboard.live', default: 'Live data') %></span>
+      <span class="inline-flex items-center gap-1 rounded-full bg-slate-900/60 px-3 py-1 ring-1 ring-white/10"><span class="material-icons text-base text-emerald-300">sync</span><%= t('dashboard.auto_refresh', default: 'Auto-refresh') %></span>
+    </div>
+  </header>
 
-<div class="space-y-6">
-  <%= render "dashboard/#{@dashboard_view}" %>
-</div>
+  <div class="space-y-6">
+    <% puts "[Dashboard Debug] @dashboard_view=#{@dashboard_view.inspect}" %>
+    <%= render "dashboard/#{@dashboard_view}" %>
+  </div>
+</section>
