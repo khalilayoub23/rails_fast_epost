@@ -14,8 +14,8 @@
 @import "design-system/logo.css";
 @import "sidebar_overrides.css";
 
-/* Fast Epost Landing System */
-:root {
+/* Fast Epost Landing System (scoped to public layout) */
+body.public-layout {
   --brand-navy: #1a2332;
   --brand-navy-translucent: rgba(26, 35, 50, 0.9);
   --brand-electric: #2563eb;
@@ -36,40 +36,33 @@
   --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.2);
   --shadow-card: 0 20px 45px rgba(15, 23, 42, 0.18);
   --transition-base: 0.3s ease-in-out;
-}
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
   font-family: var(--font-en);
   background-color: var(--brand-bg);
   color: var(--brand-text-light);
   line-height: 1.65;
 }
 
-html[dir="rtl"] body {
+html {
+  scroll-behavior: smooth;
+}
+
+html[dir="rtl"] body.public-layout {
   font-family: var(--font-ar);
 }
 
-.public-layout {
-  background-color: var(--brand-bg);
-  color: var(--brand-text-light);
-}
-
-a {
+body.public-layout a {
   transition: color var(--transition-base), opacity var(--transition-base);
 }
 
-button:focus-visible,
-a:focus-visible {
+body.public-layout button:focus-visible,
+body.public-layout a:focus-visible {
   outline: 2px solid var(--brand-gold);
   outline-offset: 3px;
 }
 
-.btn-primary,
-.btn-secondary {
+body.public-layout .btn-primary,
+body.public-layout .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -79,34 +72,34 @@ a:focus-visible {
   transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base), color var(--transition-base);
 }
 
-.btn-primary {
+body.public-layout .btn-primary {
   background: var(--brand-gold);
   color: #111;
   box-shadow: 0 10px 25px rgba(255, 215, 0, 0.35);
 }
 
-.btn-primary:hover {
+body.public-layout .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 32px rgba(255, 215, 0, 0.45);
 }
 
-.btn-primary.is-pulsing {
+body.public-layout .btn-primary.is-pulsing {
   animation: pulseGlow 2.4s ease-in-out infinite;
 }
 
-.btn-secondary {
+body.public-layout .btn-secondary {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: var(--brand-text-light);
 }
 
-.btn-secondary:hover {
+body.public-layout .btn-secondary:hover {
   transform: translateY(-2px);
   border-color: var(--brand-gold);
   color: var(--brand-gold);
 }
 
-.card-shell {
+body.public-layout .card-shell {
   background: #fff;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
@@ -114,14 +107,14 @@ a:focus-visible {
   color: var(--brand-text-dark);
 }
 
-.input-control {
+body.public-layout .input-control {
   border-radius: 8px;
   padding: 12px;
   border: 2px solid #e5e7eb;
   transition: border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
-.input-control:focus {
+body.public-layout .input-control:focus {
   border-color: var(--brand-gold);
   box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.25);
   outline: none;
@@ -528,7 +521,7 @@ a:focus-visible {
 
 /* TailAdmin Color Palette */
 :root {
-  --primary: #3c50e0;
+  --primary: #fbbf24;
   --secondary: #80caee;
   --success: #219653;
   --danger: #d34053;

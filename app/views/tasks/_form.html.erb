@@ -3,11 +3,31 @@
 <% carriers = local_assigns.fetch(:carriers) { @carriers || Carrier.order(:name) } %>
 <% customers_collection = local_assigns.fetch(:customers) { @customer ? [@customer] : Customer.order(:name) } %>
 <% task_customer = @customer || task.customer %>
-<% customer_context = task_customer if task_customer&.persisted? %>
 <% payment_details = local_assigns.fetch(:payment_details) { @payment_details || { "currency" => "USD" } } %>
-<% form_model = task.new_record? && customer_context ? [customer_context, task] : task %>
+<% form_model = task.new_record? && task_customer ? [task_customer, task] : task %>
 
-<%= form_with model: form_model, data: { turbo_frame: "_top" }, class: "space-y-6" do |f| %>
+<%= form_with model: form_model,
+      data: { turbo_frame: "_top", controller: "form-wizard" },
+      class: "space-y-6" do |f| %>
+  <div class="flex items-center justify-between">
+    <p class="text-sm font-medium text-gray-300" data-form-wizard-target="indicator">Step 1 of 2</p>
+    <div class="flex items-center gap-2">
+      <button type="button"
+              class="hidden inline-flex items-center justify-center rounded-lg border border-gray-600 px-4 py-2 text-sm font-semibold text-gray-200 hover:border-yellow-400 hover:text-yellow-400"
+              data-form-wizard-target="backButton"
+              data-action="form-wizard#back">
+        <%= t("common.back", default: "Back") %>
+      </button>
+      <button type="button"
+              class="inline-flex items-center justify-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow-lg transition hover:bg-yellow-300"
+              data-form-wizard-target="nextButton"
+              data-action="form-wizard#next">
+        <%= t("common.next", default: "Next") %>
+      </button>
+    </div>
+  </div>
+
+  <div data-form-wizard-target="step" class="space-y-6">
   <% unless task_customer %>
     <div>
       <%= f.label :customer_id, t("tasks.customer"), class: "mb-2 block text-sm font-medium text-gray-200" %>
@@ -24,41 +44,26 @@
   <% end %>
 
   <div class="grid gap-6 md:grid-cols-2">
-    <% if current_user&.manager? %>
-      <div>
-        <%= f.label :carrier_id, t("tasks.carrier", default: "Carrier"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-        <%= f.collection_select :carrier_id, carriers, :id, :name,
-              { prompt: t("tasks.select_carrier", default: "Select carrier") },
-              class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
-      </div>
-    <% else %>
-      <div class="rounded-lg border border-dashed border-gray-700 bg-gray-900/50 px-4 py-3 text-sm text-gray-400">
-        <strong class="text-white"><%= t("tasks.carrier", default: "Carrier") %>:</strong>
-        <%= t("tasks.carrier_assignment_pending", default: "A carrier will be assigned by the operations team after payment.") %>
-        <%= f.hidden_field :carrier_id, value: nil %>
-      </div>
-    <% end %>
     <div>
-      <%= f.label :package_type, t("tasks.package_type", default: "Package Type"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-      <%= f.select :package_type, Task.task_types.keys.map { |type| [type.humanize, type] }, {},
+      <%= f.label :carrier_id, t("tasks.carrier", default: "Carrier"), class: "mb-2 block text-sm font-medium text-gray-200" %>
+      <%= f.collection_select :carrier_id, carriers, :id, :name,
+            { prompt: t("tasks.select_carrier", default: "Select carrier") },
             class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
     </div>
-  </div>
-
-  <div>
-    <%= f.label :task_type, t("tasks.task_type", default: "Task Type"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-    <%= f.select :task_type, Task.task_types.keys.map { |type| [type.humanize, type] }, {},
-          class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+    <div>
+      <%= f.label :package_type, t("tasks.package_type", default: "Package Type"), class: "mb-2 block text-sm font-medium text-gray-200" %>
+      <%= f.text_field :package_type, class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+    </div>
   </div>
 
   <div class="grid gap-6 md:grid-cols-2">
     <div>
       <%= f.label :start, t("tasks.start", default: "Pickup location"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-      <%= f.text_field :start, class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400", placeholder: "Search or type pickup" %>
+      <%= f.text_field :start, class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
     </div>
     <div>
       <%= f.label :target, t("tasks.target", default: "Drop-off location"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-      <%= f.text_field :target, class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400", placeholder: "Search or type drop-off" %>
+      <%= f.text_field :target, class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
     </div>
   </div>
 
@@ -69,51 +74,32 @@
             { include_blank: t("tasks.select_sender", default: "Select sender") },
             class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
     </div>
-    <% if current_user&.admin? || current_user&.support_agent? %>
-      <div>
-        <%= f.label :messenger_id, t("tasks.messenger", default: "Messenger"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-        <%= f.collection_select :messenger_id, messengers, :id, :name,
-              { include_blank: t("tasks.select_messenger", default: "Select messenger") },
-              class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
-      </div>
-    <% else %>
-      <div class="rounded-lg border border-dashed border-gray-700 bg-gray-900/50 px-4 py-3 text-sm text-gray-400">
-        <strong class="text-white"><%= t("tasks.messenger", default: "Messenger") %>:</strong>
-        <%= t("tasks.messenger_assignment_note", default: "Messenger assignments are handled by admin or customer service after review.") %>
-        <%= f.hidden_field :messenger_id, value: nil %>
-      </div>
-    <% end %>
+    <div>
+      <%= f.label :messenger_id, t("tasks.messenger", default: "Messenger"), class: "mb-2 block text-sm font-medium text-gray-200" %>
+      <%= f.collection_select :messenger_id, messengers, :id, :name,
+            { include_blank: t("tasks.select_messenger", default: "Select messenger") },
+            class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+    </div>
   </div>
 
   <div class="grid gap-6 md:grid-cols-2">
-    <% if current_user&.carrier? %>
-      <div>
-        <%= f.label :status, t("tasks.status", default: "Status"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-        <%= f.select :status, Task.statuses.keys.map { |status| [status.humanize, status] }, {},
-              class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
-      </div>
-      <div>
-        <%= f.label :failure_code, t("tasks.failure_code", default: "Failure code"), class: "mb-2 block text-sm font-medium text-gray-200" %>
-        <%= f.select :failure_code, Task.failure_codes.keys.map { |code| [code.humanize, code] }, {},
-              class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
-      </div>
-    <% else %>
-      <div class="rounded-lg border border-dashed border-gray-700 bg-gray-900/50 px-4 py-3 text-sm text-gray-400">
-        <strong class="text-white"><%= t("tasks.status", default: "Status") %>:</strong>
-        <%= t("tasks.status_pending_note", default: "Status remains pending until a carrier updates progress in the field.") %>
-      </div>
-      <div class="rounded-lg border border-dashed border-gray-700 bg-gray-900/50 px-4 py-3 text-sm text-gray-400">
-        <strong class="text-white"><%= t("tasks.failure_code", default: "Failure code") %>:</strong>
-        <%= t("tasks.failure_code_locked_note", default: "Failure codes are updated by the carrier after delivery attempts.") %>
-      </div>
-    <% end %>
+    <div>
+      <%= f.label :status, t("tasks.status", default: "Status"), class: "mb-2 block text-sm font-medium text-gray-200" %>
+      <%= f.select :status, Task.statuses.keys.map { |status| [status.humanize, status] }, {},
+            class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+    </div>
+    <div>
+      <%= f.label :failure_code, t("tasks.failure_code", default: "Failure code"), class: "mb-2 block text-sm font-medium text-gray-200" %>
+      <%= f.select :failure_code, Task.failure_codes.keys.map { |code| [code.humanize, code] }, {},
+            class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+    </div>
   </div>
 
   <div>
     <%= f.label :priority, t("tasks.priority", default: "Priority"), class: "mb-2 block text-sm font-medium text-gray-200" %>
     <%= f.select :priority, Task.priorities.keys.map { |priority| [priority.titleize, priority] }, {},
           class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
-    <p class="mt-2 text-xs text-gray-400"><%= t("tasks.priority_help", default: "Express shipments alert messengers immediately; normal stays in the standard queue.") %></p>
+    <p class="mt-2 text-xs text-gray-400"><%= t("tasks.priority_help", default: "Urgent or express tasks trigger warning banners in alerts and emails.") %></p>
   </div>
 
   <div class="grid gap-6 md:grid-cols-2">
@@ -126,6 +112,10 @@
       <%= f.url_field :filled_form_url, class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
     </div>
   </div>
+
+  </div>
+
+  <div data-form-wizard-target="step" class="hidden space-y-6">
 
   <div class="grid gap-6 md:grid-cols-2">
     <div>
@@ -148,11 +138,76 @@
     <%= f.datetime_field :requested_pickup_time, class: "w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400" %>
   </div>
 
+  <% if task.new_record? %>
+    <div class="mt-10 rounded-2xl border border-gray-800 bg-gray-950/70 p-6">
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-semibold text-white"><%= t("tasks.payment_section_title", default: "Checkout & Payment") %></h2>
+          <p class="text-sm text-gray-400"><%= t("tasks.payment_section_help", default: "Enter the payment details to launch Stripe Checkout before the task is saved.") %></p>
+        </div>
+        <div class="flex items-center text-yellow-300">
+          <span class="material-icons mr-2 text-base">lock</span>
+          <span class="text-xs font-semibold"><%= t("tasks.payment_secure", default: "Secure Stripe Checkout") %></span>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <div>
+          <label class="mb-2 block text-sm font-medium text-gray-200" for="payment_amount"><%= t("tasks.payment_amount", default: "Amount (USD)") %></label>
+          <input type="number" step="0.01" min="1" name="payment[amount]" id="payment_amount"
+                 value="<%= payment_details["amount"] %>"
+                 class="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400"
+                 placeholder="99.00" required>
+        </div>
+        <div>
+          <label class="mb-2 block text-sm font-medium text-gray-200" for="payment_currency"><%= t("tasks.payment_currency", default: "Currency") %></label>
+          <select name="payment[currency]" id="payment_currency"
+                  class="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400">
+            <% [["USD", "USD"], ["EUR", "EUR"], ["ILS", "ILS"]].each do |label, value| %>
+              <option value="<%= value %>" <%= "selected" if payment_details["currency"] == value %>><%= label %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 mt-6">
+        <div>
+          <label class="mb-2 block text-sm font-medium text-gray-200" for="payment_service_type"><%= t("tasks.payment_service_type", default: "Service Type") %></label>
+          <select name="payment[service_type]" id="payment_service_type"
+                  class="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400">
+            <% [
+              [t("service_standard", default: "Standard Delivery"), "standard_delivery"],
+              [t("service_express", default: "Express Delivery"), "express_delivery"],
+              [t("service_legal_title", default: "Legal Document"), "legal_documents"],
+              [t("service_ecommerce_title", default: "E-commerce"), "ecommerce"]
+            ].each do |label, value| %>
+              <option value="<%= value %>" <%= "selected" if payment_details["service_type"] == value %>><%= label %></option>
+            <% end %>
+          </select>
+        </div>
+        <div>
+          <label class="mb-2 block text-sm font-medium text-gray-200" for="payment_description"><%= t("tasks.payment_description", default: "Payment Description") %></label>
+          <input type="text" name="payment[description]" id="payment_description"
+                 value="<%= payment_details["description"] %>"
+                 class="w-full rounded-lg border border-gray-600 bg-gray-900 py-3 px-4 text-white focus:border-yellow-400 focus:ring-yellow-400"
+                 placeholder="eg. Priority delivery">
+        </div>
+      </div>
+
+      <div class="mt-6 rounded-lg border border-gray-800 bg-gray-900/70 p-4 text-sm text-gray-300">
+        <p class="font-semibold text-white mb-1"><%= t("tasks.payment_info_title", default: "How this works") %></p>
+        <p><%= t("tasks.payment_info_body", default: "Submitting the form redirects you to Stripe Checkout. Once the payment succeeds, the task will be saved automatically in the system.") %></p>
+      </div>
+    </div>
+  <% end %>
+
   <div class="flex items-center gap-4">
     <%= f.submit t("tasks.save", default: "Save Task"),
           class: "inline-flex items-center justify-center rounded-lg bg-yellow-400 px-6 py-3 font-semibold text-black shadow-lg transition hover:bg-yellow-300" %>
     <%= link_to t("common.cancel", default: "Cancel"),
           task.persisted? ? task_path(task) : tasks_path,
           class: "inline-flex items-center justify-center rounded-lg border border-gray-600 px-6 py-3 text-sm font-semibold text-gray-200 hover:border-yellow-400 hover:text-yellow-400" %>
+  </div>
+
   </div>
 <% end %>

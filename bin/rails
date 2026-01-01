@@ -4,5 +4,14 @@ APP_PATH = File.expand_path("../config/application", __dir__)
 ensure_postgres = File.expand_path("../script/ensure_postgres.sh", __dir__)
 system(ensure_postgres) if File.executable?(ensure_postgres)
 
+# In this app, Tailwind runs via `bin/dev` (Procfile.dev). Running only
+# `bin/rails server` is a common cause of "CSS changes don't show up".
+if ENV["RAILS_ENV"].to_s.empty? || ENV["RAILS_ENV"] == "development"
+  if ARGV.first == "server" && ENV["DISABLE_BIN_DEV_WARNING"] != "1"
+    warn "\n[rails_fast_epost] Heads up: start dev with `bin/dev` (runs Rails + Tailwind watcher)." \
+         "\n                Running only `bin/rails server` will not watch/rebuild Tailwind CSS.\n"
+  end
+end
+
 require_relative "../config/boot"
 require "rails/commands"

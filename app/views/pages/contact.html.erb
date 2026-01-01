@@ -114,7 +114,7 @@
           <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
             <h3 class="text-xl font-bold text-yellow-400 mb-4">Quick Actions</h3>
             <div class="space-y-3">
-              <%= link_to pages_track_parcel_path, class: "flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-750 transition-colors group" do %>
+              <%= link_to pages_track_parcel_path, class: "flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors group" do %>
                 <span class="font-medium">Track Your Parcel</span>
                 <svg class="w-5 h-5 text-yellow-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -122,14 +122,14 @@
               <% end %>
               
               <% if user_signed_in? %>
-                <%= link_to dashboard_path, class: "flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-750 transition-colors group" do %>
+                <%= link_to dashboard_path, class: "flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors group" do %>
                   <span class="font-medium">Go to Dashboard</span>
                   <svg class="w-5 h-5 text-yellow-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                   </svg>
                 <% end %>
               <% else %>
-                <%= link_to new_user_registration_path, class: "flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-750 transition-colors group" do %>
+                <%= link_to new_user_registration_path, class: "flex items-center justify-between p-3 bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors group" do %>
                   <span class="font-medium">Create Account</span>
                   <svg class="w-5 h-5 text-yellow-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
