@@ -1,5 +1,82 @@
-<h1>Form Template <%= @form_template.id %></h1>
-<p>Carrier: <%= @form_template.carrier_id %></p>
-<p>Customer: <%= @form_template.customer_id %></p>
-<p><%= link_to "Preview PDF", form_template_path(@form_template, format: :pdf), target: "_blank" %></p>
-<pre><%= JSON.pretty_generate(@form_template.schema || {}) %></pre>
+<% content_for :page_title, "Form Template ##{@form_template.id}" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <%= link_to root_path, class: "text-body hover:text-dark" do %>
+              <span class="material-icons text-sm mr-1">home</span>
+              Home
+            <% end %>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <%= link_to "Form Templates", form_templates_path, class: "text-body hover:text-dark" %>
+            </div>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <span class="text-dark font-medium">Template #<%= @form_template.id %></span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="flex gap-2">
+      <%= link_to "Edit", edit_form_template_path(@form_template), class: "inline-flex items-center rounded border border-stroke bg-white px-4 py-2 text-sm font-medium text-dark hover:bg-whiter" %>
+      <%= link_to "Preview PDF", form_template_path(@form_template, format: :pdf), target: "_blank", class: "inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <!-- Template Details -->
+    <div class="rounded-sm border border-stroke bg-white shadow-default">
+      <div class="border-b border-stroke px-5 py-4">
+        <h3 class="text-title-md font-semibold text-dark">Template Details</h3>
+      </div>
+      <div class="px-5 pt-6 pb-6">
+        <div class="mb-4">
+          <p class="text-sm text-body mb-1">Template ID</p>
+          <p class="text-base font-medium text-dark">#<%= @form_template.id %></p>
+        </div>
+        <div class="mb-4">
+          <p class="text-sm text-body mb-1">Carrier ID</p>
+          <p class="text-base font-medium text-dark"><%= @form_template.carrier_id || "Not assigned" %></p>
+        </div>
+        <div class="mb-4">
+          <p class="text-sm text-body mb-1">Customer ID</p>
+          <p class="text-base font-medium text-dark"><%= @form_template.customer_id || "Not assigned" %></p>
+        </div>
+        <div class="mb-4">
+          <p class="text-sm text-body mb-1">Created At</p>
+          <p class="text-base font-medium text-dark"><%= @form_template.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+        </div>
+        <div>
+          <p class="text-sm text-body mb-1">Last Updated</p>
+          <p class="text-base font-medium text-dark"><%= @form_template.updated_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schema Preview -->
+    <div class="rounded-sm border border-stroke bg-white shadow-default">
+      <div class="border-b border-stroke px-5 py-4">
+        <h3 class="text-title-md font-semibold text-dark">Schema Structure</h3>
+      </div>
+      <div class="px-5 pt-6 pb-6">
+        <% if @form_template.schema.present? %>
+          <pre class="rounded bg-gray-2 p-4 text-sm text-dark overflow-x-auto"><%= JSON.pretty_generate(@form_template.schema) %></pre>
+        <% else %>
+          <div class="text-center py-8">
+            <span class="material-icons text-body text-3xl mb-2">code</span>
+            <p class="text-sm text-body">No schema defined</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

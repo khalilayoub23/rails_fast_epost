@@ -1,9 +1,72 @@
-<h1>Form Templates</h1>
-<%= link_to "New", new_form_template_path %>
-<ul>
-  <% @form_templates.each do |t| %>
-    <li>
-      <%= link_to "Template ##{t.id}", t %>
-    </li>
-  <% end %>
-  </ul>
+<% content_for :page_title, "Form Templates" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <%= link_to root_path, class: "text-body hover:text-dark" do %>
+              <span class="material-icons text-sm mr-1">home</span>
+              Home
+            <% end %>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
+              <span class="text-dark font-medium">Form Templates</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <%= link_to "New Template", new_form_template_path, class: "inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90" %>
+  </div>
+
+  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+    <div class="mb-6 flex items-center justify-between">
+      <h2 class="text-title-md font-semibold text-dark">All Form Templates</h2>
+    </div>
+
+    <% if @form_templates.any? %>
+      <div class="max-w-full overflow-x-auto">
+        <table class="w-full table-auto">
+          <thead>
+            <tr class="bg-gray-2 text-left">
+              <th class="min-w-[100px] px-4 py-4 font-medium text-dark">ID</th>
+              <th class="min-w-[160px] px-4 py-4 font-medium text-dark">Carrier</th>
+              <th class="min-w-[160px] px-4 py-4 font-medium text-dark">Customer</th>
+              <th class="px-4 py-4 text-right font-medium text-dark">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @form_templates.each do |template| %>
+              <tr class="border-b border-stroke hover:bg-gray-2">
+                <td class="px-4 py-4">
+                  <%= link_to template.id, form_template_path(template), class: "text-sm font-medium text-primary hover:underline" %>
+                </td>
+                <td class="px-4 py-4 text-sm text-dark">
+                  <%= template.carrier_id || "—" %>
+                </td>
+                <td class="px-4 py-4 text-sm text-dark">
+                  <%= template.customer_id || "—" %>
+                </td>
+                <td class="px-4 py-4 text-right text-sm font-medium">
+                  <%= link_to "View", form_template_path(template), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter mr-2" %>
+                  <%= link_to "Edit", edit_form_template_path(template), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="px-6 py-8 text-center">
+        <span class="material-icons text-body text-4xl mb-2">description</span>
+        <h3 class="text-sm font-medium text-dark mb-1">No form templates</h3>
+        <p class="text-sm text-body">Get started by creating a new form template.</p>
+        <%= link_to "New Template", new_form_template_path, class: "mt-4 inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90" %>
+      </div>
+    <% end %>
+  </div>
+</div>
