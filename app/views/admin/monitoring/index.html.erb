@@ -1,104 +1,104 @@
 <div class="p-6">
   <!-- Page Header -->
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">System Monitoring</h1>
-    <p class="mt-2 text-sm text-gray-600">Real-time system health, background jobs, and integration monitoring</p>
+    <h1 class="text-title-md2 font-bold text-white">System Monitoring</h1>
+    <p class="mt-2 text-sm text-slate-300">Real-time system health, background jobs, and integration monitoring</p>
   </div>
 
   <!-- Health Status Cards -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <!-- Background Jobs -->
-    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+    <div class="rounded-2xl border border-white/10 border-l-4 border-l-sky-400 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600">Background Jobs</p>
-          <p class="text-2xl font-bold text-gray-900"><%= @stats[:jobs][:total] %></p>
-          <p class="text-xs text-gray-500 mt-1">
+          <p class="text-sm text-slate-300">Background Jobs</p>
+          <p class="text-2xl font-bold text-white"><%= @stats[:jobs][:total] %></p>
+          <p class="text-xs text-slate-400 mt-1">
             <%= @stats[:jobs][:pending] %> pending · <%= @stats[:jobs][:completed] %> completed
           </p>
         </div>
-        <div class="text-blue-500">
+        <div class="text-sky-300">
           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
           </svg>
         </div>
       </div>
-      <%= link_to "View Details →", admin_monitoring_jobs_path, class: "text-sm text-blue-600 hover:text-blue-800 mt-4 inline-block" %>
+      <%= link_to "View Details →", admin_monitoring_jobs_path, class: "mt-4 inline-block text-sm text-slate-200 hover:text-white" %>
     </div>
 
     <!-- Tasks -->
-    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+    <div class="rounded-2xl border border-white/10 border-l-4 border-l-emerald-400 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600">Active Tasks</p>
-          <p class="text-2xl font-bold text-gray-900"><%= @stats[:tasks][:total] %></p>
-          <p class="text-xs text-gray-500 mt-1">
+          <p class="text-sm text-slate-300">Active Tasks</p>
+          <p class="text-2xl font-bold text-white"><%= @stats[:tasks][:total] %></p>
+          <p class="text-xs text-slate-400 mt-1">
             <%= @stats[:tasks][:in_transit] %> in transit · <%= @stats[:tasks][:delivered] %> delivered
           </p>
         </div>
-        <div class="text-green-500">
+        <div class="text-emerald-300">
           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
           </svg>
         </div>
       </div>
-      <%= link_to "View Tasks →", tasks_path, class: "text-sm text-green-600 hover:text-green-800 mt-4 inline-block" %>
+      <%= link_to "View Tasks →", tasks_path, class: "mt-4 inline-block text-sm text-slate-200 hover:text-white" %>
     </div>
 
     <!-- Payments -->
-    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+    <div class="rounded-2xl border border-white/10 border-l-4 border-l-purple-400 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600">Total Revenue</p>
-          <p class="text-2xl font-bold text-gray-900">$<%= number_with_precision(@stats[:payments][:total_amount], precision: 2) %></p>
-          <p class="text-xs text-gray-500 mt-1">
+          <p class="text-sm text-slate-300">Total Revenue</p>
+          <p class="text-2xl font-bold text-white">$<%= number_with_precision(@stats[:payments][:total_amount], precision: 2) %></p>
+          <p class="text-xs text-slate-400 mt-1">
             <%= @stats[:webhooks][:pending] %> pending · <%= @stats[:webhooks][:succeeded] %> succeeded
           </p>
         </div>
-        <div class="text-purple-500">
+        <div class="text-purple-300">
           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
       </div>
-      <%= link_to "View Webhooks →", admin_monitoring_webhooks_path, class: "text-sm text-purple-600 hover:text-purple-800 mt-4 inline-block" %>
+      <%= link_to "View Webhooks →", admin_monitoring_webhooks_path, class: "mt-4 inline-block text-sm text-slate-200 hover:text-white" %>
     </div>
 
     <!-- System Health -->
-    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+    <div class="rounded-2xl border border-white/10 border-l-4 border-l-yellow-400 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600">System Status</p>
-          <p class="text-2xl font-bold text-green-600">Healthy</p>
-          <p class="text-xs text-gray-500 mt-1">
+          <p class="text-sm text-slate-300">System Status</p>
+          <p class="text-2xl font-bold text-emerald-300">Healthy</p>
+          <p class="text-xs text-slate-400 mt-1">
             <%= @stats[:system][:users] %> users · <%= @stats[:system][:customers] %> customers
           </p>
         </div>
-        <div class="text-yellow-500">
+        <div class="text-yellow-300">
           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
       </div>
-      <%= link_to "Health Check →", admin_monitoring_health_path, class: "text-sm text-yellow-600 hover:text-yellow-800 mt-4 inline-block", data: { turbo_frame: "health_status" } %>
+      <%= link_to "Health Check →", admin_monitoring_health_path, class: "mt-4 inline-block text-sm text-slate-200 hover:text-white", data: { turbo_frame: "health_status" } %>
     </div>
   </div>
 
   <!-- Task Status Distribution -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Task Status Chart -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Task Status Distribution</h3>
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h3 class="text-lg font-semibold text-white mb-4">Task Status Distribution</h3>
       <div class="space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center">
-            <div class="w-3 h-3 bg-gray-400 rounded-full mr-3"></div>
-            <span class="text-sm text-gray-700">Pending</span>
+            <div class="w-3 h-3 bg-yellow-400 rounded-full mr-3"></div>
+            <span class="text-sm text-slate-200">Pending</span>
           </div>
           <div class="flex items-center">
-            <span class="text-sm font-semibold text-gray-900 mr-2"><%= @stats[:tasks][:pending] %></span>
-            <div class="w-32 bg-gray-200 rounded-full h-2">
-              <div class="bg-gray-400 h-2 rounded-full" style="width: <%= (@stats[:tasks][:pending].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
+            <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:pending] %></span>
+            <div class="w-32 bg-white/10 rounded-full h-2">
+              <div class="bg-yellow-400 h-2 rounded-full" style="width: <%= (@stats[:tasks][:pending].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
             </div>
           </div>
         </div>
@@ -106,11 +106,11 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-            <span class="text-sm text-gray-700">In Transit</span>
+            <span class="text-sm text-slate-200">In Transit</span>
           </div>
           <div class="flex items-center">
-            <span class="text-sm font-semibold text-gray-900 mr-2"><%= @stats[:tasks][:in_transit] %></span>
-            <div class="w-32 bg-gray-200 rounded-full h-2">
+            <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:in_transit] %></span>
+            <div class="w-32 bg-white/10 rounded-full h-2">
               <div class="bg-blue-500 h-2 rounded-full" style="width: <%= (@stats[:tasks][:in_transit].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
             </div>
           </div>
@@ -119,11 +119,11 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-            <span class="text-sm text-gray-700">Delivered</span>
+            <span class="text-sm text-slate-200">Delivered</span>
           </div>
           <div class="flex items-center">
-            <span class="text-sm font-semibold text-gray-900 mr-2"><%= @stats[:tasks][:delivered] %></span>
-            <div class="w-32 bg-gray-200 rounded-full h-2">
+            <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:delivered] %></span>
+            <div class="w-32 bg-white/10 rounded-full h-2">
               <div class="bg-green-500 h-2 rounded-full" style="width: <%= (@stats[:tasks][:delivered].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
             </div>
           </div>
@@ -132,11 +132,11 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <div class="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
-            <span class="text-sm text-gray-700">Failed</span>
+            <span class="text-sm text-slate-200">Failed</span>
           </div>
           <div class="flex items-center">
-            <span class="text-sm font-semibold text-gray-900 mr-2"><%= @stats[:tasks][:failed] %></span>
-            <div class="w-32 bg-gray-200 rounded-full h-2">
+            <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:failed] %></span>
+            <div class="w-32 bg-white/10 rounded-full h-2">
               <div class="bg-red-500 h-2 rounded-full" style="width: <%= (@stats[:tasks][:failed].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
             </div>
           </div>
@@ -145,11 +145,11 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <div class="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
-            <span class="text-sm text-gray-700">Returned</span>
+            <span class="text-sm text-slate-200">Returned</span>
           </div>
           <div class="flex items-center">
-            <span class="text-sm font-semibold text-gray-900 mr-2"><%= @stats[:tasks][:returned] %></span>
-            <div class="w-32 bg-gray-200 rounded-full h-2">
+            <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:returned] %></span>
+            <div class="w-32 bg-white/10 rounded-full h-2">
               <div class="bg-orange-500 h-2 rounded-full" style="width: <%= (@stats[:tasks][:returned].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
             </div>
           </div>
@@ -158,33 +158,33 @@
     </div>
 
     <!-- System Information -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">System Information</h3>
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h3 class="text-lg font-semibold text-white mb-4">System Information</h3>
       <dl class="space-y-3">
         <div class="flex justify-between">
-          <dt class="text-sm text-gray-600">Rails Version</dt>
-          <dd class="text-sm font-medium text-gray-900"><%= @stats[:system][:rails_version] %></dd>
+          <dt class="text-sm text-slate-300">Rails Version</dt>
+          <dd class="text-sm font-medium text-white"><%= @stats[:system][:rails_version] %></dd>
         </div>
         <div class="flex justify-between">
-          <dt class="text-sm text-gray-600">Ruby Version</dt>
-          <dd class="text-sm font-medium text-gray-900"><%= @stats[:system][:ruby_version] %></dd>
+          <dt class="text-sm text-slate-300">Ruby Version</dt>
+          <dd class="text-sm font-medium text-white"><%= @stats[:system][:ruby_version] %></dd>
         </div>
         <div class="flex justify-between">
-          <dt class="text-sm text-gray-600">Total Users</dt>
-          <dd class="text-sm font-medium text-gray-900"><%= @stats[:system][:users] %></dd>
+          <dt class="text-sm text-slate-300">Total Users</dt>
+          <dd class="text-sm font-medium text-white"><%= @stats[:system][:users] %></dd>
         </div>
         <div class="flex justify-between">
-          <dt class="text-sm text-gray-600">Total Customers</dt>
-          <dd class="text-sm font-medium text-gray-900"><%= @stats[:system][:customers] %></dd>
+          <dt class="text-sm text-slate-300">Total Customers</dt>
+          <dd class="text-sm font-medium text-white"><%= @stats[:system][:customers] %></dd>
         </div>
         <div class="flex justify-between">
-          <dt class="text-sm text-gray-600">Total Carriers</dt>
-          <dd class="text-sm font-medium text-gray-900"><%= @stats[:system][:carriers] %></dd>
+          <dt class="text-sm text-slate-300">Total Carriers</dt>
+          <dd class="text-sm font-medium text-white"><%= @stats[:system][:carriers] %></dd>
         </div>
         <% if @stats[:system][:uptime] %>
           <div class="flex justify-between">
-            <dt class="text-sm text-gray-600">System Uptime</dt>
-            <dd class="text-sm font-medium text-gray-900"><%= distance_of_time_in_words(@stats[:system][:uptime]) %></dd>
+            <dt class="text-sm text-slate-300">System Uptime</dt>
+            <dd class="text-sm font-medium text-white"><%= distance_of_time_in_words(@stats[:system][:uptime]) %></dd>
           </div>
         <% end %>
       </dl>
@@ -192,18 +192,18 @@
   </div>
 
   <!-- Payment Providers -->
-  <div class="bg-white rounded-lg shadow p-6 mb-8">
-    <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Providers</h3>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur mb-8">
+    <h3 class="text-lg font-semibold text-white mb-4">Payment Providers</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <% @stats[:payments][:providers].each do |provider, count| %>
-        <div class="border border-gray-200 rounded-lg p-4">
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-600"><%= provider.titleize %></p>
-              <p class="text-xl font-bold text-gray-900"><%= count %></p>
-              <p class="text-xs text-gray-500">transactions</p>
+              <p class="text-sm text-slate-300"><%= provider.titleize %></p>
+              <p class="text-xl font-bold text-white"><%= count %></p>
+              <p class="text-xs text-slate-400">transactions</p>
             </div>
-            <div class="w-12 h-12 bg-<%= provider == 'stripe' ? 'purple' : 'blue' %>-100 rounded-full flex items-center justify-center">
+            <div class="w-12 h-12 <%= provider == 'stripe' ? 'bg-purple-500/15' : 'bg-sky-500/15' %> rounded-full flex items-center justify-center">
               <span class="text-2xl"><%= provider == 'stripe' ? '💳' : '💰' %></span>
             </div>
           </div>
@@ -214,19 +214,19 @@
 
   <!-- Recent Job Failures -->
   <% if @stats[:jobs][:recent_failures] > 0 %>
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
+    <div class="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 mb-8">
       <div class="flex">
         <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="h-5 w-5 text-red-300" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
           </svg>
         </div>
         <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-800">
+          <h3 class="text-sm font-semibold text-red-200">
             <%= @stats[:jobs][:recent_failures] %> job failures in the last 24 hours
           </h3>
           <div class="mt-2">
-            <%= link_to "View Failed Jobs →", admin_monitoring_jobs_path, class: "text-sm text-red-700 hover:text-red-900 font-medium" %>
+            <%= link_to "View Failed Jobs →", admin_monitoring_jobs_path, class: "text-sm text-red-200 hover:text-red-100 font-semibold" %>
           </div>
         </div>
       </div>

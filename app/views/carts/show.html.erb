@@ -1,0 +1,110 @@
+<% content_for :page_title do %>
+  <%= t("cart.title", default: "Cart") %>
+<% end %>
+
+<div class="mx-auto max-w-5xl">
+  <div class="rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-black/30 backdrop-blur">
+    <div class="border-b border-white/10 px-6 py-5">
+      <h1 class="text-2xl font-bold text-white"><%= t("cart.title", default: "Cart") %></h1>
+      <p class="mt-1 text-sm text-slate-300"><%= t("cart.subtitle", default: "Choose unpaid tasks to pay for. Paid tasks will start the delivery process.") %></p>
+    </div>
+
+    <div class="px-6 py-6">
+      <% if @items.blank? %>
+        <div class="rounded-xl border border-white/10 bg-white/5 p-6 text-slate-300">
+          <p class="font-semibold text-white"><%= t("cart.empty_title", default: "Your cart is empty") %></p>
+          <p class="mt-1 text-sm text-slate-300"><%= t("cart.empty_body", default: "Add unpaid tasks to your cart, then pay when you’re ready.") %></p>
+          <div class="mt-4">
+            <%= link_to t("cart.browse_tasks", default: "Browse tasks"), tasks_path,
+                  class: "inline-flex items-center justify-center rounded-lg bg-yellow-400 px-6 py-3 font-semibold text-black shadow-lg transition hover:bg-yellow-300" %>
+          </div>
+        </div>
+      <% else %>
+        <%= form_with url: checkout_cart_path, method: :post, id: "cart_checkout_form", data: { turbo: false } do %>
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div class="max-w-xl">
+              <label class="mb-2 block text-sm font-medium text-slate-200" for="currency"><%= t("cart.currency", default: "Currency") %></label>
+              <select name="currency" id="currency" class="w-full rounded-lg border border-white/10 bg-white/5 py-3 px-4 text-center text-white focus:border-yellow-400 focus:ring-yellow-400">
+                <% [["USD", "USD"], ["EUR", "EUR"], ["ILS", "ILS"]].each do |label, value| %>
+                  <option value="<%= value %>" <%= "selected" if (params[:currency].blank? && value == "ILS") || params[:currency] == value %>><%= label %></option>
+                <% end %>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <%= submit_tag t("cart.pay_selected", default: "Pay selected"),
+                    class: "inline-flex items-center justify-center rounded-lg bg-yellow-400 px-6 py-3 font-semibold text-black shadow-lg transition hover:bg-yellow-300" %>
+            </div>
+          </div>
+
+        <% end %>
+
+          <div class="mt-6 overflow-x-auto" data-controller="cart-selection">
+            <table class="min-w-full divide-y divide-white/10">
+              <thead>
+                <tr class="text-left text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  <th class="px-4 py-3">
+                    <label class="inline-flex items-center gap-2 select-none">
+                      <input
+                        type="checkbox"
+                        class="h-4 w-4 rounded border-white/10 bg-white/5 text-yellow-400 focus:ring-yellow-400"
+                        data-cart-selection-target="toggleAll"
+                        data-action="change->cart-selection#toggleAll"
+                        checked
+                      >
+                      <span><%= t("cart.select", default: "Select") %></span>
+                    </label>
+                  </th>
+                  <th class="px-4 py-3"><%= t("cart.task", default: "Task") %></th>
+                  <th class="px-4 py-3"><%= t("cart.customer", default: "Customer") %></th>
+                  <th class="px-4 py-3"><%= t("cart.status", default: "Status") %></th>
+                  <th class="px-4 py-3"><%= t("cart.amount", default: "Amount") %></th>
+                  <th class="px-4 py-3 text-right"><%= t("cart.actions", default: "Actions") %></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-white/10">
+                <% @items.each do |item| %>
+                  <% task = item.task %>
+                  <tr class="text-sm text-slate-200">
+                    <td class="px-4 py-4">
+                      <input
+                        type="checkbox"
+                        name="task_ids[]"
+                        value="<%= task.id %>"
+                        form="cart_checkout_form"
+                        class="h-4 w-4 rounded border-white/10 bg-white/5 text-yellow-400 focus:ring-yellow-400"
+                        data-cart-selection-target="itemCheckbox"
+                        data-action="change->cart-selection#sync"
+                        checked
+                      >
+                    </td>
+                    <td class="px-4 py-4">
+                      <%= link_to "##{task.id}", task_path(task), class: "font-semibold text-yellow-300 hover:text-yellow-200" %>
+                      <div class="mt-1 text-xs text-slate-400"><%= task.package_type.presence || "-" %></div>
+                    </td>
+                    <td class="px-4 py-4 text-slate-300"><%= task.customer&.name || "-" %></td>
+                    <td class="px-4 py-4">
+                      <%= render "shared/status_badge", status: task.status %>
+                      <% unless task.published? %>
+                        <div class="mt-1 text-xs text-slate-400"><%= t("cart.unpaid", default: "Unpaid") %></div>
+                      <% end %>
+                    </td>
+                    <td class="px-4 py-4">
+                      <input type="number" step="0.01" min="1" name="items[<%= task.id %>][amount]" form="cart_checkout_form"
+                             value="<%= (CostCalculator.new(task).total_cost.presence || 100).to_f.round(2) %>"
+                             class="h-10 w-32 rounded-lg border border-white/10 bg-white/5 px-3 text-center tabular-nums text-white focus:border-yellow-400 focus:ring-yellow-400">
+                    </td>
+                    <td class="px-4 py-4 text-right">
+                          <%= button_to t("cart.remove", default: "Remove"), item_cart_path(item), method: :delete,
+                            form: { data: { turbo: false } },
+                            class: "inline-flex h-10 items-center justify-center rounded-lg border border-white/15 px-4 text-sm font-semibold text-slate-200 hover:border-yellow-400 hover:text-yellow-300" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>

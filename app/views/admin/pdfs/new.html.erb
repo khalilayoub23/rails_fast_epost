@@ -1,70 +1,70 @@
 <% content_for :page_title, "Admin · PDF Tools" %>
 
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-  <h2 class="text-title-md2 font-bold text-black dark:text-white">PDF Tools</h2>
+  <h2 class="text-title-md2 font-bold text-white">PDF Tools</h2>
 </div>
 
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:gap-7.5">
   <!-- Merge PDFs Card -->
-  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
-    <h3 class="mb-4 text-title-md font-semibold text-dark">Merge PDFs</h3>
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-7.5 py-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h3 class="mb-4 text-title-md font-semibold text-white">Merge PDFs</h3>
     <form action="<%= merge_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="space-y-4">
       <%= csrf_meta_tags %>
-      <input type="file" name="files[]" multiple accept="application/pdf" class="block w-full rounded border border-stroke px-3 py-2" />
-      <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Merge</button>
+      <input type="file" name="files[]" multiple accept="application/pdf" class="block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" />
+      <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">Merge</button>
     </form>
   </div>
 
   <!-- Stamp PDF Card -->
-  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
-    <h3 class="mb-4 text-title-md font-semibold text-dark">Stamp PDF</h3>
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-7.5 py-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h3 class="mb-4 text-title-md font-semibold text-white">Stamp PDF</h3>
     <form action="<%= stamp_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="grid grid-cols-2 gap-4">
       <%= csrf_meta_tags %>
-      <input type="file" name="file" accept="application/pdf" class="col-span-2 block w-full rounded border border-stroke px-3 py-2" />
-      <input type="text" name="text" placeholder="Text" class="col-span-2 rounded border border-stroke px-3 py-2" />
-      <input type="number" name="x" placeholder="x" value="100" class="rounded border border-stroke px-3 py-2" />
-      <input type="number" name="y" placeholder="y" value="100" class="rounded border border-stroke px-3 py-2" />
-      <input type="number" name="size" placeholder="size" value="14" class="rounded border border-stroke px-3 py-2" />
+      <input type="file" name="file" accept="application/pdf" class="col-span-2 block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" />
+      <input type="text" name="text" placeholder="Text" class="col-span-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
+      <input type="number" name="x" placeholder="x" value="100" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
+      <input type="number" name="y" placeholder="y" value="100" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
+      <input type="number" name="size" placeholder="size" value="14" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
       <div class="col-span-2">
-        <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Stamp</button>
+        <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">Stamp</button>
       </div>
     </form>
   </div>
 
   <!-- Insert Page Card -->
-  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
-    <h3 class="mb-4 text-title-md font-semibold text-dark">Insert Page</h3>
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-7.5 py-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h3 class="mb-4 text-title-md font-semibold text-white">Insert Page</h3>
     <form action="<%= insert_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="space-y-4">
       <%= csrf_meta_tags %>
-      <input type="file" name="file" accept="application/pdf" class="block w-full rounded border border-stroke px-3 py-2" />
-      <input type="number" name="index" placeholder="index" value="0" class="w-40 rounded border border-stroke px-3 py-2" />
-      <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Insert</button>
+      <input type="file" name="file" accept="application/pdf" class="block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" />
+      <input type="number" name="index" placeholder="index" value="0" class="w-40 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
+      <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">Insert</button>
     </form>
   </div>
 
   <!-- Rotate Pages Card -->
-  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
-    <h3 class="mb-4 text-title-md font-semibold text-dark">Rotate Pages</h3>
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-7.5 py-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h3 class="mb-4 text-title-md font-semibold text-white">Rotate Pages</h3>
     <form action="<%= rotate_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="space-y-4">
       <%= csrf_meta_tags %>
-      <input type="file" name="file" accept="application/pdf" class="block w-full rounded border border-stroke px-3 py-2" />
-      <input type="number" name="degrees" placeholder="degrees (multiple of 90)" value="90" class="w-56 rounded border border-stroke px-3 py-2" />
-      <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Rotate</button>
+      <input type="file" name="file" accept="application/pdf" class="block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" />
+      <input type="number" name="degrees" placeholder="degrees (multiple of 90)" value="90" class="w-56 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
+      <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">Rotate</button>
     </form>
   </div>
 
   <!-- Crop Pages Card -->
-  <div class="rounded-sm border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
-    <h3 class="mb-4 text-title-md font-semibold text-dark">Crop Pages</h3>
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-7.5 py-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h3 class="mb-4 text-title-md font-semibold text-white">Crop Pages</h3>
     <form action="<%= crop_admin_pdfs_path %>" method="post" enctype="multipart/form-data" class="grid grid-cols-2 gap-4">
       <%= csrf_meta_tags %>
-      <input type="file" name="file" accept="application/pdf" class="col-span-2 block w-full rounded border border-stroke px-3 py-2" />
-      <input type="number" name="llx" placeholder="llx" value="0" class="rounded border border-stroke px-3 py-2" />
-      <input type="number" name="lly" placeholder="lly" value="0" class="rounded border border-stroke px-3 py-2" />
-      <input type="number" name="urx" placeholder="urx" value="400" class="rounded border border-stroke px-3 py-2" />
-      <input type="number" name="ury" placeholder="ury" value="600" class="rounded border border-stroke px-3 py-2" />
+      <input type="file" name="file" accept="application/pdf" class="col-span-2 block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" />
+      <input type="number" name="llx" placeholder="llx" value="0" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
+      <input type="number" name="lly" placeholder="lly" value="0" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
+      <input type="number" name="urx" placeholder="urx" value="400" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
+      <input type="number" name="ury" placeholder="ury" value="600" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" />
       <div class="col-span-2">
-        <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Crop</button>
+        <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">Crop</button>
       </div>
     </form>
   </div>

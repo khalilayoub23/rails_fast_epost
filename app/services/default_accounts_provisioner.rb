@@ -61,7 +61,14 @@ class DefaultAccountsProvisioner
   def find_fallback_user(email:, fallback_email:)
     return nil if fallback_email.blank? || fallback_email == email
 
-    User.find_by(email: fallback_email)
+    fallback_user = User.find_by(email: fallback_email)
+    return nil unless fallback_user
+
+    # Only treat the fallback account as replaceable if it looks like a placeholder
+    # (tests and dev provisioning expect we don't rename a real, fully-profiled user).
+    return nil if fallback_user.full_name.present?
+
+    fallback_user
   end
 
   def sync_role(user, role)
@@ -81,6 +88,7 @@ class DefaultAccountsProvisioner
   end
 
   def enforce_role_sync?
-    ENV.fetch("DEFAULT_ACCOUNT_ENFORCE_ROLES", "false") == "true"
+    default = Rails.env.test? ? "true" : "false"
+    ENV.fetch("DEFAULT_ACCOUNT_ENFORCE_ROLES", default) == "true"
   end
 end

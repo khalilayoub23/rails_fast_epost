@@ -2,46 +2,46 @@
 
 <div class="space-y-6">
   <div>
-    <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+    <nav class="flex text-sm text-slate-300" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-3">
         <li class="inline-flex items-center">
-          <%= link_to root_path, class: "text-body hover:text-dark" do %>
+          <%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
             <span class="material-icons text-sm mr-1">home</span>
             Home
           <% end %>
         </li>
         <li>
           <div class="flex items-center">
-            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
-            <%= link_to "Customers", customers_path, class: "text-body hover:text-dark" %>
+            <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+            <%= link_to "Customers", customers_path, class: "text-slate-300 hover:text-white" %>
           </div>
         </li>
         <li>
           <div class="flex items-center">
-            <span class="material-icons text-sm text-body mx-1">chevron_right</span>
-            <span class="text-dark font-medium"><%= @customer.name %></span>
+            <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+            <span class="text-white font-medium"><%= @customer.name %></span>
           </div>
         </li>
       </ol>
     </nav>
   </div>
 
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
     <div class="mb-4">
-      <h2 class="text-title-md font-semibold text-dark"><%= @customer.name %></h2>
+      <h2 class="text-xl font-semibold text-white"><%= @customer.name %></h2>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
-        <div class="text-sm text-body">Email</div>
-        <div class="text-dark"><%= @customer.email %></div>
+        <div class="text-sm text-slate-300">Email</div>
+        <div class="text-white"><%= @customer.email %></div>
       </div>
       <div>
-        <div class="text-sm text-body">Category</div>
-        <div class="text-dark capitalize"><%= @customer.category %></div>
+        <div class="text-sm text-slate-300">Category</div>
+        <div class="text-white capitalize"><%= @customer.category %></div>
       </div>
       <div>
-        <div class="text-sm text-body">Bulk discount</div>
-        <div class="text-dark">
+        <div class="text-sm text-slate-300">Bulk discount</div>
+        <div class="text-white">
           <% if @customer.bulk_discount.present? %>
             <%= number_to_percentage(@customer.bulk_discount, precision: 2) %>
           <% else %>
@@ -50,38 +50,38 @@
         </div>
       </div>
       <div class="sm:col-span-2">
-        <div class="text-sm text-body">Address</div>
-        <div class="text-dark"><%= @customer.address %></div>
+        <div class="text-sm text-slate-300">Address</div>
+        <div class="text-white"><%= @customer.address %></div>
       </div>
     </div>
   </div>
 
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
     <div class="mb-4 flex items-center justify-between">
-      <h3 class="text-title-md font-semibold text-dark">Tasks</h3>
-      <%= link_to "View all", customer_tasks_path(@customer), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+      <h3 class="text-xl font-semibold text-white">Tasks</h3>
+      <%= link_to "View all", customer_tasks_path(@customer), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10" %>
     </div>
     <% if @customer.tasks.any? %>
       <div class="max-w-full overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
-            <tr class="bg-gray-2 text-left">
-              <th class="min-w-[100px] px-4 py-4 font-medium text-dark">ID</th>
-              <th class="min-w-[140px] px-4 py-4 font-medium text-dark">Status</th>
-              <th class="min-w-[120px] px-4 py-4 font-medium text-dark">Carrier</th>
-              <th class="min-w-[160px] px-4 py-4 font-medium text-dark">Created</th>
-              <th class="px-4 py-4 text-right font-medium text-dark"></th>
+            <tr class="bg-white/5 text-left">
+              <th class="min-w-[100px] px-4 py-4 font-semibold text-slate-200">ID</th>
+              <th class="min-w-[140px] px-4 py-4 font-semibold text-slate-200">Status</th>
+              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200">Carrier</th>
+              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200">Created</th>
+              <th class="px-4 py-4 text-right font-semibold text-slate-200"></th>
             </tr>
           </thead>
           <tbody>
             <% @customer.tasks.limit(10).each do |task| %>
-              <tr class="border-b border-stroke hover:bg-gray-2">
+              <tr class="border-b border-white/10 hover:bg-white/5">
                 <td class="px-4 py-4">#<%= task.id %></td>
                 <td class="px-4 py-4"><%= render "shared/status_badge", status: task.status %></td>
-                <td class="px-4 py-4 text-sm text-body">#<%= task.carrier_id %></td>
-                <td class="px-4 py-4 text-sm text-body"><%= l(task.created_at, format: :short) %></td>
+                <td class="px-4 py-4 text-sm text-slate-300">#<%= task.carrier_id %></td>
+                <td class="px-4 py-4 text-sm text-slate-300"><%= l(task.created_at, format: :short) %></td>
                 <td class="px-4 py-4 text-right">
-                  <%= link_to "Open", task_path(task), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+                  <%= link_to "Open", task_path(task), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10" %>
                 </td>
               </tr>
             <% end %>
@@ -90,14 +90,14 @@
       </div>
     <% else %>
       <div class="px-6 py-8 text-center">
-        <span class="material-icons text-body text-4xl mb-2">task</span>
-        <h3 class="text-sm font-medium text-dark mb-1">No tasks for this customer</h3>
-        <p class="text-sm text-body">This customer has no tasks yet.</p>
+        <span class="material-icons text-slate-400 text-5xl mb-3">task</span>
+        <h3 class="text-base font-semibold text-white mb-1">No tasks for this customer</h3>
+        <p class="text-sm text-slate-300">This customer has no tasks yet.</p>
       </div>
     <% end %>
   </div>
 
-  <div class="rounded-sm border border-dashed border-stroke bg-white px-5 py-6 shadow-default">
+  <div class="rounded-2xl border border-dashed border-white/20 bg-white/5 px-5 py-6 shadow-xl shadow-black/30 backdrop-blur">
     <%= render "notification_preferences/index", parent: @customer, collection: @customer.notification_preferences, new_path: new_customer_notification_preference_path(@customer) %>
   </div>
 </div>

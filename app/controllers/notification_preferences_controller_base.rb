@@ -45,7 +45,7 @@ class NotificationPreferencesControllerBase < ApplicationController
   end
 
   def redirect_target
-    polymorphic_path([@notifiable, :notification_preferences])
+    polymorphic_path([ @notifiable, :notification_preferences ])
   end
 
   def flash_message(action)

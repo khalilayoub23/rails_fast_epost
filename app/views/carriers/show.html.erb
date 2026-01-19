@@ -2,49 +2,51 @@
 
 <div class="space-y-6">
 	<div>
-		<nav class="flex text-sm text-body" aria-label="Breadcrumb">
+		<nav class="flex text-sm text-slate-300" aria-label="Breadcrumb">
 			<ol class="inline-flex items-center space-x-1 md:space-x-3">
 				<li class="inline-flex items-center">
-					<%= link_to root_path, class: "text-body hover:text-dark" do %>
+					<%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
 						<span class="material-icons text-sm mr-1">home</span>
 						Home
 					<% end %>
 				</li>
 				<li>
 					<div class="flex items-center">
-						<span class="material-icons text-sm text-body mx-1">chevron_right</span>
-						<%= link_to "Carriers", carriers_path, class: "text-body hover:text-dark" %>
+						<span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+						<%= link_to "Carriers", carriers_path, class: "text-slate-300 hover:text-white" %>
 					</div>
 				</li>
 				<li>
 					<div class="flex items-center">
-						<span class="material-icons text-sm text-body mx-1">chevron_right</span>
-						<span class="text-dark font-medium"><%= @carrier.name %></span>
+						<span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+						<span class="text-white font-medium"><%= @carrier.name %></span>
 					</div>
 				</li>
 			</ol>
 		</nav>
 	</div>
 
-	<div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+	<div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
 		<div class="mb-4 flex items-center justify-between">
-			<h2 class="text-title-md font-semibold text-dark"><%= @carrier.name %></h2>
+			<h2 class="text-xl font-semibold text-white"><%= @carrier.name %></h2>
 			<div class="inline-flex gap-2">
-				<%= link_to "Edit", edit_carrier_path(@carrier), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
-				<%= button_to "Delete", carrier_path(@carrier), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-danger hover:bg-whiter" %>
+				<%= link_to "Edit", edit_carrier_path(@carrier), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10" %>
+				<%= button_to "Delete", carrier_path(@carrier), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "inline-flex items-center rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-1.5 text-sm font-semibold text-red-200 hover:bg-red-500/20" %>
 			</div>
 		</div>
 
 		<% unless @carrier.signature_present? %>
-			<div class="mb-4 rounded border border-dashed border-warning bg-yellow-50 p-4">
-				<p class="text-sm text-dark">
-					This carrier is missing a legal signature. <%= link_to "Capture signature", new_carrier_signature_path(@carrier), class: "font-semibold underline" %>
+			<div class="mb-4 rounded-xl border border-dashed border-yellow-400/30 bg-yellow-400/10 p-4">
+				<p class="text-sm text-slate-200">
+					This carrier is missing a legal signature.
+					<%= link_to "Capture signature", new_carrier_signature_path(@carrier), class: "font-semibold text-yellow-300 underline" %>
 				</p>
 			</div>
 		<% else %>
-			<div class="mb-4 rounded border border-dashed border-success bg-green-50 p-4">
-				<p class="text-sm text-dark">
-					Signature on file. <%= link_to "Update signature", edit_carrier_signature_path(@carrier), class: "font-semibold underline" %>
+			<div class="mb-4 rounded-xl border border-dashed border-emerald-400/30 bg-emerald-500/10 p-4">
+				<p class="text-sm text-slate-200">
+					Signature on file.
+					<%= link_to "Update signature", edit_carrier_signature_path(@carrier), class: "font-semibold text-emerald-300 underline" %>
 				</p>
 			</div>
 		<% end %>
@@ -53,21 +55,21 @@
 
 		<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 			<div>
-				<div class="text-sm text-body">Type</div>
-				<div class="text-dark"><%= @carrier.carrier_type %></div>
+				<div class="text-sm text-slate-300">Type</div>
+				<div class="text-white"><%= @carrier.carrier_type %></div>
 			</div>
 			<div>
-				<div class="text-sm text-body">Email</div>
-				<div class="text-dark"><%= @carrier.email %></div>
+				<div class="text-sm text-slate-300">Email</div>
+				<div class="text-white"><%= @carrier.email %></div>
 			</div>
 			<div class="sm:col-span-2">
-				<div class="text-sm text-body">Address</div>
-				<div class="text-dark"><%= @carrier.address %></div>
+				<div class="text-sm text-slate-300">Address</div>
+				<div class="text-white"><%= @carrier.address %></div>
 			</div>
 		</div>
 
 		<div class="mt-6">
-			<h3 class="text-title-md font-semibold text-dark mb-4">Performance</h3>
+			<h3 class="text-xl font-semibold text-white mb-4">Performance</h3>
 			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 				<%= render partial: "carriers/rating_card", locals: { label: "Overall Score", value: summary[:average_overall_rating] } %>
 				<%= render partial: "carriers/rating_card", locals: { label: "Sender Score", value: summary[:average_sender_rating] } %>

@@ -22,7 +22,7 @@ class CheckoutControllerTest < ActionDispatch::IntegrationTest
     captured_payload = nil
 
     Stripe::Checkout::Session.stub(:create, ->(payload) { captured_payload = payload; session }) do
-      assert_difference ["Payment.count", "Customer.count", "Task.count"], 1 do
+      assert_difference [ "Payment.count", "Customer.count", "Task.count" ], 1 do
         post checkout_path, params: {
           amount: "99.50",
           service_type: "express",

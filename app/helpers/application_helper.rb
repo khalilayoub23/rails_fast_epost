@@ -1,6 +1,6 @@
 module ApplicationHelper
   include HotwireHelper
-  
+
   # RTL (Right-to-Left) language support
   RTL_LOCALES = [ :ar, :he, :fa, :ur ].freeze
 
@@ -75,22 +75,23 @@ module ApplicationHelper
   # Looks for (priority): svg, png, jpg, jpeg in app/assets/images then public/.
   # If both light (logo.*) and dark (logo-dark.*) exist, renders both and toggles via CSS.
   # size: :sm, :md, :lg controls height classes.
+
+  # Public: Resolve current light logo URL if present (nil if none)
+  def current_light_logo_url
+    logo_url_for_prefix("logo")
+  end
+
+  # Public: Resolve current dark logo URL if present (nil if none)
+  def current_dark_logo_url
+    logo_url_for_prefix("logo-dark")
+  end
+
   def brand_logo_tag(size: :md)
     size_class = case size
     when :sm then "h-8"
     when :lg then "h-12"
     else "h-10"
     end
-
-                  # Public: Resolve current light logo URL if present (nil if none)
-                  def current_light_logo_url
-                    logo_url_for_prefix("logo")
-                  end
-
-                  # Public: Resolve current dark logo URL if present (nil if none)
-                  def current_dark_logo_url
-                    logo_url_for_prefix("logo-dark")
-                  end
 
     light = find_logo_variant(%w[logo.svg logo.png logo.jpg logo.jpeg])
     dark  = find_logo_variant(%w[logo-dark.svg logo-dark.png logo-dark.jpg logo-dark.jpeg])
@@ -104,6 +105,16 @@ module ApplicationHelper
       else
         image_tag(resolve_logo_url(light || fallback_logo), alt: "Fast Epost", class: "brand-logo-img #{size_class} w-auto")
       end
+  end
+
+  def cart_item_count
+    user = respond_to?(:current_user) ? current_user : nil
+    return 0 unless user
+
+    allowed = user.manager? || user.sender_role? || user.lawyer? || user.ecommerce_seller?
+    return 0 unless allowed
+
+    CartItem.joins(:cart).where(carts: { user_id: user.id }).count
   end
 
   private
@@ -145,8 +156,26 @@ module ApplicationHelper
     number_to_currency(amount_sek, unit: "SEK", precision: precision)
   end
 
+  # Formats a cents amount as currency without converting exchange rates.
+  # Prefer this over `format_sek` for UI display.
+  def format_money_cents(amount_cents, currency: nil, precision: 0)
+    code = currency.to_s.upcase.presence || ENV.fetch("DEFAULT_CURRENCY", "ILS")
+    amount = amount_cents.to_i / 100.0
+
+    unit = case code
+    when "ILS" then "₪"
+    when "USD" then "$"
+    when "EUR" then "€"
+    when "GBP" then "£"
+    else
+      "#{code} "
+    end
+
+    number_to_currency(amount, unit: unit, precision: precision)
+  end
+
   def form_input_base_classes
-    "mt-2 w-full rounded-xl border border-gray-600 bg-gray-900/60 px-3 py-2 text-white focus:border-yellow-400 focus:ring-0"
+    "mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 focus:outline-none"
   end
 
   def form_input_classes(object, method, base_classes: form_input_base_classes, errors_for: nil)
@@ -154,9 +183,9 @@ module ApplicationHelper
 
     if (messages = field_errors_for(object, method, errors_for)).any?
       updated = base_classes
-        .gsub("border-gray-600", "border-red-500")
+        .gsub("border-white/10", "border-red-500")
         .gsub("focus:border-yellow-400", "focus:border-red-500")
-        .gsub("focus:ring-0", "focus:ring-1 focus:ring-red-500")
+        .gsub("focus:ring-yellow-400/30", "focus:ring-red-500/30")
 
       updated.include?("bg-red-900/10") ? updated : "#{updated} bg-red-900/10"
     else

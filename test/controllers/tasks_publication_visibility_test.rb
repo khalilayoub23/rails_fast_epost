@@ -41,7 +41,7 @@ class TasksPublicationVisibilityTest < ActionDispatch::IntegrationTest
     sign_in users(:viewer)
     get tasks_path
     assert_response :success
-    refute_includes response.body, "Draft Parcel"
+    assert_not_includes response.body, "Draft Parcel"
     assert_includes response.body, "Published Parcel"
 
     sign_out users(:viewer)

@@ -92,7 +92,7 @@ class OdooIntegrationTest < ActionDispatch::IntegrationTest
       name: "Old Name",
       address: "Old Address",
       category: :business,
-      phones: ["+15550000000"]
+      phones: [ "+15550000000" ]
     )
 
     assert_no_difference "Customer.count" do
@@ -120,7 +120,7 @@ class OdooIntegrationTest < ActionDispatch::IntegrationTest
       name: "Lead Customer",
       address: "Lead Address",
       category: :business,
-      phones: ["+16660000000"]
+      phones: [ "+16660000000" ]
     )
 
     post api_v1_integrations_odoo_url,

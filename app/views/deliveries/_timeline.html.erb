@@ -1,8 +1,8 @@
 <% timeline = delivery.signature_timeline %>
-<div class="rounded-2xl border border-gray-700 bg-gray-900/40 p-6 shadow-xl">
+<div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur">
   <div class="flex items-center justify-between">
     <div>
-      <p class="text-sm uppercase tracking-wide text-gray-400">Immutable ledger</p>
+      <p class="text-sm uppercase tracking-wide text-slate-400">Immutable ledger</p>
       <h2 class="text-2xl font-semibold text-white">Signature timeline</h2>
     </div>
     <%= render "shared/status_badge", status: delivery.status %>
@@ -13,15 +13,15 @@
       <% timeline.each do |entry| %>
         <li class="flex items-start gap-4">
           <span class="mt-1 h-3 w-3 rounded-full bg-green-400"></span>
-          <div class="flex-1 rounded-xl border border-gray-700/70 bg-gray-800/50 p-4">
+          <div class="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
             <p class="text-sm font-semibold text-white"><%= entry["role"].titleize %></p>
-            <p class="text-xs text-gray-400">
+            <p class="text-xs text-slate-400">
               Signed by user ##<%= entry["signed_by_user_id"] %> from <%= entry["ip_address"] || "Unknown IP" %>
             </p>
-            <p class="text-xs text-gray-500">
+            <p class="text-xs text-slate-400">
               Hash: <code class="break-all text-amber-200"><%= entry["signature_hash"] %></code>
             </p>
-            <p class="text-xs text-gray-400">
+            <p class="text-xs text-slate-400">
               <%= Time.zone.parse(entry["signed_at"]).to_s(:long) rescue entry["signed_at"] %>
             </p>
           </div>
@@ -29,7 +29,7 @@
       <% end %>
     </ol>
   <% else %>
-    <div class="mt-6 rounded-xl border border-dashed border-gray-600 px-6 py-10 text-center text-sm text-gray-400">
+    <div class="mt-6 rounded-xl border border-dashed border-white/10 px-6 py-10 text-center text-sm text-slate-400">
       No signatures captured yet. Participants will appear here with hashes once they sign.
     </div>
   <% end %>

@@ -12,6 +12,37 @@
 # Configure Using Gemfile
 # gem "pg"
 #
+
+<%
+  require "uri"
+
+  def derive_test_database_url_from(database_url)
+    return nil if database_url.nil? || database_url.strip.empty?
+
+    uri = URI.parse(database_url)
+    db_name = uri.path.to_s.sub(%r{^/}, "")
+    return nil if db_name.empty?
+
+    test_db_name = if db_name.end_with?("_development")
+      db_name.sub(/_development\z/, "_test")
+    elsif db_name.end_with?("_production")
+      db_name.sub(/_production\z/, "_test")
+    elsif db_name.end_with?("_test")
+      db_name
+    else
+      "#{db_name}_test"
+    end
+
+    uri.path = "/#{test_db_name}"
+    uri.to_s
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  test_database_url = ENV["TEST_DATABASE_URL"]
+  test_database_url = derive_test_database_url_from(ENV["DATABASE_URL"]) if test_database_url.nil? || test_database_url.strip.empty?
+%>
+
 default: &default
   adapter: postgresql
   encoding: unicode
@@ -51,6 +82,9 @@ development:
 test:
   <<: *default
   database: fast_epost_3_test
+  <% if test_database_url %>
+  url: <%= test_database_url %>
+  <% end %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

@@ -13,15 +13,12 @@
   data-locale-switcher-ready="false"
   data-testid="locale-switcher">
   <button type="button"
-          class="locale-switcher__button group flex h-10 min-w-[4rem] items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 px-3 transition-all hover:border-yellow-400/50 hover:bg-yellow-400/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/50"
+      class="locale-switcher__button group relative inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-yellow-400/60 bg-yellow-400 text-sm font-semibold text-black hover:bg-yellow-300 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/50"
           data-locale-switcher-target="button"
           data-action="click->locale-switcher#toggle mouseenter->locale-switcher#openFromHover"
           aria-haspopup="true" aria-expanded="false"
           aria-label="Language">
-    <span class="text-sm font-bold text-yellow-400"><%= I18n.locale.to_s.upcase %></span>
-    <svg class="h-4 w-4 text-gray-400 transition-colors group-hover:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-    </svg>
+    <span class="text-sm font-bold text-black"><%= I18n.locale.to_s.upcase %></span>
   </button>
 
   <div class="locale-switcher__menu absolute <%= rtl? ? 'left-0' : 'right-0' %> top-full mt-2 sm:mt-3 w-44 sm:w-48 rounded-3xl bg-zinc-950/95 ring-1 ring-white/10 shadow-[0_30px_55px_rgba(0,0,0,0.7)] z-50"

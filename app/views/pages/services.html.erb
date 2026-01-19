@@ -1,12 +1,12 @@
 <!-- Services Page -->
-<section class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-20">
+<section class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white py-20">
   <div class="container mx-auto px-4 py-16">
     <!-- Header -->
     <div class="text-center mb-16">
       <h1 class="text-4xl md:text-6xl font-bold mb-6">
         <%= t("services.title").split.first %> <span class="text-yellow-400"><%= t("services.title").split.last %></span>
       </h1>
-      <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+      <p class="text-xl text-slate-300 max-w-3xl mx-auto">
         <%= t("services.subtitle") %>
       </p>
     </div>
@@ -14,14 +14,14 @@
     <!-- Services Grid -->
     <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16">
       <!-- Legal Document Delivery -->
-      <div class="bg-gray-800 rounded-2xl p-8 hover:bg-gray-700 transition-all shadow-xl border border-gray-700 hover:border-yellow-400">
+      <div class="bg-white/5 rounded-3xl p-8 transition shadow-2xl shadow-black/30 border border-white/10 hover:bg-white/10 hover:border-yellow-400/30 backdrop-blur">
         <div class="w-16 h-16 bg-yellow-400/10 rounded-xl flex items-center justify-center mb-6">
           <svg class="w-10 h-10 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
           </svg>
         </div>
         <h3 class="text-3xl font-bold text-yellow-400 mb-4"><%= t("services.legal_title") %></h3>
-        <p class="text-gray-300 mb-6"><%= t("services.legal_description") %></p>
+        <p class="text-slate-300 mb-6"><%= t("services.legal_description") %></p>
         
         <ul class="space-y-4 mb-8">
           <li class="flex items-start">
@@ -50,18 +50,18 @@
           </li>
         </ul>
 
-        <%= link_to t("services.get_started"), pages_contact_path, class: "inline-block px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>
+        <%= link_to t("services.get_started"), pages_contact_path, class: "inline-block px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition" %>
       </div>
 
       <!-- E-commerce Delivery -->
-      <div class="bg-gray-800 rounded-2xl p-8 hover:bg-gray-700 transition-all shadow-xl border border-gray-700 hover:border-yellow-400">
+      <div class="bg-white/5 rounded-3xl p-8 transition shadow-2xl shadow-black/30 border border-white/10 hover:bg-white/10 hover:border-yellow-400/30 backdrop-blur">
         <div class="w-16 h-16 bg-yellow-400/10 rounded-xl flex items-center justify-center mb-6">
           <svg class="w-10 h-10 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
           </svg>
         </div>
         <h3 class="text-3xl font-bold text-yellow-400 mb-4"><%= t("services.ecommerce_title") %></h3>
-        <p class="text-gray-300 mb-6"><%= t("services.ecommerce_description") %></p>
+        <p class="text-slate-300 mb-6"><%= t("services.ecommerce_description") %></p>
         
         <ul class="space-y-4 mb-8">
           <li class="flex items-start">
@@ -90,12 +90,12 @@
           </li>
         </ul>
 
-        <%= link_to t("services.get_started"), pages_contact_path, class: "inline-block px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all" %>
+        <%= link_to t("services.get_started"), pages_contact_path, class: "inline-block px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition" %>
       </div>
     </div>
 
     <!-- Why Choose Us -->
-    <div class="bg-gray-800 rounded-2xl p-12 border border-gray-700 max-w-6xl mx-auto">
+    <div class="bg-white/5 rounded-3xl p-12 border border-white/10 max-w-6xl mx-auto shadow-2xl shadow-black/30 backdrop-blur">
       <h2 class="text-3xl font-bold text-center mb-12">
         <%= t("services.why_choose_title").split.first(2).join(" ") %> <span class="text-yellow-400"><%= t("services.why_choose_title").split.last(2).join(" ") %></span>
       </h2>
@@ -108,7 +108,7 @@
             </svg>
           </div>
           <h3 class="text-xl font-bold mb-2"><%= t("services.feature_fast_title") %></h3>
-          <p class="text-gray-300"><%= t("services.feature_fast_desc") %></p>
+          <p class="text-slate-300"><%= t("services.feature_fast_desc") %></p>
         </div>
 
         <div class="text-center">
@@ -118,7 +118,7 @@
             </svg>
           </div>
           <h3 class="text-xl font-bold mb-2"><%= t("services.feature_secure_title") %></h3>
-          <p class="text-gray-300"><%= t("services.feature_secure_desc") %></p>
+          <p class="text-slate-300"><%= t("services.feature_secure_desc") %></p>
         </div>
 
         <div class="text-center">
@@ -128,7 +128,7 @@
             </svg>
           </div>
           <h3 class="text-xl font-bold mb-2"><%= t("services.feature_support_title") %></h3>
-          <p class="text-gray-300"><%= t("services.feature_support_desc") %></p>
+          <p class="text-slate-300"><%= t("services.feature_support_desc") %></p>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@
 
   <div class="grid gap-6 md:grid-cols-2">
     <div>
-      <%= form.label :case_number, class: "text-sm font-medium text-gray-200" %>
+      <%= form.label :case_number, class: "text-sm font-medium text-slate-200" %>
       <%= form.text_field :case_number,
           class: form_input_classes(delivery, :case_number, base_classes: form_input_base_classes),
           placeholder: "e.g., CASE-2024-01",
@@ -31,7 +31,7 @@
       <%= form_error_message(delivery, :case_number) %>
     </div>
     <div>
-      <%= form.label :notes, class: "text-sm font-medium text-gray-200" %>
+      <%= form.label :notes, class: "text-sm font-medium text-slate-200" %>
       <%= form.text_field :notes,
           class: form_input_classes(delivery, :notes, base_classes: form_input_base_classes),
           placeholder: "Optional courier instructions",
@@ -47,7 +47,7 @@
 
   <div class="grid gap-6 md:grid-cols-3">
     <div>
-      <%= form.label :sender_id, "Sender / Lawyer", class: "text-sm font-medium text-gray-200" %>
+      <%= form.label :sender_id, "Sender / Lawyer", class: "text-sm font-medium text-slate-200" %>
       <%= form.collection_select :sender_id, @sender_options, :id, :full_name,
             { prompt: "Choose sender" },
             {
@@ -67,7 +67,7 @@
       <%= form_error_message(delivery, :sender_id, errors_for: :sender) %>
     </div>
     <div>
-      <%= form.label :courier_id, class: "text-sm font-medium text-gray-200" %>
+      <%= form.label :courier_id, class: "text-sm font-medium text-slate-200" %>
       <%= form.collection_select :courier_id, @courier_options, :id, :full_name,
             { prompt: "Choose courier" },
             {
@@ -87,7 +87,7 @@
       <%= form_error_message(delivery, :courier_id, errors_for: :courier) %>
     </div>
     <div>
-      <%= form.label :recipient_id, class: "text-sm font-medium text-gray-200" %>
+      <%= form.label :recipient_id, class: "text-sm font-medium text-slate-200" %>
       <%= form.collection_select :recipient_id, @recipient_options, :id, :full_name,
             { prompt: "Choose recipient" },
             {
@@ -109,27 +109,28 @@
   </div>
 
   <div>
-    <%= form.label :original_court_pdf, class: "text-sm font-medium text-gray-200" %>
+    <%= form.label :original_court_pdf, class: "text-sm font-medium text-slate-200" %>
     <%= form.file_field :original_court_pdf, direct_upload: true,
-          class: form_input_classes(delivery, :original_court_pdf, base_classes: "mt-2 block w-full cursor-pointer rounded-xl border border-dashed border-gray-600 bg-gray-900/60 px-3 py-10 text-center text-sm text-gray-400 hover:border-yellow-400"),
+          class: form_input_classes(delivery, :original_court_pdf, base_classes: "mt-2 block w-full cursor-pointer rounded-xl border border-dashed border-white/10 bg-white/5 px-3 py-10 text-center text-sm text-slate-400 hover:border-yellow-400"),
           data: {
             delivery_form_target: "field",
             delivery_form_field_name: "original_court_pdf",
-            delivery_form_default_class: "mt-2 block w-full cursor-pointer rounded-xl border border-dashed border-gray-600 bg-gray-900/60 px-3 py-10 text-center text-sm text-gray-400 hover:border-yellow-400",
+            delivery_form_default_class: "mt-2 block w-full cursor-pointer rounded-xl border border-dashed border-white/10 bg-white/5 px-3 py-10 text-center text-sm text-slate-400 hover:border-yellow-400",
             delivery_form_optional: "true"
           } %>
     <%= form_error_message(delivery, :original_court_pdf) %>
-    <p class="mt-2 text-xs text-gray-500">Optional: upload the stamped court PDF to inject barcodes before signature routing.</p>
+    <p class="mt-2 text-xs text-slate-400">Optional: upload the stamped court PDF to inject barcodes before signature routing.</p>
   </div>
 
   <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <%= link_to t("deliveries.back", default: "Cancel"), deliveries_path,
-      class: "inline-flex items-center justify-center rounded-xl border border-gray-600 px-4 py-2 text-sm font-medium text-gray-300 hover:border-yellow-400 hover:text-yellow-300" %>
+      class: "inline-flex items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 hover:border-yellow-400 hover:text-yellow-300" %>
     <%= form.submit t("deliveries.save", default: delivery.new_record? ? "Create Delivery" : "Update Delivery"),
-      class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-2 text-sm font-semibold text-gray-900 shadow-lg transition hover:bg-yellow-300 opacity-60 cursor-not-allowed",
+      class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-2 text-sm font-semibold text-black shadow-lg transition hover:bg-yellow-300 opacity-60 cursor-not-allowed",
       disabled: true,
       data: {
         delivery_form_target: "submit"
       } %>
   </div>
 <% end %>
+

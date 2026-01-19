@@ -37,7 +37,10 @@ class PaymentsUiTest < ApplicationSystemTestCase
 
   def cleanup_records
     Payment.delete_all
+    ProofUpload.delete_all
+    CarrierPayout.delete_all
     Task.delete_all
+    CarrierMembership.delete_all
     Messenger.delete_all
     Carrier.delete_all
     Sender.delete_all
@@ -79,7 +82,7 @@ class PaymentsUiTest < ApplicationSystemTestCase
       name: "Customer #{SecureRandom.hex(3)}",
       email: "customer-#{SecureRandom.hex(4)}@example.com",
       address: "100 Customer Blvd",
-      phones: ["+15550001111"],
+      phones: [ "+15550001111" ],
       category: :business
     )
 
@@ -107,5 +110,4 @@ class PaymentsUiTest < ApplicationSystemTestCase
       gateway_status: :succeeded
     )
   end
-
 end

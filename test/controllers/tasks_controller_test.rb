@@ -13,16 +13,20 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     other_user = users(:sender)
     sign_in other_user
 
+    cart_item_count = -> { CartItem.joins(:cart).where(carts: { user_id: other_user.id }).count }
+
     assert_difference("Task.count", 1) do
-      post tasks_path, params: {
-        task: {
-          customer_id: @customer.id,
-          package_type: "Sender Package",
-          start: "Sender Start",
-          target: "Sender Target",
-          delivery_time: 2.days.from_now.iso8601
+      assert_difference(cart_item_count, 1) do
+        post tasks_path, params: {
+          task: {
+            customer_id: @customer.id,
+            package_type: "Sender Package",
+            start: "Sender Start",
+            target: "Sender Target",
+            delivery_time: 2.days.from_now.iso8601
+          }
         }
-      }
+      end
     end
 
     task = Task.order(:created_at).last

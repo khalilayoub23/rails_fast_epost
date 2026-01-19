@@ -12,7 +12,7 @@
 <% end %>
 
 <% if @empty_state %>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-10 text-center">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-10 text-center">
     <p class="text-xl font-semibold text-white">No senders available</p>
     <p class="mt-2 text-sm text-slate-300">Create a sender record to unlock this perspective.</p>
   </div>
@@ -21,22 +21,22 @@
 
 <% currency = "USD" %>
 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-  <div class="rounded-2xl border border-white/5 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <p class="text-xs uppercase tracking-wide text-slate-300">Total Shipments</p>
     <p class="mt-2 text-3xl font-bold text-white"><%= @task_stats[:total] %></p>
     <p class="text-xs text-slate-400">All time</p>
   </div>
-  <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 p-5">
+  <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 backdrop-blur p-5">
     <p class="text-xs uppercase tracking-wide text-blue-100">In Transit</p>
     <p class="mt-2 text-3xl font-bold text-blue-50"><%= @task_stats[:in_transit] %></p>
     <p class="text-xs text-blue-200/80">Currently moving</p>
   </div>
-  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-5">
+  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 backdrop-blur p-5">
     <p class="text-xs uppercase tracking-wide text-emerald-100">Delivered</p>
     <p class="mt-2 text-3xl font-bold text-emerald-50"><%= @task_stats[:delivered] %></p>
     <p class="text-xs text-emerald-200/80">Successful drops</p>
   </div>
-  <div class="rounded-2xl border border-rose-400/30 bg-rose-500/10 p-5">
+  <div class="rounded-2xl border border-rose-400/30 bg-rose-500/10 backdrop-blur p-5">
     <p class="text-xs uppercase tracking-wide text-rose-100">Failed</p>
     <p class="mt-2 text-3xl font-bold text-rose-50"><%= @task_stats[:failed] %></p>
     <p class="text-xs text-rose-200/80">Requires follow-up</p>
@@ -44,7 +44,7 @@
 </div>
 
 <div class="grid gap-6 lg:grid-cols-3 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <h2 class="text-lg font-semibold text-white">Spend summary</h2>
     <div class="mt-4 space-y-4">
       <div>
@@ -64,11 +64,11 @@
       <p class="mt-6 text-sm text-slate-300">Avg. delivery time: <span class="font-semibold"><%= @avg_delivery_hours %>h</span></p>
     <% end %>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5 lg:col-span-2">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5 lg:col-span-2">
     <h2 class="text-lg font-semibold text-white mb-4">Carrier mix</h2>
     <div class="space-y-3">
       <% @carrier_mix.each do |row| %>
-        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-2">
+        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-2">
           <p class="font-medium text-white"><%= row[:name] %></p>
           <span class="text-sm text-slate-300"><%= row[:count] %> shipments</span>
         </div>
@@ -81,14 +81,14 @@
 </div>
 
 <div class="grid gap-6 lg:grid-cols-2 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-white">Recent activity</h2>
       <span class="text-xs text-slate-400">Last 10 tasks</span>
     </div>
     <div class="space-y-3">
       <% @recent_tasks.each do |task| %>
-        <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+        <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
           <div class="flex items-center justify-between">
             <p class="text-sm font-semibold text-white"><%= task.barcode %></p>
             <span class="text-xs text-slate-400"><%= task.status.humanize %></span>
@@ -104,7 +104,7 @@
       <% end %>
     </div>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-white">Open issues</h2>
       <span class="text-xs text-slate-400">Failed / flagged tasks</span>

@@ -1,5 +1,5 @@
 <!-- Payment Page -->
-<section class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-20">
+<section class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white py-20">
   <% if stripe_publishable_key.present? %>
     <% content_for :head do %>
       <meta name="stripe-publishable-key" content="<%= stripe_publishable_key %>">
@@ -18,23 +18,23 @@
         <h1 class="text-4xl md:text-5xl font-bold mb-4">
           <span data-i18n="payment_title"><%= t('payment_title', default: 'Secure Payment') %></span>
         </h1>
-        <p class="text-xl text-gray-300">
+        <p class="text-xl text-slate-300">
           <span data-i18n="payment_subtitle"><%= t('payment_subtitle', default: 'Fast, secure payments powered by Stripe') %></span>
         </p>
       </div>
 
       <!-- Payment Form -->
-      <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+      <div class="rounded-2xl p-8 border border-white/10 bg-white/5 shadow-2xl backdrop-blur">
         <% if stripe_publishable_key.present? %>
           <input type="hidden" id="stripe-publishable-key" value="<%= stripe_publishable_key %>">
         <% end %>
         <%= form_with url: checkout_path, method: :post, class: "space-y-6", local: true do |f| %>
           <!-- Service Selection -->
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">
+            <label class="block text-sm font-medium text-slate-300 mb-2">
               <span data-i18n="payment_service_type"><%= t('payment_service_type', default: 'Service Type') %></span>
             </label>
-            <select name="service_type" required class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none">
+            <select name="service_type" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-yellow-400 focus:outline-none">
               <option value="legal_documents"><%= t('service_legal_title', default: 'Legal Document Delivery') %></option>
               <option value="ecommerce"><%= t('service_ecommerce_title', default: 'E-commerce Delivery') %></option>
               <option value="express"><%= t('service_express', default: 'Express Delivery') %></option>
@@ -44,59 +44,59 @@
 
           <!-- Amount -->
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">
+            <label class="block text-sm font-medium text-slate-300 mb-2">
               <span data-i18n="payment_amount"><%= t('payment_amount', default: 'Amount (USD)') %></span>
             </label>
             <input type="number" name="amount" step="0.01" min="1" required 
-                   class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
+                   class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
                    placeholder="50.00">
           </div>
 
           <!-- Customer Information -->
           <div class="grid md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">
+              <label class="block text-sm font-medium text-slate-300 mb-2">
                 <span data-i18n="payment_name"><%= t('payment_name', default: 'Full Name') %></span>
               </label>
               <input type="text" name="name" required 
-                     class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
+                     class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
                      placeholder="John Doe">
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">
+              <label class="block text-sm font-medium text-slate-300 mb-2">
                 <span data-i18n="payment_email"><%= t('payment_email', default: 'Email') %></span>
               </label>
               <input type="email" name="email" required 
-                     class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
+                     class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
                      placeholder="john@example.com">
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">
+            <label class="block text-sm font-medium text-slate-300 mb-2">
               <span data-i18n="payment_phone"><%= t('payment_phone', default: 'Phone Number') %></span>
             </label>
             <input type="tel" name="phone" required 
-                   class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
+                   class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
                    placeholder="+1 (555) 000-0000">
           </div>
 
           <!-- Service Description (optional) -->
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">
+            <label class="block text-sm font-medium text-slate-300 mb-2">
               <span data-i18n="payment_description"><%= t('payment_description', default: 'Service Description (Optional)') %></span>
             </label>
             <textarea name="service_description" rows="3" 
-                      class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
+                      class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-yellow-400 focus:outline-none"
                       placeholder="Enter delivery details..."></textarea>
           </div>
 
           <!-- Security Notice -->
-          <div class="flex items-start space-x-3 bg-gray-900 p-4 rounded-lg border border-gray-700">
+          <div class="flex items-start space-x-3 bg-white/5 p-4 rounded-lg border border-white/10">
             <svg class="w-6 h-6 text-green-400 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
             </svg>
-            <div class="text-sm text-gray-300">
+            <div class="text-sm text-slate-200">
               <p class="font-medium text-white mb-1">
                 <span data-i18n="payment_secure_title"><%= t('payment_secure_title', default: 'Secure Payment') %></span>
               </p>
@@ -118,7 +118,7 @@
           </button>
 
           <!-- Stripe Badge -->
-          <div class="text-center text-sm text-gray-400">
+          <div class="text-center text-sm text-slate-400">
             <span data-i18n="payment_powered_by"><%= t('payment_powered_by', default: 'Powered by') %></span>
             <span class="font-semibold text-white">Stripe</span>
           </div>
@@ -127,23 +127,23 @@
 
       <!-- Payment Methods -->
       <div class="mt-8 text-center">
-        <p class="text-gray-400 mb-4">
+        <p class="text-slate-400 mb-4">
           <span data-i18n="payment_methods_accepted"><%= t('payment_methods_accepted', default: 'Accepted Payment Methods') %></span>
         </p>
         <div class="flex justify-center space-x-4">
           <!-- Card Icons -->
-          <div class="bg-gray-800 rounded-lg p-3 border border-gray-700">
+          <div class="bg-white/5 rounded-lg p-3 border border-white/10">
             <svg class="w-12 h-8" fill="currentColor" viewBox="0 0 48 32">
               <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="text-yellow-400 font-bold text-sm">VISA</text>
             </svg>
           </div>
-          <div class="bg-gray-800 rounded-lg p-3 border border-gray-700">
+          <div class="bg-white/5 rounded-lg p-3 border border-white/10">
             <svg class="w-12 h-8" fill="currentColor" viewBox="0 0 48 32">
               <circle cx="16" cy="16" r="8" class="text-red-500" opacity="0.7"/>
               <circle cx="32" cy="16" r="8" class="text-yellow-400" opacity="0.7"/>
             </svg>
           </div>
-          <div class="bg-gray-800 rounded-lg p-3 border border-gray-700">
+          <div class="bg-white/5 rounded-lg p-3 border border-white/10">
             <svg class="w-12 h-8" fill="currentColor" viewBox="0 0 48 32">
               <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="text-blue-400 font-bold text-xs">AMEX</text>
             </svg>

@@ -249,7 +249,7 @@ module Admin
           # Use quote_table_name to prevent SQL injection
           quoted_table = ActiveRecord::Base.connection.quote_table_name(table)
           count = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{quoted_table}").first["count"]
-          
+
           # For size, we use quote for the string literal
           quoted_table_str = ActiveRecord::Base.connection.quote(table)
           size = ActiveRecord::Base.connection.execute("SELECT pg_size_pretty(pg_total_relation_size(#{quoted_table_str}))").first["pg_size_pretty"]

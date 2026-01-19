@@ -3,24 +3,24 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+      <nav class="flex text-sm text-slate-300" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <%= link_to root_path, class: "text-body hover:text-dark" do %>
+            <%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
               <span class="material-icons text-sm mr-1">home</span>
               Home
             <% end %>
           </li>
           <li>
             <div class="flex items-center">
-              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
-              <%= link_to "Payments", payments_path, class: "text-body hover:text-dark" %>
+              <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+              <%= link_to "Payments", payments_path, class: "text-slate-300 hover:text-white" %>
             </div>
           </li>
           <li>
             <div class="flex items-center">
-              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
-              <span class="text-dark font-medium">#<%= @payment.id %></span>
+              <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+              <span class="text-white font-medium">#<%= @payment.id %></span>
             </div>
           </li>
         </ol>
@@ -28,87 +28,87 @@
     </div>
   </div>
 
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
     <div class="mb-4">
-      <h2 class="text-title-md font-semibold text-dark">Payment #<%= @payment.id %></h2>
+      <h2 class="text-xl font-semibold text-white">Payment #<%= @payment.id %></h2>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
-        <div class="text-sm text-body">Category</div>
-        <div class="text-dark capitalize"><%= @payment.category %></div>
+        <div class="text-sm text-slate-300">Category</div>
+        <div class="text-white capitalize"><%= @payment.category %></div>
       </div>
       <div>
-        <div class="text-sm text-body">Provider</div>
-        <div class="text-dark capitalize"><%= @payment.provider %></div>
+        <div class="text-sm text-slate-300">Provider</div>
+        <div class="text-white capitalize"><%= @payment.provider %></div>
       </div>
       <div>
-        <div class="text-sm text-body">Status</div>
+        <div class="text-sm text-slate-300">Status</div>
         <div><%= render "shared/status_badge", status: @payment.gateway_status %></div>
       </div>
       <div>
-        <div class="text-sm text-body">Amount</div>
-        <div class="text-dark"><%= @payment.amount_cents ? ("%.2f" % (@payment.amount_cents / 100.0)) : "-" %> <%= @payment.currency %></div>
+        <div class="text-sm text-slate-300">Amount</div>
+        <div class="text-white"><%= @payment.amount_cents ? ("%.2f" % (@payment.amount_cents / 100.0)) : "-" %> <%= @payment.currency %></div>
       </div>
       <div class="sm:col-span-2">
-        <div class="text-sm text-body">Total Refunded (computed)</div>
-        <div class="text-dark"><%= number_to_currency(@payment.refunds.sum(:amount_cents).to_i / 100.0, unit: @payment.currency) %></div>
+        <div class="text-sm text-slate-300">Total Refunded (computed)</div>
+        <div class="text-white"><%= number_to_currency(@payment.refunds.sum(:amount_cents).to_i / 100.0, unit: @payment.currency) %></div>
       </div>
     </div>
   </div>
 
   <% if @payment.provider == "stripe" %>
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default" data-controller="simple-modal">
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur" data-controller="simple-modal">
       <div class="mb-4">
-        <h3 class="text-title-md font-semibold text-dark">Stripe Details</h3>
+        <h3 class="text-xl font-semibold text-white">Stripe Details</h3>
       </div>
       <ul class="space-y-3">
-        <li class="flex justify-between items-center py-2 border-b border-stroke">
-          <span class="text-sm text-body">Customer:</span>
-          <code class="text-sm text-dark bg-gray-2 px-2 py-1 rounded"><%= @payment.stripe_customer_id || '-' %></code>
+        <li class="flex justify-between items-center py-2 border-b border-white/10">
+          <span class="text-sm text-slate-300">Customer:</span>
+          <code class="text-sm text-slate-200 bg-white/5 px-2 py-1 rounded"><%= @payment.stripe_customer_id || '-' %></code>
         </li>
-        <li class="flex justify-between items-center py-2 border-b border-stroke">
-          <span class="text-sm text-body">Payment Intent:</span>
-          <code class="text-sm text-dark bg-gray-2 px-2 py-1 rounded"><%= @payment.payment_intent_id || '-' %></code>
+        <li class="flex justify-between items-center py-2 border-b border-white/10">
+          <span class="text-sm text-slate-300">Payment Intent:</span>
+          <code class="text-sm text-slate-200 bg-white/5 px-2 py-1 rounded"><%= @payment.payment_intent_id || '-' %></code>
         </li>
-        <li class="flex justify-between items-center py-2 border-b border-stroke">
-          <span class="text-sm text-body">Checkout Session:</span>
-          <code class="text-sm text-dark bg-gray-2 px-2 py-1 rounded"><%= @payment.checkout_session_id || '-' %></code>
+        <li class="flex justify-between items-center py-2 border-b border-white/10">
+          <span class="text-sm text-slate-300">Checkout Session:</span>
+          <code class="text-sm text-slate-200 bg-white/5 px-2 py-1 rounded"><%= @payment.checkout_session_id || '-' %></code>
         </li>
-        <li class="flex justify-between items-center py-2 border-b border-stroke">
-          <span class="text-sm text-body">Charge:</span>
-          <code class="text-sm text-dark bg-gray-2 px-2 py-1 rounded"><%= @payment.charge_id || '-' %></code>
+        <li class="flex justify-between items-center py-2 border-b border-white/10">
+          <span class="text-sm text-slate-300">Charge:</span>
+          <code class="text-sm text-slate-200 bg-white/5 px-2 py-1 rounded"><%= @payment.charge_id || '-' %></code>
         </li>
         <li class="flex justify-between items-center py-2">
-          <span class="text-sm text-body">Total Refunded:</span>
-          <code class="text-sm text-dark bg-gray-2 px-2 py-1 rounded"><%=
+          <span class="text-sm text-slate-300">Total Refunded:</span>
+          <code class="text-sm text-slate-200 bg-white/5 px-2 py-1 rounded"><%=
             (total = @payment.refunds.sum(:amount_cents)) && total > 0 ? ("%.2f" % (total / 100.0)) : '-'
           %></code>
         </li>
       </ul>
     </div>
 
-    <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+    <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
       <div class="mb-4">
-        <h3 class="text-title-md font-semibold text-dark">Stripe Actions</h3>
+        <h3 class="text-xl font-semibold text-white">Stripe Actions</h3>
       </div>
       <div class="flex flex-wrap gap-3">
         <% unless @payment.gateway_status == "refunded" %>
-          <button class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90" data-action="click->simple-modal#open">
+          <button class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow-lg shadow-yellow-500/20 hover:bg-yellow-300" data-action="click->simple-modal#open">
             <span class="material-icons text-sm mr-2">keyboard_return</span>
             Refund
           </button>
         <% end %>
         <% if @payment.gateway_status == "pending" %>
-          <%= button_to capture_payment_path(@payment), method: :post, class: "inline-flex items-center rounded bg-success px-4 py-2 text-sm font-medium text-white hover:opacity-90" do %>
+          <%= button_to capture_payment_path(@payment), method: :post, class: "inline-flex items-center rounded-xl bg-success px-4 py-2 text-sm font-semibold text-white hover:opacity-90" do %>
             <span class="material-icons text-sm mr-2">check_circle</span>
             Capture
           <% end %>
-          <%= button_to cancel_payment_path(@payment), method: :post, class: "inline-flex items-center rounded border border-stroke bg-white px-4 py-2 text-sm font-medium text-dark hover:bg-whiter" do %>
+          <%= button_to cancel_payment_path(@payment), method: :post, class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10" do %>
             <span class="material-icons text-sm mr-2">cancel</span>
             Cancel
           <% end %>
         <% end %>
-        <%= button_to sync_payment_path(@payment), method: :post, class: "inline-flex items-center rounded bg-[#7C3AED] px-4 py-2 text-sm font-medium text-white hover:opacity-90" do %>
+        <%= button_to sync_payment_path(@payment), method: :post, class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10" do %>
           <span class="material-icons text-sm mr-2">sync</span>
           Sync
         <% end %>
@@ -117,25 +117,25 @@
 
     <!-- Refund Modal -->
     <div id="refundModal" class="fixed inset-0 z-9999 hidden items-center justify-center bg-black/30 p-4" data-simple-modal-target="backdrop">
-      <div class="w-full max-w-md rounded-sm border border-stroke bg-white shadow-default" data-simple-modal-target="dialog">
-        <div class="flex items-center justify-between border-b border-stroke px-5 py-3">
-          <h3 class="text-base font-semibold text-dark">Issue Refund</h3>
-          <button type="button" class="text-body hover:text-dark" data-action="click->simple-modal#close">✕</button>
+      <div class="w-full max-w-md rounded-2xl border border-white/10 bg-black/90 shadow-xl shadow-black/50 backdrop-blur" data-simple-modal-target="dialog">
+        <div class="flex items-center justify-between border-b border-white/10 px-5 py-3">
+          <h3 class="text-base font-semibold text-white">Issue Refund</h3>
+          <button type="button" class="text-slate-300 hover:text-white" data-action="click->simple-modal#close">✕</button>
         </div>
         <div class="p-5">
           <%= form_with url: refund_payment_path(@payment), method: :post do |f| %>
             <div class="space-y-3">
               <div>
-                <label class="block text-sm text-dark">Amount (cents)</label>
-                <input type="number" name="amount_cents" class="mt-1 w-full rounded border border-stroke px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Optional" />
+                <label class="block text-sm text-slate-200">Amount (cents)</label>
+                <input type="number" name="amount_cents" class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50" placeholder="Optional" />
               </div>
               <div>
-                <label class="block text-sm text-dark">Reason</label>
-                <input type="text" name="reason" class="mt-1 w-full rounded border border-stroke px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Optional" />
+                <label class="block text-sm text-slate-200">Reason</label>
+                <input type="text" name="reason" class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50" placeholder="Optional" />
               </div>
               <div class="flex justify-end gap-3 pt-4">
-                <button type="button" class="inline-flex items-center rounded border border-stroke bg-white px-4 py-2 text-sm font-medium text-dark hover:bg-whiter" data-action="click->simple-modal#close">Cancel</button>
-                <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90">Submit Refund</button>
+                <button type="button" class="inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10" data-action="click->simple-modal#close">Cancel</button>
+                <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow-lg shadow-yellow-500/20 hover:bg-yellow-300">Submit Refund</button>
               </div>
             </div>
           <% end %>

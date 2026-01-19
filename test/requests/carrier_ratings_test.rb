@@ -106,7 +106,7 @@ class CarrierRatingsTest < ActionDispatch::IntegrationTest
       name: "Customer #{SecureRandom.hex(2)}",
       email: "customer-#{SecureRandom.hex(2)}@example.com",
       address: "100 Customer Way",
-      phones: ["+15550000000"],
+      phones: [ "+15550000000" ],
       category: :individual
     )
     @created_customers << customer

@@ -31,11 +31,14 @@ class Task < ApplicationRecord
   has_many :proof_uploads, dependent: :destroy
   has_one :carrier_payout, dependent: :destroy
 
+  # Legal document attachments (PDFs, images, etc.)
+  has_many_attached :legal_files
+
   # Define failure_code enum (positional syntax)
   enum :failure_code, { no_failure: 0, address_not_found: 1, recipient_unavailable: 2, package_damaged: 3, refused_delivery: 4 }, prefix: true
 
   # Define status enum (positional syntax)
-  enum :status, { pending: 0, in_transit: 1, delivered: 2, failed: 3, returned: 4 }
+  enum :status, { pending: 0, in_transit: 1, delivered: 2, failed: 3, returned: 4, postponed: 5 }
 
   enum :priority, { normal: "normal", urgent: "urgent", express: "express" }, default: :normal
   enum :task_type, {
@@ -58,6 +61,9 @@ class Task < ApplicationRecord
   validates :status, presence: true
   validates :barcode, presence: true, uniqueness: true
   validates :filled_form_url, allow_blank: true, format: { with: URI::DEFAULT_PARSER.make_regexp }
+
+  # Custom validation for legal file attachments
+  validate :validate_legal_files
 
   # Aliases for notification templates (compatibility)
   alias_attribute :pickup_location, :start
@@ -83,7 +89,9 @@ class Task < ApplicationRecord
   end
 
   def publish!(timestamp = Time.current)
-    update!(published: true, published_at: timestamp)
+    attrs = { published: true, published_at: timestamp }
+    attrs[:status] = :pending if postponed?
+    update!(attrs)
   end
 
   def record_tracking_event!(title:, event_type:, status: nil, description: nil, occurred_at: Time.current, location: nil, metadata: {})
@@ -124,10 +132,15 @@ class Task < ApplicationRecord
   # State machine for task workflow
   aasm column: :status, enum: true, whiny_persistence: true do
     state :pending, initial: true
+    state :postponed
     state :in_transit
     state :delivered
     state :failed
     state :returned
+
+    event :activate do
+      transitions from: :postponed, to: :pending
+    end
 
     event :ship do
       transitions from: :pending, to: :in_transit, after: :notify_customer_shipped
@@ -138,7 +151,7 @@ class Task < ApplicationRecord
     end
 
     event :mark_failed do
-      transitions from: [ :pending, :in_transit ], to: :failed, after: [ :notify_customer_failed, :handle_failed_attempt ]
+      transitions from: [ :postponed, :pending, :in_transit ], to: :failed, after: [ :notify_customer_failed, :handle_failed_attempt ]
     end
 
     event :return_to_sender do
@@ -175,6 +188,22 @@ class Task < ApplicationRecord
   before_update :track_status_change
 
   private
+
+  def validate_legal_files
+    return unless legal_files.attached?
+
+    legal_files.each do |file|
+      # Validate content type
+      unless file.content_type.in?(%w[application/pdf image/png image/jpg image/jpeg])
+        errors.add(:legal_files, "#{file.filename} must be a PDF or image file")
+      end
+
+      # Validate file size (10MB max)
+      if file.byte_size > 10.megabytes
+        errors.add(:legal_files, "#{file.filename} must be less than 10MB")
+      end
+    end
+  end
 
   def handle_failed_attempt
     note = @current_failure_note.presence || last_failure_note
@@ -244,7 +273,7 @@ class Task < ApplicationRecord
     elsif attempts > MAX_FAILED_ATTEMPTS
       parts << "Exceeded #{MAX_FAILED_ATTEMPTS} failed attempts"
     end
-    parts << "Attempt #{[attempts, MAX_FAILED_ATTEMPTS].min} of #{MAX_FAILED_ATTEMPTS}" if attempts <= MAX_FAILED_ATTEMPTS
+    parts << "Attempt #{[ attempts, MAX_FAILED_ATTEMPTS ].min} of #{MAX_FAILED_ATTEMPTS}" if attempts <= MAX_FAILED_ATTEMPTS
     description = parts.compact.join(" | ")
     description.presence || "Delivery attempt unsuccessful"
   end

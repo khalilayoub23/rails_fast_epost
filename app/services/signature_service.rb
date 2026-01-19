@@ -4,9 +4,9 @@ require "hexapdf"
 
 class SignatureService
   SIGNATURE_POSITIONS = {
-    "sender" => [50, 100],
-    "courier" => [250, 100],
-    "recipient" => [450, 100]
+    "sender" => [ 50, 100 ],
+    "courier" => [ 250, 100 ],
+    "recipient" => [ 450, 100 ]
   }.freeze
 
   SIGNATURE_LABELS = {
@@ -57,7 +57,7 @@ class SignatureService
   def regenerate_pdf_with_signatures
     return unless delivery.base_pdf.attached?
 
-    Tempfile.create(["delivery-current", ".pdf"]) do |base|
+    Tempfile.create([ "delivery-current", ".pdf" ]) do |base|
       delivery.base_pdf.download { |chunk| base.write(chunk) }
       base.rewind
 
@@ -77,7 +77,7 @@ class SignatureService
       add_watermark(document) if delivery.all_required_signatures_completed?
       embed_attempt_metadata(document)
 
-      Tempfile.create(["delivery-current", ".pdf"]) do |output|
+      Tempfile.create([ "delivery-current", ".pdf" ]) do |output|
         document.write(output.path, optimize: true)
         output.rewind
         attach_current_pdf(output)
@@ -200,8 +200,8 @@ class SignatureService
       height: SIGNATURE_DIMENSIONS[:height]
     )
 
-    label_position = [position.first, position.last + SIGNATURE_DIMENSIONS[:height] + 15]
-    timestamp_position = [position.first, position.last - 15]
+    label_position = [ position.first, position.last + SIGNATURE_DIMENSIONS[:height] + 15 ]
+    timestamp_position = [ position.first, position.last - 15 ]
 
     canvas.font_size(10)
     canvas.text(SIGNATURE_LABELS[role], at: label_position)
@@ -221,7 +221,7 @@ class SignatureService
       canvas.translate(page.box.width / 2, page.box.height / 2)
       canvas.rotate(45)
       canvas.font_size(72)
-      canvas.text("SIGNED", at: [-150, 0])
+      canvas.text("SIGNED", at: [ -150, 0 ])
       canvas.restore_graphics_state
     end
   end
@@ -244,7 +244,7 @@ class SignatureService
         attempt.occurred_at&.iso8601,
         (location.present? ? "(#{location["lat"]}, #{location["lng"]})" : nil)
       ].compact.join(" ")
-      canvas.text(text, at: [50, y])
+      canvas.text(text, at: [ 50, y ])
     end
   end
 
@@ -261,7 +261,7 @@ class SignatureService
   def copy_current_to_final
     return unless delivery.current_pdf.attached?
 
-    Tempfile.create(["delivery-final", ".pdf"]) do |tmp|
+    Tempfile.create([ "delivery-final", ".pdf" ]) do |tmp|
       delivery.current_pdf.download { |chunk| tmp.write(chunk) }
       tmp.rewind
       File.open(tmp.path, "rb") do |f|

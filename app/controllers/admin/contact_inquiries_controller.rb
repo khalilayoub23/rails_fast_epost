@@ -1,6 +1,6 @@
 class Admin::ContactInquiriesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_contact_inquiry, only: [:show, :update]
+  before_action :set_contact_inquiry, only: [ :show, :update ]
 
   def index
     @contact_inquiries = ContactInquiry.order(created_at: :desc)

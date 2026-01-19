@@ -1,9 +1,9 @@
 <div class="space-y-6">
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <div>
-      <p class="text-sm uppercase tracking-wide text-gray-400"><%= t("deliveries.index.subtitle") %></p>
+      <p class="text-sm uppercase tracking-wide text-slate-400"><%= t("deliveries.index.subtitle") %></p>
       <h1 class="text-3xl font-semibold text-white"><%= t("deliveries.index.title") %></h1>
-      <p class="text-sm text-gray-400"><%= t("deliveries.index.description") %></p>
+      <p class="text-sm text-slate-400"><%= t("deliveries.index.description") %></p>
     </div>
     <div class="flex flex-wrap gap-3">
       <%= link_to t("deliveries.new", default: "New Delivery"), new_delivery_path,
@@ -12,27 +12,27 @@
     </div>
   </div>
 
-  <div class="rounded-2xl border border-gray-700 bg-gray-800/60 shadow-2xl">
-    <div class="border-b border-gray-700 px-4 py-4">
+  <div class="rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur">
+    <div class="border-b border-white/10 px-4 py-4">
       <%= form_with url: deliveries_path, method: :get, scope: :delivery_filter, local: true, class: "grid grid-cols-1 gap-3 md:grid-cols-5" do |f| %>
         <div>
-          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
-          <%= f.select :status, options_for_select(Delivery.statuses.keys.map { |s| [s.titleize, s] }, @delivery_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-slate-400" %>
+          <%= f.select :status, options_for_select(Delivery.statuses.keys.map { |s| [s.titleize, s] }, @delivery_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white" %>
         </div>
         <div>
-          <%= f.label :courier_id, t("dashboard.courier", default: "Courier"), class: "text-xs text-gray-400" %>
-          <%= f.select :courier_id, options_from_collection_for_select(@filter_courier_options, :id, :full_name, @delivery_filters[:courier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+          <%= f.label :courier_id, t("dashboard.courier", default: "Courier"), class: "text-xs text-slate-400" %>
+          <%= f.select :courier_id, options_from_collection_for_select(@filter_courier_options, :id, :full_name, @delivery_filters[:courier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white" %>
         </div>
         <div>
-          <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-gray-400" %>
-          <%= f.select :sender_id, options_from_collection_for_select(@filter_sender_options, :id, :full_name, @delivery_filters[:sender_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+          <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-slate-400" %>
+          <%= f.select :sender_id, options_from_collection_for_select(@filter_sender_options, :id, :full_name, @delivery_filters[:sender_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white" %>
         </div>
         <div>
-          <%= f.label :recipient_id, t("dashboard.recipient", default: "Recipient"), class: "text-xs text-gray-400" %>
-          <%= f.select :recipient_id, options_from_collection_for_select(@filter_recipient_options, :id, :full_name, @delivery_filters[:recipient_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-gray-600 bg-gray-900/60 px-3 py-2 text-sm text-white" %>
+          <%= f.label :recipient_id, t("dashboard.recipient", default: "Recipient"), class: "text-xs text-slate-400" %>
+          <%= f.select :recipient_id, options_from_collection_for_select(@filter_recipient_options, :id, :full_name, @delivery_filters[:recipient_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white" %>
         </div>
         <div class="flex items-end justify-end">
-          <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow hover:bg-yellow-300" %>
+          <%= f.submit t("dashboard.apply_filters", default: "Apply filters"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow hover:bg-yellow-300" %>
         </div>
       <% end %>
     </div>
@@ -41,7 +41,7 @@
       <div class="max-w-full overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
-            <tr class="border-b border-gray-700 bg-gray-900/40 text-left text-sm text-gray-300">
+            <tr class="border-b border-white/10 bg-white/5 text-left text-sm text-slate-200">
               <th class="px-4 py-4 font-medium"><%= t("deliveries.index.table.case") %></th>
               <th class="px-4 py-4 font-medium"><%= t("deliveries.index.table.participants") %></th>
               <th class="px-4 py-4 font-medium"><%= t("deliveries.index.table.status") %></th>
@@ -53,16 +53,16 @@
           <tbody>
             <% @deliveries.each do |delivery| %>
               <% progress = delivery.signature_progress %>
-              <tr class="border-b border-gray-700/70 text-sm text-gray-200 last:border-b-0 hover:bg-gray-900/40">
+              <tr class="border-b border-white/10 text-sm text-slate-200 last:border-b-0 hover:bg-white/5">
                 <td class="px-4 py-4 align-top">
                   <p class="font-semibold text-white"><%= delivery.case_number %></p>
-                  <p class="text-xs text-gray-400">ID: <%= delivery.id %></p>
+                  <p class="text-xs text-slate-400">ID: <%= delivery.id %></p>
                 </td>
                 <td class="px-4 py-4 align-top">
                   <div class="space-y-1 text-xs">
-                    <p><span class="font-semibold text-gray-300"><%= t("deliveries.index.sender") %>:</span> <%= delivery.sender&.full_name || "-" %></p>
-                    <p><span class="font-semibold text-gray-300"><%= t("deliveries.index.courier") %>:</span> <%= delivery.courier&.full_name || "-" %></p>
-                    <p><span class="font-semibold text-gray-300"><%= t("deliveries.index.recipient") %>:</span> <%= delivery.recipient&.full_name || "-" %></p>
+                    <p><span class="font-semibold text-slate-200"><%= t("deliveries.index.sender") %>:</span> <%= delivery.sender&.full_name || "-" %></p>
+                    <p><span class="font-semibold text-slate-200"><%= t("deliveries.index.courier") %>:</span> <%= delivery.courier&.full_name || "-" %></p>
+                    <p><span class="font-semibold text-slate-200"><%= t("deliveries.index.recipient") %>:</span> <%= delivery.recipient&.full_name || "-" %></p>
                   </div>
                 </td>
                 <td class="px-4 py-4 align-top">
@@ -70,19 +70,19 @@
                 </td>
                 <td class="px-4 py-4 align-top">
                   <div class="flex flex-col gap-2">
-                    <div class="h-2 w-32 overflow-hidden rounded-full bg-gray-700">
+                    <div class="h-2 w-32 overflow-hidden rounded-full bg-white/10">
                       <div class="h-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-500" style="width: <%= progress[:percentage] %>%"></div>
                     </div>
-                    <p class="text-xs text-gray-400">
+                    <p class="text-xs text-slate-400">
                       <%= progress[:completed] %> / <%= progress[:total] %> required
                     </p>
                   </div>
                 </td>
-                <td class="px-4 py-4 align-top text-sm text-gray-400">
+                <td class="px-4 py-4 align-top text-sm text-slate-400">
                   <%= l(delivery.updated_at, format: :short) %>
                 </td>
                 <td class="px-4 py-4 align-top text-right">
-                  <%= link_to "View", delivery_path(delivery), class: "inline-flex items-center rounded-lg border border-gray-600 px-3 py-1 text-xs font-medium text-gray-200 hover:border-yellow-400 hover:text-yellow-300", data: { turbo_frame: "_top" } %>
+                  <%= link_to "View", delivery_path(delivery), class: "inline-flex items-center rounded-lg border border-white/10 px-3 py-1 text-xs font-medium text-slate-200 hover:border-yellow-400 hover:text-yellow-300", data: { turbo_frame: "_top" } %>
                 </td>
               </tr>
             <% end %>
@@ -90,13 +90,13 @@
         </table>
       </div>
     <% else %>
-      <div class="px-6 py-12 text-center text-gray-400">
+      <div class="px-6 py-12 text-center text-slate-400">
         <p class="text-lg font-semibold text-white">No deliveries yet</p>
-        <p class="mt-2 text-sm text-gray-400">Create your first court delivery to generate PDFs, barcodes, and signature tracking.</p>
+        <p class="mt-2 text-sm text-slate-400">Create your first court delivery to generate PDFs, barcodes, and signature tracking.</p>
         <% if policy(Delivery).create? %>
           <div class="mt-6">
             <%= link_to t("deliveries.new", default: "Schedule delivery"), new_delivery_path,
-              class: "inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-900 shadow-lg hover:bg-yellow-300",
+              class: "inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow-lg hover:bg-yellow-300",
               data: { turbo_frame: "_top" } %>
           </div>
         <% end %>
@@ -104,3 +104,4 @@
     <% end %>
   </div>
 </div>
+

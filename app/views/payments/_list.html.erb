@@ -3,9 +3,9 @@
     <%= render partial: "payments/payment_card", collection: payments, as: :payment %>
   <% else %>
     <tr>
-      <td colspan="5" class="px-4 py-12 text-center">
-        <div class="flex flex-col items-center justify-center text-body-color dark:text-dark-6">
-          <span class="material-icons text-6xl mb-4 opacity-50">payment</span>
+      <td colspan="6" class="px-4 py-12 text-center">
+        <div class="flex flex-col items-center justify-center text-slate-300">
+          <span class="material-icons mb-4 text-6xl opacity-50">payment</span>
           <p class="text-lg"><%= t("payments.no_payments") %></p>
         </div>
       </td>

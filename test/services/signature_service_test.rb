@@ -9,7 +9,7 @@ class SignatureServiceTest < ActiveSupport::TestCase
   test "applies courier saved signature and logs event" do
     courier = @delivery.courier
 
-    assert_difference(["SignatureEvent.count", "@delivery.audit_logs.count"], +1) do
+    assert_difference([ "SignatureEvent.count", "@delivery.audit_logs.count" ], +1) do
       assert_enqueued_with(job: ActionMailer::MailDeliveryJob) do
         @service.add_signature(role: :courier, signed_by_user: courier, ip_address: "8.8.8.8")
       end

@@ -96,7 +96,7 @@ class CarrierRatingTest < ActiveSupport::TestCase
       name: "Customer #{SecureRandom.hex(2)}",
       email: email,
       address: "100 Customer Way",
-      phones: ["+15550000000"],
+      phones: [ "+15550000000" ],
       category: :individual
     )
     @created_customers << customer

@@ -35,7 +35,6 @@ class AuthFlowsTest < ApplicationSystemTestCase
   end
 
   test "new signup redirects straight to dashboard" do
-
     visit new_user_registration_path
 
     unique_email = "new-user-#{SecureRandom.hex(4)}@example.com"

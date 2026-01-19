@@ -1,11 +1,11 @@
 <!-- Example: Single Task Card -->
-<div class="rounded-sm border border-stroke bg-white shadow-sm dark:border-strokedark dark:bg-boxdark p-4 hover:shadow-md transition-shadow">
+<div class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-xl shadow-black/30 backdrop-blur hover:bg-white/10 transition-colors">
   <div class="flex items-start justify-between">
     <div class="flex-1">
-      <h4 class="font-medium text-black dark:text-white mb-2">
+      <h4 class="mb-2 font-semibold text-white">
         <%= task.title %>
       </h4>
-      <p class="text-sm text-bodydark1">
+      <p class="text-sm text-slate-300">
         <%= task.description %>
       </p>
       
@@ -13,7 +13,7 @@
         <span class="text-xs px-2.5 py-0.5 rounded <%= task.status_badge_class %>">
           <%= task.status %>
         </span>
-        <span class="text-xs text-bodydark1">
+        <span class="text-xs text-slate-300">
           <%= l(task.due_date, format: :short) if task.due_date %>
         </span>
       </div>
@@ -23,7 +23,7 @@
       <!-- Edit button - loads form inline -->
       <%= link_to edit_task_path(task),
           data: { turbo_frame: dom_id(task) },
-          class: "hover:text-primary" do %>
+          class: "inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:text-yellow-300 hover:bg-white/5 transition-colors" do %>
         <span class="material-icons text-xl">edit</span>
       <% end %>
 
@@ -31,7 +31,7 @@
       <%= button_to task_path(task),
           method: :delete,
           form: { data: { turbo_confirm: t('common.confirm_delete') } },
-          class: "hover:text-danger" do %>
+          class: "inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:text-red-300 hover:bg-white/5 transition-colors" do %>
         <span class="material-icons text-xl">delete</span>
       <% end %>
     </div>

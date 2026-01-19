@@ -8,11 +8,22 @@ class TasksController < ApplicationController
 
   before_action :set_customer, only: %i[index new create]
   before_action :set_task, only: %i[show edit update destroy update_status update_delivery publish]
+  before_action :authorize_task!, only: %i[show edit update destroy update_status update_delivery publish]
   before_action :load_form_collections, only: %i[new create payment_cancel]
   before_action :require_task_creator!, only: %i[new create payment_cancel publish]
 
   def index
-    base_scope = @customer ? @customer.tasks : Task.all
+    base_scope = policy_scope(Task)
+    base_scope = base_scope.where(customer_id: @customer.id) if @customer
+
+    # Handle search
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      base_scope = base_scope.where(
+        "barcode ILIKE ? OR package_type ILIKE ? OR start ILIKE ? OR target ILIKE ?",
+        search_term, search_term, search_term, search_term
+      )
+    end
 
     @priority_filter = params[:priority].presence
     if @priority_filter.present? && Task.priorities.key?(@priority_filter)
@@ -67,22 +78,68 @@ class TasksController < ApplicationController
   end
   def new
     @task = (@customer ? @customer.tasks : Task).new
+    authorize @task
   end
 
   def create
+    if current_user&.manager? && payment_form_params[:amount].present?
+      scope = @customer ? @customer.tasks : Task
+      task = scope.new(task_params)
+      authorize task
+      assign_default_carrier(task)
+
+      payment_details = default_payment_details(task).merge(payment_form_params.to_h)
+      amount_cents = parse_amount_cents(payment_details["amount"])
+      raise TaskPaymentError, t("tasks.payment_amount_invalid", default: "Payment amount must be greater than zero.") if amount_cents <= 0
+
+      cancel_token = SecureRandom.hex(12)
+      task_snapshot = serialize_task_snapshot(task)
+      metadata = {
+        "task_snapshot" => task_snapshot,
+        "task_form" => task_snapshot,
+        "payment_form" => payment_details,
+        "task_cancel_token" => cancel_token,
+        "success_url" => task_payment_success_template_url,
+        "cancel_url" => task_payment_cancel_url(token: cancel_token),
+        "payment_service_type" => payment_details["service_type"],
+        "payment_description" => payment_details["description"]
+      }.compact
+
+      payment = Gateways::StripeGateway.create_payment!(
+        amount_cents: amount_cents,
+        currency: payment_details["currency"].presence || "USD",
+        task: nil,
+        payable: task.customer,
+        metadata: metadata
+      )
+
+      redirect_to payment.payment_url, allow_other_host: true, status: :see_other
+      return
+    end
+
     scope = @customer ? @customer.tasks : Task
     @task = scope.new(task_params)
+    authorize @task
     assign_default_carrier(@task)
     @task.created_by = current_user
+    # Unpaid tasks should remain postponed until payment completes.
+    @task.status = :postponed unless @task.published?
     log_task_creation_attempt(@task)
 
     if @task.save
+      add_task_to_cart_if_applicable(@task)
       redirect_to task_path(@task), notice: t("tasks.draft_saved", default: "Task saved as a draft. Complete payment to publish it."), status: :see_other
     else
       log_task_creation_failure(@task)
       flash.now[:alert] = t("tasks.form_error", default: "Please correct the highlighted errors.")
       render :new, status: :unprocessable_entity
     end
+  rescue TaskPaymentError => e
+    Rails.logger.warn("[Tasks#create] Payment error: #{e.message}")
+    flash.now[:alert] = e.message
+    @task = (@customer ? @customer.tasks : Task).new(task_params)
+    assign_default_carrier(@task)
+    render :new, status: :unprocessable_entity
   rescue => e
     Rails.logger.error("[Tasks#create] Unexpected error: #{e.message}")
     flash.now[:alert] = t("tasks.general_creation_error", default: "Unable to save the task. Please try again.")
@@ -199,12 +256,28 @@ class TasksController < ApplicationController
 
   private
 
+  def add_task_to_cart_if_applicable(task)
+    return unless current_user.present?
+    return if task.published?
+
+    return unless current_user.admin? || current_user.support_agent? || current_user.manager? || current_user.sender_role? || current_user.lawyer? || current_user.ecommerce_seller?
+
+    Cart.for(current_user).add_task!(task)
+  rescue => e
+    Rails.logger.warn("[Tasks#create] Unable to add task to cart: #{e.message}")
+    nil
+  end
+
   def set_customer
     @customer = Customer.find(params[:customer_id]) if params[:customer_id]
   end
 
   def set_task
-    @task = Task.find(params[:id])
+    @task = policy_scope(Task).find(params[:id])
+  end
+
+  def authorize_task!
+    authorize @task
   end
 
   def load_form_collections
@@ -217,7 +290,8 @@ class TasksController < ApplicationController
     permitted = params.require(:task).permit(
       :customer_id, :carrier_id, :sender_id, :messenger_id, :lawyer_id,
       :package_type, :task_type, :start, :target, :failure_code, :delivery_time, :status, :priority, :filled_form_url,
-      :pickup_address, :pickup_contact_phone, :pickup_notes, :requested_pickup_time
+      :pickup_address, :pickup_contact_phone, :pickup_notes, :requested_pickup_time,
+      legal_files: []
     )
 
     permitted.delete(:carrier_id) if current_user&.sender_role?
@@ -232,11 +306,9 @@ class TasksController < ApplicationController
   end
 
   def apply_visibility_filter(scope)
-    return scope if current_user&.manager? || current_user&.support_agent?
+    return scope unless current_user&.sender_role?
 
     published_scope = scope.where(published: true)
-    return published_scope unless current_user&.sender_role?
-
     published_scope.or(scope.where(created_by_id: current_user.id))
   end
 
@@ -268,7 +340,7 @@ class TasksController < ApplicationController
 
     {
       "amount" => amount || "100.00",
-      "currency" => "USD",
+      "currency" => "ILS",
       "service_type" => "standard_delivery",
       "description" => nil
     }
@@ -278,7 +350,7 @@ class TasksController < ApplicationController
     amount_cents = parse_amount_cents(payment_details["amount"])
     raise TaskPaymentError, t("tasks.payment_amount_invalid", default: "Payment amount must be greater than zero.") if amount_cents <= 0
 
-    currency = payment_details["currency"].presence || "USD"
+    currency = payment_details["currency"].presence || "ILS"
     cancel_token = SecureRandom.hex(12)
 
     task_snapshot = serialize_task_snapshot(task)
@@ -308,7 +380,7 @@ class TasksController < ApplicationController
   end
 
   def require_task_creator!
-    return if current_user&.manager? || current_user&.sender_role?
+    return if current_user&.manager? || current_user&.sender_role? || current_user&.lawyer? || current_user&.ecommerce_seller?
 
     message = t("messages.unauthorized", default: "You are not authorized to perform this action.")
     redirect_to root_path, alert: message

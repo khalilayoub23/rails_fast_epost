@@ -1,80 +1,63 @@
 <% content_for :page_title, (@customer ? "Tasks for #{@customer.name}" : "All Tasks - Fastepost") %>
 
-<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-8">
+<div class="space-y-6">
   <%= turbo_stream_from "tasks" %>
-  
-  <div class="container mx-auto px-4 max-w-7xl">
-    <!-- Header Section -->
-    <div class="mb-8">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">
-            <% if @customer %>
-              Tasks for <%= @customer.name %>
-            <% else %>
-              All Tasks
-            <% end %>
-          </h1>
-          <nav class="flex items-center text-sm text-gray-400 flex-wrap gap-1" aria-label="Breadcrumb">
-            <%= link_to root_path, class: "hover:text-yellow-400 transition-colors" do %>
-              <span class="inline-flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                </svg>
-                Home
-              </span>
-            <% end %>
-            <% if @customer %>
-              <svg class="w-4 h-4 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-              <%= link_to "Customers", customers_path, class: "hover:text-yellow-400 transition-colors" %>
-              <svg class="w-4 h-4 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-              <%= link_to @customer.name, customer_path(@customer), class: "hover:text-yellow-400 transition-colors" %>
-              <svg class="w-4 h-4 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            <% end %>
-            <span class="text-yellow-400">Tasks</span>
-          </nav>
-        </div>
-        <% if @customer %>
-          <%= link_to new_customer_task_path(@customer), class: "inline-flex items-center justify-center px-6 py-3 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50 transform hover:scale-105" do %>
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            New Task
-          <% end %>
+
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <nav class="flex items-center text-sm text-slate-300 flex-wrap gap-1" aria-label="Breadcrumb">
+        <%= link_to root_path, class: "hover:text-white transition-colors" do %>
+          <span class="inline-flex items-center">
+            <span class="material-icons mr-1 text-sm">home</span>
+            Home
+          </span>
         <% end %>
-      </div>
-      <% if policy(Delivery).create? %>
-        <div class="mt-6 rounded-2xl border border-yellow-400/30 bg-yellow-400/10 p-5 shadow-xl shadow-yellow-500/10">
-          <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <p class="text-sm uppercase tracking-wide text-yellow-300">Court PDF Workflow</p>
-              <p class="text-base text-gray-100">Need to barcode a court packet or capture immutable signatures before assigning a courier? Start a Delivery workspace and upload the PDF first.</p>
-            </div>
-            <%= link_to t("deliveries.upload_pdf_cta", default: "Upload Court PDF"),
-              new_delivery_path,
-              class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-2 text-sm font-semibold text-gray-900 shadow-lg shadow-yellow-400/40 transition hover:bg-yellow-300",
-              data: { turbo_frame: "_top" } %>
-          </div>
-        </div>
-      <% end %>
+        <% if @customer %>
+          <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+          <%= link_to "Customers", customers_path, class: "hover:text-white transition-colors" %>
+          <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+          <%= link_to @customer.name, customer_path(@customer), class: "hover:text-white transition-colors" %>
+        <% end %>
+        <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+        <span class="text-white font-medium">Tasks</span>
+      </nav>
+
+      <h1 class="mt-3 text-3xl font-bold text-white">
+        <% if @customer %>
+          Tasks for <%= @customer.name %>
+        <% else %>
+          All Tasks
+        <% end %>
+      </h1>
     </div>
 
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
+    <%= link_to (@customer ? new_customer_task_path(@customer) : new_task_path),
+      class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-3 text-sm font-semibold text-black shadow-lg shadow-yellow-500/20 hover:bg-yellow-300" do %>
+      <span class="material-icons <%= margin_end_class('2') %> text-xl">add</span>
+      <%= t('tasks.new') %>
+    <% end %>
+  </div>
+
+  <% if policy(Delivery).create? %>
+    <div class="rounded-2xl border border-yellow-400/30 bg-yellow-400/10 p-5 shadow-xl shadow-yellow-500/10">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p class="text-sm uppercase tracking-wide text-yellow-300">Court PDF Workflow</p>
+          <p class="text-base text-slate-200">Need to barcode a court packet or capture immutable signatures before assigning a courier? Start a Delivery workspace and upload the PDF first.</p>
+        </div>
+        <%= link_to t("deliveries.upload_pdf_cta", default: "Upload Court PDF"),
+          new_delivery_path,
+          class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-2 text-sm font-semibold text-black shadow-lg shadow-yellow-400/40 transition hover:bg-yellow-300",
+          data: { turbo_frame: "_top" } %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
     <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-title-md font-semibold text-dark dark:text-white">
+      <h2 class="text-xl font-semibold text-white">
         <%= t('tasks.title') %> <%= "for #{@customer.name}" if @customer %>
       </h2>
-      <%= link_to (@customer ? new_customer_task_path(@customer) : new_task_path),
-          class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-4 text-center font-medium text-gray-900 hover:bg-opacity-90" do %>
-        <span class="material-icons <%= margin_end_class('2') %> text-xl">add</span>
-        <%= t('tasks.new') %>
-      <% end %>
     </div>
 
     <!-- Search form -->
@@ -86,13 +69,13 @@
         <%= f.text_field :q,
             value: params[:q],
             placeholder: t('common.search'),
-            class: "flex-1 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-[#1d2a39] dark:text-white dark:focus:border-primary" %>
+            class: "flex-1 rounded-xl border border-white/10 bg-white/5 py-2 px-4 text-white placeholder:text-slate-400 outline-none transition focus:ring-2 focus:ring-yellow-400/30" %>
           <%= f.select :priority,
             Task.priorities.keys.map { |priority| [priority.titleize, priority] },
             { include_blank: t('tasks.priority_all', default: 'All priorities'), selected: params[:priority] },
-              class: "md:w-52 rounded border-[1.5px] border-stroke bg-transparent py-2 px-4 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-[#1d2a39] dark:text-white dark:focus:border-primary" %>
+              class: "md:w-52 rounded-xl border border-white/10 bg-white/5 py-2 px-4 text-white outline-none transition focus:ring-2 focus:ring-yellow-400/30" %>
         <%= f.submit t('common.search'),
-            class: "inline-flex items-center justify-center rounded-md bg-primary py-2 px-6 text-center font-medium text-gray-900 hover:bg-opacity-90" %>
+            class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 py-2 px-6 text-center text-sm font-semibold text-black hover:bg-yellow-300" %>
       <% end %>
     </div>
 
@@ -100,14 +83,14 @@
       <div class="max-w-full overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
-            <tr class="bg-gray-100 text-left dark:bg-gray-800 border-b border-gray-700">
-              <th class="min-w-[100px] px-4 py-4 font-medium text-gray-900 dark:text-white">ID</th>
-              <th class="min-w-[140px] px-4 py-4 font-medium text-gray-900 dark:text-white">Status</th>
-              <th class="min-w-[120px] px-4 py-4 font-medium text-gray-900 dark:text-white">Priority</th>
-              <th class="min-w-[180px] px-4 py-4 font-medium text-gray-900 dark:text-white">Customer</th>
-              <th class="min-w-[120px] px-4 py-4 font-medium text-gray-900 dark:text-white">Carrier</th>
-              <th class="min-w-[160px] px-4 py-4 font-medium text-gray-900 dark:text-white">Created</th>
-              <th class="px-4 py-4 text-right font-medium text-gray-900 dark:text-white">Actions</th>
+            <tr class="bg-white/5 text-left border-b border-white/10">
+              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200">Reference</th>
+              <th class="min-w-[140px] px-4 py-4 font-semibold text-slate-200">Status</th>
+              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200">Priority</th>
+              <th class="min-w-[180px] px-4 py-4 font-semibold text-slate-200">Customer</th>
+              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200">Carrier</th>
+              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200">Created</th>
+              <th class="px-4 py-4 text-right font-semibold text-slate-200">Actions</th>
             </tr>
           </thead>
           <tbody id="tasks_list">
@@ -117,12 +100,13 @@
         
         <% if @tasks.empty? %>
           <div class="px-6 py-10 text-center">
-            <span class="material-icons text-bodydark1 dark:text-bodydark text-5xl mb-3">inbox</span>
-            <h3 class="text-sm font-medium text-dark dark:text-white mb-1"><%= t('tasks.no_tasks') %></h3>
-            <p class="text-sm text-body dark:text-bodydark">Get started by creating a new task.</p>
+            <span class="material-icons text-slate-400 text-5xl mb-3">inbox</span>
+            <h3 class="text-base font-semibold text-white mb-1"><%= t('tasks.no_tasks') %></h3>
+            <p class="text-sm text-slate-300">Get started by creating a new task.</p>
           </div>
         <% end %>
       </div>
     <% end %>
   </div>
+
 </div>

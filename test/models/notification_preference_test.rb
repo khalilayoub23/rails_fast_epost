@@ -13,7 +13,7 @@ class NotificationPreferenceTest < ActiveSupport::TestCase
     end
 
     travel_to Time.zone.local(2025, 11, 19, 7, 0, 0) do
-      refute @preference.quiet_hours_active?, "expected quiet hours to end after 06:00"
+      assert_not @preference.quiet_hours_active?, "expected quiet hours to end after 06:00"
     end
   end
 

@@ -1,37 +1,37 @@
 <% content_for :page_title, "Admin · Branding" %>
 
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-  <h2 class="text-title-md2 font-bold text-black dark:text-white">Branding</h2>
+  <h2 class="text-title-md2 font-bold text-white">Branding</h2>
 </div>
 
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:gap-7.5">
-  <div class="rounded-2xl border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
-    <h3 class="mb-4 text-title-md font-semibold text-dark">Upload Light Logo</h3>
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-7.5 py-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h3 class="mb-4 text-title-md font-semibold text-white">Upload Light Logo</h3>
     <% if current_light_logo_url %>
-      <div class="mb-4 flex items-center gap-4 rounded border border-stroke p-3 dark:border-strokedark">
-        <img src="<%= current_light_logo_url %>" alt="Current Light Logo" class="h-12 w-auto" />
-        <span class="text-xs text-body">Currently: <code class="text-dark"><%= current_light_logo_url %></code></span>
+      <div class="mb-4 flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-3">
+        <img src="<%= current_light_logo_url %>" alt="Current Light Logo" class="h-12 w-auto rounded bg-white/95" />
+        <span class="text-xs text-slate-300">Currently: <code class="rounded bg-white/10 px-2 py-1 text-slate-200"><%= current_light_logo_url %></code></span>
       </div>
     <% end %>
     <%= form_with url: admin_branding_path, method: :patch, html: { multipart: true, class: "space-y-4" } do %>
-      <input type="file" name="light_logo" accept="image/svg+xml,image/png,image/jpeg" class="block w-full rounded border border-stroke px-3 py-2" />
-      <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Save</button>
+      <input type="file" name="light_logo" accept="image/svg+xml,image/png,image/jpeg" class="block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" />
+      <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">Save</button>
     <% end %>
-    <p class="mt-2 text-xs text-body">Supported: SVG, PNG, JPG. Saved to <code class="text-dark">/public/logo.(svg|png|jpg)</code>.</p>
+    <p class="mt-2 text-xs text-slate-400">Supported: SVG, PNG, JPG. Saved to <code class="rounded bg-white/10 px-2 py-1 text-slate-200">/public/logo.(svg|png|jpg)</code>.</p>
   </div>
 
-  <div class="rounded-2xl border border-stroke bg-white px-7.5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
-    <h3 class="mb-4 text-title-md font-semibold text-dark">Upload Dark Logo (optional)</h3>
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-7.5 py-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h3 class="mb-4 text-title-md font-semibold text-white">Upload Dark Logo (optional)</h3>
     <% if current_dark_logo_url %>
-      <div class="mb-4 flex items-center gap-4 rounded border border-stroke p-3 dark:border-strokedark">
-        <img src="<%= current_dark_logo_url %>" alt="Current Dark Logo" class="h-12 w-auto" />
-        <span class="text-xs text-body">Currently: <code class="text-dark"><%= current_dark_logo_url %></code></span>
+      <div class="mb-4 flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-3">
+        <img src="<%= current_dark_logo_url %>" alt="Current Dark Logo" class="h-12 w-auto rounded bg-white/95" />
+        <span class="text-xs text-slate-300">Currently: <code class="rounded bg-white/10 px-2 py-1 text-slate-200"><%= current_dark_logo_url %></code></span>
       </div>
     <% end %>
     <%= form_with url: admin_branding_path, method: :patch, html: { multipart: true, class: "space-y-4" } do %>
-      <input type="file" name="dark_logo" accept="image/svg+xml,image/png,image/jpeg" class="block w-full rounded border border-stroke px-3 py-2" />
-      <button type="submit" class="inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white">Save</button>
+      <input type="file" name="dark_logo" accept="image/svg+xml,image/png,image/jpeg" class="block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" />
+      <button type="submit" class="inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">Save</button>
     <% end %>
-    <p class="mt-2 text-xs text-body">Supported: SVG, PNG, JPG. Saved to <code class="text-dark">/public/logo-dark.(svg|png|jpg)</code>.</p>
+    <p class="mt-2 text-xs text-slate-400">Supported: SVG, PNG, JPG. Saved to <code class="rounded bg-white/10 px-2 py-1 text-slate-200">/public/logo-dark.(svg|png|jpg)</code>.</p>
   </div>
 </div>

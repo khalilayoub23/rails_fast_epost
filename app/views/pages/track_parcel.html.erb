@@ -1,5 +1,5 @@
 <!-- Track Parcel Page -->
-<section class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-20">
+<section class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white py-20">
   <div class="container mx-auto px-4 py-16">
     <div class="max-w-3xl mx-auto">
       <!-- Header -->
@@ -10,13 +10,13 @@
         <h1 class="text-4xl md:text-5xl font-bold mb-4">
           <%= t("track.title") %>
         </h1>
-        <p class="text-xl text-gray-300">
+        <p class="text-xl text-slate-300">
           <%= t("track.subtitle") %>
         </p>
       </div>
 
       <!-- Tracking Form -->
-      <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 mb-8">
+      <div class="rounded-3xl p-8 border border-white/10 bg-white/5 shadow-2xl shadow-black/30 backdrop-blur mb-8">
         <%= form_with(
               url: pages_track_parcel_path,
               method: :get,
@@ -28,16 +28,16 @@
             <div class="flex gap-4">
               <%= f.text_field :tracking_number, 
                   value: params[:tracking_number],
-                  class: "flex-1 px-4 py-4 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent text-white text-lg", 
+                  class: "flex-1 px-4 py-4 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400 text-lg", 
                   placeholder: t("track.placeholder"),
                   required: true %>
-              <%= f.submit t("track.track_button"), class: "px-8 py-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-all transform hover:scale-105 shadow-lg cursor-pointer" %>
+              <%= f.submit t("track.track_button"), class: "px-8 py-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition shadow-lg cursor-pointer" %>
             </div>
           </div>
         <% end %>
 
-        <div class="mt-6 p-4 bg-gray-900 rounded-lg">
-          <p class="text-sm text-gray-400">
+        <div class="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg">
+          <p class="text-sm text-slate-300">
             <svg class="w-5 h-5 inline mr-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
@@ -48,26 +48,26 @@
 
       <% if params[:tracking_number].blank? %>
         <!-- No Tracking Number -->
-        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 text-center">
-          <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="rounded-3xl p-8 border border-white/10 bg-white/5 shadow-2xl shadow-black/30 backdrop-blur text-center">
+          <svg class="w-16 h-16 text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
           </svg>
-          <p class="text-gray-400"><%= t("track.no_tracking") %></p>
+          <p class="text-slate-300"><%= t("track.no_tracking") %></p>
         </div>
       <% else %>
         <% if @task %>
         <!-- Tracking Results -->
-        <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+        <div class="rounded-3xl p-8 border border-white/10 bg-white/5 shadow-2xl shadow-black/30 backdrop-blur">
           <div class="mb-6">
             <h2 class="text-2xl font-bold text-yellow-400 mb-2"><%= t("track.tracking_details") %></h2>
-            <p class="text-gray-300"><%= t("track.tracking_number_label") %> <strong class="text-white"><%= @task.barcode %></strong></p>
+            <p class="text-slate-300"><%= t("track.tracking_number_label") %> <strong class="text-white"><%= @task.barcode %></strong></p>
             <div class="mt-4 grid grid-cols-2 gap-4">
               <div>
-                <p class="text-sm text-gray-400">Package Type</p>
+                <p class="text-sm text-slate-400">Package Type</p>
                 <p class="text-white font-semibold"><%= @task.package_type.titleize %></p>
               </div>
               <div>
-                <p class="text-sm text-gray-400">Status</p>
+                <p class="text-sm text-slate-400">Status</p>
                 <p class="text-white font-semibold">
                   <span class="px-3 py-1 rounded-full text-sm 
                     <%= case @task.status
@@ -75,14 +75,14 @@
                         when 'in_transit' then 'bg-blue-600'
                         when 'pending' then 'bg-yellow-600'
                         when 'failed' then 'bg-red-600'
-                        else 'bg-gray-600'
+                        else 'bg-slate-600'
                         end %>">
                     <%= @task.status.humanize %>
                   </span>
                 </p>
               </div>
               <div>
-                <p class="text-sm text-gray-400">From</p>
+                <p class="text-sm text-slate-400">From</p>
                 <p class="text-white"><%= @task.start %></p>
               </div>
               <div>
@@ -104,7 +104,7 @@
 
                     <div class="flex gap-4">
                       <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 rounded-full flex items-center justify-center <%= is_completed ? 'bg-green-500/20 ring-2 ring-green-500' : is_current ? 'bg-yellow-400/20 ring-2 ring-yellow-400 animate-pulse' : 'bg-gray-700/20 ring-2 ring-gray-700' %>">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center <%= is_completed ? 'bg-green-500/20 ring-2 ring-green-500' : is_current ? 'bg-yellow-400/20 ring-2 ring-yellow-400 animate-pulse' : 'bg-white/5 ring-2 ring-white/10' %>">
                           <% if is_completed %>
                             <%= checkmark_icon(size: '32', css_class: 'filter brightness-125') %>
                           <% else %>
@@ -127,24 +127,24 @@
                           <% end %>
                         </div>
                         <% unless is_last %>
-                          <div class="w-0.5 h-16 <%= is_completed ? 'bg-green-500' : 'bg-gray-700' %> mt-2"></div>
+                          <div class="w-0.5 h-16 <%= is_completed ? 'bg-green-500' : 'bg-white/10' %> mt-2"></div>
                         <% end %>
                       </div>
                       <div class="flex-1 pb-6">
-                        <p class="font-semibold text-lg <%= is_completed ? 'text-green-400' : is_current ? 'text-yellow-400' : 'text-gray-500' %>">
+                        <p class="font-semibold text-lg <%= is_completed ? 'text-green-300' : is_current ? 'text-yellow-400' : 'text-slate-400' %>">
                           <%= entry[:label] %>
                           <% if is_current %>
                             <span class="ml-2 text-xs bg-yellow-400 text-black px-2 py-1 rounded-full">Current</span>
                           <% end %>
                         </p>
                         <% if entry[:desc].present? %>
-                          <p class="text-sm <%= is_future ? 'text-gray-600' : 'text-gray-400' %> mt-1">
+                          <p class="text-sm <%= is_future ? 'text-slate-500' : 'text-slate-300' %> mt-1">
                             <%= entry[:desc] %>
                           </p>
                         <% end %>
                         <% if entry[:occurred_at].present? %>
                           <% timestamp = time_ago_in_words(entry[:occurred_at]) %>
-                          <p class="text-xs <%= is_completed ? 'text-gray-500' : is_current ? 'text-yellow-400 font-semibold' : 'text-gray-600' %> mt-2">
+                          <p class="text-xs <%= is_completed ? 'text-slate-400' : is_current ? 'text-yellow-400 font-semibold' : 'text-slate-500' %> mt-2">
                             <svg class="w-4 h-4 inline mr-1 <%= is_current ? 'animate-pulse' : '' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
@@ -164,12 +164,12 @@
                 <%= warning_icon(size: '28', css_class: '') %>
                 Delivery issues reported
               </div>
-              <p class="text-sm text-gray-200">
+              <p class="text-sm text-slate-200">
                 <strong>Failed attempts:</strong>
                 <%= @task.failed_attempts %> of <%= Task::MAX_FAILED_ATTEMPTS %>
               </p>
               <% if @task.last_failure_note.present? %>
-                <p class="text-sm text-gray-100 mt-2">
+                <p class="text-sm text-slate-100 mt-2">
                   <strong>Carrier note:</strong>
                   <%= @task.last_failure_note %>
                 </p>
@@ -182,7 +182,7 @@
                   so we can schedule another attempt.
                 </p>
               <% elsif @task.returned? %>
-                <p class="text-sm text-gray-200 mt-2">
+                <p class="text-sm text-slate-200 mt-2">
                   Parcel is returning to sender due to repeated failed attempts.
                 </p>
               <% end %>
@@ -193,13 +193,13 @@
                       <div class="text-sm font-semibold text-red-200">
                         Attempt <%= attempt[:attempt_number] %>
                         <% if attempt[:occurred_at].present? %>
-                          <span class="text-xs text-gray-400">
+                          <span class="text-xs text-slate-300">
                             (<%= l(attempt[:occurred_at], format: :short) %>)
                           </span>
                         <% end %>
                       </div>
                       <% if attempt[:note].present? %>
-                        <p class="text-sm text-gray-100 mt-1"><%= attempt[:note] %></p>
+                        <p class="text-sm text-slate-100 mt-1"><%= attempt[:note] %></p>
                       <% end %>
                     </div>
                   <% end %>
@@ -211,20 +211,20 @@
 
         <!-- Shipment Details Card -->
         <div class="mt-8 grid md:grid-cols-2 gap-6">
-          <div class="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-yellow-400/30 transition-colors">
+          <div class="bg-white/5 rounded-lg p-6 border border-white/10 hover:border-yellow-400/30 transition-colors">
             <h3 class="text-lg font-semibold mb-4 flex items-center text-yellow-400">
               <%= location_icon(size: '24', css_class: 'mr-2') %>
               Origin
             </h3>
             <p class="text-white font-medium"><%= @task.start %></p>
             <% if @task.pickup_address.present? %>
-              <p class="text-sm text-gray-400 mt-2">
+              <p class="text-sm text-slate-400 mt-2">
                 <%= [@task.pickup_address['street'], @task.pickup_address['city'], @task.pickup_address['postal_code']].compact.join(', ') %>
               </p>
             <% end %>
           </div>
 
-          <div class="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-yellow-400/30 transition-colors">
+          <div class="bg-white/5 rounded-lg p-6 border border-white/10 hover:border-yellow-400/30 transition-colors">
             <h3 class="text-lg font-semibold mb-4 flex items-center text-yellow-400">
               <%= location_icon(size: '24', css_class: 'mr-2 transform rotate-180') %>
               Destination
@@ -238,10 +238,10 @@
           <div class="flex items-center gap-3">
             <%= clock_icon(size: '40', css_class: '') %>
             <div>
-              <p class="text-sm text-gray-400">Estimated Delivery</p>
+              <p class="text-sm text-slate-300">Estimated Delivery</p>
               <p class="text-xl font-bold text-white">
                 <%= @task.delivery_time.strftime("%A, %B %d, %Y") %>
-                <span class="text-sm text-gray-400">by <%= @task.delivery_time.strftime("%I:%M %p") %></span>
+                <span class="text-sm text-slate-300">by <%= @task.delivery_time.strftime("%I:%M %p") %></span>
               </p>
             </div>
           </div>
@@ -249,13 +249,13 @@
 
         <!-- Additional Info -->
         <% if @task.carrier %>
-          <div class="mt-6 p-4 bg-gray-900 rounded-lg flex items-center gap-3 border border-gray-800 hover:border-yellow-400/30 transition-colors">
+          <div class="mt-6 p-4 bg-white/5 rounded-lg flex items-center gap-3 border border-white/10 hover:border-yellow-400/30 transition-colors">
             <%= delivery_icon(size: '32', css_class: '') %>
             <div>
-              <p class="text-xs text-gray-400">Carrier</p>
+              <p class="text-xs text-slate-400">Carrier</p>
               <p class="text-white font-semibold"><%= @task.carrier.name %></p>
               <% if @task.carrier.email.present? %>
-                <a href="mailto:<%= @task.carrier.email %>" class="text-yellow-400 hover:text-yellow-500 text-sm">
+                <a href="mailto:<%= @task.carrier.email %>" class="text-yellow-400 hover:text-yellow-300 text-sm">
                   <%= @task.carrier.email %>
                 </a>
               <% end %>
@@ -265,17 +265,17 @@
       </div>
         <% else %>
           <!-- Tracking Number Not Found -->
-          <div class="bg-gray-800 rounded-2xl p-8 border border-red-700">
+          <div class="rounded-3xl p-8 border border-red-500/30 bg-red-500/10 shadow-2xl shadow-black/30 backdrop-blur">
             <div class="flex items-start gap-4">
               <svg class="w-12 h-12 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
               </svg>
               <div class="flex-1">
                 <h3 class="text-xl font-bold text-red-400 mb-2">Tracking Number Not Found</h3>
-                <p class="text-gray-300">
+                <p class="text-slate-200">
                   We couldn't find a package with tracking number <strong class="text-white"><%= params[:tracking_number] %></strong>.
                 </p>
-                <p class="text-gray-400 mt-2 text-sm">
+                <p class="text-slate-300 mt-2 text-sm">
                   Please check the number and try again, or contact us for assistance.
                 </p>
               </div>
@@ -286,23 +286,22 @@
 
       <!-- Help Section -->
       <div class="mt-8 grid md:grid-cols-2 gap-4">
-        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="bg-white/5 rounded-lg p-6 border border-white/10 shadow-xl shadow-black/20 backdrop-blur">
           <h3 class="font-bold text-lg mb-2 text-yellow-400"><%= t("track.need_help") %></h3>
-          <p class="text-sm text-gray-300 mb-4"><%= t("track.need_help_desc") %></p>
-          <%= link_to t("track.contact_support"), pages_contact_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-500 font-medium" %>
+          <p class="text-sm text-slate-300 mb-4"><%= t("track.need_help_desc") %></p>
+          <%= link_to t("track.contact_support"), pages_contact_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-300 font-medium" %>
         </div>
 
-        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="bg-white/5 rounded-lg p-6 border border-white/10 shadow-xl shadow-black/20 backdrop-blur">
           <h3 class="font-bold text-lg mb-2 text-yellow-400"><%= t("track.create_shipment") %></h3>
-          <p class="text-sm text-gray-300 mb-4"><%= t("track.create_shipment_desc") %></p>
+          <p class="text-sm text-slate-300 mb-4"><%= t("track.create_shipment_desc") %></p>
           <% if user_signed_in? %>
-            <%= link_to t("track.go_to_dashboard"), dashboard_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-500 font-medium" %>
+            <%= link_to t("track.go_to_dashboard"), dashboard_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-300 font-medium" %>
           <% else %>
-            <%= link_to t("track.sign_up_now"), new_user_registration_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-500 font-medium" %>
+            <%= link_to t("track.sign_up_now"), new_user_registration_path, class: "inline-flex items-center text-yellow-400 hover:text-yellow-300 font-medium" %>
           <% end %>
         </div>
       </div>
     </div>
   </div>
 </section>
-<%= @task.id if @task %>

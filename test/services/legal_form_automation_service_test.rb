@@ -51,7 +51,7 @@ class LegalFormAutomationServiceTest < ActiveSupport::TestCase
   test "returns nil when task missing lawyer" do
     @task.update!(lawyer: nil)
 
-    assert_no_difference(["Form.count", "FormTemplate.count"]) do
+    assert_no_difference([ "Form.count", "FormTemplate.count" ]) do
       assert_nil LegalFormAutomationService.call(task: @task, payment: @payment)
     end
   end

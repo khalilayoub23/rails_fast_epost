@@ -1,187 +1,166 @@
-<div class="container mx-auto px-4 py-8">
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
-    <div>
-      <div class="flex items-center gap-3 mb-2">
-        <h1 class="text-3xl font-bold text-gray-900"><%= @lawyer.name %></h1>
-        <% if @lawyer.active? %>
-          <span class="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">Active</span>
-        <% else %>
-          <span class="px-3 py-1 text-sm font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>
-        <% end %>
-      </div>
-      <p class="text-gray-600"><%= @lawyer.specialization.titleize %> Specialist</p>
-    </div>
-    <div class="flex gap-2">
-      <%= link_to "Edit", edit_admin_lawyer_path(@lawyer), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-200" %>
+<div class="flex items-start justify-between gap-4 mb-6">
+  <div>
+    <div class="flex items-center gap-3">
+      <h1 class="text-2xl font-bold text-white"><%= @lawyer.name %></h1>
       <% if @lawyer.active? %>
-        <%= button_to "Deactivate", deactivate_admin_lawyer_path(@lawyer), method: :patch, class: "bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition duration-200" %>
+        <span class="inline-flex items-center rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-200">Active</span>
       <% else %>
-        <%= button_to "Activate", activate_admin_lawyer_path(@lawyer), method: :patch, class: "bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200" %>
+        <span class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-slate-200">Inactive</span>
       <% end %>
-      <%= link_to "Back", admin_lawyers_path, class: "bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition duration-200" %>
+    </div>
+    <p class="mt-1 text-sm text-slate-400"><%= @lawyer.specialization.titleize %> Specialist</p>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-2">
+    <%= link_to "Edit", edit_admin_lawyer_path(@lawyer), class: "inline-flex items-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15" %>
+    <% if @lawyer.active? %>
+      <%= button_to "Deactivate", deactivate_admin_lawyer_path(@lawyer), method: :patch, class: "inline-flex items-center rounded-xl bg-yellow-500/15 px-4 py-2 text-sm font-semibold text-yellow-200 hover:bg-yellow-500/20" %>
+    <% else %>
+      <%= button_to "Activate", activate_admin_lawyer_path(@lawyer), method: :patch, class: "inline-flex items-center rounded-xl bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-200 hover:bg-emerald-500/20" %>
+    <% end %>
+    <%= link_to "Back", admin_lawyers_path, class: "inline-flex items-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15" %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 space-y-6">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h2 class="text-lg font-semibold text-white mb-4">Contact Information</h2>
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <dt class="text-sm font-semibold text-slate-300">Email</dt>
+          <dd class="mt-1 text-sm text-slate-200"><%= mail_to @lawyer.email %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-semibold text-slate-300">Phone</dt>
+          <dd class="mt-1 text-sm text-slate-200"><%= @lawyer.phone %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-semibold text-slate-300">License Number</dt>
+          <dd class="mt-1 text-sm font-mono text-slate-200"><%= @lawyer.license_number %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-semibold text-slate-300">Bar Association</dt>
+          <dd class="mt-1 text-sm text-slate-200"><%= @lawyer.bar_association || "Not specified" %></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h2 class="text-lg font-semibold text-white mb-4">Certifications</h2>
+      <% if @lawyer.certifications.present? && @lawyer.certifications.any? %>
+        <div class="space-y-3">
+          <% @lawyer.certifications.each do |cert_name, cert_data| %>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div class="font-semibold text-white"><%= cert_name %></div>
+              <div class="text-sm text-slate-200 mt-1">
+                <% if cert_data["issuer"].present? %>
+                  Issued by: <%= cert_data["issuer"] %><br>
+                <% end %>
+                <% if cert_data["date"].present? %>
+                  Date: <%= Date.parse(cert_data["date"]).strftime("%B %d, %Y") %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-slate-300">No certifications on file</p>
+      <% end %>
+    </div>
+
+    <% if @lawyer.notes.present? %>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+        <h2 class="text-lg font-semibold text-white mb-4">Notes</h2>
+        <p class="text-sm text-slate-200 whitespace-pre-wrap"><%= @lawyer.notes %></p>
+      </div>
+    <% end %>
+
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-white">Recent Tasks</h2>
+        <span class="text-sm text-slate-400"><%= @lawyer.tasks.count %> total</span>
+      </div>
+      <% if @tasks.any? %>
+        <div class="space-y-3">
+          <% @tasks.each do |task| %>
+            <% status_badge = task.status == "delivered" ? "bg-emerald-500/15 text-emerald-200" : task.status == "failed" ? "bg-red-500/15 text-red-200" : "bg-yellow-500/15 text-yellow-200" %>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+              <div class="flex justify-between items-start gap-4">
+                <div>
+                  <div class="font-mono text-sm font-semibold text-yellow-200">
+                    <%= link_to task.barcode, task_path(task), class: "hover:text-yellow-100" %>
+                  </div>
+                  <div class="text-sm text-slate-200 mt-1">Customer: <%= task.customer.name %></div>
+                  <div class="text-xs text-slate-400 mt-1"><%= task.created_at.strftime("%b %d, %Y") %></div>
+                </div>
+                <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold <%= status_badge %>"><%= task.status.titleize %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <% if @lawyer.tasks.count > 10 %>
+          <div class="mt-4 text-center">
+            <span class="text-sm text-slate-400">Showing 10 of <%= @lawyer.tasks.count %> tasks</span>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-sm text-slate-300">No tasks assigned yet</p>
+      <% end %>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Main Information -->
-    <div class="lg:col-span-2 space-y-6">
-      <!-- Contact Information -->
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Contact Information</h2>
-        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <dt class="text-sm font-medium text-gray-500">Email</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= mail_to @lawyer.email %></dd>
-          </div>
-          <div>
-            <dt class="text-sm font-medium text-gray-500">Phone</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @lawyer.phone %></dd>
-          </div>
-          <div>
-            <dt class="text-sm font-medium text-gray-500">License Number</dt>
-            <dd class="mt-1 text-sm font-mono text-gray-900"><%= @lawyer.license_number %></dd>
-          </div>
-          <div>
-            <dt class="text-sm font-medium text-gray-500">Bar Association</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @lawyer.bar_association || "Not specified" %></dd>
-          </div>
-        </dl>
-      </div>
-
-      <!-- Certifications -->
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Certifications</h2>
-        <% if @lawyer.certifications.present? && @lawyer.certifications.any? %>
-          <div class="space-y-3">
-            <% @lawyer.certifications.each do |cert_name, cert_data| %>
-              <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r">
-                <div class="font-semibold text-gray-900"><%= cert_name %></div>
-                <div class="text-sm text-gray-600 mt-1">
-                  <% if cert_data["issuer"].present? %>
-                    Issued by: <%= cert_data["issuer"] %><br>
-                  <% end %>
-                  <% if cert_data["date"].present? %>
-                    Date: <%= Date.parse(cert_data["date"]).strftime("%B %d, %Y") %>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <p class="text-gray-500 italic">No certifications on file</p>
-        <% end %>
-      </div>
-
-      <!-- Notes -->
-      <% if @lawyer.notes.present? %>
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-4">Notes</h2>
-          <p class="text-gray-700 whitespace-pre-wrap"><%= @lawyer.notes %></p>
+  <div class="lg:col-span-1 space-y-6">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h3 class="text-lg font-semibold text-white mb-4">Statistics</h3>
+      <div class="space-y-4">
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-slate-300">Total Cases</span>
+          <span class="text-2xl font-bold text-white"><%= @lawyer.tasks.count %></span>
         </div>
-      <% end %>
-
-      <!-- Recent Tasks -->
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold text-gray-900">Recent Tasks</h2>
-          <span class="text-sm text-gray-500"><%= @lawyer.tasks.count %> total</span>
-        </div>
-        <% if @tasks.any? %>
-          <div class="space-y-3">
-            <% @tasks.each do |task| %>
-              <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <div class="font-mono text-sm font-semibold text-blue-600">
-                      <%= link_to task.barcode, task_path(task) %>
-                    </div>
-                    <div class="text-sm text-gray-600 mt-1">
-                      Customer: <%= task.customer.name %>
-                    </div>
-                    <div class="text-xs text-gray-500 mt-1">
-                      <%= task.created_at.strftime("%b %d, %Y") %>
-                    </div>
-                  </div>
-                  <span class="px-2 py-1 text-xs font-semibold rounded-full 
-                    <%= task.status == 'delivered' ? 'bg-green-100 text-green-800' : 
-                        task.status == 'failed' ? 'bg-red-100 text-red-800' : 
-                        'bg-yellow-100 text-yellow-800' %>">
-                    <%= task.status.titleize %>
-                  </span>
-                </div>
-              </div>
-            <% end %>
+        <div class="border-t border-white/10 pt-4 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-slate-300">Completed</span>
+            <span class="text-lg font-semibold text-emerald-200"><%= @lawyer.tasks.where(status: :delivered).count %></span>
           </div>
-          <% if @lawyer.tasks.count > 10 %>
-            <div class="mt-4 text-center">
-              <span class="text-sm text-gray-500">Showing 10 of <%= @lawyer.tasks.count %> tasks</span>
-            </div>
-          <% end %>
-        <% else %>
-          <p class="text-gray-500 italic">No tasks assigned yet</p>
-        <% end %>
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-slate-300">In Progress</span>
+            <span class="text-lg font-semibold text-yellow-200"><%= @lawyer.tasks.where(status: [:pending, :in_transit]).count %></span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-slate-300">Failed</span>
+            <span class="text-lg font-semibold text-red-200"><%= @lawyer.tasks.where(status: :failed).count %></span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Sidebar -->
-    <div class="lg:col-span-1 space-y-6">
-      <!-- Stats Card -->
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistics</h3>
-        <div class="space-y-4">
-          <div>
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-600">Total Cases</span>
-              <span class="text-2xl font-bold text-gray-900"><%= @lawyer.tasks.count %></span>
-            </div>
-          </div>
-          <div class="border-t pt-4">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm text-gray-600">Completed</span>
-              <span class="text-lg font-semibold text-green-600"><%= @lawyer.tasks.where(status: :delivered).count %></span>
-            </div>
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm text-gray-600">In Progress</span>
-              <span class="text-lg font-semibold text-yellow-600"><%= @lawyer.tasks.where(status: [:pending, :in_transit]).count %></span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-600">Failed</span>
-              <span class="text-lg font-semibold text-red-600"><%= @lawyer.tasks.where(status: :failed).count %></span>
-            </div>
-          </div>
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h3 class="text-lg font-semibold text-white mb-3">Quick Info</h3>
+      <dl class="space-y-3">
+        <div>
+          <dt class="text-sm text-slate-300">Specialization</dt>
+          <dd class="text-sm font-semibold text-white"><%= @lawyer.specialization.titleize %></dd>
         </div>
-      </div>
-
-      <!-- Quick Info -->
-      <div class="bg-blue-50 rounded-lg shadow-sm p-6">
-        <h3 class="text-lg font-semibold text-blue-900 mb-3">Quick Info</h3>
-        <dl class="space-y-2">
-          <div>
-            <dt class="text-sm text-blue-700">Specialization</dt>
-            <dd class="text-sm font-semibold text-blue-900"><%= @lawyer.specialization.titleize %></dd>
-          </div>
-          <div>
-            <dt class="text-sm text-blue-700">Certifications</dt>
-            <dd class="text-sm font-semibold text-blue-900"><%= @lawyer.certification_list.count %></dd>
-          </div>
-          <div>
-            <dt class="text-sm text-blue-700">Member Since</dt>
-            <dd class="text-sm font-semibold text-blue-900"><%= @lawyer.created_at.strftime("%B %Y") %></dd>
-          </div>
-        </dl>
-      </div>
-
-      <!-- Actions -->
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-3">Actions</h3>
-        <div class="space-y-2">
-          <%= link_to "Assign to Task", "#", class: "block w-full text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-200" %>
-          <%= link_to "View All Tasks", tasks_path(lawyer_id: @lawyer.id), class: "block w-full text-center bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition duration-200" %>
-          <%= button_to "Delete Lawyer", admin_lawyer_path(@lawyer), method: :delete, 
-              data: { confirm: "Are you sure you want to delete this lawyer? This action cannot be undone." },
-              class: "block w-full text-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition duration-200" %>
+        <div>
+          <dt class="text-sm text-slate-300">Certifications</dt>
+          <dd class="text-sm font-semibold text-white"><%= @lawyer.certification_list.count %></dd>
         </div>
+        <div>
+          <dt class="text-sm text-slate-300">Member Since</dt>
+          <dd class="text-sm font-semibold text-white"><%= @lawyer.created_at.strftime("%B %Y") %></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h3 class="text-lg font-semibold text-white mb-3">Actions</h3>
+      <div class="space-y-2">
+        <%= link_to "Assign to Task", "#", class: "block w-full text-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15" %>
+        <%= link_to "View All Tasks", tasks_path(lawyer_id: @lawyer.id), class: "block w-full text-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15" %>
+        <%= button_to "Delete Lawyer", admin_lawyer_path(@lawyer), method: :delete,
+                      data: { confirm: "Are you sure you want to delete this lawyer? This action cannot be undone." },
+                      class: "block w-full text-center rounded-xl bg-red-500/15 px-4 py-2 text-sm font-semibold text-red-200 hover:bg-red-500/20" %>
       </div>
     </div>
   </div>

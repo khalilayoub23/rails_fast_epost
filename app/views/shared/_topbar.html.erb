@@ -1,10 +1,10 @@
-<header class="sticky top-0 z-999 flex w-full bg-white dark:bg-boxdark drop-shadow-1 dark:drop-shadow-none">
+<header class="sticky top-0 z-999 flex w-full border-b border-white/10 bg-slate-950/80 backdrop-blur drop-shadow-1" data-controller="ui-prefs">
   <div class="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
     <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
       <!-- Hamburger Toggle BTN -->
-      <button class="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
+      <button class="z-99999 block rounded-xl border border-white/10 bg-white/5 p-1.5 shadow-sm lg:hidden hover:bg-white/10"
               data-action="click->sidebar#toggle">
-        <span class="material-icons text-lg text-dark dark:text-white">menu</span>
+        <span class="material-icons text-lg text-white">menu</span>
       </button>
       <!-- Hamburger Toggle BTN -->
       <%= link_to root_path, class: "flex items-center gap-2" do %>
@@ -12,80 +12,87 @@
       <% end %>
     </div>
 
-    <div class="hidden sm:block">
-      <h1 class="text-title-md2 font-semibold text-black dark:text-white">
-        <%= content_for?(:page_title) ? yield(:page_title) : t('dashboard_title', default: 'Dashboard') %>
-      </h1>
-      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
-        <%= t('topbar.welcome_back', default: 'Welcome back,') %> <%= current_user&.full_name || current_user&.email || "User" %>
-      </p>
-    </div>
+    <% welcome_name = current_user&.full_name.presence %>
+    <% welcome_name ||= (current_user&.lawyer? ? Lawyer.find_by(email: current_user.email)&.name : nil) %>
+    <% welcome_name ||= current_user&.email.to_s.split("@").first.to_s.titleize.presence %>
+    <% welcome_name ||= current_user&.email %>
 
-  <div class="flex items-center gap-4 md:gap-7" data-controller="ui-prefs">
-      <!-- Language Switcher -->
-      <%= render "shared/locale_switcher" %>
-      
-      <!-- Search Form -->
-      <div class="hidden items-center rounded-full border border-stroke bg-white px-3 py-2 shadow-card dark:border-strokedark dark:bg-boxdark sm:flex">
-        <svg class="mr-2 fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="flex w-full items-center justify-between gap-4">
+      <!-- Left: Welcome pill only -->
+      <div class="hidden min-w-0 sm:flex">
+        <div class="inline-flex max-w-96 items-center whitespace-normal break-words rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white shadow-card leading-snug">
+          <div class="flex flex-col">
+            <div class="text-sm font-semibold text-white"><%= welcome_name %></div>
+            <div class="text-xs font-medium text-slate-300"><%= t("dashboard.welcome", default: "Welcome") %></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: Search -->
+      <div class="flex flex-1 justify-center">
+        <div class="hidden w-full max-w-xl items-center rounded-full border border-white/10 bg-white/5 px-3 py-2 shadow-card sm:flex" data-controller="search">
+        <svg class="mr-2 fill-slate-400 hover:fill-yellow-300 cursor-pointer" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-action="click->search#search">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"/>
           <path fill-rule="evenodd" clip-rule="evenodd" d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"/>
         </svg>
-        <input type="text" placeholder="<%= t('topbar.search_placeholder', default: 'Search or type command...') %>" class="w-full bg-transparent text-black placeholder:text-body focus:outline-none dark:text-white xl:w-125" />
-        <span class="ml-2 hidden rounded-md border border-stroke px-1.5 py-0.5 text-xs text-body dark:border-strokedark sm:block">⌘K</span>
+        <input 
+          type="text" 
+          placeholder="<%= t('topbar.search_placeholder', default: 'Search or type command...') %>" 
+          class="w-full bg-transparent text-white placeholder:text-slate-400 focus:outline-none xl:w-125" 
+          data-search-target="input"
+          data-action="keydown->search#handleEnter"
+        />
+        <span class="ml-2 hidden rounded-md border border-white/10 px-1.5 py-0.5 text-xs text-slate-300 sm:block">⌘K</span>
+        </div>
       </div>
 
-      <!-- UI Pref Toggles -->
-      <div class="hidden items-center gap-2 sm:flex">
-        <button class="rounded border border-stroke bg-white px-2.5 py-1.5 text-sm dark:bg-boxdark hover:text-primary dark:hover:text-primary transition-colors" 
+      <!-- Right: buttons (dark mode, cart, language, avatar) -->
+      <div class="flex items-center justify-end gap-2">
+        <button type="button"
+                class="relative inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-yellow-400/60 bg-yellow-400 text-black hover:bg-yellow-300 transition-all"
+                title="<%= t('topbar.theme', default: 'Dark mode') %>"
                 data-action="click->ui-prefs#toggleDark">
-          <!-- Sun Icon (for dark mode) -->
-          <svg class="hidden dark:block w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
-            <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
-          </svg>
-          <!-- Moon Icon (for light mode) -->
-          <svg class="block dark:hidden w-5 h-5 fill-current text-dark" viewBox="0 0 24 24">
-            <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Logout Button -->
-      <%= button_to destroy_user_session_path,
-            method: :delete,
-            form: { class: "inline" },
-            class: "hidden items-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-bold text-gray-900 hover:bg-yellow-500 transition-all shadow-lg hover:shadow-yellow-400/50 md:inline-flex" do %>
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-        </svg>
-        <%= t('topbar.logout', default: 'Logout') %>
-      <% end %>
-
-      <!-- User Area -->
-      <div class="relative" data-controller="dropdown">
-        <button class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 hover:border-yellow-400/50 hover:bg-yellow-400/10 transition-all duration-300" data-action="click->dropdown#toggle">
-          <span class="hidden text-right lg:block">
-            <span class="block text-sm font-medium text-black dark:text-white"><%= t('topbar.account', default: 'Account') %></span>
-            <span class="block text-xs text-gray-500 dark:text-gray-400"><%= current_user&.role&.humanize&.titleize || t('topbar.admin', default: 'Admin') %></span>
-          </span>
-          <span class="h-10 w-10 rounded-full border border-white/10 shadow-sm overflow-hidden">
-            <img src="data:image/svg+xml,%3Csvg width='112' height='112' viewBox='0 0 112 112' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='56' cy='56' r='56' fill='url(%23paint0_linear_25_319)'/%3E%3Cpath d='M42 84V74.5C42 66.4919 48.4919 60 56.5 60H69.5C77.5081 60 84 66.4919 84 74.5V84' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='63' cy='44' r='14' stroke='white' stroke-width='4'/%3E%3Cdefs%3E%3ClinearGradient id='paint0_linear_25_319' x1='56' y1='0' x2='56' y2='112' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233C50E0'/%3E%3Cstop offset='1' stop-color='%23809CFF'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E" alt="User" class="h-full w-full object-cover" />
-          </span>
-          <svg class="hidden fill-current text-gray-500 sm:block" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.410765 0.910734C0.736202 0.585297 1.26384 0.585297 1.58928 0.910734L6.00002 5.32148L10.4108 0.910734C10.7362 0.585297 11.2638 0.585297 11.5893 0.910734C11.9147 1.23617 11.9147 1.76381 11.5893 2.08924L6.58928 7.08924C6.26384 7.41468 5.7362 7.41468 5.41077 7.08924L0.410765 2.08924C0.0853277 1.76381 0.0853277 1.23617 0.410765 0.910734Z"/>
-          </svg>
+          <span class="material-icons text-xl text-black">dark_mode</span>
         </button>
 
-  <div class="absolute right-0 mt-4 hidden w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark" data-dropdown-target="menu">
-          <ul class="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+        <% if current_user&.manager? || current_user&.sender_role? || current_user&.lawyer? || current_user&.ecommerce_seller? %>
+          <%= link_to cart_path,
+                title: t('topbar.cart', default: 'Cart'),
+                class: "relative inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-yellow-400/60 bg-yellow-400 text-black hover:bg-yellow-300 transition-all" do %>
+            <span class="material-icons text-xl text-black">shopping_cart</span>
+            <% if cart_item_count.positive? %>
+              <span class="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-black px-1.5 py-0.5 text-[10px] font-bold text-white">
+                <%= cart_item_count %>
+              </span>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <%= render "shared/locale_switcher" %>
+
+        <div class="relative" data-controller="dropdown">
+        <button class="relative inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-yellow-400/60 bg-yellow-400 text-black hover:bg-yellow-300 transition-all" data-action="click->dropdown#toggle" title="<%= t('topbar.user_menu', default: 'User menu') %>">
+          <span class="material-icons text-xl text-black">person</span>
+
+          <span class="pointer-events-none absolute left-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-md bg-black/10 text-black">
+            <span class="material-icons" style="font-size: 14px">logout</span>
+          </span>
+
+          <span class="pointer-events-none absolute -bottom-1 -right-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white">
+            ▾
+          </span>
+        </button>
+
+  <div class="absolute right-0 mt-4 hidden w-62.5 flex-col rounded-xl border border-white/10 bg-slate-950/90 shadow-xl shadow-black/30 backdrop-blur" data-dropdown-target="menu">
+          <ul class="flex flex-col gap-5 border-b border-white/10 px-6 py-7.5">
             <li>
-              <%= link_to profile_path, class: "flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" do %>
+              <%= link_to profile_path, class: "flex items-center gap-3.5 text-sm font-medium text-slate-200 duration-300 ease-in-out hover:text-yellow-300 lg:text-base" do %>
                 <span class="material-icons text-lg">person</span>
                 <%= t('topbar.my_profile', default: 'My Profile') %>
               <% end %>
             </li>
             <li>
-              <%= link_to settings_path, class: "flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" do %>
+              <%= link_to settings_path, class: "flex items-center gap-3.5 text-sm font-medium text-slate-200 duration-300 ease-in-out hover:text-yellow-300 lg:text-base" do %>
                 <span class="material-icons text-lg">settings</span>
                 <%= t('topbar.account_settings', default: 'Account Settings') %>
               <% end %>
@@ -94,13 +101,15 @@
               <%= button_to destroy_user_session_path,
                     method: :delete,
                     form: { class: "w-full text-left" },
-                    class: "flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" do %>
+                    class: "flex items-center gap-3.5 text-sm font-medium text-slate-200 duration-300 ease-in-out hover:text-red-300 lg:text-base" do %>
                 <span class="material-icons text-lg">logout</span>
-                <%= t('topbar.logout', default: 'Logout') %>
+                <%= t('topbar.logout', default: 'Sign out') %>
               <% end %>
             </li>
           </ul>
         </div>
+      </div>
+
       </div>
     </div>
   </div>

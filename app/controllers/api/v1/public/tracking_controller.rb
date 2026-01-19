@@ -46,7 +46,7 @@ module Api
 
         def format_address(address)
           return nil if address.blank?
-          
+
           {
             street: address["street"],
             city: address["city"],

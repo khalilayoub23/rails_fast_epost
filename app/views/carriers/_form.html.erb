@@ -1,6 +1,6 @@
 <%= form_with(model: carrier, class: "space-y-4") do |f| %>
   <% if carrier.errors.any? %>
-    <div class="rounded-sm border border-danger/30 bg-[#FFF1F2] p-4 text-danger">
+    <div class="rounded-xl border border-red-400/30 bg-red-500/10 p-4 text-red-200">
       <h3 class="mb-2 font-semibold"><%= pluralize(carrier.errors.count, "error") %> prohibited saving:</h3>
       <ul class="list-disc pl-5 text-sm">
         <% carrier.errors.full_messages.each do |msg| %>
@@ -12,25 +12,25 @@
 
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div>
-      <label class="mb-2 block text-sm text-dark">Carrier type</label>
-      <%= f.select :carrier_type, ["PostalCarrier", "CourierCarrier"], { prompt: "Select carrier type" }, class: "w-full rounded border border-stroke bg-white px-3 py-2 text-dark focus:border-primary focus:outline-none" %>
+      <label class="mb-2 block text-sm font-medium text-slate-200">Carrier type</label>
+      <%= f.select :carrier_type, ["PostalCarrier", "CourierCarrier"], { prompt: "Select carrier type" }, class: "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white focus:border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
     </div>
     <div>
-      <label class="mb-2 block text-sm text-dark">Name</label>
-      <%= f.text_field :name, class: "w-full rounded border border-stroke bg-white px-3 py-2 text-dark focus:border-primary focus:outline-none" %>
+      <label class="mb-2 block text-sm font-medium text-slate-200">Name</label>
+      <%= f.text_field :name, class: "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-slate-400 focus:border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
     </div>
     <div>
-      <label class="mb-2 block text-sm text-dark">Email</label>
-      <%= f.email_field :email, class: "w-full rounded border border-stroke bg-white px-3 py-2 text-dark focus:border-primary focus:outline-none" %>
+      <label class="mb-2 block text-sm font-medium text-slate-200">Email</label>
+      <%= f.email_field :email, class: "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-slate-400 focus:border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
     </div>
     <div class="sm:col-span-2">
-      <label class="mb-2 block text-sm text-dark">Address</label>
-      <%= f.text_area :address, rows: 3, class: "w-full rounded border border-stroke bg-white px-3 py-2 text-dark focus:border-primary focus:outline-none" %>
+      <label class="mb-2 block text-sm font-medium text-slate-200">Address</label>
+      <%= f.text_area :address, rows: 3, class: "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-slate-400 focus:border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
     </div>
   </div>
 
   <div class="flex items-center gap-3">
-    <%= f.submit class: "inline-flex items-center rounded bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90" %>
-    <%= link_to "Cancel", (carrier.persisted? ? carrier_path(carrier) : carriers_path), class: "inline-flex items-center rounded border border-stroke bg-white px-4 py-2 text-sm font-medium text-dark hover:bg-whiter" %>
+    <%= f.submit class: "inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow-lg shadow-yellow-500/20 hover:bg-yellow-300" %>
+    <%= link_to "Cancel", (carrier.persisted? ? carrier_path(carrier) : carriers_path), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10" %>
   </div>
 <% end %>

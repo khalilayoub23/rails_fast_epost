@@ -2,8 +2,6 @@
 <% title_text = title_key.present? ? t(title_key, default: title_default) : (title || title_default) %>
 <% subtitle_text = subtitle_key.present? ? t(subtitle_key, default: subtitle_default) : (subtitle || subtitle_default) %>
 <% link_label_text = link_label_key.present? ? t(link_label_key, default: link_label_default) : (link_label || link_label_default) %>
-<% Rails.logger.info("[Dashboard SectionWrapper] link_path=#{link_path.inspect} block_given=#{block_given?}" ) %>
-
 <section class="<%= card_class %>">
   <div class="flex items-center justify-between gap-3 <%= rtl? ? 'flex-row-reverse text-right' : '' %>">
     <div>

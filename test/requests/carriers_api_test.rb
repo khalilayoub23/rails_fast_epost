@@ -15,7 +15,7 @@ class CarriersApiTest < ActionDispatch::IntegrationTest
       name: "JSON Customer",
       email: "json-customer@example.com",
       address: "401 Api Lane",
-      phones: ["+15558889999"],
+      phones: [ "+15558889999" ],
       category: :business
     )
 

@@ -83,7 +83,7 @@ class NotificationServiceTest < ActionMailer::TestCase
     recipients = ActionMailer::Base.deliveries.last(2).map(&:to).flatten
     assert_includes recipients, @customer.email
     assert_includes recipients, @sender.email
-    refute_includes recipients, nil
+    assert_not_includes recipients, nil
   end
 
   test "notify_delivery_complete sends emails to all parties" do
@@ -195,7 +195,7 @@ class NotificationServiceTest < ActionMailer::TestCase
       NotificationService.notify_task_assigned(@task)
     end
 
-    refute_empty sms_calls
+    assert_not_empty sms_calls
     assert_equal @messenger.phone, sms_calls.first[:to]
   end
 
@@ -215,7 +215,7 @@ class NotificationServiceTest < ActionMailer::TestCase
         NotificationService.notify_status_changed(@task, "pending")
       end
 
-      refute_includes recipient_ids, messenger.id, "Messenger should not receive SMS during quiet hours"
+      assert_not_includes recipient_ids, messenger.id, "Messenger should not receive SMS during quiet hours"
     end
   end
 

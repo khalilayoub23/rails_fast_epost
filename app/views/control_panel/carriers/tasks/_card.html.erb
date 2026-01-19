@@ -1,28 +1,28 @@
-<div class="rounded-xl border border-gray-800 bg-gray-950/70 p-3 space-y-2">
+<div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur p-3 space-y-2">
   <div class="flex items-center justify-between">
-    <p class="text-sm font-semibold text-gray-100">Task <%= task.barcode %></p>
-    <span class="text-xs rounded-full px-2 py-0.5 bg-gray-800 text-gray-300"><%= task.priority.titleize %></span>
+    <p class="text-sm font-semibold text-slate-100">Task <%= task.barcode %></p>
+    <span class="text-xs rounded-full px-2 py-0.5 bg-white/10 text-slate-200"><%= task.priority.titleize %></span>
   </div>
-  <p class="text-xs text-gray-400"><%= task.start %> → <%= task.target %></p>
-  <p class="text-xs text-gray-500">Customer: <%= task.customer&.name || "N/A" %></p>
+  <p class="text-xs text-slate-400"><%= task.start %> → <%= task.target %></p>
+  <p class="text-xs text-slate-500">Customer: <%= task.customer&.name || "N/A" %></p>
 
   <%= form_with url: status_control_panel_carriers_task_path(task), method: :patch, data: { turbo: false }, class: "space-y-2" do |form| %>
     <div class="grid grid-cols-2 gap-2 text-xs">
-      <%= form.button "Mark In Transit", name: "task[status]", value: "in_transit", class: "rounded-md border border-gray-800 px-2 py-1 hover:border-yellow-300" %>
-      <%= form.button "Mark Delivered", name: "task[status]", value: "delivered", class: "rounded-md border border-gray-800 px-2 py-1 hover:border-emerald-300" %>
-      <%= form.button "Report Failure", name: "task[status]", value: "failed", class: "col-span-2 rounded-md border border-gray-800 px-2 py-1 text-red-300 hover:border-red-400" %>
+      <%= form.button "Mark In Transit", name: "task[status]", value: "in_transit", class: "rounded-md border border-white/10 bg-white/5 px-2 py-1 hover:bg-white/10 hover:border-yellow-300" %>
+      <%= form.button "Mark Delivered", name: "task[status]", value: "delivered", class: "rounded-md border border-white/10 bg-white/5 px-2 py-1 hover:bg-white/10 hover:border-emerald-300" %>
+      <%= form.button "Report Failure", name: "task[status]", value: "failed", class: "col-span-2 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-red-300 hover:bg-white/10 hover:border-red-400" %>
     </div>
-    <%= form.text_area :note, placeholder: "Optional note", class: "w-full rounded-md bg-gray-900 border border-gray-800 px-2 py-1 text-xs text-gray-100", rows: 2 %>
+    <%= form.text_area :note, placeholder: "Optional note", class: "w-full rounded-md bg-black/30 border border-white/10 px-2 py-1 text-xs text-slate-100 placeholder-slate-500", rows: 2 %>
   <% end %>
 
   <%= form_with url: flag_issue_control_panel_carriers_task_path(task), method: :patch, data: { turbo: false }, class: "text-xs space-y-1" do |form| %>
-    <%= form.text_area :content, name: "issue[content]", placeholder: "Flag issue for ops team", class: "w-full rounded-md bg-gray-900 border border-gray-800 px-2 py-1 text-gray-100", rows: 2 %>
+    <%= form.text_area :content, name: "issue[content]", placeholder: "Flag issue for ops team", class: "w-full rounded-md bg-black/30 border border-white/10 px-2 py-1 text-slate-100 placeholder-slate-500", rows: 2 %>
     <%= form.submit "Flag issue", class: "rounded-md border border-red-500/30 bg-red-500/10 px-2 py-1 text-red-200" %>
   <% end %>
 
   <% proofs = task.proof_uploads.order(recorded_at: :desc) %>
   <% if proofs.any? %>
-    <div class="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-2 text-xs text-gray-100 space-y-2">
+    <div class="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-2 text-xs text-slate-100 space-y-2">
       <p class="text-[10px] uppercase tracking-wide text-emerald-200">Proof uploads (<%= proofs.count %>)</p>
       <ul class="space-y-2">
         <% proofs.each do |proof| %>
@@ -31,11 +31,11 @@
               <p class="font-semibold text-sm text-white">
                 <%= link_to(proof.file.filename, rails_blob_path(proof.file, disposition: "attachment"), class: "underline decoration-emerald-400/60") if proof.file.attached? %>
               </p>
-              <p class="text-[10px] text-gray-400">
+              <p class="text-[10px] text-slate-400">
                 <%= proof.category.humanize %> • <%= l(proof.recorded_at, format: :short) %>
               </p>
               <% if proof.notes.present? %>
-                <p class="text-[10px] text-gray-300"><%= proof.notes %></p>
+                <p class="text-[10px] text-slate-300"><%= proof.notes %></p>
               <% end %>
             </div>
             <%= button_to "×", control_panel_carriers_task_proof_upload_path(task, proof), method: :delete, data: { turbo: false }, class: "rounded-full border border-emerald-400/40 px-2 text-[10px] text-emerald-100" %>
@@ -53,27 +53,27 @@
         <div class="grid grid-cols-1 gap-2">
           <div>
             <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Door photo (required)</label>
-            <input type="file" name="proof_uploads[][file]" accept="image/*" required class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" />
+            <input type="file" name="proof_uploads[][file]" accept="image/*" required class="w-full rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-200" />
             <input type="hidden" name="proof_uploads[][category]" value="door_affix_photo" />
           </div>
           <div>
             <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Address photo (required)</label>
-            <input type="file" name="proof_uploads[][file]" accept="image/*" required class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" />
+            <input type="file" name="proof_uploads[][file]" accept="image/*" required class="w-full rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-200" />
             <input type="hidden" name="proof_uploads[][category]" value="door_affix_address" />
           </div>
           <div>
             <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Extra photo (optional)</label>
-            <input type="file" name="proof_uploads[][file]" accept="image/*" class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" />
+            <input type="file" name="proof_uploads[][file]" accept="image/*" class="w-full rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-200" />
             <input type="hidden" name="proof_uploads[][category]" value="door_affix_extra" />
           </div>
           <div>
             <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Video (optional)</label>
-            <input type="file" name="proof_uploads[][file]" accept="video/*" class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" />
+            <input type="file" name="proof_uploads[][file]" accept="video/*" class="w-full rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-200" />
             <input type="hidden" name="proof_uploads[][category]" value="door_affix_video" />
           </div>
           <div>
             <label class="block text-xxs uppercase tracking-wide text-amber-100 mb-1">Notes</label>
-            <textarea name="proof_uploads[][notes]" rows="2" class="w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-100" placeholder="Notes (optional)"></textarea>
+            <textarea name="proof_uploads[][notes]" rows="2" class="w-full rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-100 placeholder-slate-500" placeholder="Notes (optional)"></textarea>
           </div>
         </div>
         <%= form.submit "Submit door affix", class: "rounded-md border border-amber-500/50 bg-amber-500/10 px-2 py-1 text-amber-100" %>
@@ -83,14 +83,14 @@
 
   <%= form_with url: control_panel_carriers_task_proof_uploads_path(task), method: :post, data: { turbo: false }, html: { enctype: "multipart/form-data" }, class: "space-y-2 text-xs" do |form| %>
     <div>
-      <label class="mb-1 block text-gray-300 text-xxs uppercase tracking-wide">Upload proof</label>
-      <%= form.file_field :file, required: true, class: "w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-200" %>
+      <label class="mb-1 block text-slate-300 text-xxs uppercase tracking-wide">Upload proof</label>
+      <%= form.file_field :file, required: true, class: "w-full rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-200" %>
     </div>
     <div class="grid grid-cols-2 gap-2">
-      <%= form.select :category, ProofUpload.categories.keys.map { |key| [key.humanize, key] }, {}, class: "rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-100" %>
-      <%= form.datetime_local_field :recorded_at, class: "rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-100" %>
+      <%= form.select :category, ProofUpload.categories.keys.map { |key| [key.humanize, key] }, {}, class: "rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-100" %>
+      <%= form.datetime_local_field :recorded_at, class: "rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-100" %>
     </div>
-    <%= form.text_area :notes, rows: 2, placeholder: "Leave a note (optional)", class: "w-full rounded-md border border-gray-800 bg-gray-900 px-2 py-1 text-gray-100" %>
+    <%= form.text_area :notes, rows: 2, placeholder: "Leave a note (optional)", class: "w-full rounded-md border border-white/10 bg-black/30 px-2 py-1 text-slate-100 placeholder-slate-500" %>
     <%= form.submit "Attach proof", class: "rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-emerald-100" %>
   <% end %>
 </div>

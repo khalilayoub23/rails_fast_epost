@@ -1,15 +1,15 @@
-<tr id="<%= dom_id(task) %>" class="border-b border-stroke hover:bg-gray-2">
+<tr id="<%= dom_id(task) %>" class="border-b border-white/10 hover:bg-white/5 transition-colors">
   <td class="px-4 py-4">
-    <%= link_to main_app.task_path(task), class: "text-sm font-medium text-primary hover:underline" do %>
-      #<%= task.id %>
+    <%= link_to main_app.task_path(task), class: "text-sm font-semibold text-yellow-300 hover:underline" do %>
+      <%= task.barcode.presence || "##{task.id}" %>
     <% end %>
   </td>
   <td class="px-4 py-4"><%= render "shared/status_badge", status: task.status %></td>
   <td class="px-4 py-4"><%= render "shared/priority_badge", priority: task.priority %></td>
-  <td class="px-4 py-4 text-sm text-dark"><%= task.customer&.name || "-" %></td>
-  <td class="px-4 py-4 text-sm text-body">#<%= task.carrier_id %></td>
-  <td class="px-4 py-4 text-sm text-body"><%= l(task.created_at, format: :short) %></td>
+  <td class="px-4 py-4 text-sm text-slate-200"><%= task.customer&.name || "-" %></td>
+  <td class="px-4 py-4 text-sm text-slate-300"><%= task.carrier&.name || (task.carrier_id.present? ? "##{task.carrier_id}" : "-") %></td>
+  <td class="px-4 py-4 text-sm text-slate-300"><%= l(task.created_at, format: :short) %></td>
   <td class="px-4 py-4 text-right text-sm font-medium">
-    <%= link_to "View", main_app.task_path(task), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter" %>
+    <%= link_to "View", main_app.task_path(task), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10" %>
   </td>
 </tr>

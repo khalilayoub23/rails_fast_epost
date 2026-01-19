@@ -28,15 +28,15 @@
 
       <%= form_with url: dashboard_path, method: :get, scope: :task_filter, local: true, class: "mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4" do |f| %>
         <div>
-          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
+          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-slate-400" %>
           <%= f.select :status, options_for_select(@task_statuses.map { |s| [s.titleize, s] }, @task_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
         </div>
         <div>
-          <%= f.label :carrier_id, t("dashboard.carrier", default: "Carrier"), class: "text-xs text-gray-400" %>
+          <%= f.label :carrier_id, t("dashboard.carrier", default: "Carrier"), class: "text-xs text-slate-400" %>
           <%= f.select :carrier_id, options_from_collection_for_select(@carrier_options, :id, :name, @task_filters[:carrier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
         </div>
         <div>
-          <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-gray-400" %>
+          <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-slate-400" %>
           <%= f.select :sender_id, options_from_collection_for_select(@sender_options, :id, :full_name, @task_filters[:sender_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
         </div>
         <div class="flex items-end <%= rtl? ? 'justify-start' : 'justify-end' %>">
@@ -68,19 +68,19 @@
 
       <%= form_with url: dashboard_path, method: :get, scope: :delivery_filter, local: true, class: "mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5" do |f| %>
         <div>
-          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-gray-400" %>
+          <%= f.label :status, t("dashboard.status", default: "Status"), class: "text-xs text-slate-400" %>
           <%= f.select :status, options_for_select(@delivery_statuses.map { |s| [s.titleize, s] }, @delivery_filters[:status]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
         </div>
         <div>
-          <%= f.label :courier_id, t("dashboard.courier", default: "Courier"), class: "text-xs text-gray-400" %>
+          <%= f.label :courier_id, t("dashboard.courier", default: "Courier"), class: "text-xs text-slate-400" %>
           <%= f.select :courier_id, options_from_collection_for_select(@courier_options, :id, :full_name, @delivery_filters[:courier_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
         </div>
         <div>
-          <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-gray-400" %>
+          <%= f.label :sender_id, t("dashboard.sender", default: "Sender"), class: "text-xs text-slate-400" %>
           <%= f.select :sender_id, options_from_collection_for_select(@sender_options, :id, :full_name, @delivery_filters[:sender_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
         </div>
         <div>
-          <%= f.label :recipient_id, t("dashboard.recipient", default: "Recipient"), class: "text-xs text-gray-400" %>
+          <%= f.label :recipient_id, t("dashboard.recipient", default: "Recipient"), class: "text-xs text-slate-400" %>
           <%= f.select :recipient_id, options_from_collection_for_select(@recipient_options, :id, :full_name, @delivery_filters[:recipient_id]), include_blank: true, class: "mt-1 w-full rounded-lg border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white shadow-inner shadow-black/20" %>
         </div>
         <div class="flex items-end <%= rtl? ? 'justify-start' : 'justify-end' %>">

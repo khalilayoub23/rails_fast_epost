@@ -17,7 +17,7 @@ class I18nKeysTest < Minitest::Test
   ].freeze
 
   def test_locales_have_consistent_keys
-    locale_maps = LOCALES.to_h { |lc| [lc, load_locale(lc)] }
+    locale_maps = LOCALES.to_h { |lc| [ lc, load_locale(lc) ] }
 
     union_keys = locale_maps.values.flat_map { |h| flatten_keys(h) }.uniq
 
@@ -38,9 +38,9 @@ class I18nKeysTest < Minitest::Test
 
   def flatten_keys(hash, prefix = [])
     hash.flat_map do |k, v|
-      key = (prefix + [k.to_s]).join(".")
+      key = (prefix + [ k.to_s ]).join(".")
       if v.is_a?(Hash)
-        flatten_keys(v, prefix + [k.to_s])
+        flatten_keys(v, prefix + [ k.to_s ])
       else
         key
       end

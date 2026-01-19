@@ -1,7 +1,9 @@
 <%# app/views/admin/messengers/new.html.erb %>
-<div class="page-header mb-6">
-  <h1 class="text-2xl font-bold">New Messenger</h1>
+<div class="mb-6">
+  <h1 class="text-2xl font-bold text-white">New Messenger</h1>
+  <p class="mt-1 text-sm text-slate-400">Create a messenger profile for assignments and tracking.</p>
 </div>
-<div class="bg-white rounded shadow p-6">
-  <%= render 'form' %>
+
+<div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+  <%= render "form" %>
 </div>

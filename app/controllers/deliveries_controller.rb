@@ -34,7 +34,7 @@ class DeliveriesController < ApplicationController
       # If the user didn't provide a case number, clear the auto-generated one
       # to avoid potential collisions if they resubmit after a delay.
       @delivery.case_number = nil if delivery_params[:case_number].blank?
-      
+
       puts "Failed to create Delivery by User ##{current_user.id}: #{@delivery.errors.full_messages.to_sentence}"
       render :new, status: :unprocessable_entity
     end
@@ -48,7 +48,7 @@ class DeliveriesController < ApplicationController
     authorize @delivery
 
     if @delivery.update(delivery_params)
-      redirect_to @delivery, notice: t("deliveries.updated", default: "Delivery updated." )
+      redirect_to @delivery, notice: t("deliveries.updated", default: "Delivery updated.")
     else
       render :edit, status: :unprocessable_entity
     end

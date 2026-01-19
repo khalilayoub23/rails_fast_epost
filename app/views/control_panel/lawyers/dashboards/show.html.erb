@@ -12,7 +12,7 @@
 <% end %>
 
 <% if @empty_state %>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-10 text-center">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-10 text-center">
     <p class="text-xl font-semibold text-white">No lawyers selected</p>
     <p class="mt-2 text-sm text-slate-300">Invite a lawyer or add one under Admin → Lawyers.</p>
   </div>
@@ -20,38 +20,38 @@
 <% end %>
 
 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <p class="text-xs uppercase tracking-wide text-slate-300">Total cases</p>
     <p class="mt-2 text-3xl font-bold text-white"><%= @caseload[:total] %></p>
   </div>
-  <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 p-5">
+  <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 backdrop-blur p-5">
     <p class="text-xs uppercase tracking-wide text-blue-100">Active</p>
     <p class="mt-2 text-3xl font-bold text-blue-50"><%= @caseload[:active] %></p>
   </div>
-  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-5">
+  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 backdrop-blur p-5">
     <p class="text-xs uppercase tracking-wide text-emerald-100">Cleared</p>
     <p class="mt-2 text-3xl font-bold text-emerald-50"><%= @caseload[:delivered] %></p>
   </div>
-  <div class="rounded-2xl border border-amber-400/30 bg-amber-500/10 p-5">
+  <div class="rounded-2xl border border-amber-400/30 bg-amber-500/10 backdrop-blur p-5">
     <p class="text-xs uppercase tracking-wide text-amber-100">Investigations</p>
     <p class="mt-2 text-3xl font-bold text-amber-50"><%= @caseload[:investigative] %></p>
   </div>
 </div>
 
 <div class="grid gap-6 lg:grid-cols-2 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between">
       <h2 class="text-lg font-semibold text-white">Compliance rate</h2>
       <span class="text-3xl font-bold text-emerald-200"><%= @compliance_rate %>%</span>
     </div>
     <p class="mt-2 text-sm text-slate-300">Delivered vs total case volume.</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <h2 class="text-lg font-semibold text-white mb-2">Certifications</h2>
     <% if @lawyer.certifications.present? %>
       <ul class="space-y-2 text-sm text-slate-200">
         <% @lawyer.certifications.each_key do |name| %>
-          <li class="rounded-lg border border-white/10 bg-white/5 px-3 py-2"><%= name %></li>
+          <li class="rounded-lg border border-white/10 bg-white/5 backdrop-blur px-3 py-2"><%= name %></li>
         <% end %>
       </ul>
     <% else %>
@@ -61,7 +61,7 @@
 </div>
 
 <div class="grid gap-6 lg:grid-cols-2 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-white">Awaiting clearance</h2>
       <span class="text-xs text-slate-400">Escalate oldest first</span>
@@ -82,14 +82,14 @@
       <% end %>
     </div>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-white">Recent clearances</h2>
       <span class="text-xs text-slate-400">Delivered tasks</span>
     </div>
     <div class="space-y-3">
       <% @recent_clearances.each do |task| %>
-        <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+        <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
           <div class="flex items-center justify-between">
             <p class="text-sm font-semibold text-white">Task <%= task.barcode %></p>
             <span class="text-xs text-emerald-200"><%= l(task.delivery_time, format: :short) if task.delivery_time %></span>

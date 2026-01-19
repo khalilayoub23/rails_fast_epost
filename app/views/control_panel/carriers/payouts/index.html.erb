@@ -1,12 +1,12 @@
 <section class="space-y-6">
   <header>
     <h1 class="text-2xl font-semibold">Payouts owed to <%= @carrier.name %></h1>
-    <p class="text-sm text-gray-400">Carrier-facing payouts only. Sender billing amounts are not shown here.</p>
+    <p class="text-sm text-slate-400">Carrier-facing payouts only. Sender billing amounts are not shown here.</p>
   </header>
 
-  <div class="overflow-x-auto rounded-2xl border border-gray-800 bg-gray-900/60">
+  <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
     <table class="min-w-full text-sm">
-      <thead class="text-left text-gray-400">
+      <thead class="text-left text-slate-400">
         <tr>
           <th class="px-4 py-3">Task</th>
           <th class="px-4 py-3">Amount</th>
@@ -15,23 +15,23 @@
           <th class="px-4 py-3">Updated</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-800">
+      <tbody class="divide-y divide-white/10">
         <% @payouts.each do |payout| %>
           <tr>
-            <td class="px-4 py-3 text-gray-200"><%= link_to payout.task&.barcode, control_panel_carriers_payout_path(payout), class: "text-yellow-300 hover:underline" %></td>
+            <td class="px-4 py-3 text-slate-200"><%= link_to payout.task&.barcode, control_panel_carriers_payout_path(payout), class: "text-yellow-300 hover:underline" %></td>
             <td class="px-4 py-3 font-semibold"><%= number_to_currency(payout.amount_cents / 100.0, unit: payout.currency) %></td>
             <td class="px-4 py-3">
               <span class="inline-flex rounded-full px-2 py-0.5 text-xs <%= payout.status == "paid" ? 'bg-emerald-500/20 text-emerald-200' : 'bg-yellow-500/10 text-yellow-300' %>">
                 <%= payout.status.humanize %>
               </span>
             </td>
-            <td class="px-4 py-3 text-gray-300"><%= payout.due_at ? l(payout.due_at, format: :long) : "—" %></td>
-            <td class="px-4 py-3 text-gray-400"><%= l(payout.updated_at, format: :short) %></td>
+            <td class="px-4 py-3 text-slate-300"><%= payout.due_at ? l(payout.due_at, format: :long) : "—" %></td>
+            <td class="px-4 py-3 text-slate-400"><%= l(payout.updated_at, format: :short) %></td>
           </tr>
         <% end %>
         <% if @payouts.empty? %>
           <tr>
-            <td colspan="5" class="px-4 py-6 text-center text-gray-500">No payout data yet.</td>
+            <td colspan="5" class="px-4 py-6 text-center text-slate-500">No payout data yet.</td>
           </tr>
         <% end %>
       </tbody>
