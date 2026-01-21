@@ -88,13 +88,13 @@ Rails.application.configure do
 
   # Allow requests from GitHub Codespaces domain
   config.hosts << /.*\.app\.github\.dev/
-  
+
   # Configure allowed origins for CSRF protection in Codespaces
   config.action_controller.forgery_protection_origin_check = false
 
   # Ensure logs are visible when running inside containers/Codespaces by mirroring production STDOUT logging
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "debug").to_sym
-  config.log_tags = [:request_id]
+  config.log_tags = [ :request_id ]
 
   stdout_logger = ActiveSupport::Logger.new($stdout)
   stdout_logger.formatter = config.log_formatter

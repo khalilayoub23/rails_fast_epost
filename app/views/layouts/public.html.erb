@@ -80,13 +80,13 @@
                 <%= button_to t("nav.logout"), destroy_user_session_path,
                       method: :delete,
                       form: { class: "inline" },
-                      class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-gray-900 transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20",
+                      class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-black transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20",
                       data: { turbo: false } %>
               <% else %>
                 <% if controller_name == 'sessions' && (action_name == 'new' || action_name == 'create') %>
-                  <%= link_to t("nav.signup", default: "Sign Up"), new_user_registration_path, class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-gray-900 transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20", data: { turbo: false } %>
+                  <%= link_to t("nav.signup", default: "Sign Up"), new_user_registration_path, class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-black transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20", data: { turbo: false } %>
                 <% else %>
-                  <%= link_to t("nav.login", default: "Login"), new_user_session_path, class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-gray-900 transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20", data: { turbo: false } %>
+                  <%= link_to t("nav.login", default: "Login"), new_user_session_path, class: "flex h-10 items-center justify-center rounded-xl bg-yellow-400 px-6 text-sm font-bold text-black transition-all hover:bg-yellow-300 shadow-lg shadow-yellow-400/20", data: { turbo: false } %>
                 <% end %>
               <% end %>
             </div>

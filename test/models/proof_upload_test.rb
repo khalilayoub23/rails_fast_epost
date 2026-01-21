@@ -1,7 +1,6 @@
 require "test_helper"
 
 class ProofUploadTest < ActiveSupport::TestCase
-
   setup do
     @task = tasks(:one)
     @user = users(:operations_manager)

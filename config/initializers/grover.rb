@@ -18,7 +18,7 @@ Grover.configure do |config|
       height: 720
     },
     launchOptions: {
-      args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-web-security"],
+      args: [ "--no-sandbox", "--disable-dev-shm-usage", "--disable-web-security" ],
       dumpio: false
     }
   }

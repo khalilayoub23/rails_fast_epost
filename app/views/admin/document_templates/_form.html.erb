@@ -1,6 +1,6 @@
 <%= form_with(model: [:admin, document_template], class: "space-y-6") do |form| %>
   <% if document_template.errors.any? %>
-    <div class="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded">
+    <div class="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-200">
       <h3 class="font-bold"><%=  pluralize(document_template.errors.count, "error") %> prohibited this template from being saved:</h3>
       <ul class="list-disc list-inside mt-2">
         <% document_template.errors.full_messages.each do |message| %>
@@ -11,18 +11,18 @@
   <% end %>
 
   <div>
-    <%= form.label :name, "Template Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.text_field :name, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "e.g., Power of Attorney" %>
+    <%= form.label :name, "Template Name", class: "block text-sm font-medium text-slate-200 mb-1" %>
+    <%= form.text_field :name, class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30", placeholder: "e.g., Power of Attorney" %>
   </div>
 
   <div>
-    <%= form.label :description, "Description", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.text_area :description, rows: 3, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Describe this template's purpose..." %>
+    <%= form.label :description, "Description", class: "block text-sm font-medium text-slate-200 mb-1" %>
+    <%= form.text_area :description, rows: 3, class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30", placeholder: "Describe this template's purpose..." %>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
-      <%= form.label :template_type, "Template Type", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.label :template_type, "Template Type", class: "block text-sm font-medium text-slate-200 mb-1" %>
       <%= form.select :template_type, 
           options_for_select([
             ["Prawn Template (Generate from Text)", "prawn_template"],
@@ -30,42 +30,42 @@
             ["Hybrid (Both)", "hybrid"]
           ], document_template.template_type),
           {},
-          class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
-      <p class="mt-1 text-sm text-gray-500">Choose how PDFs will be generated</p>
+          class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
+      <p class="mt-1 text-sm text-slate-400">Choose how PDFs will be generated</p>
     </div>
 
     <div>
-      <%= form.label :category, "Category", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.label :category, "Category", class: "block text-sm font-medium text-slate-200 mb-1" %>
       <%= form.select :category,
           options_for_select([["Select a category", ""]] + DocumentTemplate::CATEGORIES, document_template.category),
           {},
-          class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+          class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
     </div>
   </div>
 
   <div>
     <%= form.label :active, class: "flex items-center" do %>
-      <%= form.check_box :active, class: "rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
-      <span class="ml-2 text-sm text-gray-700">Active (template can be used)</span>
+      <%= form.check_box :active, class: "rounded border-white/10 bg-white/5 text-yellow-400 shadow-sm focus:ring-2 focus:ring-yellow-400/30" %>
+      <span class="ml-2 text-sm text-slate-200">Active (template can be used)</span>
     <% end %>
   </div>
 
   <div>
-    <%= form.label :content, "Template Content (for Prawn templates)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.text_area :content, rows: 12, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 font-mono text-sm", placeholder: "Use {{variable_name}} for dynamic content...\n\nExample:\n# Power of Attorney\n\nI, {{principal_name}}, hereby appoint {{agent_name}} as my attorney-in-fact..." %>
-    <p class="mt-1 text-sm text-gray-500">Use {{variable_name}} syntax for placeholders. Supports Markdown-style headers with #.</p>
+    <%= form.label :content, "Template Content (for Prawn templates)", class: "block text-sm font-medium text-slate-200 mb-1" %>
+    <%= form.text_area :content, rows: 12, class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30", placeholder: "Use {{variable_name}} for dynamic content...\n\nExample:\n# Power of Attorney\n\nI, {{principal_name}}, hereby appoint {{agent_name}} as my attorney-in-fact..." %>
+    <p class="mt-1 text-sm text-slate-400">Use {{variable_name}} syntax for placeholders. Supports Markdown-style headers with #.</p>
   </div>
 
   <div>
-    <%= form.label :pdf_file, "Upload PDF Template (for Fillable Forms)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.file_field :pdf_file, accept: "application/pdf", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+    <%= form.label :pdf_file, "Upload PDF Template (for Fillable Forms)", class: "block text-sm font-medium text-slate-200 mb-1" %>
+    <%= form.file_field :pdf_file, accept: "application/pdf", class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" %>
     <% if document_template.pdf_file.attached? %>
-      <p class="mt-2 text-sm text-green-600">✓ Current file: <%= document_template.pdf_file.filename %> (<%= document_template.file_size %>)</p>
+      <p class="mt-2 text-sm text-emerald-300">✓ Current file: <%= document_template.pdf_file.filename %> (<%= document_template.file_size %>)</p>
     <% end %>
   </div>
 
   <div class="flex justify-end gap-3 pt-4">
-    <%= link_to "Cancel", admin_document_templates_path, class: "bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded" %>
-    <%= form.submit "Save Template", class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded" %>
+    <%= link_to "Cancel", admin_document_templates_path, class: "inline-flex items-center rounded-xl bg-white/10 px-6 py-2 text-sm font-semibold text-white hover:bg-white/15" %>
+    <%= form.submit "Save Template", class: "inline-flex items-center rounded-xl bg-yellow-400 px-6 py-2 text-sm font-semibold text-black hover:bg-yellow-300" %>
   </div>
 <% end %>

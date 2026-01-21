@@ -1,7 +1,7 @@
 <!-- Example Turbo Frame: Tasks List -->
-<div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-  <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
-    <h3 class="font-medium text-black dark:text-white">
+<div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur">
+  <div class="border-b border-white/10 px-7 py-4">
+    <h3 class="font-semibold text-white">
       <%= t('tasks.title') %>
     </h3>
   </div>
@@ -12,7 +12,7 @@
       <div class="mb-5.5">
         <%= f.text_field :q, 
             placeholder: t('common.search'),
-            class: "w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary",
+            class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30",
             data: { 
               controller: "autocomplete",
               autocomplete_url_value: search_tasks_path,
@@ -31,7 +31,7 @@
       <%= link_to t('common.load_more'), 
           tasks_path(page: @tasks.next_page),
           data: { turbo_frame: "tasks_list", turbo_action: "advance" },
-          class: "inline-flex items-center justify-center rounded-md bg-primary py-3 px-6 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" %>
+          class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 py-3 px-6 text-center text-sm font-semibold text-black hover:bg-yellow-300 lg:px-8 xl:px-10" %>
     <% end %>
   </div>
 </div>
@@ -39,7 +39,7 @@
 <!-- New Task Button with Modal -->
 <%= link_to new_task_path,
     data: { turbo_frame: "modal" },
-    class: "inline-flex items-center justify-center rounded-md bg-primary py-3 px-6 text-center font-medium text-white hover:bg-opacity-90" do %>
+    class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 py-3 px-6 text-center text-sm font-semibold text-black hover:bg-yellow-300" do %>
   <span class="material-icons <%= margin_end_class('2') %>">add</span>
   <%= t('tasks.new') %>
 <% end %>

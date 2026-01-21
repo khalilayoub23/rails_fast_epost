@@ -3,37 +3,53 @@ import { Controller } from "@hotwired/stimulus"
 // Renders a simple inline SVG bar chart matching TailAdmin style, CSP-safe.
 export default class extends Controller {
   static targets = ["chartContainer"]
+  static values = {
+    seriesA: Object,
+    seriesB: Object
+  }
 
   connect() {
-    this.renderChart('day')
+    this.setActivePeriod("month")
   }
 
   update(event) {
-    // Reset all buttons style
-    this.element.querySelectorAll('button').forEach(btn => {
-      btn.className = "flex items-center justify-center min-w-[80px] px-3 py-2 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-white rounded-md transition-colors leading-tight"
+    const period = event.params.period || "month"
+    this.setActivePeriod(period, event.currentTarget)
+  }
+
+  setActivePeriod(period, clickedButton = null) {
+    const normalizedPeriod = ["day", "week", "month"].includes(period) ? period : "month"
+
+    const buttons = this.element.querySelectorAll('button[data-charts-period-param]')
+    buttons.forEach(btn => {
+      btn.className = "px-3 py-1 text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white rounded transition-colors"
+      btn.setAttribute("aria-pressed", "false")
     })
 
-    // Set active style
-    event.currentTarget.className = "flex items-center justify-center min-w-[80px] rounded-md bg-yellow-400 px-3 py-2 text-xs font-medium text-gray-900 shadow-lg hover:bg-yellow-500 transition-colors leading-tight"
+    const activeButton = clickedButton || this.element.querySelector(`button[data-charts-period-param="${normalizedPeriod}"]`)
+    if (activeButton) {
+      activeButton.className = "rounded bg-yellow-400 px-3 py-1 text-xs font-medium text-black shadow-lg hover:bg-yellow-500 transition-colors"
+      activeButton.setAttribute("aria-pressed", "true")
+    }
 
-    const period = event.params.period
-    this.renderChart(period)
+    this.renderChart(normalizedPeriod)
   }
 
   renderChart(period) {
-    let a, b
-    
-    if (period === 'day') {
-       a = [120, 380, 220, 180, 260, 140, 80, 300, 190, 280, 220, 110]
-       b = [100, 320, 200, 150, 210, 120, 60, 260, 160, 250, 190, 90]
-    } else if (period === 'week') {
-       a = [180, 260, 140, 80, 300, 190, 280, 220, 110, 120, 380, 220]
-       b = [150, 210, 120, 60, 260, 160, 250, 190, 90, 100, 320, 200]
-    } else {
-       a = [220, 110, 120, 380, 220, 180, 260, 140, 80, 300, 190, 280]
-       b = [190, 90, 100, 320, 200, 150, 210, 120, 60, 260, 160, 250]
+    const fallback = {
+      day: [120, 380, 220, 180, 260, 140, 80, 300, 190, 280, 220, 110],
+      week: [180, 260, 140, 80, 300, 190, 280, 220, 110, 120, 380, 220],
+      month: [220, 110, 120, 380, 220, 180, 260, 140, 80, 300, 190, 280]
     }
+    const fallbackB = {
+      day: [100, 320, 200, 150, 210, 120, 60, 260, 160, 250, 190, 90],
+      week: [150, 210, 120, 60, 260, 160, 250, 190, 90, 100, 320, 200],
+      month: [190, 90, 100, 320, 200, 150, 210, 120, 60, 260, 160, 250]
+    }
+
+    const normalizedPeriod = ["day", "week", "month"].includes(period) ? period : "month"
+    const a = (this.seriesAValue && this.seriesAValue[normalizedPeriod]) || fallback[normalizedPeriod]
+    const b = (this.seriesBValue && this.seriesBValue[normalizedPeriod]) || fallbackB[normalizedPeriod]
 
     this.chartContainerTarget.innerHTML = this.renderBars(a, b)
   }
@@ -46,7 +62,7 @@ export default class extends Controller {
     const barGroupGap = 28
     const monthGap = 24
     const barWidth = 10
-    const maxVal = Math.max(...a, ...b, 400)
+    const maxVal = Math.max(...a, ...b, 1)
 
     let x = padLeft
     let bars = ''

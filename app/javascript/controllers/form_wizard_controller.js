@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["step", "nextButton", "backButton", "indicator"]
+  static targets = ["step", "nextButton", "backButton", "indicator", "paymentField"]
 
   connect() {
     this.currentIndex = 0
@@ -42,6 +42,17 @@ export default class extends Controller {
 
     if (this.hasIndicatorTarget) {
       this.indicatorTarget.textContent = `Step ${this.currentIndex + 1} of ${this.stepTargets.length}`
+    }
+
+    if (this.hasPaymentFieldTarget) {
+      const enablePayment = this.currentIndex >= this.stepTargets.length - 1
+      this.paymentFieldTargets.forEach((el) => {
+        el.disabled = !enablePayment
+
+        if (el.dataset && el.dataset.paymentRequired === "true") {
+          el.required = enablePayment
+        }
+      })
     }
   }
 }

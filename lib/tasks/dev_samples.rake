@@ -5,7 +5,7 @@ namespace :dev do
       record.name = "Debug Customer"
       record.category = :individual
       record.address = "1 Debug Way, Sample City"
-      record.phones = ["+1-555-0100"]
+      record.phones = [ "+1-555-0100" ]
     end
     customer.allow_partial_profile = true if customer.respond_to?(:allow_partial_profile=)
     customer.save!

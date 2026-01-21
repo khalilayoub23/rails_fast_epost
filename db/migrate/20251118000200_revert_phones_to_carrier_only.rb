@@ -1,7 +1,7 @@
 class RevertPhonesToCarrierOnly < ActiveRecord::Migration[8.0]
   def up
-    if index_exists?(:phones, [:phoneable_type, :phoneable_id])
-      remove_index :phones, [:phoneable_type, :phoneable_id]
+    if index_exists?(:phones, [ :phoneable_type, :phoneable_id ])
+      remove_index :phones, [ :phoneable_type, :phoneable_id ]
     end
 
     execute <<~SQL.squish
@@ -31,6 +31,6 @@ class RevertPhonesToCarrierOnly < ActiveRecord::Migration[8.0]
     change_column_null :phones, :phoneable_id, false
     change_column_null :phones, :phoneable_type, false
 
-    add_index :phones, [:phoneable_type, :phoneable_id]
+    add_index :phones, [ :phoneable_type, :phoneable_id ]
   end
 end

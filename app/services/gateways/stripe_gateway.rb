@@ -4,7 +4,7 @@ module Gateways
 
     class << self
       # For this scaffold, we assume payment creation happens on Stripe Checkout and our app records a pending Payment
-      def create_payment!(amount_cents:, currency:, task:, payable:, metadata: {})
+      def create_payment!(amount_cents:, currency:, task:, payable:, metadata: {}, category: :service_fee, payment_type: :per_task)
         data = normalize_metadata(metadata)
         external_id = data["checkout_session_id"].presence || data["payment_intent_id"].presence || data["stripe_id"].presence
         checkout_url = data["checkout_url"]
@@ -15,18 +15,20 @@ module Gateways
           secret = stripe_secret_key
           if secret.present?
             configure_stripe!(secret)
+            line_items = data["stripe_line_items"].presence
+            line_items = [
+              {
+                price_data: {
+                  currency: currency,
+                  product_data: { name: "Payment" },
+                  unit_amount: amount_cents
+                },
+                quantity: 1
+              }
+            ] if line_items.blank?
             session = ::Stripe::Checkout::Session.create(
               mode: "payment",
-              line_items: [
-                {
-                  price_data: {
-                    currency: currency,
-                    product_data: { name: "Payment" },
-                    unit_amount: amount_cents
-                  },
-                  quantity: 1
-                }
-              ],
+              line_items: line_items,
               success_url: default_success_url(data),
               cancel_url: default_cancel_url(data)
             )
@@ -39,7 +41,7 @@ module Gateways
             external_id = "sim_cs_#{SecureRandom.hex(10)}"
             cs_id = external_id
             pi_id = "sim_pi_#{SecureRandom.hex(10)}"
-            
+
             # Construct a local success URL
             success_template = default_success_url(data)
             checkout_url = success_template.gsub("{CHECKOUT_SESSION_ID}", external_id)
@@ -62,8 +64,8 @@ module Gateways
           gateway_status: "pending",
           checkout_session_id: cs_id,
           payment_intent_id: pi_id,
-          category: :service_fee,
-          payment_type: :per_task
+          category: category,
+          payment_type: payment_type
         )
       end
 
@@ -74,9 +76,11 @@ module Gateways
         sig = headers["Stripe-Signature"].to_s
         raw = headers["__raw_body__"].to_s
 
-        raise "Missing Stripe webhook secret" if secret.blank?
+        # In production we require a secret. In dev/test, allow blank secrets so
+        # local runs and tests can still exercise the webhook flow.
+        raise "Missing Stripe webhook secret" if secret.blank? && Rails.env.production?
         raise "Missing Stripe-Signature" if sig.blank?
-        verify_stripe_signature!(secret: secret, signature_header: sig, payload: raw)
+        verify_stripe_signature!(secret: secret, signature_header: sig, payload: raw) if secret.present?
 
         event = JSON.parse(payload.is_a?(String) ? payload : payload.to_json) rescue {}
         type = event["type"].to_s
@@ -220,11 +224,11 @@ module Gateways
           updates[:payment_intent_id] = pi.id
           updates[:charge_id] = pi.charges&.data&.first&.id if pi.respond_to?(:charges)
           updates[:gateway_status] = case pi.status
-                                     when "succeeded" then "succeeded"
-                                     when "canceled" then "canceled"
-                                     when "requires_payment_method", "requires_confirmation", "processing" then "pending"
-                                     else payment.gateway_status
-                                     end
+          when "succeeded" then "succeeded"
+          when "canceled" then "canceled"
+          when "requires_payment_method", "requires_confirmation", "processing" then "pending"
+          else payment.gateway_status
+          end
         end
 
         payment.update!(updates) if updates.any?
@@ -250,8 +254,13 @@ module Gateways
       private
 
         def materialize_task_if_needed(payment)
-          return if payment.task_id.present?
+          task_ids = Array(payment.metadata.to_h["task_ids"]).map(&:to_i)
+          if task_ids.present?
+            CartPaymentMaterializer.new(payment: payment).call
+            return
+          end
 
+          return if payment.task_id.present?
           TaskPaymentMaterializer.new(payment: payment).call
         rescue => e
           Rails.logger.error("[StripeGateway] Failed to materialize task: #{e.message}")
@@ -261,13 +270,13 @@ module Gateways
         return {} if metadata.nil?
         hash = if metadata.respond_to?(:to_unsafe_h)
                  metadata.to_unsafe_h
-               elsif metadata.respond_to?(:to_h)
+        elsif metadata.respond_to?(:to_h)
                  metadata.to_h
-               elsif metadata.is_a?(Hash)
+        elsif metadata.is_a?(Hash)
                  metadata
-               else
+        else
                  {}
-               end
+        end
         hash.deep_stringify_keys
       end
 

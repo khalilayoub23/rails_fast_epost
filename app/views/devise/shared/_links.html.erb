@@ -1,6 +1,6 @@
 <div class="space-y-3">
   <%- if controller_name != 'sessions' %>
-    <%= link_to new_session_path(resource_name), class: "flex items-center justify-center text-gray-300 hover:text-yellow-400 transition-colors group" do %>
+    <%= link_to new_session_path(resource_name), class: "flex items-center justify-center text-slate-300 hover:text-yellow-400 transition-colors group" do %>
       <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
       </svg>
@@ -9,7 +9,7 @@
   <% end %>
 
   <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-    <%= link_to new_registration_path(resource_name), class: "flex items-center justify-center text-gray-300 hover:text-yellow-400 transition-colors group" do %>
+    <%= link_to new_registration_path(resource_name), class: "flex items-center justify-center text-slate-300 hover:text-yellow-400 transition-colors group" do %>
       <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
       </svg>
@@ -18,19 +18,19 @@
   <% end %>
 
   <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-    <%= link_to new_password_path(resource_name), class: "block text-sm text-gray-400 hover:text-yellow-400 transition-colors text-center" do %>
+    <%= link_to new_password_path(resource_name), class: "block text-sm text-slate-400 hover:text-yellow-400 transition-colors text-center" do %>
       <%= t('forgot_password', default: 'Forgot your password?') %>
     <% end %>
   <% end %>
 
   <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
-    <%= link_to new_confirmation_path(resource_name), class: "block text-xs text-gray-500 hover:text-gray-400 transition-colors text-center" do %>
+    <%= link_to new_confirmation_path(resource_name), class: "block text-xs text-slate-500 hover:text-slate-300 transition-colors text-center" do %>
       <%= t('no_confirmation_instructions', default: "Didn't receive confirmation instructions?") %>
     <% end %>
   <% end %>
 
   <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
-    <%= link_to new_unlock_path(resource_name), class: "block text-xs text-gray-500 hover:text-gray-400 transition-colors text-center" do %>
+    <%= link_to new_unlock_path(resource_name), class: "block text-xs text-slate-500 hover:text-slate-300 transition-colors text-center" do %>
       <%= t('no_unlock_instructions', default: "Didn't receive unlock instructions?") %>
     <% end %>
   <% end %>

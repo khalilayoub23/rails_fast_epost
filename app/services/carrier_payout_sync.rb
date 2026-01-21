@@ -32,7 +32,7 @@ class CarrierPayoutSync
   def group_payments
     groups = Hash.new { |hash, key| hash[key] = [] }
     payments_relation.find_each(batch_size: 200) do |payment|
-      groups[[payment.payable_id, payment.task_id]] << payment
+      groups[[ payment.payable_id, payment.task_id ]] << payment
     end
     groups
   end
@@ -117,7 +117,7 @@ class CarrierPayoutSync
     scope = scope.where(task_id: task_id) if task_id.present?
 
     scope.find_each do |payout|
-      key = [payout.carrier_id, payout.task_id]
+      key = [ payout.carrier_id, payout.task_id ]
       next if key_set.include?(key)
 
       payout.destroy!

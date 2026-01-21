@@ -18,32 +18,32 @@
 
 <% currency = "USD" %>
 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-  <div class="rounded-2xl border border-white/5 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <p class="text-xs font-semibold uppercase tracking-wide text-slate-300">Active Tasks</p>
     <p class="mt-2 text-4xl font-bold text-white"><%= @kpis[:active_tasks] %></p>
     <p class="text-sm text-slate-400">Pending / In transit shipments</p>
   </div>
-  <div class="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5">
+  <div class="rounded-2xl border border-rose-500/30 bg-rose-500/10 backdrop-blur p-5">
     <p class="text-xs font-semibold uppercase tracking-wide text-rose-200">At Risk</p>
     <p class="mt-2 text-4xl font-bold text-rose-100"><%= @kpis[:delayed_tasks] %></p>
     <p class="text-sm text-rose-200/70">In-transit past SLA (12h)</p>
   </div>
-  <div class="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5">
+  <div class="rounded-2xl border border-amber-400/30 bg-amber-400/10 backdrop-blur p-5">
     <p class="text-xs font-semibold uppercase tracking-wide text-amber-200">Failed / Investigations</p>
     <p class="mt-2 text-4xl font-bold text-amber-100"><%= @kpis[:failed_tasks] %></p>
     <p class="text-sm text-amber-200/70">Awaiting remediation</p>
   </div>
-  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-5">
+  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 backdrop-blur p-5">
     <p class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Outstanding carrier payouts</p>
     <p class="mt-2 text-3xl font-bold text-emerald-100"><%= number_to_currency(@kpis[:outstanding_payouts_cents].to_i / 100.0, unit: currency) %></p>
     <p class="text-sm text-emerald-200/70">Scheduled + pending carrier disbursements</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <p class="text-xs font-semibold uppercase tracking-wide text-slate-300">Active Carriers</p>
     <p class="mt-2 text-4xl font-bold text-white"><%= @kpis[:carriers_online] %></p>
     <p class="text-sm text-slate-400">Connected carrier partners</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <p class="text-xs font-semibold uppercase tracking-wide text-slate-300">Active Senders</p>
     <p class="mt-2 text-4xl font-bold text-white"><%= @kpis[:active_senders] %></p>
     <p class="text-sm text-slate-400">Shippers with activity this quarter</p>
@@ -51,14 +51,14 @@
 </div>
 
 <div class="grid gap-6 lg:grid-cols-2 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-semibold text-white">Carrier performance</h2>
       <span class="text-xs text-slate-400">Top 5 by rating</span>
     </div>
     <ul class="space-y-3">
       <% @carrier_leaderboard.each do |carrier| %>
-        <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+        <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
           <div>
             <p class="font-semibold text-white"><%= carrier.name %></p>
             <p class="text-xs text-slate-400">Ratings: <%= carrier.ratings_count %></p>
@@ -71,7 +71,7 @@
       <% end %>
     </ul>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-semibold text-white">Payout alerts</h2>
       <span class="text-xs text-slate-400">Oldest first</span>
@@ -94,14 +94,14 @@
 </div>
 
 <div class="grid gap-6 lg:grid-cols-2 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-semibold text-white">Late-stage shipments</h2>
       <span class="text-xs text-slate-400">Escalate before SLA breach</span>
     </div>
     <ul class="space-y-3">
       <% @late_tasks.each do |task| %>
-        <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+        <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
           <div>
             <p class="text-sm font-semibold text-white"><%= task.barcode %></p>
             <p class="text-xs text-slate-400">Carrier: <%= task.carrier&.name || 'Unassigned' %></p>
@@ -114,14 +114,14 @@
       <% end %>
     </ul>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-semibold text-white">Incident feed</h2>
       <span class="text-xs text-slate-400">Latest tracking events</span>
     </div>
     <ul class="space-y-3">
       <% @incident_feed.each do |event| %>
-        <li class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+        <li class="rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
           <div class="flex items-center justify-between">
             <p class="text-sm font-semibold text-white"><%= event.title %></p>
             <span class="text-xs text-slate-400"><%= l(event.occurred_at, format: :short) %></span>

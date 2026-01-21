@@ -20,16 +20,16 @@ Rails.application.routes.draw do
   post "/checkout", to: "checkout#create", as: :checkout
   get "/checkout/success", to: "checkout#success", as: :checkout_success
   get "/checkout/cancel", to: "checkout#cancel", as: :checkout_cancel
-  
+
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
   }
-  
+
   # Root route - public homepage for non-authenticated users
   authenticated :user do
     root to: "dashboard#index", as: :authenticated_root
   end
-  
+
   root "pages#home"
 
   namespace :control_panel, path: "/control", as: :control_panel do
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
       get "/", to: "dashboards#show", as: :dashboard
     end
   end
-  
+
   # Dashboard for authenticated users
   get "/dashboard", to: "dashboard#index", as: :dashboard
 
@@ -81,6 +81,15 @@ Rails.application.routes.draw do
   # Payments for tasks require dedicated success/cancel handlers
   get "/tasks/payment/success", to: "tasks#payment_success", as: :task_payment_success
   get "/tasks/payment/cancel", to: "tasks#payment_cancel", as: :task_payment_cancel
+
+  # Cart / basket checkout for paying multiple unpaid tasks
+  resource :cart, only: [ :show ] do
+    post :checkout
+    get :success
+    get :cancel
+    post :add_item
+    delete "items/:id", to: "carts#remove_item", as: :item
+  end
 
   # Tasks are nested under customers but also need standalone routes.
   # The standalone routes must be defined before the shallow routes
@@ -211,7 +220,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :contact_inquiries, only: [:index, :show, :update]
+    resources :contact_inquiries, only: [ :index, :show, :update ]
 
     root to: "dashboard#index", as: :root
     get "dashboard", to: "dashboard#index", as: :dashboard

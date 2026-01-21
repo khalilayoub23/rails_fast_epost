@@ -114,6 +114,8 @@ class ApplicationController < ActionController::Base
     message = t("messages.unauthorized", default: "You are not authorized to perform this action.")
     respond_to do |format|
       format.html do
+        safe_fallback = request.path == root_path ? landing_page_path : root_path
+
         referer_path = nil
         if request.referer.present?
           begin
@@ -124,9 +126,9 @@ class ApplicationController < ActionController::Base
         end
 
         if referer_path.present? && referer_path != request.path
-          redirect_back fallback_location: landing_page_path, alert: message
+          redirect_back fallback_location: safe_fallback, alert: message
         else
-          redirect_to landing_page_path, alert: message
+          redirect_to safe_fallback, alert: message
         end
       end
       format.json { render json: { error: message }, status: :forbidden }
@@ -145,11 +147,11 @@ class ApplicationController < ActionController::Base
   def set_locale
     locale = extract_locale
     I18n.locale = locale
-    
+
     if locale != session[:locale]
       session[:locale] = locale
     end
-    
+
     # Update user preference if they explicitly switched via params
     if params[:locale].present? && current_user && current_user.respond_to?(:preferred_language) && current_user.preferred_language != locale.to_s
       current_user.update_column(:preferred_language, locale)

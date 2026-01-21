@@ -6,7 +6,7 @@ class TaskPolicy < ApplicationPolicy
   def show?
     return false unless user
 
-    admin? || manager? || support_agent? || warehouse_agent? || sender_owner? || carrier_member?
+    admin? || manager? || support_agent? || warehouse_agent? || sender_owner? || carrier_member? || lawyer_assigned?
   end
 
   def create?
@@ -20,6 +20,7 @@ class TaskPolicy < ApplicationPolicy
 
     return true if admin? || manager?
     return true if warehouse_agent?
+    return true if lawyer_assigned?
     sender_owner? && record.status_pending?
   end
 
@@ -35,7 +36,12 @@ class TaskPolicy < ApplicationPolicy
       if user.carrier_staff?
         carrier_ids = user.carriers.select(:id)
         scope.where(carrier_id: carrier_ids)
+      elsif user.lawyer?
+        # Lawyers can see tasks assigned to their Lawyer profile.
+        lawyer_id = Lawyer.find_by(email: user.email)&.id
+        lawyer_id ? scope.where(lawyer_id: lawyer_id) : scope.none
       else
+        # Senders and ecommerce sellers see their own tasks
         scope.where(sender_id: user.id)
       end
     end
@@ -53,7 +59,14 @@ class TaskPolicy < ApplicationPolicy
     user.carriers.where(id: record.carrier_id).exists?
   end
 
+  def lawyer_assigned?
+    return false unless user.lawyer? && record.respond_to?(:lawyer_id) && record.lawyer_id.present?
+
+    lawyer_id = @lawyer_id ||= Lawyer.find_by(email: user.email)&.id
+    lawyer_id.present? && record.lawyer_id == lawyer_id
+  end
+
   def sender_role?
-    user.user_type_sender? || user.user_type_ecommerce_seller? || user.user_type_lawyer?
+    user.sender_role? || user.lawyer? || user.ecommerce_seller?
   end
 end

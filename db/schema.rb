@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_23_090000) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_02_090003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -109,6 +109,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_090000) do
     t.integer "ratings_count", default: 0, null: false
     t.decimal "average_overall_rating", precision: 4, scale: 2, default: "0.0", null: false
     t.decimal "average_sender_rating", precision: 4, scale: 2, default: "0.0", null: false
+  end
+
+  create_table "cart_items", force: :cascade do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "task_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id", "task_id"], name: "index_cart_items_on_cart_id_and_task_id", unique: true
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["task_id"], name: "index_cart_items_on_task_id"
+  end
+
+  create_table "carts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_carts_on_user_id", unique: true
   end
 
   create_table "contact_inquiries", force: :cascade do |t|
@@ -663,6 +680,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_23_090000) do
   add_foreign_key "carrier_payouts", "tasks"
   add_foreign_key "carrier_ratings", "carriers"
   add_foreign_key "carrier_ratings", "tasks"
+  add_foreign_key "cart_items", "carts"
+  add_foreign_key "cart_items", "tasks"
+  add_foreign_key "carts", "users"
   add_foreign_key "cost_calcs", "tasks", on_delete: :cascade
   add_foreign_key "deliveries", "users", column: "courier_id"
   add_foreign_key "deliveries", "users", column: "recipient_id"

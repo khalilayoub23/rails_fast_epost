@@ -3,6 +3,8 @@ require "securerandom"
 
 class CarrierRatingsUiTest < ApplicationSystemTestCase
   setup do
+    CarrierMembership.delete_all
+    ProofUpload.delete_all
     User.delete_all
     @admin = User.create!(
       email: "admin-#{SecureRandom.hex(4)}@example.com",
@@ -110,7 +112,7 @@ class CarrierRatingsUiTest < ApplicationSystemTestCase
       name: "Customer #{SecureRandom.hex(2)}",
       email: "customer-#{SecureRandom.hex(2)}@example.com",
       address: "200 Customer Lane",
-      phones: ["+15550000000"],
+      phones: [ "+15550000000" ],
       category: :individual
     )
 
@@ -153,6 +155,7 @@ class CarrierRatingsUiTest < ApplicationSystemTestCase
 
   def purge_carrier_dependencies
     CarrierRating.delete_all
+    CarrierPayout.delete_all
     Task.delete_all
     Document.delete_all
     FormTemplate.delete_all

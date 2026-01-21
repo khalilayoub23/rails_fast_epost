@@ -3,18 +3,18 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <nav class="flex text-sm text-body" aria-label="Breadcrumb">
+      <nav class="flex text-sm text-slate-300" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <%= link_to root_path, class: "text-body hover:text-dark" do %>
+            <%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
               <span class="material-icons text-sm mr-1">home</span>
               Home
             <% end %>
           </li>
           <li>
             <div class="flex items-center">
-              <span class="material-icons text-sm text-body mx-1">chevron_right</span>
-              <span class="text-dark font-medium">Payments</span>
+              <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+              <span class="text-white font-medium">Payments</span>
             </div>
           </li>
         </ol>
@@ -24,20 +24,20 @@
 
   <%= turbo_stream_from "payments" %>
 
-  <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default">
+  <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
     <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-title-md font-semibold text-dark">All Payments</h2>
+      <h2 class="text-xl font-semibold text-white">All Payments</h2>
     </div>
     <div class="max-w-full overflow-x-auto">
       <table class="w-full table-auto">
         <thead>
-          <tr class="bg-gray-2 text-left">
-            <th class="min-w-[120px] px-4 py-4 font-medium text-dark">ID</th>
-            <th class="min-w-[150px] px-4 py-4 font-medium text-dark">Provider</th>
-            <th class="min-w-[150px] px-4 py-4 font-medium text-dark">Status</th>
-            <th class="min-w-[150px] px-4 py-4 font-medium text-dark">Amount</th>
-            <th class="min-w-[100px] px-4 py-4 font-medium text-dark">Currency</th>
-            <th class="px-4 py-4 text-right font-medium text-dark">Actions</th>
+          <tr class="bg-white/5 text-left border-b border-white/10">
+            <th class="min-w-[140px] px-4 py-4 font-semibold text-slate-200">Payment ID</th>
+            <th class="min-w-[150px] px-4 py-4 font-semibold text-slate-200">Provider</th>
+            <th class="min-w-[150px] px-4 py-4 font-semibold text-slate-200">Status</th>
+            <th class="min-w-[150px] px-4 py-4 font-semibold text-slate-200">Amount</th>
+            <th class="min-w-[100px] px-4 py-4 font-semibold text-slate-200">Currency</th>
+            <th class="px-4 py-4 text-right font-semibold text-slate-200">Actions</th>
           </tr>
         </thead>
         <tbody id="payments">

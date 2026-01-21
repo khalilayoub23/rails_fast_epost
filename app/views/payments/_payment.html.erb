@@ -1,14 +1,17 @@
-<tr id="<%= dom_id(payment) %>" class="border-b border-gray-700 hover:bg-gray-900/30 transition-colors">
+<tr id="<%= dom_id(payment) %>" class="border-b border-white/10 hover:bg-white/5 transition-colors">
   <td class="px-4 py-4">
     <%= link_to payment_path(payment), class: "text-sm font-medium text-yellow-400 hover:text-yellow-300 transition-colors" do %>
       #<%= payment.id %>
     <% end %>
   </td>
-  <td class="px-4 py-4 text-sm text-gray-300"><%= payment.provider.presence || "-" %></td>
+  <td class="px-4 py-4 text-sm text-slate-300"><%= payment.provider.to_s.titleize.presence || "-" %></td>
   <td class="px-4 py-4"><%= render "shared/status_badge", status: payment.gateway_status %></td>
-  <td class="px-4 py-4 text-sm text-gray-300"><%= payment.amount_cents ? ("%.2f" % (payment.amount_cents / 100.0)) : "-" %></td>
-  <td class="px-4 py-4 text-sm text-gray-400"><%= payment.currency %></td>
+  <td class="px-4 py-4 text-sm text-slate-300">
+    <% unit = payment.currency.to_s.upcase.presence || "USD" %>
+    <%= payment.amount_cents ? number_to_currency(payment.amount_cents / 100.0, unit: unit) : "-" %>
+  </td>
+  <td class="px-4 py-4 text-sm text-slate-400"><%= payment.currency.to_s.upcase.presence || "-" %></td>
   <td class="px-4 py-4 text-right text-sm font-medium">
-    <%= link_to t('dashboard.view', default: 'View'), payment_path(payment), class: "inline-flex items-center justify-center rounded-lg border border-gray-600 bg-gray-800/50 px-3 py-1.5 text-xs font-medium text-gray-300 hover:bg-gray-700 hover:border-yellow-400/50 hover:text-yellow-400 transition-all" %>
+    <%= link_to t('dashboard.view', default: 'View'), payment_path(payment), class: "inline-flex items-center justify-center rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-white/10 hover:border-yellow-400/50 hover:text-yellow-300 transition" %>
   </td>
 </tr>

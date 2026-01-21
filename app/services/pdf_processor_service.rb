@@ -3,7 +3,7 @@ require "stringio"
 require "hexapdf"
 
 class PdfProcessorService
-  BARCODE_POSITION = [450, 750].freeze
+  BARCODE_POSITION = [ 450, 750 ].freeze
   BARCODE_WIDTH = 100
 
   def initialize(delivery)
@@ -13,7 +13,7 @@ class PdfProcessorService
   def add_system_barcode_to_court_pdf
     return unless delivery.original_court_pdf.attached?
 
-    Tempfile.create(["delivery-original", ".pdf"]) do |input|
+    Tempfile.create([ "delivery-original", ".pdf" ]) do |input|
       delivery.original_court_pdf.download { |chunk| input.write(chunk) }
       input.rewind
 
@@ -21,7 +21,7 @@ class PdfProcessorService
       inject_barcode(document)
       embed_attempt_metadata(document)
 
-      Tempfile.create(["delivery-base", ".pdf"]) do |output|
+      Tempfile.create([ "delivery-base", ".pdf" ]) do |output|
         document.write(output.path, optimize: true)
         output.rewind
         attach_as_base_and_current(output, source: "original")
@@ -65,7 +65,7 @@ class PdfProcessorService
         attempt.occurred_at&.iso8601,
         (location.present? ? "(#{location["lat"]}, #{location["lng"]})" : nil)
       ].compact.join(" ")
-      canvas.text(text, at: [50, y])
+      canvas.text(text, at: [ 50, y ])
     end
   end
 

@@ -54,7 +54,7 @@ class DeliveriesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, @delivery.case_number
-    refute_includes response.body, alternate_delivery.case_number
+    assert_not_includes response.body, alternate_delivery.case_number
   end
 
   test "recipient cannot create delivery due to pundit policy" do

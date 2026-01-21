@@ -6,11 +6,11 @@
 <% providers.each do |provider| %>
   <% label, button_class, icon_name = case provider
     when :google_oauth2
-      ["Google", "bg-white/90 text-gray-900 hover:bg-white hover:shadow-xl", :google]
+      ["Google", "bg-white/90 text-black hover:bg-white/95 hover:shadow-xl", :google]
     when :facebook
       ["Facebook", "bg-[#1877F2] text-white hover:bg-[#2d88ff]", :facebook]
     else
-      [provider.to_s.titleize, "bg-gray-800 text-white hover:bg-gray-700", :default]
+      [provider.to_s.titleize, "bg-white/5 text-white hover:bg-white/10", :default]
     end %>
   <%= button_to omniauth_authorize_path(resource_name, provider), data: { turbo: false }, class: "group flex w-full items-center justify-center gap-3 rounded-2xl border border-white/10 px-5 py-3 text-sm font-semibold transition-all #{button_class}" do %>
     <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/10">

@@ -1,6 +1,6 @@
 <div data-controller="cookie-consent"
      data-cookie-consent-target="banner"
-     class="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md bg-gray-900/95 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-2xl z-50 hidden transition-all duration-500 transform translate-y-full opacity-0">
+  class="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md bg-zinc-950/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-2xl z-50 hidden transition-all duration-500 transform translate-y-full opacity-0">
   <div class="flex flex-col gap-4" dir="<%= I18n.t('direction') %>">
     <div class="flex items-start gap-4">
       <div class="p-2 bg-yellow-400/10 rounded-lg text-yellow-400 shrink-0">
@@ -8,13 +8,13 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       </div>
-      <p class="text-gray-300 text-sm leading-relaxed">
+      <p class="text-slate-200 text-sm leading-relaxed">
         <%= t('cookie_message') %>
       </p>
     </div>
     <div class="flex gap-3 justify-end">
-      <%= link_to t('cookie_learn_more'), pages_privacy_policy_path, class: "px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors" %>
-      <button data-action="click->cookie-consent#accept" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded-xl text-sm transition-all shadow-lg hover:shadow-yellow-400/20">
+      <%= link_to t('cookie_learn_more'), pages_privacy_policy_path, class: "px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors" %>
+      <button data-action="click->cookie-consent#accept" class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2 px-6 rounded-xl text-sm transition-all shadow-lg hover:shadow-yellow-400/20">
         <%= t('cookie_accept') %>
       </button>
     </div>

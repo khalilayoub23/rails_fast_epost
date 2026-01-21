@@ -1,19 +1,19 @@
 <div class="p-6">
   <!-- Page Header -->
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Database Management</h1>
-    <p class="mt-2 text-sm text-gray-600">Export, import, and backup your database</p>
+    <h1 class="text-title-md2 font-bold text-white">Database Management</h1>
+    <p class="mt-2 text-sm text-slate-300">Export, import, and backup your database</p>
   </div>
 
   <!-- Database Statistics -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white rounded-lg shadow p-6">
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-3 mb-8">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600">Database Size</p>
-          <p class="text-2xl font-bold text-gray-900"><%= @stats[:size] %></p>
+          <p class="text-sm text-slate-300">Database Size</p>
+          <p class="text-2xl font-bold text-white"><%= @stats[:size] %></p>
         </div>
-        <div class="text-blue-500">
+        <div class="text-sky-300">
           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
           </svg>
@@ -21,13 +21,13 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600">Total Tables</p>
-          <p class="text-2xl font-bold text-gray-900"><%= @stats[:tables].count %></p>
+          <p class="text-sm text-slate-300">Total Tables</p>
+          <p class="text-2xl font-bold text-white"><%= @stats[:tables].count %></p>
         </div>
-        <div class="text-green-500">
+        <div class="text-emerald-300">
           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
           </svg>
@@ -35,13 +35,13 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-600">Recent Backups</p>
-          <p class="text-2xl font-bold text-gray-900"><%= @stats[:recent_backups].count %></p>
+          <p class="text-sm text-slate-300">Recent Backups</p>
+          <p class="text-2xl font-bold text-white"><%= @stats[:recent_backups].count %></p>
         </div>
-        <div class="text-purple-500">
+        <div class="text-purple-300">
           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
           </svg>
@@ -51,76 +51,76 @@
   </div>
 
   <!-- Quick Actions -->
-  <div class="bg-white rounded-lg shadow mb-8">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-lg font-semibold text-gray-900">Quick Actions</h2>
+  <div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur mb-8">
+    <div class="px-6 py-4 border-b border-white/10">
+      <h2 class="text-lg font-semibold text-white">Quick Actions</h2>
     </div>
     <div class="p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Full Backup -->
-        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 transition">
-          <div class="text-blue-600 mb-2">
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+          <div class="text-sky-300 mb-2">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
             </svg>
           </div>
-          <h3 class="font-semibold text-gray-900 mb-1">Full Backup</h3>
-          <p class="text-sm text-gray-600 mb-3">Download complete SQL backup</p>
+          <h3 class="font-semibold text-white mb-1">Full Backup</h3>
+          <p class="text-sm text-slate-300 mb-3">Download complete SQL backup</p>
           <%= link_to "Download", admin_database_backup_path, 
-            class: "inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium w-full text-center" %>
+            class: "inline-flex w-full items-center justify-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300" %>
         </div>
 
         <!-- Export SQL -->
         <%= form_with url: admin_database_export_path, method: :post, class: "contents" do |f| %>
-          <div class="border border-gray-200 rounded-lg p-4">
-            <div class="text-green-600 mb-2">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+            <div class="text-emerald-300 mb-2">
               <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
             </div>
-            <h3 class="font-semibold text-gray-900 mb-1">Export SQL</h3>
-            <p class="text-sm text-gray-600 mb-3">Export specific table to SQL</p>
+            <h3 class="font-semibold text-white mb-1">Export SQL</h3>
+            <p class="text-sm text-slate-300 mb-3">Export specific table to SQL</p>
             <%= f.hidden_field :format, value: "sql" %>
             <%= f.select :table, options_for_select(@stats[:tables].map { |t| [t[:name].titleize, t[:name]] }), 
               { include_blank: "All Tables" },
-              class: "w-full mb-2 px-3 py-2 border border-gray-300 rounded text-sm" %>
-            <%= f.submit "Export", class: "px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium w-full" %>
+              class: "w-full mb-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
+            <%= f.submit "Export", class: "inline-flex w-full items-center justify-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300" %>
           </div>
         <% end %>
 
         <!-- Export CSV -->
         <%= form_with url: admin_database_export_path, method: :post, class: "contents" do |f| %>
-          <div class="border border-gray-200 rounded-lg p-4">
-            <div class="text-yellow-600 mb-2">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+            <div class="text-yellow-300 mb-2">
               <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
             </div>
-            <h3 class="font-semibold text-gray-900 mb-1">Export CSV</h3>
-            <p class="text-sm text-gray-600 mb-3">Export table to spreadsheet</p>
+            <h3 class="font-semibold text-white mb-1">Export CSV</h3>
+            <p class="text-sm text-slate-300 mb-3">Export table to spreadsheet</p>
             <%= f.hidden_field :format, value: "csv" %>
             <%= f.select :table, options_for_select(@stats[:tables].map { |t| [t[:name].titleize, t[:name]] }), 
               { prompt: "Select Table" },
-              class: "w-full mb-2 px-3 py-2 border border-gray-300 rounded text-sm" %>
-            <%= f.submit "Export CSV", class: "px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm font-medium w-full" %>
+              class: "w-full mb-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
+            <%= f.submit "Export CSV", class: "inline-flex w-full items-center justify-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300" %>
           </div>
         <% end %>
 
         <!-- Import CSV -->
         <%= form_with url: admin_database_import_path, method: :post, multipart: true, class: "contents" do |f| %>
-          <div class="border border-gray-200 rounded-lg p-4">
-            <div class="text-purple-600 mb-2">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+            <div class="text-purple-300 mb-2">
               <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
               </svg>
             </div>
-            <h3 class="font-semibold text-gray-900 mb-1">Import CSV</h3>
-            <p class="text-sm text-gray-600 mb-3">Import data from CSV file</p>
+            <h3 class="font-semibold text-white mb-1">Import CSV</h3>
+            <p class="text-sm text-slate-300 mb-3">Import data from CSV file</p>
             <%= f.select :table, options_for_select(@stats[:tables].map { |t| [t[:name].titleize, t[:name]] }), 
               { prompt: "Select Table" },
-              class: "w-full mb-2 px-3 py-2 border border-gray-300 rounded text-sm" %>
-            <%= f.file_field :file, accept: ".csv", class: "w-full mb-2 text-sm" %>
-            <%= f.submit "Import", class: "px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm font-medium w-full" %>
+              class: "w-full mb-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
+            <%= f.file_field :file, accept: ".csv", class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/15" %>
+            <%= f.submit "Import", class: "inline-flex w-full items-center justify-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300" %>
           </div>
         <% end %>
       </div>
@@ -128,38 +128,38 @@
   </div>
 
   <!-- Table Statistics -->
-  <div class="bg-white rounded-lg shadow mb-8">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-lg font-semibold text-gray-900">Table Statistics</h2>
+  <div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur mb-8">
+    <div class="px-6 py-4 border-b border-white/10">
+      <h2 class="text-lg font-semibold text-white">Table Statistics</h2>
     </div>
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+      <table class="min-w-full divide-y divide-white/10">
+        <thead class="bg-white/5">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Table</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Records</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Size</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Table</th>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Records</th>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Size</th>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Actions</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="divide-y divide-white/10">
           <% @stats[:tables].each do |table| %>
-            <tr class="hover:bg-gray-50">
+            <tr class="hover:bg-white/5">
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="font-medium text-gray-900"><%= table[:name].titleize %></span>
-                <span class="text-xs text-gray-500 ml-2">(<%= table[:name] %>)</span>
+                <span class="font-medium text-white"><%= table[:name].titleize %></span>
+                <span class="text-xs text-slate-400 ml-2">(<%= table[:name] %>)</span>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
                 <%= number_with_delimiter(table[:count]) %>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                 <%= table[:size] %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
                 <%= link_to "Export SQL", admin_database_export_path(format: "sql", table: table[:name]), 
-                  method: :post, class: "text-blue-600 hover:text-blue-800 mr-3" %>
+                  method: :post, class: "text-sky-300 hover:text-sky-200 mr-3" %>
                 <%= link_to "Export CSV", admin_database_export_path(format: "csv", table: table[:name]), 
-                  method: :post, class: "text-green-600 hover:text-green-800" %>
+                  method: :post, class: "text-emerald-300 hover:text-emerald-200" %>
               </td>
             </tr>
           <% end %>
@@ -170,29 +170,29 @@
 
   <!-- Recent Backups -->
   <% if @stats[:recent_backups].any? %>
-    <div class="bg-white rounded-lg shadow">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Recent Backups</h2>
+    <div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur">
+      <div class="px-6 py-4 border-b border-white/10">
+        <h2 class="text-lg font-semibold text-white">Recent Backups</h2>
       </div>
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-white/10">
+          <thead class="bg-white/5">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Filename</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Size</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Filename</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Size</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Created</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="divide-y divide-white/10">
             <% @stats[:recent_backups].each do |backup| %>
-              <tr class="hover:bg-gray-50">
+              <tr class="hover:bg-white/5">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <code class="bg-gray-100 px-2 py-1 rounded text-xs"><%= backup[:name] %></code>
+                  <code class="rounded bg-white/10 px-2 py-1 text-xs text-slate-200"><%= backup[:name] %></code>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
                   <%= number_to_human_size(backup[:size]) %>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                   <%= time_ago_in_words(backup[:created_at]) %> ago
                 </td>
               </tr>

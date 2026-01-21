@@ -1,99 +1,125 @@
 <%# app/views/admin/senders/show.html.erb %>
-<div class="page-header flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-bold"><%= @sender.display_name %></h1>
+<div class="flex items-start justify-between gap-4 mb-6">
   <div>
-    <%= link_to 'Edit', edit_admin_sender_path(@sender), class: 'btn btn-secondary' %>
-    <%= link_to 'Back', admin_senders_path, class: 'btn btn-outline ml-2' %>
+    <h1 class="text-2xl font-bold text-white"><%= @sender.display_name %></h1>
+    <p class="mt-1 text-sm text-slate-400">Sender profile, task history, and ratings.</p>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= link_to "Edit", edit_admin_sender_path(@sender), class: "inline-flex items-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15" %>
+    <%= link_to "Back", admin_senders_path, class: "inline-flex items-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15" %>
   </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-  <div class="bg-white rounded shadow p-6">
-    <h2 class="font-semibold text-lg mb-2">Sender Details</h2>
-    <dl class="divide-y">
-      <dt class="font-medium">Type</dt>
-      <dd class="mb-2"><span class="badge badge-info"><%= @sender.sender_type.titleize %></span></dd>
-      <dt class="font-medium">Email</dt>
-      <dd class="mb-2"><%= @sender.email %></dd>
-      <dt class="font-medium">Phone</dt>
-      <dd class="mb-2"><%= @sender.phone %></dd>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h2 class="font-semibold text-lg text-white mb-4">Sender Details</h2>
+    <dl class="divide-y divide-white/10">
+      <div class="py-3">
+        <dt class="text-sm font-semibold text-slate-300">Type</dt>
+        <dd class="mt-2"><span class="inline-flex items-center rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-slate-200"><%= @sender.sender_type.titleize %></span></dd>
+      </div>
+      <div class="py-3">
+        <dt class="text-sm font-semibold text-slate-300">Email</dt>
+        <dd class="mt-1 text-sm text-slate-200"><%= @sender.email %></dd>
+      </div>
+      <div class="py-3">
+        <dt class="text-sm font-semibold text-slate-300">Phone</dt>
+        <dd class="mt-1 text-sm text-slate-200"><%= @sender.phone %></dd>
+      </div>
       <% if @sender.company_name.present? %>
-        <dt class="font-medium">Company</dt>
-        <dd class="mb-2"><%= @sender.company_name %></dd>
+        <div class="py-3">
+          <dt class="text-sm font-semibold text-slate-300">Company</dt>
+          <dd class="mt-1 text-sm text-slate-200"><%= @sender.company_name %></dd>
+        </div>
       <% end %>
       <% if @sender.tax_id.present? %>
-        <dt class="font-medium">Tax ID</dt>
-        <dd class="mb-2"><%= @sender.tax_id %></dd>
+        <div class="py-3">
+          <dt class="text-sm font-semibold text-slate-300">Tax ID</dt>
+          <dd class="mt-1 text-sm font-mono text-slate-200"><%= @sender.tax_id %></dd>
+        </div>
       <% end %>
       <% if @sender.business_registration.present? %>
-        <dt class="font-medium">Business Registration</dt>
-        <dd class="mb-2"><%= @sender.business_registration %></dd>
+        <div class="py-3">
+          <dt class="text-sm font-semibold text-slate-300">Business Registration</dt>
+          <dd class="mt-1 text-sm font-mono text-slate-200"><%= @sender.business_registration %></dd>
+        </div>
       <% end %>
-      <dt class="font-medium">Address</dt>
-      <dd class="mb-2"><%= @sender.address %></dd>
+      <div class="py-3">
+        <dt class="text-sm font-semibold text-slate-300">Address</dt>
+        <dd class="mt-1 text-sm text-slate-200 whitespace-pre-wrap"><%= @sender.address %></dd>
+      </div>
       <% if @sender.notes.present? %>
-        <dt class="font-medium">Notes</dt>
-        <dd class="mb-2"><%= @sender.notes %></dd>
+        <div class="py-3">
+          <dt class="text-sm font-semibold text-slate-300">Notes</dt>
+          <dd class="mt-1 text-sm text-slate-200 whitespace-pre-wrap"><%= @sender.notes %></dd>
+        </div>
       <% end %>
     </dl>
   </div>
-  <div class="bg-white rounded shadow p-6">
-    <h2 class="font-semibold text-lg mb-2">Task Stats</h2>
-    <ul class="mb-4">
-      <li>Total Tasks: <span class="font-bold"><%= @task_stats[:total] %></span></li>
-      <li>Pending: <span class="font-bold"><%= @task_stats[:pending] %></span></li>
-      <li>In Transit: <span class="font-bold"><%= @task_stats[:in_transit] %></span></li>
-      <li>Delivered: <span class="font-bold"><%= @task_stats[:delivered] %></span></li>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h2 class="font-semibold text-lg text-white mb-4">Task Stats</h2>
+    <ul class="space-y-2 text-sm text-slate-200 mb-5">
+      <li class="flex items-center justify-between"><span>Total Tasks</span><span class="font-semibold text-white"><%= @task_stats[:total] %></span></li>
+      <li class="flex items-center justify-between"><span>Pending</span><span class="font-semibold text-white"><%= @task_stats[:pending] %></span></li>
+      <li class="flex items-center justify-between"><span>In Transit</span><span class="font-semibold text-white"><%= @task_stats[:in_transit] %></span></li>
+      <li class="flex items-center justify-between"><span>Delivered</span><span class="font-semibold text-white"><%= @task_stats[:delivered] %></span></li>
     </ul>
-    <h3 class="font-semibold mb-2">Recent Tasks</h3>
-    <ul>
+
+    <h3 class="text-sm font-semibold text-white mb-2">Recent Tasks</h3>
+    <ul class="space-y-1 text-sm">
       <% @recent_tasks.each do |task| %>
         <li>
-          <%= link_to task.barcode, task_path(task), class: 'text-blue-700 hover:underline' %>
-          <span class="ml-2 text-xs text-gray-500">(<%= task.status.titleize %>)</span>
+          <%= link_to task.barcode, task_path(task), class: "font-mono text-yellow-200 hover:text-yellow-100" %>
+          <span class="ml-2 text-xs text-slate-400">(<%= task.status.titleize %>)</span>
         </li>
       <% end %>
     </ul>
   </div>
 
-  <div class="bg-white rounded shadow p-6">
-    <h2 class="font-semibold text-lg mb-2">Carrier Experience</h2>
+  <div class="md:col-span-2 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+    <h2 class="font-semibold text-lg text-white mb-4">Carrier Experience</h2>
     <% if @carrier_performance.present? %>
-      <div class="mb-4">
-        <div class="text-sm text-gray-500">Average Carrier Score</div>
-        <div class="text-3xl font-bold text-dark"><%= display_rating(@sender_average_carrier_score) %></div>
+      <div class="mb-5">
+        <div class="text-sm text-slate-300">Average Carrier Score</div>
+        <div class="mt-2 text-3xl font-bold text-white"><%= display_rating(@sender_average_carrier_score) %></div>
       </div>
-      <table class="table-auto w-full">
-        <thead>
-          <tr>
-            <th class="px-2 py-1 text-left">Carrier</th>
-            <th class="px-2 py-1 text-left">Overall</th>
-            <th class="px-2 py-1 text-left">Sender</th>
-            <th class="px-2 py-1 text-left">Recipient</th>
-            <th class="px-2 py-1 text-left">Completion</th>
-            <th class="px-2 py-1 text-left">Delivered</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @carrier_performance.each do |carrier| %>
+      <div class="overflow-x-auto rounded-xl border border-white/10">
+        <table class="min-w-full divide-y divide-white/10">
+          <thead class="bg-white/5">
             <tr>
-              <td class="px-2 py-1 font-medium"><%= link_to carrier.name, carrier_path(carrier), class: 'text-blue-700 hover:underline' %></td>
-              <% summary = carrier.rating_summary %>
-              <td class="px-2 py-1"><%= display_rating(summary[:average_overall_rating]) %></td>
-              <td class="px-2 py-1"><%= display_rating(summary[:average_sender_rating]) %></td>
-              <td class="px-2 py-1"><%= display_rating(summary[:average_recipient_rating]) %></td>
-              <td class="px-2 py-1"><%= display_rating(summary[:average_completion_rating]) %></td>
-              <td class="px-2 py-1"><%= @carrier_delivery_counts[carrier.id] || 0 %></td>
+              <th class="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Carrier</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Overall</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Sender</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Recipient</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Completion</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Delivered</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-white/10">
+            <% @carrier_performance.each do |carrier| %>
+              <% summary = carrier.rating_summary %>
+              <tr class="hover:bg-white/5">
+                <td class="px-3 py-2 text-sm font-semibold">
+                  <%= link_to carrier.name, carrier_path(carrier), class: "text-yellow-200 hover:text-yellow-100" %>
+                </td>
+                <td class="px-3 py-2 text-sm text-slate-200"><%= display_rating(summary[:average_overall_rating]) %></td>
+                <td class="px-3 py-2 text-sm text-slate-200"><%= display_rating(summary[:average_sender_rating]) %></td>
+                <td class="px-3 py-2 text-sm text-slate-200"><%= display_rating(summary[:average_recipient_rating]) %></td>
+                <td class="px-3 py-2 text-sm text-slate-200"><%= display_rating(summary[:average_completion_rating]) %></td>
+                <td class="px-3 py-2 text-sm text-slate-200"><%= @carrier_delivery_counts[carrier.id] || 0 %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     <% else %>
-      <p class="text-body">No carrier performance data yet.</p>
+      <p class="text-sm text-slate-300">No carrier performance data yet.</p>
     <% end %>
   </div>
 </div>
 
-<div class="bg-white rounded shadow p-6 mt-6">
+<div class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
   <%= render "notification_preferences/index", parent: @sender, collection: @sender.notification_preferences, new_path: new_sender_notification_preference_path(@sender) %>
 </div>

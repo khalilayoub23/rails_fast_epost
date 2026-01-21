@@ -1,26 +1,26 @@
 <%= turbo_frame_tag document do %>
-  <tr class="border-b border-stroke dark:border-dark-3 hover:bg-gray-1 dark:hover:bg-dark-2 transition-colors">
+  <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
     <td class="px-4 py-3">
-      <span class="font-medium text-dark dark:text-white">
+      <span class="font-medium text-slate-100">
         <%= document.id_document %>
       </span>
     </td>
     <td class="px-4 py-3">
-      <span class="text-dark dark:text-white">
+      <span class="text-slate-200">
         <%= truncate(document.signature, length: 50) if document.signature.present? %>
       </span>
     </td>
     <td class="px-4 py-3 text-<%= margin_end_class %>">
       <div class="flex items-center gap-2 justify-end">
         <%= link_to carrier_document_path(carrier, document), 
-            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            class: "inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:text-yellow-300 hover:bg-white/5 transition-colors",
             title: t("common.view") do %>
           <span class="material-icons text-xl">visibility</span>
         <% end %>
         
         <%= link_to edit_carrier_document_path(carrier, document),
             data: { turbo_frame: dom_id(document) },
-            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-primary dark:hover:text-primary transition-colors",
+            class: "inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:text-yellow-300 hover:bg-white/5 transition-colors",
             title: t("common.edit") do %>
           <span class="material-icons text-xl">edit</span>
         <% end %>
@@ -28,7 +28,7 @@
         <%= button_to carrier_document_path(carrier, document),
             method: :delete,
             data: { turbo_confirm: t("common.confirm_delete") },
-            class: "inline-flex items-center justify-center rounded-md p-2 text-body hover:text-red-500 dark:hover:text-red-500 transition-colors" do %>
+            class: "inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:text-red-300 hover:bg-white/5 transition-colors" do %>
           <span class="material-icons text-xl">delete</span>
         <% end %>
       </div>

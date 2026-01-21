@@ -8,13 +8,13 @@
   <div class="space-y-5.5">
     <!-- Title field -->
     <div>
-      <%= f.label :title, class: "mb-3 block text-sm font-medium text-black dark:text-white" %>
+      <%= f.label :title, class: "mb-2 block text-sm font-semibold text-slate-200" %>
       <%= f.text_field :title,
           required: true,
           minlength: 3,
           maxlength: 200,
           placeholder: t('tasks.title_placeholder'),
-          class: "w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary",
+          class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30 disabled:opacity-60",
           data: { 
             form_validation_target: "input",
             action: "blur->form-validation#validateField"
@@ -24,35 +24,35 @@
 
     <!-- Description field -->
     <div>
-      <%= f.label :description, class: "mb-3 block text-sm font-medium text-black dark:text-white" %>
+      <%= f.label :description, class: "mb-2 block text-sm font-semibold text-slate-200" %>
       <%= f.text_area :description,
           rows: 4,
           placeholder: t('tasks.description_placeholder'),
-          class: "w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
+          class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
     </div>
 
     <!-- Status field -->
     <div>
-      <%= f.label :status, class: "mb-3 block text-sm font-medium text-black dark:text-white" %>
+      <%= f.label :status, class: "mb-2 block text-sm font-semibold text-slate-200" %>
       <%= f.select :status,
           options_for_select(Task.statuses.keys, task.status),
           {},
-          class: "relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" %>
+          class: "relative z-20 w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
     </div>
 
     <!-- Due date field -->
     <div>
-      <%= f.label :due_date, class: "mb-3 block text-sm font-medium text-black dark:text-white" %>
+      <%= f.label :due_date, class: "mb-2 block text-sm font-semibold text-slate-200" %>
       <%= f.date_field :due_date,
-          class: "w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
+          class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
     </div>
 
     <!-- Assigned to (with autocomplete) -->
     <div data-controller="autocomplete">
-      <%= f.label :assigned_to_id, class: "mb-3 block text-sm font-medium text-black dark:text-white" %>
+      <%= f.label :assigned_to_id, class: "mb-2 block text-sm font-semibold text-slate-200" %>
       <%= f.text_field :assigned_to_name,
           placeholder: t('tasks.search_user'),
-          class: "w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary",
+          class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30",
           data: { 
             autocomplete_target: "input",
             autocomplete_url_value: search_users_path,
@@ -60,7 +60,7 @@
           } %>
       <%= f.hidden_field :assigned_to_id, data: { autocomplete_target: "hiddenInput" } %>
       
-      <div class="hidden absolute z-50 mt-1 w-full bg-white dark:bg-boxdark border border-stroke dark:border-strokedark rounded-lg shadow-lg max-h-60 overflow-auto"
+      <div class="hidden absolute z-50 mt-1 w-full rounded-xl border border-white/10 bg-slate-950/95 shadow-xl shadow-black/40 backdrop-blur max-h-60 overflow-auto"
            data-autocomplete-target="results">
       </div>
     </div>
@@ -68,13 +68,13 @@
     <!-- Form actions -->
     <div class="flex items-center gap-3">
       <%= f.submit t('common.save'),
-          class: "inline-flex items-center justify-center rounded-md bg-primary py-3 px-6 text-center font-medium text-white hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed",
+          class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-5 py-3 text-sm font-semibold text-black hover:bg-yellow-300 disabled:opacity-50 disabled:cursor-not-allowed",
           data: { form_validation_target: "submit" } %>
       
       <%= link_to t('common.cancel'),
           task.persisted? ? task : tasks_path,
           data: { turbo_frame: "_top" },
-          class: "inline-flex items-center justify-center rounded-md border border-stroke py-3 px-6 text-center font-medium hover:shadow-1 dark:border-strokedark" %>
+          class: "inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10" %>
     </div>
   </div>
 <% end %>

@@ -14,7 +14,7 @@ class Api::V1::CarriersSmokeTest < ActionDispatch::IntegrationTest
       name: "JSON Customer #{SecureRandom.hex(2)}",
       email: "customer-api-#{SecureRandom.hex(2)}@example.com",
       address: "100 Api Ave",
-      phones: ["+15550001111"],
+      phones: [ "+15550001111" ],
       category: :business
     )
 

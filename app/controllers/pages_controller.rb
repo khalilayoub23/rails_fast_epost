@@ -91,7 +91,7 @@ class PagesController < ApplicationController
     combined_entries.sort_by do |entry|
       weight = entry[:sort_weight] || STEP_ORDER.fetch(entry[:key], STEP_ORDER.length + 1)
       time_value = entry[:occurred_at]&.to_f || Float::INFINITY
-      [weight, time_value]
+      [ weight, time_value ]
     end
   end
 
@@ -226,8 +226,8 @@ class PagesController < ApplicationController
     elsif task.failed_attempts > Task::MAX_FAILED_ATTEMPTS
       parts << "Exceeded #{Task::MAX_FAILED_ATTEMPTS} failed attempts"
     end
-    parts << "Attempt #{[task.failed_attempts, Task::MAX_FAILED_ATTEMPTS].min} of #{Task::MAX_FAILED_ATTEMPTS}" if task.failed_attempts.positive?
-    description = parts.compact.join(' | ')
+    parts << "Attempt #{[ task.failed_attempts, Task::MAX_FAILED_ATTEMPTS ].min} of #{Task::MAX_FAILED_ATTEMPTS}" if task.failed_attempts.positive?
+    description = parts.compact.join(" | ")
     description.presence || "Delivery attempt unsuccessful"
   end
 
@@ -239,7 +239,7 @@ class PagesController < ApplicationController
   def failed_attempt_entry(event)
     attempt_number = extract_attempt_number(event)
     key = "failed_attempt_#{attempt_number || event.id}".to_sym
-    desc_parts = [event.description_text]
+    desc_parts = [ event.description_text ]
 
     stored_until = parse_stored_until(event.metadata)
     if stored_until.present?
@@ -249,7 +249,7 @@ class PagesController < ApplicationController
     build_event_entry(
       key: key,
       label: attempt_number ? "Failed Attempt ##{attempt_number}" : "Delivery Attempt Failed",
-      desc: desc_parts.compact.join(' | ').presence || "Delivery attempt unsuccessful",
+      desc: desc_parts.compact.join(" | ").presence || "Delivery attempt unsuccessful",
       icon: "warning",
       occurred_at: event.occurred_at,
       actual_status: "failed",

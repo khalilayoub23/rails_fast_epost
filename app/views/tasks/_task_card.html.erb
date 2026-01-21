@@ -1,8 +1,14 @@
 <%= turbo_frame_tag task do %>
-  <tr class="border-b border-gray-200 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800">
+  <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
     <td class="px-4 py-4">
-      <%= link_to task_path(task), class: "text-sm font-medium text-primary hover:underline" do %>
-        #<%= task.id %>
+      <%= link_to task_path(task), class: "text-sm font-semibold text-yellow-300 hover:underline" do %>
+        <%= task.barcode.presence || "##{task.id}" %>
+      <% end %>
+
+      <% if task.package_type.present? %>
+        <div class="mt-1 text-xs text-slate-400">
+          <%= task.package_type %>
+        </div>
       <% end %>
     </td>
     <td class="px-4 py-4">
@@ -11,17 +17,27 @@
     <td class="px-4 py-4">
         <%= render "shared/priority_badge", priority: task.priority %>
     </td>
-    <td class="px-4 py-4 text-sm text-gray-900 dark:text-white">
+    <td class="px-4 py-4 text-sm text-slate-200">
       <%= task.customer&.name || "-" %>
     </td>
-    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-400">
-      <%= task.carrier&.name || "##{task.carrier_id}" %>
+    <td class="px-4 py-4 text-sm text-slate-300">
+      <%= task.carrier&.name || (task.carrier_id.present? ? "##{task.carrier_id}" : "-") %>
     </td>
-    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-400">
+    <td class="px-4 py-4 text-sm text-slate-300">
       <%= l(task.created_at, format: :short) %>
     </td>
     <td class="px-4 py-4 text-right">
       <div class="flex items-center justify-end gap-3">
+        <% if (current_user&.manager? || current_user&.sender_role? || current_user&.lawyer? || current_user&.ecommerce_seller?) && task.published? == false %>
+          <%= button_to add_item_cart_path(task_id: task.id),
+              method: :post,
+              form: { data: { turbo_frame: "_top" } },
+              class: "text-amber-300 hover:text-amber-200",
+              title: t('cart.add_to_cart', default: 'Add to cart') do %>
+            <span class="material-icons text-xl">add_shopping_cart</span>
+          <% end %>
+        <% end %>
+
         <!-- Quick status update buttons -->
         <% if task.status != "delivered" %>
           <%= button_to update_status_task_path(task, status: "in_progress"),

@@ -1,28 +1,41 @@
 <div data-controller="dashboard-editor" data-dashboard-editor-save-url-value="<%= admin_dashboard_layout_path %>">
-  <% toolbar_label_class = "text-xs text-body dark:text-bodydark mr-2" %>
-  <% toolbar_select_class = "rounded border border-stroke bg-transparent px-2 py-1 text-xs text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" %>
-  <% card_class = "rounded-2xl border border-stroke bg-white shadow-2xl dark:border-strokedark dark:bg-boxdark" %>
-  <!-- Dashboard Header with Dark Theme -->
-  <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-    <div>
-      <h2 class="text-3xl font-bold text-dark dark:text-white mb-2">
-        <%= t('dashboard_title', default: 'Dashboard') %>
-      </h2>
-      <p class="text-body dark:text-bodydark text-sm">
-        <%= t('dashboard_subtitle', default: 'Welcome back! Here\'s what\'s happening today.') %>
-      </p>
-    </div>
-    
-    <button class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-gray-900 hover:bg-opacity-90"
-            data-action="click->dashboard-editor#toggleEdit">
-      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-      </svg>
-      <%= t('edit_layout', default: 'Edit Layout') %>
-    </button>
-  </div>
+  <% card_class = "rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur" %>
+  <!-- Header moved to topbar -->
 
   <%= turbo_stream_from "dashboard" %>
+
+  <% if %w[admin manager operational].include?(@dashboard_view) %>
+    <%= form_with url: dashboard_path, method: :get, local: true, class: "mb-6 rounded-2xl border border-white/10 bg-white/5 p-4" do %>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <% if %w[admin manager].include?(@dashboard_view) %>
+          <div class="flex-1">
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Payment status</label>
+            <%= select_tag "payment_filter[status]",
+                options_for_select([ ["All", ""] ] + (@payment_statuses || Payment.gateway_statuses.keys).map { |s| [s.titleize, s] }, @payment_filters&.[](:status)),
+                class: "w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white" %>
+          </div>
+        <% end %>
+
+        <div class="flex-1">
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Task status</label>
+          <%= select_tag "task_filter[status]",
+              options_for_select([ ["All", ""] ] + (@task_statuses || Task.statuses.keys).map { |s| [s.titleize, s] }, @task_filters&.[](:status)),
+              class: "w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white" %>
+        </div>
+
+        <div class="flex-1">
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Delivery status</label>
+          <%= select_tag "delivery_filter[status]",
+              options_for_select([ ["All", ""] ] + (@delivery_statuses || Delivery.statuses.keys).map { |s| [s.titleize, s] }, @delivery_filters&.[](:status)),
+              class: "w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white" %>
+        </div>
+
+        <div>
+          <%= submit_tag "Apply", class: "inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-black hover:bg-opacity-90" %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
 
 <div class="grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5"
      data-dashboard-editor-target="container">
@@ -30,27 +43,17 @@
   <% layout.each do |w| %>
     <% id = w["id"]; span = w["span"] %>
     <% if id == "kpis" %>
-      <div data-widget-id="kpis" data-span="<%= span || 'col-span-12' %>" class="<%= span || 'col-span-12' %>" title="Drag to reorder">
-        <div data-role="widget-toolbar" class="mb-2 hidden">
-          <label class="<%= toolbar_label_class %>">Width:</label>
-          <select class="<%= toolbar_select_class %>" data-action="change->dashboard-editor#changeSpan">
-            <option value="col-span-12">Full</option>
-            <option value="col-span-12 xl:col-span-6">Half (xl)</option>
-          </select>
-        </div>
+      <div data-widget-id="kpis" data-span="<%= span || 'col-span-12' %>" class="<%= span || 'col-span-12' %>">
         <%= render "kpis" %>
       </div>
     <% elsif id == "chart" %>
       <!-- Monthly Sales Chart - Dark Theme -->
-      <div data-widget-id="chart" data-span="<%= span %>" class="<%= span %> <%= card_class %> px-5 pb-5 pt-7.5 sm:px-7.5">
-        <div data-role="widget-toolbar" class="mb-2 hidden">
-          <label class="<%= toolbar_label_class %>">Width:</label>
-          <select class="<%= toolbar_select_class %>" data-action="change->dashboard-editor#changeSpan">
-            <option value="col-span-12" <%= 'selected' if span == 'col-span-12' %>>Full</option>
-            <option value="col-span-12 xl:col-span-8" <%= 'selected' if span == 'col-span-12 xl:col-span-8' %>>2/3 (xl)</option>
-            <option value="col-span-12 xl:col-span-6" <%= 'selected' if span == 'col-span-12 xl:col-span-6' %>>Half (xl)</option>
-          </select>
-        </div>
+      <div data-widget-id="chart"
+           data-span="<%= span %>"
+           class="<%= span %> <%= card_class %> px-5 pb-5 pt-7.5 sm:px-7.5"
+           data-controller="charts"
+           data-charts-series-a-value='<%= (@chart_series_a_by_period || {}).to_json %>'
+           data-charts-series-b-value='<%= (@chart_series_b_by_period || {}).to_json %>'>
     <div class="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
       <div class="flex w-full flex-wrap gap-3 sm:gap-5">
         <div class="flex min-w-47.5">
@@ -58,8 +61,7 @@
             <span class="block h-2.5 w-full max-w-2.5 rounded-full bg-yellow-400"></span>
           </span>
           <div class="w-full">
-            <p class="font-semibold text-yellow-400">Total Revenue</p>
-            <p class="text-sm font-medium text-gray-400">12.04.2022 - 12.05.2022</p>
+            <p class="font-semibold text-yellow-400">Succeeded Payments</p>
           </div>
         </div>
         <div class="flex min-w-47.5">
@@ -67,20 +69,19 @@
             <span class="block h-2.5 w-full max-w-2.5 rounded-full bg-blue-400"></span>
           </span>
           <div class="w-full">
-            <p class="font-semibold text-blue-400">Total Sales</p>
-            <p class="text-sm font-medium text-gray-400">12.04.2022 - 12.05.2022</p>
+            <p class="font-semibold text-blue-400">Tasks Created</p>
           </div>
         </div>
       </div>
       <div class="flex w-full max-w-45 justify-end">
-        <div class="inline-flex items-center rounded-lg bg-gray-900/50 p-1.5">
-          <button class="rounded bg-yellow-400 px-3 py-1 text-xs font-medium text-gray-900 shadow-lg hover:bg-yellow-500 transition-colors">
+        <div class="inline-flex items-center rounded-lg bg-white/10 p-1.5">
+          <button data-action="click->charts#update" data-charts-period-param="day" class="px-3 py-1 text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white rounded transition-colors">
             Day
           </button>
-          <button class="px-3 py-1 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-white rounded transition-colors">
+          <button data-action="click->charts#update" data-charts-period-param="week" class="px-3 py-1 text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white rounded transition-colors">
             Week
           </button>
-          <button class="px-3 py-1 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-white rounded transition-colors">
+          <button data-action="click->charts#update" data-charts-period-param="month" class="rounded bg-yellow-400 px-3 py-1 text-xs font-medium text-black shadow-lg hover:bg-yellow-500 transition-colors">
             Month
           </button>
         </div>
@@ -88,20 +89,16 @@
     </div>
 
     <div>
-      <div id="chartOne" class="-ml-5" data-controller="charts" data-charts-series-a-value='[120,380,220,180,260,140,80,300,190,280,220,110]' data-charts-series-b-value='[100,320,200,150,210,120,60,260,160,250,190,90]'></div>
+      <div id="chartOne" class="-ml-5" data-charts-target="chartContainer"></div>
     </div>
       </div>
     <% elsif id == "target" %>
       <!-- Monthly Target - Dark Theme -->
       <div data-widget-id="target" data-span="<%= span %>" class="<%= span %> <%= card_class %> p-7.5">
-        <div data-role="widget-toolbar" class="mb-2 hidden">
-          <label class="<%= toolbar_label_class %>">Width:</label>
-          <select class="<%= toolbar_select_class %>" data-action="change->dashboard-editor#changeSpan">
-            <option value="col-span-12" <%= 'selected' if span == 'col-span-12' %>>Full</option>
-            <option value="col-span-12 xl:col-span-4" <%= 'selected' if span == 'col-span-12 xl:col-span-4' %>>1/3 (xl)</option>
-            <option value="col-span-12 xl:col-span-6" <%= 'selected' if span == 'col-span-12 xl:col-span-6' %>>Half (xl)</option>
-          </select>
-        </div>
+        <% target_percent = (@target_percent || 0).to_i %>
+        <% radius = 80 %>
+        <% circumference = 2 * Math::PI * radius %>
+        <% dashoffset = circumference * (1 - (target_percent / 100.0)) %>
     <div class="mb-4 justify-between gap-4 sm:flex">
       <div>
         <h5 class="text-xl font-semibold text-dark dark:text-white">
@@ -122,71 +119,65 @@
     </div>
 
     <div class="mb-2">
-      <p class="font-medium text-gray-400">Target you've set for each month</p>
+      <p class="font-medium text-slate-400">Target you've set for each month</p>
     </div>
 
     <div class="mx-auto flex justify-center relative">
       <svg class="rotate-90 transform" width="200" height="200">
         <circle cx="100" cy="100" r="80" stroke="#374151" stroke-width="16" fill="transparent"/>
-        <circle cx="100" cy="100" r="80" stroke="#FBBF24" stroke-width="16" fill="transparent" stroke-dasharray="377" stroke-dashoffset="94.25" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="80" stroke="#FBBF24" stroke-width="16" fill="transparent" stroke-dasharray="<%= circumference %>" stroke-dashoffset="<%= dashoffset %>" stroke-linecap="round"/>
       </svg>
-      <div class="absolute flex flex-col items-center justify-center">
-        <span class="text-3xl font-bold text-dark dark:text-white">75.55%</span>
-        <span class="text-sm font-medium text-green-400">+10%</span>
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <span class="text-3xl font-bold text-dark dark:text-white"><%= number_to_percentage(target_percent, precision: 0) %></span>
+        <% delta = (@target_delta_percent || 0).to_i %>
+        <% delta_class = delta.negative? ? "text-rose-400" : "text-green-400" %>
+        <span class="text-sm font-medium <%= delta_class %>"><%= delta.positive? ? "+#{delta}" : delta %>%</span>
       </div>
     </div>
 
     <div class="mt-7">
       <p class="mb-3 font-medium text-dark dark:text-white">
-        You earn $<%= number_with_delimiter(((@revenue_total_cents || 0) / 100.0).to_i) %> today, it's higher than last month.
+        You earn <%= format_money_cents(@today_revenue_cents || 0, currency: @currency_code, precision: 0) %> today, it's higher than last month.
       </p>
       <p class="text-sm text-body dark:text-bodydark">Keep up your good work!</p>
     </div>
 
-    <div class="mt-5 flex items-center justify-between border-t border-stroke pt-5 dark:border-strokedark">
+    <div class="mt-5 flex items-center justify-between border-t border-white/10 pt-5">
       <div>
-        <p class="font-medium text-gray-400 text-sm">Target</p>
-        <p class="text-xl font-bold text-yellow-400">$20K</p>
+        <p class="font-medium text-slate-400 text-sm">Target</p>
+        <p class="text-xl font-bold text-yellow-400"><%= format_money_cents(@monthly_target_cents || 0, currency: @currency_code, precision: 0) %></p>
       </div>
       <div>
-        <p class="font-medium text-gray-400 text-sm">Revenue</p>
-        <p class="text-xl font-bold text-green-400">$20K</p>
+        <p class="font-medium text-slate-400 text-sm">Revenue</p>
+        <p class="text-xl font-bold text-green-400"><%= format_money_cents(@month_revenue_cents || 0, currency: @currency_code, precision: 0) %></p>
       </div>
       <div>
-        <p class="font-medium text-gray-400 text-sm">Today</p>
-        <p class="text-xl font-bold text-green-400">$20K</p>
+        <p class="font-medium text-slate-400 text-sm">Today</p>
+        <p class="text-xl font-bold text-green-400"><%= format_money_cents(@today_revenue_cents || 0, currency: @currency_code, precision: 0) %></p>
       </div>
     </div>
       </div>
     <% elsif id == "recent_payments" %>
       <!-- Recent Payments - Dark Theme -->
       <div data-widget-id="recent_payments" data-span="<%= span %>" class="<%= span %> <%= card_class %> px-5 pt-6 pb-2.5 sm:px-7.5">
-        <div data-role="widget-toolbar" class="mb-2 hidden">
-          <label class="<%= toolbar_label_class %>">Width:</label>
-          <select class="<%= toolbar_select_class %>" data-action="change->dashboard-editor#changeSpan">
-            <option value="col-span-12" <%= 'selected' if span == 'col-span-12' %>>Full</option>
-            <option value="col-span-12 xl:col-span-7" <%= 'selected' if span == 'col-span-12 xl:col-span-7' %>>7/12 (xl)</option>
-            <option value="col-span-12 xl:col-span-6" <%= 'selected' if span == 'col-span-12 xl:col-span-6' %>>Half (xl)</option>
-          </select>
-        </div>
     <div class="mb-6 flex items-center justify-between">
-      <h3 class="text-title-md font-semibold text-dark dark:text-white">Recent Payments</h3>
-      <%= link_to "View all", payments_path, class: "text-sm font-medium text-primary hover:opacity-80 transition-opacity" %>
+      <h3 class="text-title-md font-semibold text-white"><%= t("dashboard.recent_payments", default: "Payments") %></h3>
+      <%= link_to "View all", payments_path, class: "text-sm font-medium text-yellow-300 hover:text-yellow-200 transition-colors" %>
     </div>
     <div class="max-w-full overflow-x-auto">
       <table class="w-full table-auto">
         <thead>
-          <tr class="bg-gray-2 text-left dark:bg-meta-4">
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">ID</th>
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">Provider</th>
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">Status</th>
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">Amount</th>
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">Currency</th>
-            <th class="px-4 py-4 text-right font-medium text-dark dark:text-white">Actions</th>
+          <tr class="bg-white/5 text-left border-b border-white/10">
+            <th class="px-4 py-4 font-medium text-slate-200">ID</th>
+            <th class="px-4 py-4 font-medium text-slate-200">Provider</th>
+            <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.status", default: "Status") %></th>
+            <th class="px-4 py-4 font-medium text-slate-200">Amount</th>
+            <th class="px-4 py-4 font-medium text-slate-200">Currency</th>
+            <th class="px-4 py-4 text-right font-medium text-slate-200">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% @recent_payments.each do |payment| %>
+          <% Array(@recent_payments).each do |payment| %>
             <%= render "payments/payment", payment: payment %>
           <% end %>
         </tbody>
@@ -196,38 +187,30 @@
     <% elsif id == "recent_tasks" %>
       <!-- Recent Tasks - Dark Theme -->
       <div data-widget-id="recent_tasks" data-span="<%= span %>" class="<%= span %> <%= card_class %> px-5 pt-6 pb-2.5 sm:px-7.5">
-        <div data-role="widget-toolbar" class="mb-2 hidden">
-          <label class="<%= toolbar_label_class %>">Width:</label>
-          <select class="<%= toolbar_select_class %>" data-action="change->dashboard-editor#changeSpan">
-            <option value="col-span-12" <%= 'selected' if span == 'col-span-12' %>>Full</option>
-            <option value="col-span-12 xl:col-span-5" <%= 'selected' if span == 'col-span-12 xl:col-span-5' %>>5/12 (xl)</option>
-            <option value="col-span-12 xl:col-span-6" <%= 'selected' if span == 'col-span-12 xl:col-span-6' %>>Half (xl)</option>
-          </select>
-        </div>
     <div class="mb-6 flex items-center justify-between">
-      <h3 class="text-title-md font-semibold text-dark dark:text-white">Recent Tasks</h3>
-      <%= link_to "View all", tasks_path, class: "text-sm font-medium text-primary hover:opacity-80 transition-opacity" %>
+      <h3 class="text-title-md font-semibold text-white"><%= t("dashboard.recent_tasks", default: "Tasks") %></h3>
+      <%= link_to "View all", tasks_path, class: "text-sm font-medium text-yellow-300 hover:text-yellow-200 transition-colors" %>
     </div>
     <div class="max-w-full overflow-x-auto">
       <table class="w-full table-auto">
         <thead>
-          <tr class="bg-gray-2 text-left dark:bg-meta-4">
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">Task</th>
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">Customer</th>
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">Priority</th>
-            <th class="px-4 py-4 font-medium text-dark dark:text-white">Status</th>
-            <th class="px-4 py-4 text-right font-medium text-dark dark:text-white">Actions</th>
+          <tr class="bg-white/5 text-left border-b border-white/10">
+            <th class="px-4 py-4 font-medium text-slate-200">Task</th>
+            <th class="px-4 py-4 font-medium text-slate-200">Customer</th>
+            <th class="px-4 py-4 font-medium text-slate-200">Priority</th>
+            <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.status", default: "Status") %></th>
+            <th class="px-4 py-4 text-right font-medium text-slate-200">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% @recent_tasks.each do |task| %>
-            <tr class="border-b border-stroke hover:bg-whiten dark:border-strokedark dark:hover:bg-meta-4 transition-colors">
-              <td class="px-4 py-4 text-sm font-medium text-dark dark:text-white">
-                <%= link_to task_path(task), class: "text-primary hover:opacity-80 transition-opacity" do %>
+          <% Array(@recent_tasks).each do |task| %>
+            <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+              <td class="px-4 py-4 text-sm font-medium text-white">
+                <%= link_to task_path(task), class: "text-yellow-300 hover:text-yellow-200 transition-colors" do %>
                   <%= task.title.presence || "Task ##{task.id}" %>
                 <% end %>
               </td>
-              <td class="px-4 py-4 text-sm text-gray-400"><%= task.customer&.name || "-" %></td>
+              <td class="px-4 py-4 text-sm text-slate-300"><%= task.customer&.name || "-" %></td>
               <td class="px-4 py-4">
                 <%= render "shared/priority_badge", priority: task.priority %>
               </td>
@@ -235,7 +218,7 @@
                 <%= render "shared/status_badge", status: task.status %>
               </td>
               <td class="px-4 py-4 text-right">
-                <%= link_to "View", task_path(task), class: "inline-flex items-center rounded border border-stroke bg-white px-3 py-1 text-sm font-medium text-dark hover:bg-whiter dark:border-strokedark dark:bg-boxdark dark:text-white dark:hover:bg-meta-4" %>
+                <%= link_to "View", task_path(task), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-sm font-medium text-white hover:bg-white/10" %>
               </td>
             </tr>
           <% end %>
@@ -246,4 +229,76 @@
     <% end %>
   <% end %>
 </div>
+
+<% if %w[admin manager operational].include?(@dashboard_view) %>
+  <div class="mt-6 <%= card_class %> px-5 pt-6 pb-2.5 sm:px-7.5">
+    <div class="mb-6 flex items-center justify-between">
+      <h3 class="text-title-md font-semibold text-white"><%= t("deliveries.index.title", default: "Deliveries") %></h3>
+      <%= link_to "View all", deliveries_path, class: "text-sm font-medium text-yellow-300 hover:text-yellow-200 transition-colors" %>
+    </div>
+
+    <div class="max-w-full overflow-x-auto">
+      <table class="w-full table-auto">
+        <thead>
+          <tr class="bg-white/5 text-left border-b border-white/10">
+            <th class="px-4 py-4 font-medium text-slate-200">Case</th>
+            <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.status", default: "Status") %></th>
+            <th class="px-4 py-4 font-medium text-slate-200">Courier</th>
+            <th class="px-4 py-4 font-medium text-slate-200">Created</th>
+            <th class="px-4 py-4 text-right font-medium text-slate-200">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% Array(@delivery_samples).each do |delivery| %>
+            <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+              <td class="px-4 py-4 text-sm font-medium text-white">
+                <%= link_to "Case #{delivery.case_number}", delivery_path(delivery), class: "text-yellow-300 hover:text-yellow-200" %>
+              </td>
+              <td class="px-4 py-4">
+                <%= render "shared/status_badge", status: delivery.status %>
+              </td>
+              <td class="px-4 py-4 text-sm text-slate-300"><%= delivery.courier&.full_name || "-" %></td>
+              <td class="px-4 py-4 text-sm text-slate-300"><%= l(delivery.created_at, format: :short) %></td>
+              <td class="px-4 py-4 text-right">
+                <%= link_to "View", delivery_path(delivery), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-sm font-medium text-white hover:bg-white/10" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
+
+<% if @dashboard_view == "carrier" %>
+  <div class="mt-6 <%= card_class %> px-5 pt-6 pb-2.5 sm:px-7.5">
+    <div class="mb-6 flex items-center justify-between">
+      <h3 class="text-title-md font-semibold text-white"><%= t("dashboard.recent_payouts", default: "Payouts") %></h3>
+      <%= link_to "View all", control_panel_carriers_payouts_path, class: "text-sm font-medium text-yellow-300 hover:text-yellow-200 transition-colors" %>
+    </div>
+
+    <div class="max-w-full overflow-x-auto">
+      <table class="w-full table-auto">
+        <thead>
+          <tr class="bg-white/5 text-left border-b border-white/10">
+            <th class="px-4 py-4 font-medium text-slate-200">ID</th>
+            <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.status", default: "Status") %></th>
+            <th class="px-4 py-4 font-medium text-slate-200">Amount</th>
+            <th class="px-4 py-4 font-medium text-slate-200">Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% Array(@recent_payouts).each do |payout| %>
+            <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+              <td class="px-4 py-4 text-sm font-medium text-white">#<%= payout.id %></td>
+              <td class="px-4 py-4 text-sm text-slate-300"><%= payout.status %></td>
+              <td class="px-4 py-4 text-sm text-slate-300"><%= format_money_cents(payout.amount_cents, currency: payout.currency.presence || @currency_code, precision: 0) %></td>
+              <td class="px-4 py-4 text-sm text-slate-300"><%= l(payout.created_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
 </div>

@@ -12,7 +12,7 @@
 %>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-black pb-20" dir="<%= text_direction %>">
+<section class="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-black pb-20" dir="<%= text_direction %>">
   <!-- Background Effects -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
     <div class="absolute top-0 left-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl"></div>
@@ -25,20 +25,20 @@
       
       <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-8">
         <span class="block" data-i18n="hero_title_trust"><%= t("hero_title_trust") %></span>
-        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400" data-i18n="hero_title_2"><%= t("hero_title_2") %></span>
+        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" data-i18n="hero_title_2"><%= t("hero_title_2") %></span>
         <span class="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200" data-i18n="hero_title_3"><%= t("hero_title_3") %></span>
       </h1>
       
-      <p class="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl leading-relaxed" data-i18n="hero_subtitle">
+      <p class="text-xl md:text-2xl text-slate-400 mb-12 max-w-3xl leading-relaxed" data-i18n="hero_subtitle">
         <%= t("hero_subtitle") %>
       </p>
       
       <div class="flex flex-wrap gap-4">
-        <%= link_to pages_contact_path, class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-black transition-all duration-200 bg-yellow-400 rounded-xl hover:bg-yellow-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 focus:ring-offset-gray-900" do %>
+        <%= link_to pages_contact_path, class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-black transition-all duration-200 bg-yellow-400 rounded-xl hover:bg-yellow-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 focus:ring-offset-slate-950" do %>
           <span data-i18n="btn_get_quote"><%= t("btn_get_quote") %></span>
         <% end %>
         
-        <%= link_to pages_track_parcel_path, class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-200 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/20 focus:ring-offset-gray-900" do %>
+        <%= link_to pages_track_parcel_path, class: "inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-200 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/20 focus:ring-offset-slate-950" do %>
           <span data-i18n="btn_track_delivery"><%= t("btn_track_delivery") %></span>
         <% end %>
       </div>
@@ -47,24 +47,24 @@
 </section>
 
 <!-- Stats Section -->
-<section class="py-20 bg-gray-900/50 border-y border-white/5 backdrop-blur-sm" dir="<%= text_direction %>">
+<section class="py-20 bg-white/5 border-y border-white/5 backdrop-blur-sm" dir="<%= text_direction %>">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
       <div class="text-center">
         <div class="text-4xl md:text-5xl font-bold text-white mb-4"><%= number_with_delimiter(@stats[:total_deliveries]) %>+</div>
-        <div class="text-sm md:text-base text-gray-400 uppercase tracking-wider font-medium"><%= t('stats_deliveries', default: 'Successful Deliveries') %></div>
+        <div class="text-sm md:text-base text-slate-400 uppercase tracking-wider font-medium"><%= t('stats_deliveries', default: 'Successful Deliveries') %></div>
       </div>
       <div class="text-center">
         <div class="text-4xl md:text-5xl font-bold text-white mb-4"><%= number_with_delimiter(@stats[:active_shipments]) %></div>
-        <div class="text-sm md:text-base text-gray-400 uppercase tracking-wider font-medium"><%= t('stats_active', default: 'Active Shipments') %></div>
+        <div class="text-sm md:text-base text-slate-400 uppercase tracking-wider font-medium"><%= t('stats_active', default: 'Active Shipments') %></div>
       </div>
       <div class="text-center">
         <div class="text-4xl md:text-5xl font-bold text-white mb-4"><%= number_with_delimiter(@stats[:total_customers]) %>+</div>
-        <div class="text-sm md:text-base text-gray-400 uppercase tracking-wider font-medium"><%= t('stats_customers', default: 'Happy Customers') %></div>
+        <div class="text-sm md:text-base text-slate-400 uppercase tracking-wider font-medium"><%= t('stats_customers', default: 'Happy Customers') %></div>
       </div>
       <div class="text-center">
         <div class="text-4xl md:text-5xl font-bold text-white mb-4"><%= number_with_delimiter(@stats[:carriers_network]) %>+</div>
-        <div class="text-sm md:text-base text-gray-400 uppercase tracking-wider font-medium"><%= t('stats_carriers', default: 'Delivery Partners') %></div>
+        <div class="text-sm md:text-base text-slate-400 uppercase tracking-wider font-medium"><%= t('stats_carriers', default: 'Delivery Partners') %></div>
       </div>
     </div>
   </div>
@@ -76,7 +76,7 @@
     <div class="max-w-4xl mb-24 <%= alignment %>">
       <span class="text-yellow-400 font-bold tracking-wider uppercase text-sm"><%= t('services.title', default: 'Our Services') %></span>
       <h2 class="text-3xl md:text-5xl font-bold text-white mt-4 mb-8"><%= t('services.subtitle', default: 'Delivery Solutions for Every Industry') %></h2>
-      <p class="text-lg md:text-xl text-gray-400"><%= t('services.description', default: 'From sensitive legal documents to fast e-commerce fulfillment, we design delivery experiences that match your business needs.') %></p>
+      <p class="text-lg md:text-xl text-slate-400"><%= t('services.description', default: 'From sensitive legal documents to fast e-commerce fulfillment, we design delivery experiences that match your business needs.') %></p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-8">
@@ -88,7 +88,7 @@
         <h3 class="text-2xl font-bold text-white mb-6" data-i18n="service_legal_title"><%= t("service_legal_title") %></h3>
         <ul class="space-y-4 flex-grow">
           <% [t('service_legal_1'), t('service_legal_2'), t('service_legal_4')].each do |point| %>
-            <li class="flex items-start gap-3 text-gray-300 text-lg">
+            <li class="flex items-start gap-3 text-slate-300 text-lg">
               <svg class="w-6 h-6 text-yellow-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
               <span><%= point %></span>
             </li>
@@ -104,7 +104,7 @@
         <h3 class="text-2xl font-bold text-white mb-6" data-i18n="service_ecommerce_title"><%= t("service_ecommerce_title") %></h3>
         <ul class="space-y-4 flex-grow">
           <% [t('service_ecommerce_1'), t('service_ecommerce_2'), t('service_ecommerce_3')].each do |point| %>
-            <li class="flex items-start gap-3 text-gray-300 text-lg">
+            <li class="flex items-start gap-3 text-slate-300 text-lg">
               <svg class="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
               <span><%= point %></span>
             </li>
@@ -119,15 +119,15 @@
         </div>
         <h3 class="text-2xl font-bold text-white mb-6"><%= t('services.tech_advantage', default: 'Tech Advantage') %></h3>
         <ul class="space-y-4 flex-grow">
-          <li class="flex items-start gap-3 text-gray-300 text-lg">
+          <li class="flex items-start gap-3 text-slate-300 text-lg">
             <svg class="w-6 h-6 text-purple-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             <span><%= t('services.tech_1', default: 'Real-time dashboards & smart alerts') %></span>
           </li>
-          <li class="flex items-start gap-3 text-gray-300 text-lg">
+          <li class="flex items-start gap-3 text-slate-300 text-lg">
             <svg class="w-6 h-6 text-purple-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             <span><%= t('services.tech_2', default: 'Direct integration with ERP & Stores') %></span>
           </li>
-          <li class="flex items-start gap-3 text-gray-300 text-lg">
+          <li class="flex items-start gap-3 text-slate-300 text-lg">
             <svg class="w-6 h-6 text-purple-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             <span><%= t('services.tech_3', default: 'Actionable performance analytics') %></span>
           </li>
@@ -138,12 +138,12 @@
 </section>
 
 <!-- Features Section -->
-<section class="py-32 bg-gray-900 relative" dir="<%= text_direction %>">
+<section class="py-32 bg-black relative" dir="<%= text_direction %>">
   <div class="container mx-auto px-4">
     <div class="max-w-4xl mb-24 <%= alignment %>">
       <span class="text-yellow-400 font-bold tracking-wider uppercase text-sm"><%= t('features.title', default: 'Technical Reliability') %></span>
       <h2 class="text-3xl md:text-5xl font-bold text-white mt-4 mb-8"><%= t('features.subtitle', default: 'Unified Platform for Every Journey') %></h2>
-      <p class="text-lg md:text-xl text-gray-400"><%= t('features.description', default: 'Full integration with your apps, real-time updates, and smart monitoring for every step.') %></p>
+      <p class="text-lg md:text-xl text-slate-400"><%= t('features.description', default: 'Full integration with your apps, real-time updates, and smart monitoring for every step.') %></p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-8">
@@ -152,21 +152,21 @@
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
         <h3 class="text-2xl font-bold text-white mb-4"><%= t('features.legal_compliance', default: 'Legal Compliance') %></h3>
-        <p class="text-gray-400 text-lg leading-relaxed flex-grow"><%= t('features.legal_desc', default: 'Licensed network ensuring timely delivery of official documents.') %></p>
+        <p class="text-slate-400 text-lg leading-relaxed flex-grow"><%= t('features.legal_desc', default: 'Licensed network ensuring timely delivery of official documents.') %></p>
       </div>
       <div class="p-10 rounded-3xl bg-white/5 border border-white/10 h-full flex flex-col hover:bg-white/10 transition-colors duration-300">
         <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 text-yellow-400 mx-auto">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
         <h3 class="text-2xl font-bold text-white mb-4"><%= t('features.real_time', default: 'Real-Time Tracking') %></h3>
-        <p class="text-gray-400 text-lg leading-relaxed flex-grow"><%= t('features.real_time_desc', default: 'Detailed dashboards with proactive alerts for admins and customers.') %></p>
+        <p class="text-slate-400 text-lg leading-relaxed flex-grow"><%= t('features.real_time_desc', default: 'Detailed dashboards with proactive alerts for admins and customers.') %></p>
       </div>
       <div class="p-10 rounded-3xl bg-white/5 border border-white/10 h-full flex flex-col hover:bg-white/10 transition-colors duration-300">
         <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 text-yellow-400 mx-auto">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
         </div>
         <h3 class="text-2xl font-bold text-white mb-4"><%= t('features.security', default: 'Top-Tier Security') %></h3>
-        <p class="text-gray-400 text-lg leading-relaxed flex-grow"><%= t('features.security_desc', default: 'End-to-end encryption with automated monitoring against human error.') %></p>
+        <p class="text-slate-400 text-lg leading-relaxed flex-grow"><%= t('features.security_desc', default: 'End-to-end encryption with automated monitoring against human error.') %></p>
       </div>
     </div>
   </div>
@@ -182,19 +182,19 @@
           <h3 class="text-4xl font-bold text-white mb-10"><%= t('contact.title', default: "Let's Talk About Your Next Shipment") %></h3>
           
           <div class="space-y-8 mb-10">
-            <div class="flex items-center gap-5 text-gray-300">
+            <div class="flex items-center gap-5 text-slate-300">
               <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-yellow-400 flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.95.69l1.5 4.49a1 1 0 01-.5 1.21L8 10.54a11.05 11.05 0 005.46 5.46l1.15-2.27a1 1 0 011.2-.5l4.5 1.5a1 1 0 01.69.95V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z"></path></svg>
               </div>
               <span class="text-lg" data-i18n="contact_phone"><%= t("contact_phone") %></span>
             </div>
-            <div class="flex items-center gap-5 text-gray-300">
+            <div class="flex items-center gap-5 text-slate-300">
               <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-yellow-400 flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
               </div>
               <span class="text-lg" data-i18n="contact_email"><%= t("contact_email") %></span>
             </div>
-            <div class="flex items-center gap-5 text-gray-300">
+            <div class="flex items-center gap-5 text-slate-300">
               <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-yellow-400 flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
               </div>
@@ -235,13 +235,13 @@
         <%= form_with url: pages_contact_path, method: :post, local: true, class: "flex flex-col flex-grow" do |form| %>
           <div class="space-y-6">
             <div>
-              <%= form.text_field :name, placeholder: t('contact.name', default: 'Name'), class: "w-full px-6 py-4 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-colors text-lg", required: true %>
+              <%= form.text_field :name, placeholder: t('contact.name', default: 'Name'), class: "w-full px-6 py-4 bg-black/50 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-colors text-lg", required: true %>
             </div>
             <div>
-              <%= form.email_field :email, placeholder: t('contact.email', default: 'Email'), class: "w-full px-6 py-4 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-colors text-lg", required: true %>
+              <%= form.email_field :email, placeholder: t('contact.email', default: 'Email'), class: "w-full px-6 py-4 bg-black/50 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-colors text-lg", required: true %>
             </div>
             <div>
-              <%= form.text_area :message, rows: 4, placeholder: t('contact.message', default: 'Describe your shipping needs'), class: "w-full px-6 py-4 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-colors text-lg" %>
+              <%= form.text_area :message, rows: 4, placeholder: t('contact.message', default: 'Describe your shipping needs'), class: "w-full px-6 py-4 bg-black/50 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 transition-colors text-lg" %>
             </div>
           </div>
           <div class="mt-auto pt-6">
@@ -254,7 +254,7 @@
 </section>
 
 <!-- Privacy Section -->
-<section class="py-24 bg-gray-900 border-t border-white/5" dir="<%= text_direction %>">
+<section class="py-24 bg-white/5 border-t border-white/5" dir="<%= text_direction %>">
   <div class="container mx-auto px-4">
     <div class="max-w-5xl mx-auto text-center">
       <p class="text-sm font-semibold tracking-[0.5em] text-yellow-400 uppercase mb-6" data-i18n="privacy_section_title">
@@ -263,7 +263,7 @@
       <h2 class="text-3xl md:text-4xl font-bold text-white mb-8" data-i18n="privacy_title">
         <%= t("privacy_title") %>
       </h2>
-      <p class="text-lg text-gray-400 mb-12" data-i18n="privacy_content">
+      <p class="text-lg text-slate-400 mb-12" data-i18n="privacy_content">
         <%= t("privacy_content") %>
       </p>
       

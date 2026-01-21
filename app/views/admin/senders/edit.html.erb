@@ -1,5 +1,9 @@
 <%# app/views/admin/senders/edit.html.erb %>
-<div class="page-header mb-6">
-  <h1 class="text-2xl font-bold">Edit Sender</h1>
+<div class="mb-6">
+  <h1 class="text-2xl font-bold text-white">Edit Sender</h1>
+  <p class="mt-1 text-sm text-slate-400">Update sender details and preferences.</p>
 </div>
-<%= render 'form', sender: @sender %>
+
+<div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+  <%= render "form", sender: @sender %>
+</div>

@@ -12,7 +12,7 @@ class CreateSignatureEvents < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :signature_events, [:delivery_id, :role]
+    add_index :signature_events, [ :delivery_id, :role ]
     add_index :signature_events, :signature_hash
     add_index :signature_events, :created_at
   end

@@ -1,71 +1,96 @@
 <%# app/views/admin/messengers/index.html.erb %>
-<div class="page-header flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-bold">Messengers</h1>
-  <%= link_to 'New Messenger', new_admin_messenger_path, class: 'btn btn-primary' %>
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-white">Messengers</h1>
+    <p class="mt-1 text-sm text-slate-400">Availability, performance, and assignment overview.</p>
+  </div>
+
+  <%= link_to "New Messenger", new_admin_messenger_path,
+              class: "inline-flex items-center rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-  <div class="bg-white rounded shadow p-4">
-    <h3 class="text-sm font-semibold text-gray-600">Total Messengers</h3>
-    <p class="text-2xl font-bold"><%= @stats[:total] %></p>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-xl shadow-black/30 backdrop-blur">
+    <div class="text-xs font-semibold uppercase tracking-wide text-slate-300">Total</div>
+    <div class="mt-2 text-2xl font-bold text-white"><%= @stats[:total] %></div>
   </div>
-  <div class="bg-green-100 rounded shadow p-4">
-    <h3 class="text-sm font-semibold text-green-800">Available</h3>
-    <p class="text-2xl font-bold text-green-600"><%= @stats[:available] %></p>
+  <div class="rounded-2xl border border-white/10 bg-emerald-500/10 p-4 shadow-xl shadow-black/30 backdrop-blur">
+    <div class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Available</div>
+    <div class="mt-2 text-2xl font-bold text-emerald-200"><%= @stats[:available] %></div>
   </div>
-  <div class="bg-yellow-100 rounded shadow p-4">
-    <h3 class="text-sm font-semibold text-yellow-800">Busy</h3>
-    <p class="text-2xl font-bold text-yellow-600"><%= @stats[:busy] %></p>
+  <div class="rounded-2xl border border-white/10 bg-yellow-500/10 p-4 shadow-xl shadow-black/30 backdrop-blur">
+    <div class="text-xs font-semibold uppercase tracking-wide text-yellow-200">Busy</div>
+    <div class="mt-2 text-2xl font-bold text-yellow-200"><%= @stats[:busy] %></div>
   </div>
-  <div class="bg-gray-100 rounded shadow p-4">
-    <h3 class="text-sm font-semibold text-gray-800">Offline</h3>
-    <p class="text-2xl font-bold text-gray-600"><%= @stats[:offline] %></p>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-xl shadow-black/30 backdrop-blur">
+    <div class="text-xs font-semibold uppercase tracking-wide text-slate-300">Offline</div>
+    <div class="mt-2 text-2xl font-bold text-slate-200"><%= @stats[:offline] %></div>
   </div>
 </div>
 
-<div class="mb-4">
-  <%= form_with url: admin_messengers_path, method: :get, local: true, class: 'flex gap-2 flex-wrap' do |f| %>
-    <%= f.text_field :search, value: params[:search], placeholder: 'Name, email, employee ID...', class: 'input input-bordered' %>
-    <%= f.select :status, Messenger.statuses.map { |k, v| [k.titleize, k] }, { include_blank: 'All Statuses' }, class: 'input input-bordered' %>
-    <%= f.select :vehicle_type, Messenger.vehicle_types.map { |k, v| [k.titleize, k] }, { include_blank: 'All Vehicles' }, class: 'input input-bordered' %>
-    <%= f.select :carrier_id, Carrier.pluck(:name, :id), { include_blank: 'All Carriers' }, class: 'input input-bordered' %>
-    <%= f.submit 'Filter', class: 'btn btn-secondary' %>
+<div class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-xl shadow-black/30 backdrop-blur mb-6">
+  <%= form_with url: admin_messengers_path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-5 gap-3" do |f| %>
+    <%= f.text_field :search,
+                     value: params[:search],
+                     placeholder: "Name, email, employee ID...",
+                     class: "md:col-span-2 block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
+    <%= f.select :status,
+                 Messenger.statuses.map { |k, _v| [k.titleize, k] },
+                 { include_blank: "All Statuses" },
+                 class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
+    <%= f.select :vehicle_type,
+                 Messenger.vehicle_types.map { |k, _v| [k.titleize, k] },
+                 { include_blank: "All Vehicles" },
+                 class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
+    <%= f.select :carrier_id,
+                 Carrier.pluck(:name, :id),
+                 { include_blank: "All Carriers" },
+                 class: "block w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/30" %>
+    <div class="flex items-center">
+      <%= f.submit "Filter", class: "w-full inline-flex items-center justify-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15" %>
+    </div>
   <% end %>
 </div>
 
-<table class="table-auto w-full bg-white rounded shadow">
-  <thead>
-    <tr>
-      <th class="px-4 py-2">Name</th>
-      <th class="px-4 py-2">Status</th>
-      <th class="px-4 py-2">Vehicle</th>
-      <th class="px-4 py-2">Carrier</th>
-      <th class="px-4 py-2">Employee ID</th>
-      <th class="px-4 py-2">Deliveries</th>
-      <th class="px-4 py-2">On-Time Rate</th>
-      <th class="px-4 py-2">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @messengers.each do |messenger| %>
-      <tr>
-        <td class="border px-4 py-2 font-semibold">
-          <%= link_to messenger.display_name, admin_messenger_path(messenger), class: 'text-blue-700 hover:underline' %>
-        </td>
-        <td class="border px-4 py-2">
-          <% status_color = messenger.available? ? 'badge-success' : messenger.busy? ? 'badge-warning' : 'badge-secondary' %>
-          <span class="badge <%= status_color %>"><%= messenger.status.titleize %></span>
-        </td>
-        <td class="border px-4 py-2"><%= messenger.vehicle_type&.titleize %></td>
-        <td class="border px-4 py-2"><%= messenger.carrier&.name %></td>
-        <td class="border px-4 py-2"><%= messenger.employee_id %></td>
-        <td class="border px-4 py-2"><%= messenger.total_deliveries %></td>
-        <td class="border px-4 py-2"><%= number_to_percentage(messenger.on_time_rate * 100, precision: 1) %></td>
-        <td class="border px-4 py-2">
-          <%= link_to 'View', admin_messenger_path(messenger), class: 'btn btn-xs btn-outline' %>
-          <%= link_to 'Edit', edit_admin_messenger_path(messenger), class: 'btn btn-xs btn-outline' %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-white/10">
+      <thead class="bg-white/5">
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Name</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Status</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Vehicle</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Carrier</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Employee ID</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">Deliveries</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">On-Time</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-300">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/10">
+        <% @messengers.each do |messenger| %>
+          <% status_badge = messenger.available? ? "bg-emerald-500/15 text-emerald-200" : messenger.busy? ? "bg-yellow-500/15 text-yellow-200" : "bg-white/10 text-slate-200" %>
+          <tr class="hover:bg-white/5">
+            <td class="px-4 py-3 text-sm font-semibold text-white">
+              <%= link_to messenger.display_name, admin_messenger_path(messenger), class: "text-yellow-200 hover:text-yellow-100" %>
+            </td>
+            <td class="px-4 py-3 text-sm">
+              <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold <%= status_badge %>"><%= messenger.status.titleize %></span>
+            </td>
+            <td class="px-4 py-3 text-sm text-slate-200"><%= messenger.vehicle_type&.titleize %></td>
+            <td class="px-4 py-3 text-sm text-slate-200"><%= messenger.carrier&.name %></td>
+            <td class="px-4 py-3 text-sm text-slate-200"><%= messenger.employee_id %></td>
+            <td class="px-4 py-3 text-sm text-slate-200"><%= messenger.total_deliveries %></td>
+            <td class="px-4 py-3 text-sm text-slate-200"><%= number_to_percentage(messenger.on_time_rate * 100, precision: 1) %></td>
+            <td class="px-4 py-3 text-right text-sm">
+              <div class="inline-flex items-center gap-2">
+                <%= link_to "View", admin_messenger_path(messenger), class: "inline-flex items-center rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/15" %>
+                <%= link_to "Edit", edit_admin_messenger_path(messenger), class: "inline-flex items-center rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/15" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

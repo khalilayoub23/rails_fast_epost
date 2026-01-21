@@ -33,7 +33,7 @@ class Customers::NotificationPreferencesControllerTest < ActionDispatch::Integra
 
     assert_redirected_to customer_notification_preferences_path(@customer)
     @preference.reload
-    refute @preference.enabled?
+    assert_not @preference.enabled?
     assert_equal 8, @preference.quiet_hours_start
     assert_equal 20, @preference.quiet_hours_end
   end
@@ -49,6 +49,6 @@ class Customers::NotificationPreferencesControllerTest < ActionDispatch::Integra
   test "prevents duplicate channels" do
     duplicate = @customer.notification_preferences.build(channel: :sms, enabled: true)
 
-    refute duplicate.valid?
+    assert_not duplicate.valid?
   end
 end

@@ -1,4 +1,4 @@
-<div class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white overflow-hidden px-4 py-12">
+<div class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden px-4 py-12">
   <div class="absolute inset-0 overflow-hidden">
     <div class="absolute -top-1/3 -left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[160px] animate-pulse"></div>
     <div class="absolute -bottom-1/3 -right-1/4 w-[28rem] h-[28rem] bg-yellow-500/10 rounded-full blur-[160px] animate-[pulse_6s_ease-in-out_infinite]"></div>
@@ -20,34 +20,34 @@
         <h1 class="text-4xl font-semibold text-white mb-4">
           <%= t('signup_title', default: 'Sign Up for FastEpost') %>
         </h1>
-        <p class="text-gray-300 text-lg mb-8">
+        <p class="text-slate-300 text-lg mb-8">
           <%= t('signup_subtitle', default: 'Create a new account to start shipping.') %>
         </p>
 
         <div class="grid gap-4 mb-10">
           <div class="rounded-2xl border border-white/10 p-4">
-            <p class="text-sm uppercase tracking-widest text-gray-400"><%= t('signup_step_one', default: 'Connect') %></p>
+            <p class="text-sm uppercase tracking-widest text-slate-400"><%= t('signup_step_one', default: 'Connect') %></p>
             <p class="text-lg text-white"><%= t('signup_step_one_desc', default: 'Pick Google, Facebook, or continue with email.') %></p>
           </div>
           <div class="rounded-2xl border border-white/10 p-4">
-            <p class="text-sm uppercase tracking-widest text-gray-400"><%= t('signup_step_two', default: 'Customize') %></p>
+            <p class="text-sm uppercase tracking-widest text-slate-400"><%= t('signup_step_two', default: 'Customize') %></p>
             <p class="text-lg text-white"><%= t('signup_step_two_desc', default: 'Tell us how you ship, get matched to workflows.') %></p>
           </div>
           <div class="rounded-2xl border border-white/10 p-4">
-            <p class="text-sm uppercase tracking-widest text-gray-400"><%= t('signup_step_three', default: 'Launch') %></p>
+            <p class="text-sm uppercase tracking-widest text-slate-400"><%= t('signup_step_three', default: 'Launch') %></p>
             <p class="text-lg text-white"><%= t('signup_step_three_desc', default: 'Go straight to your personalized dashboard experience.') %></p>
           </div>
         </div>
 
         <div class="space-y-4">
-          <p class="text-sm font-medium text-gray-300 uppercase tracking-widest">
+          <p class="text-sm font-medium text-slate-300 uppercase tracking-widest">
             <%= t('signup_social_heading', default: 'Connect with') %>
           </p>
           <%= render "devise/shared/social_connect", resource_name: resource_name %>
         </div>
       </div>
 
-      <div class="rounded-3xl border border-white/10 bg-gray-900/80 px-8 py-10 shadow-2xl backdrop-blur">
+      <div class="rounded-3xl border border-white/10 bg-white/5 px-8 py-10 shadow-2xl backdrop-blur">
         <div class="mb-8">
           <p class="text-sm font-semibold text-yellow-400 uppercase tracking-widest">
             <%= t('signup_email_heading_badge', default: 'Email sign up') %>
@@ -55,7 +55,7 @@
           <h2 class="text-3xl font-semibold text-white">
             <%= t('signup_email_heading', default: 'Create your FastEpost login') %>
           </h2>
-          <p class="text-gray-400 mt-2">
+          <p class="text-slate-400 mt-2">
             <%= t('signup_email_hint', default: 'We keep things lightweight—only three fields to get started.') %>
           </p>
         </div>
@@ -75,99 +75,99 @@
           <% end %>
 
           <div>
-            <%= f.label :full_name, t('full_name', default: 'Full name'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+            <%= f.label :full_name, t('full_name', default: 'Full name'), class: "mb-2 block text-sm font-medium text-slate-300" %>
             <div class="relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.567 3-3.5S13.657 4 12 4 9 5.567 9 7.5 10.343 11 12 11zm0 2c-2.485 0-7 1.243-7 3.5V19a1 1 0 001 1h12a1 1 0 001-1v-2.5c0-2.257-4.515-3.5-7-3.5z" />
                 </svg>
               </div>
               <%= f.text_field :full_name, autocomplete: "name",
                   placeholder: t('full_name_placeholder', default: 'Alex Doe'),
-                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
+                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-slate-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
             </div>
           </div>
 
           <div>
-            <%= f.label :email, t('email', default: 'Email'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+            <%= f.label :email, t('email', default: 'Email'), class: "mb-2 block text-sm font-medium text-slate-300" %>
             <div class="relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                 </svg>
               </div>
               <%= f.email_field :email, autofocus: true, autocomplete: "email",
                   placeholder: t('email_placeholder', default: 'you@company.com'),
-                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
+                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-slate-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
             </div>
           </div>
 
           <div>
-            <%= f.label :password, t('password', default: 'Password'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+            <%= f.label :password, t('password', default: 'Password'), class: "mb-2 block text-sm font-medium text-slate-300" %>
             <div class="relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
               <%= f.password_field :password, autocomplete: "new-password",
                   placeholder: t('password_placeholder', default: '••••••••'),
-                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
+                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-slate-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
             </div>
             <% if @minimum_password_length %>
-              <p class="mt-2 text-xs text-gray-400">
+              <p class="mt-2 text-xs text-slate-400">
                 <%= t('minimum_characters', default: '%{count} characters minimum', count: @minimum_password_length) %>
               </p>
             <% end %>
           </div>
 
           <div>
-            <%= f.label :password_confirmation, t('password_confirmation', default: 'Confirm Password'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+            <%= f.label :password_confirmation, t('password_confirmation', default: 'Confirm Password'), class: "mb-2 block text-sm font-medium text-slate-300" %>
             <div class="relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <%= f.password_field :password_confirmation, autocomplete: "new-password",
                   placeholder: t('password_placeholder', default: '••••••••'),
-                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-gray-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
+                  class: "w-full rounded-2xl border border-white/10 bg-transparent px-4 py-3 pl-11 text-white placeholder-slate-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/40" %>
             </div>
           </div>
 
           <%= f.hidden_field :role, value: resource.role.presence || 'sender' %>
 
           <div>
-            <%= f.label :user_type, t('user_type', default: 'User type'), class: "mb-2 block text-sm font-medium text-gray-300" %>
+            <%= f.label :user_type, t('user_type', default: 'User type'), class: "mb-2 block text-sm font-medium text-slate-300" %>
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <%= f.collection_radio_buttons(:user_type, User.user_types.keys, :to_s, ->(k) { k.humanize }) do |b| %>
                 <div class="relative">
                   <%= b.radio_button(class: "peer sr-only", required: true) %>
-                  <%= b.label(class: "block cursor-pointer rounded-xl border px-4 py-3 text-sm font-semibold transition-all peer-checked:border-amber-400 peer-checked:bg-amber-400/10 peer-checked:text-white border-white/10 bg-white/5 text-gray-300 hover:border-amber-300/60") %>
+                  <%= b.label(class: "block cursor-pointer rounded-xl border px-4 py-3 text-sm font-semibold transition-all peer-checked:border-amber-400 peer-checked:bg-amber-400/10 peer-checked:text-white border-white/10 bg-white/5 text-slate-200 hover:border-amber-300/60") %>
                 </div>
               <% end %>
             </div>
-            <p class="mt-2 text-xs text-gray-400"><%= t('user_type_hint', default: 'Choose how you plan to use FastEpost (sender, courier, recipient, etc.)') %></p>
+            <p class="mt-2 text-xs text-slate-400"><%= t('user_type_hint', default: 'Choose how you plan to use FastEpost (sender, courier, recipient, etc.)') %></p>
           </div>
 
           <div class="space-y-3">
-            <%= f.submit t('create_account_button', default: 'Sign Up'), class: "w-full rounded-2xl bg-yellow-400 px-4 py-3 text-base font-semibold text-gray-900 transition-all hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500" %>
+            <%= f.submit t('create_account_button', default: 'Sign Up'), class: "w-full rounded-2xl bg-yellow-400 px-4 py-3 text-base font-semibold text-black transition-all hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500" %>
             
             <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-gray-700"></div>
-                <span class="flex-shrink-0 mx-4 text-gray-500 text-xs"><%= t('or', default: 'OR') %></span>
-                <div class="flex-grow border-t border-gray-700"></div>
+              <div class="flex-grow border-t border-white/10"></div>
+              <span class="flex-shrink-0 mx-4 text-slate-500 text-xs"><%= t('or', default: 'OR') %></span>
+              <div class="flex-grow border-t border-white/10"></div>
             </div>
 
             <%= link_to t('log_in', default: 'Already have an account? Log in'), new_session_path(resource_name), class: "flex w-full items-center justify-center rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-base font-semibold text-white transition-all hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20" %>
 
-            <p class="text-center text-xs text-gray-500">
+            <p class="text-center text-xs text-slate-400">
               <%= t('signup_security_note', default: 'Signing up confirms you agree to our terms and privacy promise.') %>
             </p>
           </div>
         <% end %>
 
-        <div class="mt-8 border-t border-white/10 pt-6 text-center text-sm text-gray-400">
+        <div class="mt-8 border-t border-white/10 pt-6 text-center text-sm text-slate-400">
           <%= render "devise/shared/links" %>
         </div>
       </div>

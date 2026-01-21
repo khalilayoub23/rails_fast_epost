@@ -17,7 +17,7 @@ namespace :demo do
       name: "Demo Customer",
       email: "customer@example.com",
       address: "500 Customer Blvd, Chicago, IL",
-      phones: ["+1-555-0100"].to_json,
+      phones: [ "+1-555-0100" ].to_json,
       category: :business
     )
 
