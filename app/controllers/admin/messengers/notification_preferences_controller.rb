@@ -1,6 +1,8 @@
 module Admin
   module Messengers
     class NotificationPreferencesController < ApplicationController
+      include AdminOrManagerAuthorization
+
       before_action :require_admin_or_manager!
       before_action :authenticate_user!
       before_action :set_notification_preference, only: %i[ edit update destroy ]
@@ -55,12 +57,6 @@ module Admin
 
       def notification_preference_params
         params.require(:notification_preference).permit(:channel, :enabled, :quiet_hours_start, :quiet_hours_end)
-      end
-
-      def require_admin_or_manager!
-        unless current_user&.admin? || current_user&.manager?
-          redirect_to root_path, alert: "Access denied"
-        end
       end
     end
   end
