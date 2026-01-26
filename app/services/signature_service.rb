@@ -49,29 +49,30 @@ class SignatureService
         message&.deliver_later
       end
 
-      regenerate_pdf_with_signatures
+      regenerate_pdf_with_signatures(signature_bytes_by_role: { role => signature_bytes })
       finalize_if_complete
     end
   end
 
-  def regenerate_pdf_with_signatures
+  def regenerate_pdf_with_signatures(signature_bytes_by_role: nil)
     return unless delivery.base_pdf.attached?
 
     Tempfile.create([ "delivery-current", ".pdf" ]) do |base|
+      base.binmode
       delivery.base_pdf.download { |chunk| base.write(chunk) }
       base.rewind
 
       document = HexaPDF::Document.open(base.path)
       page = document.pages.first || document.pages.add
-      canvas = page.canvas
+      canvas = page.canvas(type: :overlay)
 
       Delivery::SIGNATURE_ROLES.each do |role|
         next unless delivery.signature_completed?(role)
 
-        attachment = signature_attachment_for(role)
-        next unless attachment&.attached?
+        bytes = signature_bytes_for(role, signature_bytes_by_role)
+        next unless bytes
 
-        draw_signature(canvas, document, attachment, role)
+        draw_signature(canvas, document, bytes, role)
       end
 
       add_watermark(document) if delivery.all_required_signatures_completed?
@@ -169,6 +170,28 @@ class SignatureService
     delivery.public_send("#{role}_signature_copy")
   end
 
+  def signature_bytes_for(role, signature_bytes_by_role = nil)
+    return signature_bytes_by_role[role] if signature_bytes_by_role&.key?(role)
+
+    attachment = signature_attachment_for(role)
+    if attachment&.attached?
+      begin
+        return attachment.download
+      rescue ActiveStorage::FileNotFoundError
+        # fall through to saved signatures
+      end
+    end
+
+    if role != "recipient"
+      user = delivery.public_send(role)
+      return user.saved_signature.download if user&.has_saved_signature?
+    end
+
+    return delivery.recipient.saved_signature.download if role == "recipient" && delivery.recipient&.has_saved_signature?
+
+    nil
+  end
+
   def update_signature_data(role, user, signature_hash, ip_address)
     key = role.to_s
     payload = delivery.signature_snapshot
@@ -188,8 +211,7 @@ class SignatureService
     delivery.save!
   end
 
-  def draw_signature(canvas, document, attachment, role)
-    bytes = attachment.download
+  def draw_signature(canvas, document, bytes, role)
     image = document.images.add(StringIO.new(bytes))
     position = SIGNATURE_POSITIONS[role]
 
@@ -203,20 +225,20 @@ class SignatureService
     label_position = [ position.first, position.last + SIGNATURE_DIMENSIONS[:height] + 15 ]
     timestamp_position = [ position.first, position.last - 15 ]
 
-    canvas.font_size(10)
-    canvas.text(SIGNATURE_LABELS[role], at: label_position)
+    canvas.font("Helvetica", size: 10)
+    label_text = SIGNATURE_LABELS[role].encode("ASCII", invalid: :replace, undef: :replace, replace: "")
+    canvas.text(label_text, at: label_position)
 
     data = delivery.signature_data[role.to_s]
-    lock = "🔒"
-    timestamp_text = "#{lock} #{data["signed_at"]} ##{data["signed_by_user_id"]}"
+    timestamp_text = "LOCK #{data["signed_at"]} ##{data["signed_by_user_id"]}"
     canvas.text(timestamp_text, at: timestamp_position)
   end
 
   def add_watermark(document)
     document.pages.each do |page|
-      canvas = page.canvas
+      canvas = page.canvas(type: :overlay)
       canvas.save_graphics_state
-      canvas.fill_color("#d1d5db")
+      canvas.fill_color(0.82, 0.84, 0.86)
       canvas.opacity(fill_alpha: 0.1)
       canvas.translate(page.box.width / 2, page.box.height / 2)
       canvas.rotate(45)
@@ -227,12 +249,14 @@ class SignatureService
   end
 
   def embed_attempt_metadata(document)
+    return unless delivery.respond_to?(:tracking_events)
+
     attempts = delivery.tracking_events.where(event_type: "failed").order(:occurred_at).limit(5)
     return if attempts.empty?
 
     page = document.pages.first || document.pages.add
-    canvas = page.canvas
-    canvas.font_size(8)
+    canvas = page.canvas(type: :overlay)
+    canvas.font("Helvetica", size: 8)
     canvas.fill_color("#555555")
 
     attempts.each_with_index do |attempt, idx|
@@ -249,29 +273,18 @@ class SignatureService
   end
 
   def attach_current_pdf(file)
-    File.open(file.path, "rb") do |f|
-      delivery.current_pdf.attach(
-        io: f,
-        filename: "delivery-#{delivery.id || "new"}-current-#{Time.current.to_i}.pdf",
-        content_type: "application/pdf"
-      )
-    end
+    io = StringIO.new(File.binread(file.path))
+    delivery.current_pdf.attach(
+      io: io,
+      filename: "delivery-#{delivery.id || "new"}-current-#{Time.current.to_i}.pdf",
+      content_type: "application/pdf"
+    )
   end
 
   def copy_current_to_final
     return unless delivery.current_pdf.attached?
 
-    Tempfile.create([ "delivery-final", ".pdf" ]) do |tmp|
-      delivery.current_pdf.download { |chunk| tmp.write(chunk) }
-      tmp.rewind
-      File.open(tmp.path, "rb") do |f|
-        delivery.final_pdf.attach(
-          io: f,
-          filename: "delivery-#{delivery.id}-final.pdf",
-          content_type: "application/pdf"
-        )
-      end
-    end
+    delivery.final_pdf.attach(delivery.current_pdf.blob)
   end
 
   def persist_recipient_signature

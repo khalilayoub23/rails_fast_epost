@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>" dir="<%= text_direction %>">
   <head>
-    <title><%= content_for(:title) || "Fast Epost 3" %></title>
+    <title><%= content_for(:title) || t("app.meta_title", default: "Fast Epost") %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -62,20 +62,20 @@
     data-direction="<%= text_direction %>"
     data-lang="<%= I18n.locale %>"
   >
+    <%= render "shared/flash_messages" %>
     <div class="flex h-screen overflow-hidden" data-controller="sidebar">
       <!-- Hide sidebar on mobile/Turbo Native -->
       <% unless turbo_native_app? %>
         <%= render "shared/sidebar" %>
       <% end %>
       
-      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-transparent <%= 'pb-20' if turbo_native_app? %>">
+      <div class="relative flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-transparent <%= 'pb-20' if turbo_native_app? %>">
         <!-- Hide topbar on Turbo Native (native apps have their own nav) -->
         <% unless turbo_native_app? %>
           <%= render "shared/topbar" %>
         <% end %>
         
-        <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-          <%= render "shared/flash_messages" %>
+        <main class="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10">
           <%= yield %>
         </main>
       </div>

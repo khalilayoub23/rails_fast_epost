@@ -50,6 +50,7 @@
   </head>
 
   <body class="bg-gradient-to-br from-slate-950 via-slate-900 to-black font-satoshi text-base text-slate-200 transition-colors duration-300">
+    <%= render "shared/flash_messages" %>
     <% unless content_for?(:page_title) %>
       <% content_for :page_title, (@control_panel_title.presence || "Carrier Control Panel") %>
     <% end %>
@@ -59,18 +60,17 @@
         <%= render "shared/sidebar" %>
       <% end %>
 
-      <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-transparent <%= 'pb-20' if turbo_native_app? %>">
+      <div class="relative flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-transparent <%= 'pb-20' if turbo_native_app? %>">
         <% unless turbo_native_app? %>
           <%= render "shared/topbar" %>
         <% end %>
 
-        <main class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 space-y-6">
+        <main class="mx-auto w-full max-w-screen-2xl p-4 md:p-6 2xl:p-10 space-y-6">
           <% if content_for?(:control_panel_context) %>
             <%= yield :control_panel_context %>
           <% else %>
             <%= render "control_panel/shared/context_bar" %>
           <% end %>
-          <%= render "shared/flash_messages" %>
           <%= yield %>
         </main>
       </div>

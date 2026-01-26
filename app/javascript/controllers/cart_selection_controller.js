@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["toggleAll", "itemCheckbox"]
+  static targets = ["toggleAll", "itemCheckbox", "amountInput"]
 
   connect() {
     this.sync()
@@ -14,10 +14,12 @@ export default class extends Controller {
     })
 
     this.updateToggleAllState()
+    this.updateAmountInputs()
   }
 
   sync() {
     this.updateToggleAllState()
+    this.updateAmountInputs()
   }
 
   updateToggleAllState() {
@@ -32,5 +34,19 @@ export default class extends Controller {
 
     this.toggleAllTarget.indeterminate = !allChecked && !noneChecked
     this.toggleAllTarget.checked = allChecked
+  }
+
+  updateAmountInputs() {
+    if (!this.hasAmountInputTarget) return
+
+    const selectedTaskIds = new Set(
+      this.itemCheckboxTargets.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.dataset.taskId)
+    )
+
+    this.amountInputTargets.forEach((input) => {
+      const taskId = input.dataset.taskId
+      const enabled = selectedTaskIds.has(taskId)
+      input.disabled = !enabled
+    })
   }
 }

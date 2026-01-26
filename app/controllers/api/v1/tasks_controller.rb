@@ -1,18 +1,22 @@
 module Api
   module V1
     class TasksController < BaseController
+      before_action :authenticate_user!
       before_action :set_task, only: %i[show update destroy]
 
       def index
-        render json: Task.all
+        authorize Task
+        render json: policy_scope(Task)
       end
 
       def show
+        authorize @task
         render json: @task
       end
 
       def create
         task = Task.new(task_params)
+        authorize task
         if task.save
           render json: task, status: :created
         else
@@ -21,6 +25,7 @@ module Api
       end
 
       def update
+        authorize @task
         if @task.update(task_params)
           render json: @task
         else
@@ -29,6 +34,7 @@ module Api
       end
 
       def destroy
+        authorize @task
         @task.destroy
         head :no_content
       end
@@ -36,7 +42,7 @@ module Api
       private
 
       def set_task
-        @task = Task.find(params[:id])
+        @task = policy_scope(Task).find(params[:id])
       end
 
       def task_params

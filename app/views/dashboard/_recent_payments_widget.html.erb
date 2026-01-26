@@ -1,0 +1,25 @@
+<div data-widget-id="recent_payments" data-span="<%= span %>" class="<%= span %> <%= card_class %> px-5 pt-6 pb-2.5 sm:px-7.5">
+  <div class="mb-6 flex items-center justify-between">
+    <h3 class="text-title-md font-semibold text-white"><%= t("dashboard.recent_payments", default: "Payments") %></h3>
+    <%= link_to t("common.view_all", default: "View all"), payments_path, class: "text-sm font-medium text-yellow-300 hover:text-yellow-200 transition-colors" %>
+  </div>
+  <div class="max-w-full overflow-x-auto rounded-xl border border-white/10">
+    <table class="w-full table-auto">
+      <thead>
+        <tr class="bg-slate-900/60 text-left border-b border-white/10">
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("common.id", default: "ID") %></th>
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.provider", default: "Provider") %></th>
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.status", default: "Status") %></th>
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.amount", default: "Amount") %></th>
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.currency", default: "Currency") %></th>
+          <th class="px-4 py-4 text-right font-medium text-slate-200"><%= t("common.actions", default: "Actions") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Array(recent_payments).each do |payment| %>
+          <%= render "payments/payment", payment: payment %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

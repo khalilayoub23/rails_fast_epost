@@ -14,6 +14,7 @@ class PdfProcessorService
     return unless delivery.original_court_pdf.attached?
 
     Tempfile.create([ "delivery-original", ".pdf" ]) do |input|
+      input.binmode
       delivery.original_court_pdf.download { |chunk| input.write(chunk) }
       input.rewind
 
@@ -22,6 +23,7 @@ class PdfProcessorService
       embed_attempt_metadata(document)
 
       Tempfile.create([ "delivery-base", ".pdf" ]) do |output|
+        output.binmode
         document.write(output.path, optimize: true)
         output.rewind
         attach_as_base_and_current(output, source: "original")
@@ -47,13 +49,15 @@ class PdfProcessorService
   end
 
   def embed_attempt_metadata(document)
+    return unless delivery.respond_to?(:tracking_events)
+
     page = document.pages.first || document.pages.add
-    canvas = page.canvas
+    canvas = page.canvas(type: :overlay)
 
     attempts = delivery.tracking_events.where(event_type: "failed").order(:occurred_at).limit(5)
     return if attempts.empty?
 
-    canvas.font_size(8)
+    canvas.font("Helvetica", size: 8)
     canvas.fill_color("#555555")
 
     attempts.each_with_index do |attempt, idx|
@@ -77,7 +81,7 @@ class PdfProcessorService
     barcode_png = BarcodeGenerator.generate_qr(delivery.barcode_data)
     image_io = StringIO.new(barcode_png)
     page = document.pages.first || document.pages.add
-    page.canvas.image(document.images.add(image_io), at: BARCODE_POSITION, width: BARCODE_WIDTH)
+    page.canvas(type: :overlay).image(document.images.add(image_io), at: BARCODE_POSITION, width: BARCODE_WIDTH)
   end
 
   def attach_as_base_and_current(io, source: "generated")

@@ -2,6 +2,8 @@ module Api
   module V1
     module Public
       class TrackingController < Api::V1::BaseController
+        before_action :require_public_tracking_key!
+
         # GET /api/v1/public/track/:barcode
         def show
           barcode = params[:barcode].upcase.strip
@@ -43,6 +45,15 @@ module Api
         end
 
         private
+
+        def require_public_tracking_key!
+          expected = ENV["PUBLIC_TRACKING_API_KEY"].to_s
+          provided = request.headers["X-Public-Api-Key"].to_s
+
+          return if expected.present? && ActiveSupport::SecurityUtils.secure_compare(expected, provided)
+
+          render json: { success: false, error: "Unauthorized" }, status: :forbidden
+        end
 
         def format_address(address)
           return nil if address.blank?

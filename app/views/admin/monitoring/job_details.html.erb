@@ -1,0 +1,74 @@
+<div class="p-6 space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="text-title-md2 font-bold text-white">Job Details</h1>
+      <p class="mt-2 text-sm text-slate-300">Inspect a Solid Queue job payload</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <%= link_to "← Back to Jobs", admin_monitoring_jobs_path, class: "text-sm text-slate-200 hover:text-white" %>
+      <%= link_to "Monitoring", admin_monitoring_path, class: "text-sm text-slate-400 hover:text-white" %>
+    </div>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-wide text-slate-300">Job ID</p>
+        <p class="mt-2 text-xl font-semibold text-white"><%= @job.id %></p>
+      </div>
+      <div>
+        <% if @job.finished_at %>
+          <span class="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-500/15 text-emerald-200">Completed</span>
+        <% else %>
+          <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-500/15 text-yellow-200">Pending</span>
+        <% end %>
+      </div>
+    </div>
+
+    <dl class="mt-6 grid gap-6 md:grid-cols-2">
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">Class</dt>
+        <dd class="mt-2 text-sm text-white"><code class="rounded bg-white/10 px-2 py-1 text-slate-200"><%= @job.class_name %></code></dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">Queue</dt>
+        <dd class="mt-2 text-sm text-white"><%= @job.queue_name %></dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">Priority</dt>
+        <dd class="mt-2 text-sm text-white"><%= @job.priority %></dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">Active Job ID</dt>
+        <dd class="mt-2 text-sm text-white"><%= @job.active_job_id.presence || "-" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">Scheduled At</dt>
+        <dd class="mt-2 text-sm text-white"><%= @job.scheduled_at ? l(@job.scheduled_at, format: :long) : "-" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">Finished At</dt>
+        <dd class="mt-2 text-sm text-white"><%= @job.finished_at ? l(@job.finished_at, format: :long) : "-" %></dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">Created At</dt>
+        <dd class="mt-2 text-sm text-white"><%= l(@job.created_at, format: :long) %></dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-300">Updated At</dt>
+        <dd class="mt-2 text-sm text-white"><%= l(@job.updated_at, format: :long) %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h2 class="text-lg font-semibold text-white">Arguments</h2>
+      <pre class="mt-4 max-h-80 overflow-auto rounded-xl bg-black/40 p-4 text-xs text-slate-200"><%= JSON.pretty_generate(@job.arguments) rescue @job.arguments.to_s %></pre>
+    </div>
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+      <h2 class="text-lg font-semibold text-white">Metadata</h2>
+      <pre class="mt-4 max-h-80 overflow-auto rounded-xl bg-black/40 p-4 text-xs text-slate-200"><%= JSON.pretty_generate(@job.attributes) rescue @job.attributes.to_s %></pre>
+    </div>
+  </div>
+</div>

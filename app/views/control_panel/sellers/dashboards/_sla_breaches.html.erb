@@ -1,0 +1,21 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-white"><%= t("sellers.sla_breaches", default: "SLA breaches") %></h2>
+    <span class="text-xs text-slate-400"><%= t("sellers.late_failed_shipments", default: "Late / failed shipments") %></span>
+  </div>
+  <div class="space-y-3">
+    <% sla_breaches.each do |task| %>
+      <div class="rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-semibold text-white">Task <%= task.barcode %></p>
+          <span class="text-xs text-slate-200"><%= task.status.humanize %></span>
+        </div>
+        <p class="text-xs text-slate-300"><%= t("tasks.carrier", default: "Carrier") %>: <%= task.carrier&.name || t("tasks.unassigned", default: "Unassigned") %></p>
+        <p class="text-xs text-slate-400"><%= t("tasks.scheduled", default: "Scheduled %{time}", time: (l(task.delivery_time, format: :short) if task.delivery_time)) %></p>
+      </div>
+    <% end %>
+    <% if sla_breaches.empty? %>
+      <p class="text-sm text-slate-400"><%= t("sellers.no_sla_breaches", default: "No SLA breaches 🎯") %></p>
+    <% end %>
+  </div>
+</div>

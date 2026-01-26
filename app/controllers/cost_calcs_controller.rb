@@ -5,30 +5,36 @@ class CostCalcsController < ApplicationController
   before_action :set_cost_calc, only: %i[show edit update destroy]
 
   def index
+    authorize CostCalc
     @cost_calcs = [ @task.cost_calc ].compact
     respond_with_index(@cost_calcs)
   end
 
   def show
+    authorize @cost_calc
     respond_with_show(@cost_calc)
   end
 
   def new
     @cost_calc = @task.build_cost_calc
+    authorize @cost_calc
   end
 
   def create
     @cost_calc = @task.build_cost_calc(cost_calc_params)
+    authorize @cost_calc
     respond_with_create(@cost_calc, @task, notice: "Cost calc created.")
   end
 
   def edit; end
 
   def update
+    authorize @cost_calc
     respond_with_update(@cost_calc, @task, notice: "Cost calc updated.", attributes: cost_calc_params)
   end
 
   def destroy
+    authorize @cost_calc
     respond_with_destroy(@cost_calc, task_cost_calcs_path(@task), notice: "Cost calc deleted.")
   end
 
@@ -36,6 +42,7 @@ class CostCalcsController < ApplicationController
 
   def set_task
     @task = Task.find(params[:task_id])
+    authorize @task, :show?
   end
 
   def set_cost_calc

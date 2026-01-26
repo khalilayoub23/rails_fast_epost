@@ -1,7 +1,8 @@
 module ControlPanel
   module Lawyers
     class DashboardsController < ControlPanel::BaseController
-      before_action :require_operations_role!
+      skip_before_action :require_control_panel_access!, only: :show
+      before_action :require_lawyer_panel_access!
       before_action :set_lawyer
 
       def show
@@ -15,10 +16,30 @@ module ControlPanel
         @compliance_rate = calculate_compliance_rate(tasks)
         @pending_clearances = tasks.where(status: [ Task.statuses[:pending], Task.statuses[:failed] ]).order(updated_at: :desc).limit(6)
         @recent_clearances = tasks.where(status: Task.statuses[:delivered]).order(delivery_time: :desc).limit(6)
+        @recent_tasks = tasks.order(updated_at: :desc).limit(8)
+        @tasks_count = tasks.count
         @control_panel_title = "#{@lawyer.display_name} · Lawyer Panel"
       end
 
       private
+
+      def require_lawyer_panel_access!
+        return if current_user&.admin? || current_user&.operations_manager? || current_user&.lawyer?
+
+        message = t("messages.unauthorized", default: "You are not authorized to access this panel.")
+        redirect_to(root_path, alert: message)
+      end
+
+      def accessible_lawyers
+        return Lawyer.order(Arel.sql("LOWER(name)")) if current_user&.admin? || current_user&.operations_manager?
+
+        if current_user&.lawyer?
+          lawyer = Lawyer.find_by(email: current_user.email)
+          return Lawyer.where(id: lawyer.id) if lawyer
+        end
+
+        Lawyer.none
+      end
 
       def set_lawyer
         @lawyer_scope = accessible_lawyers

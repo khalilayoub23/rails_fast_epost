@@ -13,31 +13,45 @@ module Gateways
 
         if external_id.blank?
           secret = stripe_secret_key
-          if secret.present?
-            configure_stripe!(secret)
-            line_items = data["stripe_line_items"].presence
-            line_items = [
-              {
-                price_data: {
-                  currency: currency,
-                  product_data: { name: "Payment" },
-                  unit_amount: amount_cents
-                },
-                quantity: 1
-              }
-            ] if line_items.blank?
-            session = ::Stripe::Checkout::Session.create(
-              mode: "payment",
-              line_items: line_items,
-              success_url: default_success_url(data),
-              cancel_url: default_cancel_url(data)
-            )
-            external_id = session.id
-            checkout_url = session.url
-            cs_id = session.id
-            pi_id = session.payment_intent if session.respond_to?(:payment_intent)
+          simulate = ENV.fetch("STRIPE_SIMULATE", "false") == "true"
+
+          if secret.present? && !simulate
+            begin
+              configure_stripe!(secret)
+              line_items = data["stripe_line_items"].presence
+              line_items = [
+                {
+                  price_data: {
+                    currency: currency,
+                    product_data: { name: "Payment" },
+                    unit_amount: amount_cents
+                  },
+                  quantity: 1
+                }
+              ] if line_items.blank?
+              session = ::Stripe::Checkout::Session.create(
+                mode: "payment",
+                line_items: line_items,
+                success_url: default_success_url(data),
+                cancel_url: default_cancel_url(data)
+              )
+              external_id = session.id
+              checkout_url = session.url
+              cs_id = session.id
+              pi_id = session.payment_intent if session.respond_to?(:payment_intent)
+            rescue ::Stripe::AuthenticationError
+              if Rails.env.development? || Rails.env.test?
+                external_id = "sim_cs_#{SecureRandom.hex(10)}"
+                cs_id = external_id
+                pi_id = "sim_pi_#{SecureRandom.hex(10)}"
+                success_template = default_success_url(data)
+                checkout_url = success_template.gsub("{CHECKOUT_SESSION_ID}", external_id)
+              else
+                raise
+              end
+            end
           elsif Rails.env.development? || Rails.env.test?
-            # Simulate Stripe in development/test if keys are missing
+            # Simulate Stripe in development/test if keys are missing or explicit simulation is enabled
             external_id = "sim_cs_#{SecureRandom.hex(10)}"
             cs_id = external_id
             pi_id = "sim_pi_#{SecureRandom.hex(10)}"

@@ -1,0 +1,14 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5 lg:col-span-2">
+  <h2 class="text-lg font-semibold text-white mb-4"><%= t("senders.carrier_mix", default: "Carrier mix") %></h2>
+  <div class="space-y-3">
+    <% carrier_mix.each do |row| %>
+      <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-2">
+        <p class="font-medium text-white"><%= row[:name] %></p>
+        <span class="text-sm text-slate-300"><%= t("senders.shipments_count", default: "%{count} shipments", count: row[:count]) %></span>
+      </div>
+    <% end %>
+    <% if carrier_mix.empty? %>
+      <p class="text-sm text-slate-400"><%= t("senders.no_carrier_assignments", default: "No carrier assignments yet.") %></p>
+    <% end %>
+  </div>
+</div>

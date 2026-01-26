@@ -4,20 +4,24 @@ class CustomersController < ApplicationController
   before_action :set_customer, only: %i[show edit update destroy]
 
   def index
-    @customers = Customer.all
+    authorize Customer
+    @customers = policy_scope(Customer)
     respond_with_index(@customers)
   end
 
   def show
+    authorize @customer
     respond_with_show(@customer)
   end
 
   def new
     @customer = Customer.new
+    authorize @customer
   end
 
   def create
     @customer = Customer.new(customer_params)
+    authorize @customer
     respond_with_create(@customer, nil, notice: "Customer created.") do
       render turbo_stream: [
         turbo_stream.prepend("customers_list", partial: "customers/customer_card", locals: { customer: @customer }),
@@ -31,6 +35,7 @@ class CustomersController < ApplicationController
   def edit; end
 
   def update
+    authorize @customer
     respond_with_update(@customer, nil, notice: "Customer updated.", attributes: customer_params) do
       render turbo_stream: [
         turbo_stream.replace(@customer, partial: "customers/customer_card", locals: { customer: @customer }),
@@ -41,6 +46,7 @@ class CustomersController < ApplicationController
   end
 
   def destroy
+    authorize @customer
     respond_with_destroy(@customer, customers_path, notice: "Customer deleted.") do
       render turbo_stream: [
         turbo_stream.remove(@customer),
@@ -51,6 +57,7 @@ class CustomersController < ApplicationController
   end
 
   def search
+    authorize Customer
     @customers = if params[:q].present?
       Customer.where("name ILIKE ?", "%#{params[:q]}%").limit(10)
     else

@@ -1,0 +1,23 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold"><%= t("carriers.event_log", default: "Event log") %></h2>
+    <%= link_to t("common.view_json", default: "View JSON"), api_v1_carriers_events_path(format: :json), class: "text-xs underline text-yellow-300" %>
+  </div>
+  <ul class="space-y-3">
+    <% events.each do |event| %>
+      <li class="border border-white/10 bg-black/20 rounded-xl p-3">
+        <p class="text-sm font-semibold text-slate-200">
+          <%= event.title %>
+          <span class="ml-2 text-xs uppercase tracking-wide text-slate-500"><%= event.event_type %></span>
+        </p>
+        <p class="text-xs text-slate-400">Task <%= event.task&.barcode %> · <%= l(event.occurred_at, format: :short) %></p>
+        <% if event.description.present? %>
+          <p class="mt-1 text-sm text-slate-300"><%= event.description %></p>
+        <% end %>
+      </li>
+    <% end %>
+    <% if events.empty? %>
+      <li class="text-sm text-slate-500"><%= t("carriers.no_events", default: "No tracking events yet.") %></li>
+    <% end %>
+  </ul>
+</div>

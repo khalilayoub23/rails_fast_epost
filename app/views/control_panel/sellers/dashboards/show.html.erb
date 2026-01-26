@@ -20,83 +20,33 @@
 <% end %>
 
 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-    <p class="text-xs uppercase tracking-wide text-slate-300">Orders</p>
-    <p class="mt-2 text-3xl font-bold text-white"><%= @order_metrics[:total] %></p>
-  </div>
-  <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 backdrop-blur p-5">
-    <p class="text-xs uppercase text-blue-100">In transit</p>
-    <p class="mt-2 text-3xl font-bold text-blue-50"><%= @order_metrics[:in_transit] %></p>
-  </div>
-  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 backdrop-blur p-5">
-    <p class="text-xs uppercase text-emerald-100">Delivered</p>
-    <p class="mt-2 text-3xl font-bold text-emerald-50"><%= @order_metrics[:delivered] %></p>
-  </div>
-  <div class="rounded-2xl border border-rose-400/30 bg-rose-500/10 backdrop-blur p-5">
-    <p class="text-xs uppercase text-rose-100">Failed</p>
-    <p class="mt-2 text-3xl font-bold text-rose-50"><%= @order_metrics[:failed] %></p>
-  </div>
+  <%= render "control_panel/shared/stat_card",
+        label: "Orders",
+        value: @order_metrics[:total],
+        value_class: "mt-2 text-3xl font-bold text-white" %>
+  <%= render "control_panel/shared/stat_card",
+        label: "In transit",
+        value: @order_metrics[:in_transit],
+        container_class: "rounded-2xl border border-blue-400/30 bg-blue-500/10 backdrop-blur p-5",
+        label_class: "text-xs uppercase text-blue-100",
+        value_class: "mt-2 text-3xl font-bold text-blue-50" %>
+  <%= render "control_panel/shared/stat_card",
+        label: "Delivered",
+        value: @order_metrics[:delivered],
+        container_class: "rounded-2xl border border-emerald-400/30 bg-emerald-500/10 backdrop-blur p-5",
+        label_class: "text-xs uppercase text-emerald-100",
+        value_class: "mt-2 text-3xl font-bold text-emerald-50" %>
+  <%= render "control_panel/shared/stat_card",
+        label: "Failed",
+        value: @order_metrics[:failed],
+        container_class: "rounded-2xl border border-rose-400/30 bg-rose-500/10 backdrop-blur p-5",
+        label_class: "text-xs uppercase text-rose-100",
+        value_class: "mt-2 text-3xl font-bold text-rose-50" %>
 </div>
 
 <div class="grid gap-6 lg:grid-cols-2 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold text-white">SLA breaches</h2>
-      <span class="text-xs text-slate-400">Late / failed shipments</span>
-    </div>
-    <div class="space-y-3">
-      <% @sla_breaches.each do |task| %>
-        <div class="rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3">
-          <div class="flex items-center justify-between">
-            <p class="text-sm font-semibold text-white">Task <%= task.barcode %></p>
-            <span class="text-xs text-slate-200"><%= task.status.humanize %></span>
-          </div>
-          <p class="text-xs text-slate-300">Carrier: <%= task.carrier&.name || 'Unassigned' %></p>
-          <p class="text-xs text-slate-400">Scheduled <%= l(task.delivery_time, format: :short) if task.delivery_time %></p>
-        </div>
-      <% end %>
-      <% if @sla_breaches.empty? %>
-        <p class="text-sm text-slate-400">No SLA breaches 🎯</p>
-      <% end %>
-    </div>
-  </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold text-white">Top package types</h2>
-      <span class="text-xs text-slate-400">Last 5</span>
-    </div>
-    <div class="space-y-3">
-      <% @top_products.each do |package_type, count| %>
-        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-2">
-          <p class="text-sm font-semibold text-white"><%= package_type.presence || 'Unspecified' %></p>
-          <span class="text-xs text-slate-300"><%= count %> orders</span>
-        </div>
-      <% end %>
-      <% if @top_products.empty? %>
-        <p class="text-sm text-slate-400">No package mix data.</p>
-      <% end %>
-    </div>
-  </div>
+  <%= render "sla_breaches", sla_breaches: @sla_breaches %>
+  <%= render "top_packages", top_products: @top_products %>
 </div>
 
-<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5 mt-6">
-  <div class="flex items-center justify-between mb-4">
-    <h2 class="text-lg font-semibold text-white">Recent orders</h2>
-    <span class="text-xs text-slate-400">Latest 8</span>
-  </div>
-  <div class="space-y-3">
-    <% @recent_orders.each do |task| %>
-      <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
-        <div class="flex items-center justify-between">
-          <p class="text-sm font-semibold text-white"><%= task.barcode %></p>
-          <span class="text-xs text-slate-400"><%= task.status.humanize %></span>
-        </div>
-        <p class="text-xs text-slate-400">Carrier: <%= task.carrier&.name || 'Pending' %></p>
-        <p class="text-xs text-slate-400">Created <%= l(task.created_at, format: :short) %></p>
-      </div>
-    <% end %>
-    <% if @recent_orders.empty? %>
-      <p class="text-sm text-slate-400">No orders yet.</p>
-    <% end %>
-  </div>
-</div>
+<%= render "recent_orders", recent_orders: @recent_orders %>

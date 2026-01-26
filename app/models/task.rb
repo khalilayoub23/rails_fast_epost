@@ -12,7 +12,7 @@ class Task < ApplicationRecord
     customer_id carrier_id sender_id messenger_id lawyer_id
     package_type start target failure_code delivery_time status priority
     filled_form_url pickup_address pickup_contact_phone pickup_notes
-    requested_pickup_time
+    requested_pickup_time case_file_number delivery_medium
   ].freeze
 
   belongs_to :customer
@@ -33,6 +33,22 @@ class Task < ApplicationRecord
 
   # Legal document attachments (PDFs, images, etc.)
   has_many_attached :legal_files
+  has_one_attached :power_of_attorney
+
+  COPY_TASK_TYPES = %w[
+    criminal_file_photocopying
+    traffic_file_photocopying
+    document_retrieval_from_government_agencies
+  ].freeze
+
+  POWER_OF_ATTORNEY_TASK_TYPES = %w[
+    criminal_file_photocopying
+    traffic_file_photocopying
+    document_retrieval_from_government_agencies
+    court_filings
+    process_serving
+    filing_to_arbitration_mediation_centers
+  ].freeze
 
   # Define failure_code enum (positional syntax)
   enum :failure_code, { no_failure: 0, address_not_found: 1, recipient_unavailable: 2, package_damaged: 3, refused_delivery: 4 }, prefix: true
@@ -42,13 +58,31 @@ class Task < ApplicationRecord
 
   enum :priority, { normal: "normal", urgent: "urgent", express: "express" }, default: :normal
   enum :task_type, {
-    letter: 0,
-    package: 1,
-    case_creation: 2,
-    case_copy: 3,
-    pod: 4,
-    deliver_collect: 5
-  }, default: :package
+    court_filings: "court_filings",
+    process_serving: "process_serving",
+    document_retrieval_from_government_agencies: "document_retrieval_from_government_agencies",
+    inter_office_courier: "inter_office_courier",
+    archive_services: "archive_services",
+    notarization_and_apostille: "notarization_and_apostille",
+    international_courier: "international_courier",
+    criminal_file_photocopying: "criminal_file_photocopying",
+    traffic_file_photocopying: "traffic_file_photocopying",
+    remote_digital_signature: "remote_digital_signature",
+    enforcement_office_services: "enforcement_office_services",
+    pickup_services: "pickup_services",
+    ecommerce_delivery: "ecommerce_delivery",
+    ecommerce_pickup: "ecommerce_pickup",
+    cash_on_delivery_cod: "cash_on_delivery_cod",
+    delivery_and_pickup: "delivery_and_pickup",
+    payment_collection: "payment_collection",
+    bailiff_services_coordination: "bailiff_services_coordination",
+    land_registry_tabu_services: "land_registry_tabu_services",
+    companies_registrar_services: "companies_registrar_services",
+    filing_to_arbitration_mediation_centers: "filing_to_arbitration_mediation_centers",
+    same_day_express_delivery: "same_day_express_delivery",
+    warehousing_temporary_storage: "warehousing_temporary_storage",
+    proof_of_delivery_pod: "proof_of_delivery_pod"
+  }, default: :court_filings
 
   scope :published, -> { where(published: true) }
   scope :draft, -> { where(published: false) }
@@ -60,10 +94,13 @@ class Task < ApplicationRecord
   validates :delivery_time, presence: true
   validates :status, presence: true
   validates :barcode, presence: true, uniqueness: true
+  validates :case_file_number, presence: true, if: :copy_task_type?
+  validates :delivery_medium, presence: true, if: :copy_task_type?
   validates :filled_form_url, allow_blank: true, format: { with: URI::DEFAULT_PARSER.make_regexp }
 
   # Custom validation for legal file attachments
   validate :validate_legal_files
+  validate :power_of_attorney_required
 
   # Aliases for notification templates (compatibility)
   alias_attribute :pickup_location, :start
@@ -118,6 +155,17 @@ class Task < ApplicationRecord
 
   def signature_image
     nil  # Optional: Signature image URL or data
+  end
+
+  def copy_task_type?
+    COPY_TASK_TYPES.include?(task_type)
+  end
+
+  def power_of_attorney_required
+    return unless POWER_OF_ATTORNEY_TASK_TYPES.include?(task_type)
+    return if power_of_attorney.attached?
+
+    errors.add(:power_of_attorney, :blank)
   end
 
   def proof_uploaded?

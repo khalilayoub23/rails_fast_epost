@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_02_090003) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_26_000100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -615,7 +615,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_02_090003) do
     t.boolean "published", default: false, null: false
     t.datetime "published_at"
     t.decimal "distance", precision: 10, scale: 2
-    t.integer "task_type", default: 1, null: false
+    t.string "task_type", default: "court_filings", null: false
+    t.string "case_file_number"
+    t.string "delivery_medium"
     t.index ["barcode"], name: "index_tasks_on_barcode", unique: true
     t.index ["carrier_id"], name: "index_tasks_on_carrier_id"
     t.index ["created_at"], name: "index_tasks_on_created_at"

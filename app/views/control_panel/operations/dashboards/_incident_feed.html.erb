@@ -1,0 +1,23 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold text-white"><%= t("operations.incident_feed", default: "Incident feed") %></h2>
+    <span class="text-xs text-slate-400"><%= t("operations.latest_events", default: "Latest tracking events") %></span>
+  </div>
+  <ul class="space-y-3">
+    <% incident_feed.each do |event| %>
+      <li class="rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-semibold text-white"><%= event.title %></p>
+          <span class="text-xs text-slate-400"><%= l(event.occurred_at, format: :short) %></span>
+        </div>
+        <p class="text-xs text-slate-400">Task <%= event.task&.barcode || event.task_id %> · <%= event.event_type.to_s.humanize %></p>
+        <% if event.description.present? %>
+          <p class="mt-1 text-sm text-slate-200/80"><%= event.description %></p>
+        <% end %>
+      </li>
+    <% end %>
+    <% if incident_feed.empty? %>
+      <li class="text-sm text-slate-400"><%= t("operations.no_incidents", default: "No incidents reported.") %></li>
+    <% end %>
+  </ul>
+</div>

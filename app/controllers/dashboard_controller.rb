@@ -89,7 +89,7 @@ class DashboardController < ApplicationController
 
     # For lawyers, filter by lawyer_id; for senders, filter by sender_id
     if current_user.lawyer?
-      lawyer_profile = Lawyer.find_by(email: current_user.email)
+      lawyer_profile = current_user.ensure_lawyer_profile!
 
       unless lawyer_profile
         @my_payments = Payment.none

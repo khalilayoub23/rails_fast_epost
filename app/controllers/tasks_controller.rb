@@ -59,6 +59,12 @@ class TasksController < ApplicationController
     @payment_details = default_payment_details.merge(payment_form_params.to_h)
     payment = initiate_task_checkout!(@task, @payment_details)
 
+    if (Rails.env.development? || Rails.env.test?) && ENV.fetch("STRIPE_SIMULATE", "false") == "true"
+      payment.update!(gateway_status: "succeeded")
+      task = finalize_task_from_payment(payment)
+      redirect_to task_path(task), notice: t("tasks.published_after_payment", default: "Payment confirmed. Task is now published."), status: :see_other and return
+    end
+
     if payment.payment_url.present?
       redirect_to payment.payment_url, allow_other_host: true, status: :see_other
     elsif payment.gateway_status_succeeded?
@@ -128,7 +134,25 @@ class TasksController < ApplicationController
 
     if @task.save
       add_task_to_cart_if_applicable(@task)
-      redirect_to task_path(@task), notice: t("tasks.draft_saved", default: "Task saved as a draft. Complete payment to publish it."), status: :see_other
+      @payment_details = default_payment_details
+      @task = (@customer ? @customer.tasks : Task).new
+      @task.customer = @customer if @customer
+      authorize @task
+      notice_message = t("tasks.created_notice", default: "Task created successfully.")
+
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("task-form", partial: "tasks/form", locals: { task: @task }),
+            turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                               locals: { type: :success, message: notice_message })
+          ]
+        end
+        format.html do
+          redirect_path = @customer ? new_customer_task_path(@customer) : new_task_path
+          redirect_to redirect_path, notice: notice_message, status: :see_other
+        end
+      end
     else
       log_task_creation_failure(@task)
       flash.now[:alert] = t("tasks.form_error", default: "Please correct the highlighted errors.")
@@ -291,6 +315,7 @@ class TasksController < ApplicationController
       :customer_id, :carrier_id, :sender_id, :messenger_id, :lawyer_id,
       :package_type, :task_type, :start, :target, :failure_code, :delivery_time, :status, :priority, :filled_form_url,
       :pickup_address, :pickup_contact_phone, :pickup_notes, :requested_pickup_time,
+      :case_file_number, :delivery_medium, :power_of_attorney,
       legal_files: []
     )
 

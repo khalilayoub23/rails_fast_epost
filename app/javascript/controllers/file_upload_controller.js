@@ -2,15 +2,24 @@ import { Controller } from "@hotwired/stimulus"
 
 // File upload controller with preview and progress
 export default class extends Controller {
-  static targets = ["input", "preview", "progress", "error"]
+  static targets = ["input", "preview", "progress", "error", "label"]
   static values = {
     maxSize: { type: Number, default: 10485760 }, // 10MB
     acceptedTypes: { type: Array, default: ["image/*", "application/pdf"] },
-    direct: { type: Boolean, default: false }
+    direct: { type: Boolean, default: false },
+    emptyLabel: { type: String, default: "No files selected" },
+    selectedLabel: { type: String, default: "%{count} files selected" }
   }
 
   connect() {
     this.files = []
+    this.updateLabel()
+  }
+
+  open() {
+    if (this.hasInputTarget) {
+      this.inputTarget.click()
+    }
   }
 
   selectFiles(event) {
@@ -22,10 +31,13 @@ export default class extends Controller {
     if (validFiles.length > 0) {
       this.files = validFiles
       this.displayPreviews()
+      this.updateLabel()
       
       if (this.directValue) {
         this.uploadFiles()
       }
+    } else {
+      this.updateLabel()
     }
   }
 
@@ -101,11 +113,28 @@ export default class extends Controller {
     const index = parseInt(event.currentTarget.dataset.index)
     this.files.splice(index, 1)
     this.displayPreviews()
+    this.updateLabel()
 
     // Clear input if no files left
     if (this.files.length === 0) {
       this.inputTarget.value = ""
     }
+  }
+
+  updateLabel() {
+    if (!this.hasLabelTarget) return
+
+    if (this.files.length === 0) {
+      this.labelTarget.textContent = this.emptyLabelValue
+      return
+    }
+
+    if (this.files.length === 1) {
+      this.labelTarget.textContent = this.files[0].name
+      return
+    }
+
+    this.labelTarget.textContent = this.selectedLabelValue.replace("%{count}", this.files.length)
   }
 
   async uploadFiles() {
@@ -155,6 +184,7 @@ export default class extends Controller {
     if (this.hasPreviewTarget) {
       this.previewTarget.innerHTML = ""
     }
+    this.updateLabel()
   }
 
   showProgress() {

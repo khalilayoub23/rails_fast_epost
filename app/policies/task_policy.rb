@@ -24,6 +24,12 @@ class TaskPolicy < ApplicationPolicy
     sender_owner? && record.status_pending?
   end
 
+  def publish?
+    return false unless user
+
+    admin? || manager? || support_agent? || sender_owner? || lawyer_assigned?
+  end
+
   def destroy?
     user.present? && (admin? || manager?)
   end
@@ -38,11 +44,11 @@ class TaskPolicy < ApplicationPolicy
         scope.where(carrier_id: carrier_ids)
       elsif user.lawyer?
         # Lawyers can see tasks assigned to their Lawyer profile.
-        lawyer_id = Lawyer.find_by(email: user.email)&.id
+        lawyer_id = user.ensure_lawyer_profile!&.id
         lawyer_id ? scope.where(lawyer_id: lawyer_id) : scope.none
       else
-        # Senders and ecommerce sellers see their own tasks
-        scope.where(sender_id: user.id)
+        # Senders and ecommerce sellers see their own tasks (by sender_id or created_by)
+        scope.where(sender_id: user.id).or(scope.where(created_by_id: user.id))
       end
     end
   end
@@ -62,7 +68,7 @@ class TaskPolicy < ApplicationPolicy
   def lawyer_assigned?
     return false unless user.lawyer? && record.respond_to?(:lawyer_id) && record.lawyer_id.present?
 
-    lawyer_id = @lawyer_id ||= Lawyer.find_by(email: user.email)&.id
+    lawyer_id = @lawyer_id ||= user.ensure_lawyer_profile!&.id
     lawyer_id.present? && record.lawyer_id == lawyer_id
   end
 

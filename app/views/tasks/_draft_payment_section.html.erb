@@ -1,0 +1,23 @@
+<% if current_user&.manager? || current_user&.sender_role? || current_user&.lawyer? || current_user&.ecommerce_seller? %>
+  <div class="flex items-center justify-end">
+    <%= button_to add_item_cart_path(task_id: task.id),
+          method: :post,
+          form: { data: { turbo_frame: "_top" } },
+          class: "inline-flex items-center justify-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow hover:bg-yellow-300" do %>
+      <span class="material-icons text-base">add_shopping_cart</span>
+      <%= t("cart.add_to_cart", default: "Add to cart") %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if checkout_payment&.payment_url.present? %>
+  <div class="rounded-2xl border border-blue-400/30 bg-blue-400/10 px-5 py-4 shadow-xl shadow-black/20 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="text-sm font-semibold text-blue-200"><%= t("tasks.pending_checkout_title", default: "Existing checkout in progress") %></p>
+      <p class="text-sm text-slate-200"><%= t("tasks.pending_checkout_body", default: "You can reopen the Stripe checkout if you closed it earlier.") %></p>
+    </div>
+    <%= link_to t("tasks.pending_checkout_cta", default: "Open checkout"), checkout_payment.payment_url, target: "_blank", rel: "noopener", class: "inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-500" %>
+  </div>
+<% end %>
+
+<%= render "payment_panel", task: task, payment_details: payment_details %>

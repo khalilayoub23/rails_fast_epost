@@ -34,9 +34,9 @@
         const startInput = document.getElementById("task_start")
         const targetInput = document.getElementById("task_target")
         const pickupAddressInput = document.getElementById("task_pickup_address")
-        if (startInput) attachAutocomplete(startInput, "Search pickup")
-        if (targetInput) attachAutocomplete(targetInput, "Search drop-off")
-        if (pickupAddressInput) attachAutocomplete(pickupAddressInput, "Search pickup address")
+        if (startInput) attachAutocomplete(startInput, startInput.dataset.autocompletePlaceholder || startInput.placeholder || "Search pickup")
+        if (targetInput) attachAutocomplete(targetInput, targetInput.dataset.autocompletePlaceholder || targetInput.placeholder || "Search drop-off")
+        if (pickupAddressInput) attachAutocomplete(pickupAddressInput, pickupAddressInput.dataset.autocompletePlaceholder || pickupAddressInput.placeholder || "Search pickup address")
       })
       .catch((err) => {
         console.warn("Google Maps autocomplete init failed", err)

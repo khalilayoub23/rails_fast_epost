@@ -3,12 +3,13 @@ module Api
     module Carriers
       class PayoutsController < BaseController
         def index
-          payouts = carrier.carrier_payouts.order(due_at: :asc)
+          payouts = policy_scope(CarrierPayout).where(carrier_id: carrier.id).order(due_at: :asc)
           render json: payouts.map { |payout| payout_payload(payout) }
         end
 
         def show
-          payout = carrier.carrier_payouts.find(params[:id])
+          payout = policy_scope(CarrierPayout).where(carrier_id: carrier.id).find(params[:id])
+          authorize payout
           render json: payout_payload(payout)
         end
 

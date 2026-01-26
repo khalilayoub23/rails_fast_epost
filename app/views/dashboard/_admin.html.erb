@@ -47,7 +47,7 @@
         <table class="w-full text-xs text-slate-200 md:text-sm">
           <thead class="border-b border-white/10 bg-white/5 text-amber-200">
             <tr class="<%= rtl? ? 'text-right' : 'text-left' %>">
-              <th class="px-4 py-2">ID</th>
+              <th class="px-4 py-2"><%= t("common.id", default: "ID") %></th>
               <th class="px-4 py-2"><%= t("dashboard.provider", default: "Provider") %></th>
               <th class="px-4 py-2"><%= t("dashboard.status", default: "Status") %></th>
               <th class="px-4 py-2"><%= t("dashboard.amount", default: "Amount") %></th>
@@ -106,7 +106,7 @@
         <% @recent_tasks.each do |task| %>
           <div class="flex items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/5 px-4 py-3">
             <div class="<%= stack_text %>">
-              <p class="text-sm font-semibold text-white"><%= link_to(task.title.presence || "Task ##{task.id}", task_path(task), class: "hover:text-amber-200") %></p>
+              <p class="text-sm font-semibold text-white"><%= link_to(task.title.presence || "#{t("tasks.task_label", default: "Task")} ##{task.id}", task_path(task), class: "hover:text-amber-200") %></p>
               <p class="text-xs text-slate-400">
                 <%= task.status %> • <%= task.carrier&.name || t("dashboard.no_carrier", default: "No carrier") %>
               </p>

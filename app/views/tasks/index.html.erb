@@ -9,24 +9,24 @@
         <%= link_to root_path, class: "hover:text-white transition-colors" do %>
           <span class="inline-flex items-center">
             <span class="material-icons mr-1 text-sm">home</span>
-            Home
+            <%= t("nav.home", default: "Home") %>
           </span>
         <% end %>
         <% if @customer %>
           <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-          <%= link_to "Customers", customers_path, class: "hover:text-white transition-colors" %>
+          <%= link_to t("customers.title", default: "Customers"), customers_path, class: "hover:text-white transition-colors" %>
           <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
           <%= link_to @customer.name, customer_path(@customer), class: "hover:text-white transition-colors" %>
         <% end %>
         <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-        <span class="text-white font-medium">Tasks</span>
+        <span class="text-white font-medium"><%= t("tasks.title", default: "Tasks") %></span>
       </nav>
 
       <h1 class="mt-3 text-3xl font-bold text-white">
         <% if @customer %>
-          Tasks for <%= @customer.name %>
+          <%= t("tasks.for_customer", customer: @customer.name, default: "Tasks for %{customer}") %>
         <% else %>
-          All Tasks
+          <%= t("tasks.all", default: "All Tasks") %>
         <% end %>
       </h1>
     </div>
@@ -38,45 +38,11 @@
     <% end %>
   </div>
 
-  <% if policy(Delivery).create? %>
-    <div class="rounded-2xl border border-yellow-400/30 bg-yellow-400/10 p-5 shadow-xl shadow-yellow-500/10">
-      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <p class="text-sm uppercase tracking-wide text-yellow-300">Court PDF Workflow</p>
-          <p class="text-base text-slate-200">Need to barcode a court packet or capture immutable signatures before assigning a courier? Start a Delivery workspace and upload the PDF first.</p>
-        </div>
-        <%= link_to t("deliveries.upload_pdf_cta", default: "Upload Court PDF"),
-          new_delivery_path,
-          class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 px-6 py-2 text-sm font-semibold text-black shadow-lg shadow-yellow-400/40 transition hover:bg-yellow-300",
-          data: { turbo_frame: "_top" } %>
-      </div>
-    </div>
-  <% end %>
-
   <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
     <div class="mb-6 flex items-center justify-between">
       <h2 class="text-xl font-semibold text-white">
-        <%= t('tasks.title') %> <%= "for #{@customer.name}" if @customer %>
+        <%= t('tasks.title') %> <%= t("tasks.for_customer_short", customer: @customer.name, default: "for %{customer}") if @customer %>
       </h2>
-    </div>
-
-    <!-- Search form -->
-    <div class="mb-5">
-      <%= form_with url: (@customer ? customer_tasks_path(@customer) : tasks_path), 
-          method: :get,
-          data: { turbo_frame: "tasks_table", turbo_action: "advance" },
-          class: "flex flex-col gap-3 md:flex-row" do |f| %>
-        <%= f.text_field :q,
-            value: params[:q],
-            placeholder: t('common.search'),
-            class: "flex-1 rounded-xl border border-white/10 bg-white/5 py-2 px-4 text-white placeholder:text-slate-400 outline-none transition focus:ring-2 focus:ring-yellow-400/30" %>
-          <%= f.select :priority,
-            Task.priorities.keys.map { |priority| [priority.titleize, priority] },
-            { include_blank: t('tasks.priority_all', default: 'All priorities'), selected: params[:priority] },
-              class: "md:w-52 rounded-xl border border-white/10 bg-white/5 py-2 px-4 text-white outline-none transition focus:ring-2 focus:ring-yellow-400/30" %>
-        <%= f.submit t('common.search'),
-            class: "inline-flex items-center justify-center rounded-xl bg-yellow-400 py-2 px-6 text-center text-sm font-semibold text-black hover:bg-yellow-300" %>
-      <% end %>
     </div>
 
     <%= turbo_frame_tag "tasks_table" do %>
@@ -84,13 +50,13 @@
         <table class="w-full table-auto">
           <thead>
             <tr class="bg-white/5 text-left border-b border-white/10">
-              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200">Reference</th>
-              <th class="min-w-[140px] px-4 py-4 font-semibold text-slate-200">Status</th>
-              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200">Priority</th>
-              <th class="min-w-[180px] px-4 py-4 font-semibold text-slate-200">Customer</th>
-              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200">Carrier</th>
-              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200">Created</th>
-              <th class="px-4 py-4 text-right font-semibold text-slate-200">Actions</th>
+              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200 text-center"><%= t("tasks.table.reference", default: "Reference") %></th>
+              <th class="min-w-[140px] px-4 py-4 font-semibold text-slate-200 text-center"><%= t("tasks.table.status", default: "Status") %></th>
+              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200 text-center"><%= t("tasks.table.priority", default: "Priority") %></th>
+              <th class="min-w-[180px] px-4 py-4 font-semibold text-slate-200 text-center"><%= t("tasks.table.customer", default: "Customer") %></th>
+              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200 text-center"><%= t("tasks.table.carrier", default: "Carrier") %></th>
+              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200 text-center"><%= t("tasks.table.created", default: "Created") %></th>
+              <th class="px-4 py-4 font-semibold text-slate-200 text-center"><%= t("tasks.table.actions", default: "Actions") %></th>
             </tr>
           </thead>
           <tbody id="tasks_list">
@@ -102,7 +68,7 @@
           <div class="px-6 py-10 text-center">
             <span class="material-icons text-slate-400 text-5xl mb-3">inbox</span>
             <h3 class="text-base font-semibold text-white mb-1"><%= t('tasks.no_tasks') %></h3>
-            <p class="text-sm text-slate-300">Get started by creating a new task.</p>
+            <p class="text-sm text-slate-300"><%= t("tasks.empty_hint", default: "Get started by creating a new task.") %></p>
           </div>
         <% end %>
       </div>

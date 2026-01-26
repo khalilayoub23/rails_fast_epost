@@ -1,0 +1,17 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-white"><%= t("sellers.top_package_types", default: "Top package types") %></h2>
+    <span class="text-xs text-slate-400"><%= t("common.last_n", default: "Last 5") %></span>
+  </div>
+  <div class="space-y-3">
+    <% top_products.each do |package_type, count| %>
+      <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-2">
+        <p class="text-sm font-semibold text-white"><%= package_type.presence || t("common.unspecified", default: "Unspecified") %></p>
+        <span class="text-xs text-slate-300"><%= t("sellers.orders_count", default: "%{count} orders", count: count) %></span>
+      </div>
+    <% end %>
+    <% if top_products.empty? %>
+      <p class="text-sm text-slate-400"><%= t("sellers.no_package_mix", default: "No package mix data.") %></p>
+    <% end %>
+  </div>
+</div>

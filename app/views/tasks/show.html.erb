@@ -2,223 +2,22 @@
 
 <div class="space-y-6">
   <div>
-    <nav class="flex text-sm text-slate-300" aria-label="Breadcrumb">
-      <ol class="inline-flex items-center space-x-1 md:space-x-3">
-        <li class="inline-flex items-center">
-          <%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
-            <span class="material-icons text-sm mr-1">home</span>
-            Home
-          <% end %>
-        </li>
-        <% if @task.customer %>
-          <li>
-            <div class="flex items-center">
-              <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-              <%= link_to "Customers", customers_path, class: "text-slate-300 hover:text-white" %>
-            </div>
-          </li>
-          <li>
-            <div class="flex items-center">
-              <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-              <%= link_to @task.customer.name, customer_path(@task.customer), class: "text-slate-300 hover:text-white" %>
-            </div>
-          </li>
-        <% end %>
-        <li>
-          <div class="flex items-center">
-            <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-            <%= link_to "Tasks", (@task.customer ? customer_tasks_path(@task.customer) : tasks_path), class: "text-slate-300 hover:text-white" %>
-          </div>
-        </li>
-        <li>
-          <div class="flex items-center">
-            <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-            <span class="text-white font-medium"><%= @task.barcode.presence || "##{@task.id}" %></span>
-          </div>
-        </li>
-      </ol>
-    </nav>
+    <%= render "breadcrumb", task: @task %>
   </div>
 
-  <div data-controller="task-details" class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
-    <div class="mb-4 flex items-center justify-between gap-3">
-      <h2 class="text-xl font-semibold text-white">Task <%= @task.barcode.presence || "##{@task.id}" %></h2>
-      <button type="button" class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white hover:bg-white/10" data-action="task-details#toggle">
-        <span class="material-icons text-base" aria-hidden="true" data-task-details-target="icon">unfold_more</span>
-        <span data-task-details-target="label">Show details</span>
-      </button>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
-        <div class="text-sm text-slate-300">Status</div>
-        <div><%= render "shared/status_badge", status: @task.status %></div>
-      </div>
-      <div>
-        <div class="text-sm text-slate-300">Priority</div>
-        <div><%= render "shared/priority_badge", priority: @task.priority %></div>
-      </div>
-      <div>
-        <div class="text-sm text-slate-300">Customer</div>
-        <div class="text-white"><%= @task.customer&.name || "-" %></div>
-      </div>
-      <div>
-        <div class="text-sm text-slate-300">Carrier</div>
-        <div class="text-white"><%= @task.carrier&.name || (@task.carrier_id.present? ? "##{@task.carrier_id}" : "-") %></div>
-      </div>
-      <div>
-        <div class="text-sm text-slate-300">Created</div>
-        <div class="text-white"><%= @task.created_at ? l(@task.created_at, format: :long) : t("tasks.not_available", default: "N/A") %></div>
-      </div>
-      <div class="sm:col-span-2">
-        <div class="text-sm text-slate-300">Barcode</div>
-        <div class="text-white"><%= @task.barcode %></div>
-      </div>
-    </div>
-
-    <div class="mt-4 hidden" data-task-details-target="panel">
-      <div class="border-t border-white/10 pt-4">
-        <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <dt class="text-sm text-slate-300">Task type</dt>
-            <dd class="text-white font-semibold"><%= @task.task_type&.humanize || "-" %></dd>
-          </div>
-          <div>
-            <dt class="text-sm text-slate-300">Package type</dt>
-            <dd class="text-white font-semibold"><%= @task.package_type.presence || "-" %></dd>
-          </div>
-          <div>
-            <dt class="text-sm text-slate-300">Pickup location</dt>
-            <dd class="text-white"><%= @task.start.presence || t("tasks.not_available", default: "N/A") %></dd>
-          </div>
-          <div>
-            <dt class="text-sm text-slate-300">Drop-off location</dt>
-            <dd class="text-white"><%= @task.target.presence || t("tasks.not_available", default: "N/A") %></dd>
-          </div>
-          <div>
-            <dt class="text-sm text-slate-300">Delivery time</dt>
-            <dd class="text-white"><%= @task.delivery_time ? l(@task.delivery_time, format: :long) : t("tasks.not_available", default: "N/A") %></dd>
-          </div>
-          <div>
-            <dt class="text-sm text-slate-300">Distance</dt>
-            <dd class="text-white">
-              <% if @task.distance.present? %>
-                <%= "#{number_with_precision(@task.distance, precision: 2)} km" %>
-              <% else %>
-                <%= t("tasks.not_available", default: "N/A") %>
-              <% end %>
-            </dd>
-          </div>
-          <div>
-            <dt class="text-sm text-slate-300">Published</dt>
-            <dd class="text-white"><%= @task.published? ? t("common.yes", default: "Yes") : t("common.no", default: "No") %></dd>
-          </div>
-          <div>
-            <dt class="text-sm text-slate-300">Failure code</dt>
-            <dd class="text-white"><%= @task.failure_code_text.presence || @task.failure_code&.humanize || "No failure" %></dd>
-          </div>
-          <% if @task.pickup_notes.present? %>
-            <div class="sm:col-span-2">
-              <dt class="text-sm text-slate-300">Pickup notes</dt>
-              <dd class="text-white"><%= @task.pickup_notes %></dd>
-            </div>
-          <% end %>
-        </dl>
-      </div>
-    </div>
-  </div>
+  <%= render "details_card", task: @task %>
 
   <% if @task.legal_files.attached? %>
-    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
-      <h3 class="text-xl font-semibold text-white mb-4">
-        <span class="material-icons align-middle text-yellow-400">description</span>
-        Legal Documents
-      </h3>
-      <div class="space-y-3">
-        <% @task.legal_files.each do |file| %>
-          <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
-            <div class="flex items-center gap-3">
-              <% if file.content_type == 'application/pdf' %>
-                <svg class="h-8 w-8 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
-                </svg>
-              <% else %>
-                <svg class="h-8 w-8 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
-                </svg>
-              <% end %>
-              <div>
-                <p class="text-sm font-semibold text-white"><%= file.filename %></p>
-                <p class="text-xs text-slate-400">
-                  <%= number_to_human_size(file.byte_size) %> · 
-                  Uploaded <%= time_ago_in_words(file.created_at) %> ago
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <%= link_to rails_blob_path(file, disposition: "inline"), 
-                    target: "_blank",
-                    class: "inline-flex items-center gap-1 rounded-lg bg-yellow-400 px-3 py-2 text-sm font-semibold text-black hover:bg-yellow-300 transition" do %>
-                <span class="material-icons text-base">visibility</span>
-                View
-              <% end %>
-              <%= link_to rails_blob_path(file, disposition: "attachment"), 
-                    class: "inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white hover:bg-white/10 transition" do %>
-                <span class="material-icons text-base">download</span>
-                Download
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
+    <%= render "legal_documents_list", task: @task %>
   <% end %>
 
   <% if @task.draft? %>
-    <% if current_user&.manager? || current_user&.sender_role? || current_user&.lawyer? || current_user&.ecommerce_seller? %>
-      <div class="flex items-center justify-end">
-        <%= button_to add_item_cart_path(task_id: @task.id),
-              method: :post,
-              form: { data: { turbo_frame: "_top" } },
-              class: "inline-flex items-center justify-center gap-2 rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow hover:bg-yellow-300" do %>
-          <span class="material-icons text-base">add_shopping_cart</span>
-          <%= t("cart.add_to_cart", default: "Add to cart") %>
-        <% end %>
-      </div>
-    <% end %>
-
-    <div class="rounded-2xl border border-yellow-400/30 bg-yellow-400/10 px-5 py-4 shadow-xl shadow-yellow-500/10">
-      <p class="text-sm font-semibold text-yellow-300"><%= t("tasks.draft_notice_title", default: "Task saved as a draft") %></p>
-      <p class="text-sm text-slate-200"><%= t("tasks.draft_notice_body", default: "Complete the payment below to publish the task and make it available for carriers to book.") %></p>
-    </div>
-    <% if @checkout_payment&.payment_url.present? %>
-      <div class="rounded-2xl border border-blue-400/30 bg-blue-400/10 px-5 py-4 shadow-xl shadow-black/20 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p class="text-sm font-semibold text-blue-200"><%= t("tasks.pending_checkout_title", default: "Existing checkout in progress") %></p>
-          <p class="text-sm text-slate-200"><%= t("tasks.pending_checkout_body", default: "You can reopen the Stripe checkout if you closed it earlier.") %></p>
-        </div>
-        <%= link_to t("tasks.pending_checkout_cta", default: "Open checkout"), @checkout_payment.payment_url, target: "_blank", rel: "noopener", class: "inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-500" %>
-      </div>
-    <% end %>
-    <%= render "payment_panel", task: @task, payment_details: @payment_details %>
+    <%= render "draft_payment_section", task: @task, checkout_payment: @checkout_payment, payment_details: @payment_details %>
   <% else %>
-    <div class="rounded-2xl border border-green-400/30 bg-green-400/10 px-5 py-4 text-sm text-slate-200 shadow-xl shadow-black/20">
-      <p class="font-semibold text-green-200"><%= t("tasks.published_notice_title", default: "Task published") %></p>
-      <p><%= t("tasks.published_notice_body", default: "Carriers can now see this task in their queue and pick it up.") %></p>
-    </div>
+    <%= render "published_notice" %>
   <% end %>
 
   <% if policy(Delivery).create? %>
-    <div class="rounded-2xl border border-yellow-400/30 bg-yellow-400/10 px-5 py-4 shadow-xl shadow-yellow-500/10">
-      <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <p class="text-sm font-semibold text-yellow-300">Need to attach court PDFs?</p>
-          <p class="text-sm text-slate-200">Launch the delivery workspace to upload stamped PDFs, inject barcodes, and route immutable signatures before this task goes out.</p>
-        </div>
-        <%= link_to t("deliveries.upload_pdf_cta", default: "Upload Court PDF"),
-          new_delivery_path,
-          class: "inline-flex items-center justify-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black shadow hover:bg-yellow-300",
-          data: { turbo_frame: "_top" } %>
-      </div>
-    </div>
+    <%= render "delivery_cta" %>
   <% end %>
 </div>

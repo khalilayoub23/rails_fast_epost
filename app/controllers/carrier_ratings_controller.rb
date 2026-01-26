@@ -1,6 +1,7 @@
 class CarrierRatingsController < ApplicationController
   def create
     @carrier_rating = CarrierRating.new(carrier_rating_params)
+    authorize @carrier_rating
     @carrier_rating.rated_by ||= current_user&.email
 
     if @carrier_rating.save

@@ -1,0 +1,36 @@
+<nav class="flex text-sm text-slate-300" aria-label="Breadcrumb">
+  <ol class="inline-flex items-center space-x-1 md:space-x-3">
+    <li class="inline-flex items-center">
+      <%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
+        <span class="material-icons text-sm mr-1">home</span>
+        <%= t("nav.home", default: "Home") %>
+      <% end %>
+    </li>
+    <% if task.customer %>
+      <li>
+        <div class="flex items-center">
+          <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+          <%= link_to t("nav.customers", default: "Customers"), customers_path, class: "text-slate-300 hover:text-white" %>
+        </div>
+      </li>
+      <li>
+        <div class="flex items-center">
+          <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+          <%= link_to task.customer.name, customer_path(task.customer), class: "text-slate-300 hover:text-white" %>
+        </div>
+      </li>
+    <% end %>
+    <li>
+      <div class="flex items-center">
+        <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+        <%= link_to t("nav.tasks", default: "Tasks"), (task.customer ? customer_tasks_path(task.customer) : tasks_path), class: "text-slate-300 hover:text-white" %>
+      </div>
+    </li>
+    <li>
+      <div class="flex items-center">
+        <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
+        <span class="text-white font-medium"><%= task.barcode.presence || "##{task.id}" %></span>
+      </div>
+    </li>
+  </ol>
+</nav>

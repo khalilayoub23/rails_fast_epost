@@ -1,6 +1,7 @@
 class PaymentsTasksController < ApplicationController
   def create
     @payments_task = PaymentsTask.new(payments_task_params)
+    authorize @payments_task
     if @payments_task.save
       respond_to do |format|
         format.html { redirect_back fallback_location: task_path(@payments_task.task), notice: "Linked payment to task." }
@@ -16,6 +17,7 @@ class PaymentsTasksController < ApplicationController
 
   def destroy
     @payments_task = PaymentsTask.find(params[:id])
+    authorize @payments_task
     task = @payments_task.task
     @payments_task.destroy
     respond_to do |format|
