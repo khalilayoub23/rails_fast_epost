@@ -57,4 +57,33 @@ class DashboardFlowsTest < ApplicationSystemTestCase
     click_link "New Carrier"
     assert_selector "form[action='#{carriers_path}']"
   end
+
+  test "dashboard widget view-all links navigate correctly" do
+    login_as users(:admin)
+    visit dashboard_path
+
+    within "[data-widget-id='recent_payments']" do
+      click_link I18n.t("dashboard.view_all", default: "View all")
+    end
+    assert_current_path payments_path
+
+    visit dashboard_path
+    within "[data-widget-id='recent_tasks']" do
+      click_link I18n.t("dashboard.view_all", default: "View all")
+    end
+    assert_current_path tasks_path
+
+    visit dashboard_path
+    within "[data-widget-id='deliveries']" do
+      click_link I18n.t("dashboard.view_all", default: "View all")
+    end
+    assert_current_path deliveries_path
+
+    login_as users(:carrier_staff_user)
+    visit dashboard_path
+    within "[data-widget-id='payouts']" do
+      click_link I18n.t("dashboard.view_all", default: "View all")
+    end
+    assert_current_path control_panel_carriers_payouts_path
+  end
 end

@@ -1,57 +1,56 @@
-<div class="rounded-xl border border-white/10 bg-white/5 p-6">
+<% align_class = rtl? ? "text-right" : "text-left" %>
+<% row_class = rtl? ? "flex-row-reverse" : "" %>
+<div class="hidden rounded-xl border border-white/10 bg-white/5 p-6 <%= align_class %>"
+  data-task-type-form-target="section"
+  data-task-types="court_filings,process_serving,notarization_and_apostille,criminal_file_photocopying,traffic_file_photocopying,enforcement_office_services,bailiff_services_coordination,land_registry_tabu_services,companies_registrar_services,filing_to_arbitration_mediation_centers,proof_of_delivery_pod">
   <h3 class="text-xl font-semibold text-white"><%= t("tasks.legal_documents_title", default: "Legal Documents") %></h3>
   <p class="mt-2 text-lg text-slate-300"><%= t("tasks.legal_documents_help", default: "Upload legal documents, court filings, or any related PDFs.") %></p>
 
   <div class="mt-5 space-y-4">
-    <div class="hidden rounded-lg border border-white/10 bg-white/5 p-4"
-         data-task-type-form-target="section"
-         data-task-types="criminal_file_photocopying,traffic_file_photocopying,document_retrieval_from_government_agencies,court_filings,process_serving,filing_to_arbitration_mediation_centers">
-      <p class="text-base font-semibold text-white"><%= t("tasks.power_of_attorney", default: "Power of Attorney (signed)") %></p>
-      <p class="mt-1 text-sm text-slate-400"><%= t("tasks.power_of_attorney_help", default: "Required for this task type.") %></p>
-      <div class="mt-3" data-controller="file-upload"
-           data-file-upload-empty-label-value="<%= t("tasks.no_files_selected", default: "No files selected") %>"
-           data-file-upload-selected-label-value="<%= t("tasks.files_selected", default: "%{count} files selected") %>">
-        <%= f.file_field :power_of_attorney,
-              accept: "application/pdf,image/*",
-              data: { file_upload_target: "input", action: "change->file-upload#selectFiles" },
-              class: "hidden" %>
-        <div class="flex items-center gap-3">
-          <button type="button"
-                  data-action="click->file-upload#open"
-                  class="inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">
-            <%= t("tasks.upload_poa_button", default: "Upload POA") %>
-          </button>
-          <span class="text-sm text-slate-300" data-file-upload-target="label"></span>
-        </div>
-      </div>
+    <div>
+      <%= f.label :legal_files, t("tasks.legal_files", default: "Upload Files (PDF, Images)"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+      <%= f.file_field :legal_files,
+            multiple: true,
+            accept: "application/pdf,image/*",
+            class: "block w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-base text-slate-200 file:mr-4 file:rounded-lg file:border-0 file:bg-yellow-400 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:bg-yellow-300" %>
+      <p class="mt-2 text-base text-slate-400"><%= t("tasks.legal_files_help", default: "Select one or more files to upload (PDFs, images)") %></p>
     </div>
 
-    <div data-controller="file-upload"
-         data-file-upload-empty-label-value="<%= t("tasks.no_files_selected", default: "No files selected") %>"
-         data-file-upload-selected-label-value="<%= t("tasks.files_selected", default: "%{count} files selected") %>">
-      <%= f.label :legal_files, t("tasks.legal_files", default: "Upload Files (PDF, Images)"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
-      <div class="flex items-center gap-3">
-        <%= f.file_field :legal_files,
-              multiple: true,
-              accept: "application/pdf,image/*",
-              data: { file_upload_target: "input", action: "change->file-upload#selectFiles" },
-              class: "hidden" %>
-        <button type="button"
-                data-action="click->file-upload#open"
-                class="inline-flex items-center rounded-lg bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-300">
-          <%= t("tasks.upload_files_button", default: "Choose files") %>
-        </button>
-        <span class="text-sm text-slate-300" data-file-upload-target="label"></span>
+        <div class="hidden rounded-lg border border-white/10 bg-white/5 p-4"
+          data-controller="poa-toggle"
+          data-poa-toggle-filename-value="<%= @poa_templates&.first&.name.to_s %>"
+          data-task-type-form-target="section"
+          data-task-types="criminal_file_photocopying,traffic_file_photocopying,document_retrieval_from_government_agencies,court_filings,process_serving,filing_to_arbitration_mediation_centers,notarization_and_apostille">
+      <div class="flex items-center justify-between gap-3 <%= row_class %>">
+        <div class="flex items-center gap-3 <%= rtl? ? 'flex-row-reverse text-right' : '' %>">
+          <span class="text-sm font-semibold text-slate-200"><%= t("tasks.power_of_attorney", default: "Power of Attorney Template") %></span>
+          <span class="text-sm text-slate-300" data-poa-toggle-target="filename"></span>
+        </div>
+        <div class="flex items-center gap-3 <%= rtl? ? 'flex-row-reverse' : '' %>">
+          <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-300" data-poa-toggle-target="status"></span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <span class="sr-only"><%= t("tasks.power_of_attorney", default: "Power of Attorney (signed)") %></span>
+            <%= check_box_tag "poa_enabled", "1",
+                  %w[court_filings process_serving document_retrieval_from_government_agencies].include?(task.task_type),
+                  class: "sr-only",
+                  data: { poa_toggle_target: "toggle", action: "change->poa-toggle#toggle" } %>
+            <span class="h-6 w-11 rounded-full border border-white/10 bg-white/5 shadow-inner transition-colors"></span>
+            <span class="pointer-events-none absolute h-5 w-5 rounded-full bg-yellow-400 shadow translate-x-1 transition-transform"></span>
+          </label>
+        </div>
       </div>
-      <p class="mt-2 text-base text-slate-400"><%= t("tasks.legal_files_help", default: "Select one or more files to upload (PDFs, images)") %></p>
+      <%= f.hidden_field :poa_enabled, value: "0", data: { poa_toggle_target: "enabled" } %>
+      <%= f.hidden_field :poa_document_template_id,
+        value: @poa_templates&.first&.id,
+        data: { poa_toggle_target: "select" } %>
     </div>
 
     <% if task.persisted? && task.legal_files.attached? %>
       <div class="space-y-2">
         <p class="text-sm font-semibold text-slate-200"><%= t("tasks.attached_files", default: "Attached Files:") %></p>
         <% task.legal_files.each do |file| %>
-          <div class="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3">
-            <div class="flex items-center gap-3">
+          <div class="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 p-3 <%= row_class %>">
+            <div class="flex items-center gap-3 <%= row_class %>">
               <svg class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
               </svg>

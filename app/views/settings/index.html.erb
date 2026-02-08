@@ -1,4 +1,4 @@
-<% content_for :page_title, "Settings" %>
+<% content_for :page_title, t("settings.title", default: "Settings") %>
 
 <div class="space-y-6">
   <div class="flex items-center justify-between">
@@ -8,13 +8,13 @@
           <li class="inline-flex items-center">
             <%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
               <span class="material-icons text-sm mr-1">home</span>
-              Home
+              <%= t("nav.home", default: "Home") %>
             <% end %>
           </li>
           <li>
             <div class="flex items-center">
               <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-              <span class="text-white font-medium">Settings</span>
+              <span class="text-white font-medium"><%= t("settings.title", default: "Settings") %></span>
             </div>
           </li>
         </ol>
@@ -24,12 +24,12 @@
 
   <div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur">
     <div class="px-6 py-4 border-b border-white/10">
-      <h2 class="text-xl font-semibold text-white">Application Settings</h2>
+      <h2 class="text-xl font-semibold text-white"><%= t("settings.header", default: "Application Settings") %></h2>
     </div>
     <div class="px-6 py-8 text-center">
       <span class="material-icons text-slate-400 text-5xl mb-3">settings</span>
-      <h3 class="text-base font-semibold text-white mb-1">System Configuration</h3>
-      <p class="text-sm text-slate-300">Application settings panel coming soon.</p>
+      <h3 class="text-base font-semibold text-white mb-1"><%= t("settings.system_configuration", default: "System Configuration") %></h3>
+      <p class="text-sm text-slate-300"><%= t("settings.coming_soon", default: "Application settings panel coming soon.") %></p>
     </div>
   </div>
 </div>

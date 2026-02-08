@@ -1,4 +1,6 @@
 class DashboardController < ApplicationController
+  before_action :authenticate_user!
+
   def index
     if current_user.admin?
       load_admin_data
@@ -188,14 +190,20 @@ class DashboardController < ApplicationController
     end
 
     @chart_series_a_by_period = {
-      "day" => last_12_day_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).count },
-      "week" => last_12_week_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).count },
-      "month" => last_12_month_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).count }
+      "day" => last_12_day_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).sum(:amount_cents).to_f / 100.0 },
+      "week" => last_12_week_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).sum(:amount_cents).to_f / 100.0 },
+      "month" => last_12_month_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).sum(:amount_cents).to_f / 100.0 }
     }
     @chart_series_b_by_period = {
       "day" => last_12_day_buckets { |range| tasks_scope.where(created_at: range).count },
       "week" => last_12_week_buckets { |range| tasks_scope.where(created_at: range).count },
       "month" => last_12_month_buckets { |range| tasks_scope.where(created_at: range).count }
+    }
+
+    @chart_labels_by_period = {
+      "day" => last_12_day_labels,
+      "week" => last_12_week_labels,
+      "month" => last_12_month_labels
     }
 
     @chart_range_label = I18n.t("dashboard.chart_range_label", default: "Last 12")
@@ -225,6 +233,29 @@ class DashboardController < ApplicationController
     starts.map do |start_time|
       end_time = start_time.end_of_month
       yield(start_time..end_time)
+    end
+  end
+
+  def last_12_day_labels
+    now = Time.zone.now
+    11.downto(0).map { |i| (now.to_date - i.days).strftime("%d %b") }
+  end
+
+  def last_12_week_labels
+    now = Time.zone.now
+    11.downto(0).map do |i|
+      start_time = (now.beginning_of_week - i.weeks).beginning_of_week
+      start_time.strftime("W%U")
+    end
+  end
+
+  def last_12_month_labels
+    now = Time.zone.now
+    11.downto(0).map do |i|
+      date = (now.beginning_of_month - i.months).to_date
+      I18n.l(date, format: "%b")
+    rescue I18n::ArgumentError
+      date.strftime("%b")
     end
   end
 

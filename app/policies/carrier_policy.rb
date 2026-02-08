@@ -21,7 +21,7 @@ class CarrierPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.none unless admin?
+      return scope.none unless user&.admin?
 
       scope.all
     end

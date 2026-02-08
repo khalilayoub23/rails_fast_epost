@@ -7,17 +7,6 @@
   <div class="space-y-6">
     <%= render "header" %>
 
-  <% if %w[admin manager operational].include?(@dashboard_view) %>
-    <%= render "filters",
-          dashboard_view: @dashboard_view,
-          payment_statuses: @payment_statuses,
-          payment_filters: @payment_filters,
-          task_statuses: @task_statuses,
-          task_filters: @task_filters,
-          delivery_statuses: @delivery_statuses,
-          delivery_filters: @delivery_filters %>
-  <% end %>
-
   <div class="grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5"
        data-dashboard-editor-target="container">
     <% layout = JSON.parse(File.read(Rails.root.join('config','dashboard_layout.json'))) rescue [] %>
@@ -32,7 +21,9 @@
               span: span,
               card_class: card_class,
               series_a: @chart_series_a_by_period,
-              series_b: @chart_series_b_by_period %>
+              series_b: @chart_series_b_by_period,
+              labels: @chart_labels_by_period,
+              currency_code: @currency_code %>
       <% elsif id == "target" %>
         <%= render "target_widget",
               span: span,
@@ -53,16 +44,20 @@
               span: span,
               card_class: card_class,
               recent_tasks: @recent_tasks %>
+      <% elsif id == "deliveries" %>
+        <% if %w[admin manager operational].include?(@dashboard_view) %>
+          <div data-widget-id="deliveries" data-span="<%= span || 'col-span-12' %>" class="<%= span || 'col-span-12' %>">
+            <%= render "deliveries_widget", card_class: card_class, delivery_samples: @delivery_samples %>
+          </div>
+        <% end %>
+      <% elsif id == "payouts" %>
+        <% if @dashboard_view == "carrier" %>
+          <div data-widget-id="payouts" data-span="<%= span || 'col-span-12' %>" class="<%= span || 'col-span-12' %>">
+            <%= render "payouts_widget", card_class: card_class, recent_payouts: @recent_payouts, currency_code: @currency_code %>
+          </div>
+        <% end %>
       <% end %>
     <% end %>
   </div>
-
-<% if %w[admin manager operational].include?(@dashboard_view) %>
-  <%= render "deliveries_widget", card_class: card_class, delivery_samples: @delivery_samples %>
-<% end %>
-
-<% if @dashboard_view == "carrier" %>
-  <%= render "payouts_widget", card_class: card_class, recent_payouts: @recent_payouts, currency_code: @currency_code %>
-<% end %>
   </div>
 </div>

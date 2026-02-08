@@ -17,18 +17,24 @@ class CustomersController < ApplicationController
   def new
     @customer = Customer.new
     authorize @customer
+    session[:customer_return_to] = params[:return_to] if params[:return_to].present?
   end
 
   def create
     @customer = Customer.new(customer_params)
     authorize @customer
-    respond_with_create(@customer, nil, notice: "Customer created.") do
-      render turbo_stream: [
-        turbo_stream.prepend("customers_list", partial: "customers/customer_card", locals: { customer: @customer }),
-        turbo_stream.update("customer_form", partial: "customers/form", locals: { customer: Customer.new }),
-        turbo_stream.append("flash-messages", partial: "shared/flash_message",
-                           locals: { type: :success, message: t("customers.created_successfully") })
-      ]
+    return_to = params[:return_to].presence || session.delete(:customer_return_to)
+
+    if @customer.save
+      respond_to do |format|
+        format.html { redirect_to(return_to || @customer, notice: t("customers.created_successfully", default: "Customer created.")) }
+        format.json { render json: @customer, status: :created }
+      end
+    else
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: { errors: @customer.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -85,6 +91,6 @@ class CustomersController < ApplicationController
   end
 
   def customer_params
-    params.require(:customer).permit(:name, :category, :address, :email, :bulk_discount, phones: [])
+    params.require(:customer).permit(:name, :first_name, :last_name, :category, :address, :email, :bulk_discount, phones: [])
   end
 end

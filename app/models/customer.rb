@@ -2,6 +2,7 @@ class Customer < ApplicationRecord
   include Notifiable
 
   attr_accessor :allow_partial_profile
+  attr_accessor :first_name, :last_name
 
   has_many :form_templates
   has_many :forms
@@ -14,6 +15,8 @@ class Customer < ApplicationRecord
   enum :category, { individual: 0, business: 1, government: 2 }
 
   validates :name, presence: true
+
+  before_validation :compose_name_from_parts
 
   with_options unless: :allow_partial_profile? do
     validates :phones, presence: true
@@ -29,6 +32,17 @@ class Customer < ApplicationRecord
     name
   end
 
+  def first_name
+    return @first_name if @first_name.present?
+    name.to_s.split.first.to_s
+  end
+
+  def last_name
+    return @last_name if @last_name.present?
+    parts = name.to_s.split
+    parts.length > 1 ? parts[1..].join(" ") : ""
+  end
+
   # Return first phone number for email templates
   def phone
     phones&.first || "N/A"
@@ -36,5 +50,14 @@ class Customer < ApplicationRecord
 
   def allow_partial_profile?
     !!@allow_partial_profile
+  end
+
+  private
+
+  def compose_name_from_parts
+    parts = [@first_name, @last_name].map { |part| part.to_s.strip }.reject(&:empty?)
+    return if parts.empty?
+
+    self.name = parts.join(" ")
   end
 end

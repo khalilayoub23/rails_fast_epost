@@ -1,0 +1,22 @@
+<% shipments = Array(shipments) %>
+
+<% if shipments.any? %>
+  <div class="grid grid-cols-1 gap-3">
+    <% shipments.each do |shipment| %>
+      <% shipment_title = shipment.try(:reference).presence || shipment.try(:tracking_number).presence || shipment.try(:id).to_s.presence || t("dashboard.shipment", default: "Shipment") %>
+      <% shipment_status = shipment.try(:status).to_s.presence || t("dashboard.status", default: "Status") %>
+      <% shipment_meta = shipment.try(:destination).presence || shipment.try(:recipient_name).presence || shipment.try(:route).presence %>
+      <div class="flex items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/5 px-4 py-3 <%= rtl? ? 'flex-row-reverse text-right' : '' %>">
+        <div>
+          <p class="text-sm font-semibold text-white"><%= shipment_title %></p>
+          <% if shipment_meta.present? %>
+            <p class="text-xs text-slate-400"><%= shipment_meta %></p>
+          <% end %>
+        </div>
+        <span class="rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-amber-200 ring-1 ring-white/10"><%= shipment_status %></span>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-sm text-slate-400"><%= t("dashboard.no_shipments", default: "No shipments yet.") %></p>
+<% end %>

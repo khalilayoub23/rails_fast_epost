@@ -8,7 +8,7 @@ class CartPaymentMaterializer
 
     Task.transaction do
       tasks.each do |task|
-        task.publish! unless task.published?
+        task.publish!(validate: false) unless task.published?
         @payment.tasks << task unless @payment.tasks.exists?(task.id)
       end
 

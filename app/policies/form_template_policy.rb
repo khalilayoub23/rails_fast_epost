@@ -1,10 +1,10 @@
 class FormTemplatePolicy < ApplicationPolicy
   def index?
-    admin? || manager?
+    admin? || manager? || lawyer?
   end
 
   def show?
-    admin? || manager?
+    admin? || manager? || lawyer?
   end
 
   def create?

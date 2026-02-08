@@ -18,5 +18,13 @@
   {
     "id": "recent_tasks",
     "span": "col-span-12 xl:col-span-5"
+  },
+  {
+    "id": "deliveries",
+    "span": "col-span-12"
+  },
+  {
+    "id": "payouts",
+    "span": "col-span-12"
   }
 ]

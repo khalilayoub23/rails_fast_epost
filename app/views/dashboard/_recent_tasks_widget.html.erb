@@ -1,8 +1,8 @@
 <div data-widget-id="recent_tasks" data-span="<%= span %>" class="<%= span %> <%= card_class %> px-5 pt-6 pb-2.5 sm:px-7.5">
-  <div class="mb-6 flex items-center justify-between">
-    <h3 class="text-title-md font-semibold text-white"><%= t("dashboard.recent_tasks", default: "Tasks") %></h3>
-    <%= link_to t("common.view_all", default: "View all"), tasks_path, class: "text-sm font-medium text-yellow-300 hover:text-yellow-200 transition-colors" %>
-  </div>
+  <%= render "dashboard/widget_header",
+        title: t("dashboard.recent_tasks", default: "Tasks"),
+        link_label: t("dashboard.view_all", default: "View all"),
+        link_path: tasks_path %>
   <div class="max-w-full overflow-x-auto rounded-xl border border-white/10">
     <table class="w-full table-auto">
       <thead>
@@ -11,7 +11,7 @@
           <th class="px-4 py-4 font-medium text-slate-200"><%= t("tasks.customer", default: "Customer") %></th>
           <th class="px-4 py-4 font-medium text-slate-200"><%= t("tasks.priority", default: "Priority") %></th>
           <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.status", default: "Status") %></th>
-          <th class="px-4 py-4 text-right font-medium text-slate-200"><%= t("common.actions", default: "Actions") %></th>
+          <th class="px-4 py-4 text-right font-medium text-slate-200"><%= t("dashboard.actions", default: "Actions") %></th>
         </tr>
       </thead>
       <tbody>
@@ -30,7 +30,7 @@
               <%= render "shared/status_badge", status: task.status %>
             </td>
             <td class="px-4 py-4 text-right">
-              <%= link_to t("common.view", default: "View"), task_path(task), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-sm font-medium text-white hover:bg-white/10" %>
+              <%= link_to t("dashboard.view", default: "View"), task_path(task), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-sm font-medium text-white hover:bg-white/10" %>
             </td>
           </tr>
         <% end %>

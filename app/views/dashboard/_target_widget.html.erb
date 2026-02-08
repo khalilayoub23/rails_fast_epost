@@ -9,7 +9,7 @@
 <% dashoffset = circumference * (1 - (target_percent / 100.0)) %>
 
 <div data-widget-id="target" data-span="<%= span %>" class="<%= span %> <%= card_class %> p-7.5">
-  <div class="mb-4 justify-between gap-4 sm:flex">
+  <div class="mb-4 justify-between gap-4 sm:flex <%= rtl? ? 'flex-row-reverse text-right' : '' %>">
     <div>
       <h5 class="text-xl font-semibold text-white">
         <%= t("dashboard.monthly_target", default: "Monthly Target") %>

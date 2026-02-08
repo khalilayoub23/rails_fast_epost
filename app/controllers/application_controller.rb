@@ -71,6 +71,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_admin_or_lawyer!
+    unless current_user&.admin? || current_user&.lawyer? || current_user&.manager?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
+  end
+
   def require_manager!
     return if current_user&.manager?
 

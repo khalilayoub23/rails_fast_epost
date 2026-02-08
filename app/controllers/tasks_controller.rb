@@ -85,6 +85,7 @@ class TasksController < ApplicationController
   def new
     @task = (@customer ? @customer.tasks : Task).new
     authorize @task
+    load_poa_templates
   end
 
   def create
@@ -93,6 +94,7 @@ class TasksController < ApplicationController
       task = scope.new(task_params)
       authorize task
       assign_default_carrier(task)
+      assign_lawyer_from_creator(task)
 
       payment_details = default_payment_details(task).merge(payment_form_params.to_h)
       amount_cents = parse_amount_cents(payment_details["amount"])
@@ -127,6 +129,7 @@ class TasksController < ApplicationController
     @task = scope.new(task_params)
     authorize @task
     assign_default_carrier(@task)
+    assign_lawyer_from_creator(@task)
     @task.created_by = current_user
     # Unpaid tasks should remain postponed until payment completes.
     @task.status = :postponed unless @task.published?
@@ -144,6 +147,7 @@ class TasksController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace("task-form", partial: "tasks/form", locals: { task: @task }),
+            turbo_stream.replace("cart-indicator", partial: "shared/cart_indicator"),
             turbo_stream.append("flash-messages", partial: "shared/flash_message",
                                locals: { type: :success, message: notice_message })
           ]
@@ -156,6 +160,7 @@ class TasksController < ApplicationController
     else
       log_task_creation_failure(@task)
       flash.now[:alert] = t("tasks.form_error", default: "Please correct the highlighted errors.")
+      load_poa_templates
       render :new, status: :unprocessable_entity
     end
   rescue TaskPaymentError => e
@@ -167,6 +172,9 @@ class TasksController < ApplicationController
   rescue => e
     Rails.logger.error("[Tasks#create] Unexpected error: #{e.message}")
     flash.now[:alert] = t("tasks.general_creation_error", default: "Unable to save the task. Please try again.")
+    @task = (@customer ? @customer.tasks : Task).new(task_params)
+    assign_default_carrier(@task)
+    load_poa_templates
     render :new, status: :internal_server_error
   end
 
@@ -174,9 +182,11 @@ class TasksController < ApplicationController
     @senders = Sender.order(:name)
     @messengers = Messenger.order(:name)
     @carriers = Carrier.order(:name)
+    load_poa_templates
   end
 
   def update
+    load_poa_templates
     respond_with_update(@task, @task.customer, notice: "Task updated.", attributes: task_params) do
       render turbo_stream: [
         turbo_stream.replace(@task, partial: "tasks/task_card", locals: { task: @task }),
@@ -314,6 +324,10 @@ class TasksController < ApplicationController
     permitted = params.require(:task).permit(
       :customer_id, :carrier_id, :sender_id, :messenger_id, :lawyer_id,
       :package_type, :task_type, :start, :target, :failure_code, :delivery_time, :status, :priority, :filled_form_url,
+      :id_number,
+      :collection_amount, :collection_currency,
+      :poa_document_template_id, :poa_enabled,
+      :archive_item_type, :archive_quantity, :archive_duration_days, :archive_from_date, :archive_to_date,
       :pickup_address, :pickup_contact_phone, :pickup_notes, :requested_pickup_time,
       :case_file_number, :delivery_medium, :power_of_attorney,
       legal_files: []
@@ -330,6 +344,12 @@ class TasksController < ApplicationController
     permitted
   end
 
+  def load_poa_templates
+    @poa_templates = DocumentTemplate.active_templates
+                                    .where(category: "Power of Attorney")
+                                    .order(:name)
+  end
+
   def apply_visibility_filter(scope)
     return scope unless current_user&.sender_role?
 
@@ -341,6 +361,13 @@ class TasksController < ApplicationController
     return if task.carrier_id.present?
 
     task.carrier = Carrier.default_system_carrier
+  end
+
+  def assign_lawyer_from_creator(task)
+    return unless current_user&.lawyer?
+    return if task.lawyer_id.present?
+
+    task.lawyer_id = current_user.ensure_lawyer_profile!&.id
   end
 
   def log_task_creation_attempt(task)

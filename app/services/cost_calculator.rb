@@ -6,12 +6,14 @@ class CostCalculator
   end
 
   def total_cost
+    ensure_distance!
     return 0 unless distance_available?
 
     fuel_cost + agent_earnings + constants[:waiting_time_cost] + constants[:parking_costs] + constants[:highway_costs] + priority_cost + special_costs + customer_location_cost - discount
   end
 
   def cost_details
+    ensure_distance!
     return { "error" => "Missing distance" } unless distance_available?
 
     {
@@ -63,6 +65,19 @@ class CostCalculator
 
   def distance_available?
     @route_distance.present? && @route_distance.to_f.positive?
+  end
+
+  def ensure_distance!
+    return if distance_available?
+    return if @task.start.blank? || @task.target.blank?
+
+    km = RouteDistanceService.new(origin: @task.start, destination: @task.target).fetch_distance_km
+    return if km.blank?
+
+    @route_distance = km
+    @task.update_column(:distance, km) if @task.persisted?
+  rescue => e
+    Rails.logger.warn("[CostCalculator] distance lookup failed for task #{@task.id}: #{e.message}")
   end
 
   def fuel_cost

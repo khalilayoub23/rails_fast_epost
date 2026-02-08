@@ -40,10 +40,10 @@
         <% end %>
 
           <div class="mt-6 overflow-x-auto" data-controller="cart-selection">
-            <table class="min-w-full divide-y divide-white/10">
+            <table class="min-w-full table-fixed divide-y divide-white/10">
               <thead>
                 <tr class="text-left text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  <th class="px-4 py-3">
+                  <th class="w-24 px-4 py-3">
                     <label class="inline-flex items-center gap-2 select-none">
                       <input
                         type="checkbox"
@@ -55,11 +55,13 @@
                       <span><%= t("cart.select", default: "Select") %></span>
                     </label>
                   </th>
-                  <th class="px-4 py-3"><%= t("cart.task", default: "Task") %></th>
-                  <th class="px-4 py-3"><%= t("cart.customer", default: "Customer") %></th>
-                  <th class="px-4 py-3"><%= t("cart.status", default: "Status") %></th>
-                  <th class="px-4 py-3"><%= t("cart.amount", default: "Amount") %></th>
-                  <th class="px-4 py-3 text-right"><%= t("cart.actions", default: "Actions") %></th>
+                  <th class="w-48 px-4 py-3"><%= t("cart.task", default: "Task") %></th>
+                  <th class="w-48 px-4 py-3"><%= t("cart.task_type", default: "Task type") %></th>
+                  <th class="w-40 px-4 py-3"><%= t("cart.created_at", default: "Created") %></th>
+                  <th class="w-48 px-4 py-3"><%= t("cart.customer", default: "Customer") %></th>
+                  <th class="w-36 px-4 py-3"><%= t("cart.status", default: "Status") %></th>
+                  <th class="w-36 px-4 py-3"><%= t("cart.amount", default: "Amount") %></th>
+                  <th class="w-32 px-4 py-3 text-right"><%= t("cart.actions", default: "Actions") %></th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-white/10">
@@ -83,6 +85,12 @@
                       <%= link_to "##{task.id}", task_path(task), class: "font-semibold text-yellow-300 hover:text-yellow-200" %>
                       <div class="mt-1 text-xs text-slate-400"><%= task.package_type.presence || "-" %></div>
                     </td>
+                    <td class="px-4 py-4 text-slate-300">
+                      <%= t("task_types.#{task.task_type}", default: task.task_type.to_s.humanize) %>
+                    </td>
+                    <td class="px-4 py-4 text-slate-300">
+                      <%= l(task.created_at, format: :short) %>
+                    </td>
                     <td class="px-4 py-4 text-slate-300"><%= task.customer&.name || "-" %></td>
                     <td class="px-4 py-4">
                       <%= render "shared/status_badge", status: task.status %>
@@ -91,11 +99,16 @@
                       <% end %>
                     </td>
                     <td class="px-4 py-4">
-                       <input type="number" step="0.01" min="1" name="items[<%= task.id %>][amount]" form="cart_checkout_form"
-                         value="<%= (CostCalculator.new(task).total_cost.presence || 100).to_f.round(2) %>"
-                         data-cart-selection-target="amountInput"
-                         data-task-id="<%= task.id %>"
-                         class="h-10 w-32 rounded-lg border border-white/10 bg-white/5 px-3 text-center tabular-nums text-white focus:border-yellow-400 focus:ring-yellow-400">
+                      <% cost = CostCalculator.new(task).total_cost %>
+                      <% amount = cost.to_f %>
+                      <input type="number" step="0.01" min="1" name="items[<%= task.id %>][amount]" form="cart_checkout_form"
+                        value="<%= amount.positive? ? format("%.2f", amount) : "" %>"
+                        data-cart-selection-target="amountInput"
+                        data-task-id="<%= task.id %>"
+                        class="h-10 w-32 rounded-lg border border-white/10 bg-white/5 px-3 text-center tabular-nums text-white focus:border-yellow-400 focus:ring-yellow-400">
+                      <% unless amount.positive? %>
+                        <div class="mt-1 text-xs text-slate-400"><%= t("cart.amount_pending", default: "Price will appear after distance is calculated.") %></div>
+                      <% end %>
                     </td>
                     <td class="px-4 py-4 text-right">
                           <%= button_to t("cart.remove", default: "Remove"), item_cart_path(item), method: :delete,

@@ -39,6 +39,14 @@
               <%= t('sidebar.tasks', default: 'Tasks') %>
             <% end %>
           </li>
+          <% if current_user&.lawyer? || current_user&.admin? || current_user&.manager? %>
+            <li>
+              <%= link_to admin_document_templates_path, class: "group relative z-10 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-200 transition-all duration-200 hover:bg-white/5 hover:text-white #{rtl? ? 'flex-row-reverse text-right' : ''} #{'bg-white/10 text-white shadow-lg shadow-black/30 ring-1 ring-white/15' if current_page?(admin_document_templates_path)}" do %>
+                <span class="material-icons text-lg shrink-0 text-slate-400 group-hover:text-white #{'text-amber-300' if current_page?(admin_document_templates_path)}">description</span>
+                <%= t('sidebar.template_files', default: 'Template Files') %>
+              <% end %>
+            </li>
+          <% end %>
 
           <% if current_user&.manager? || current_user&.sender_role? || current_user&.lawyer? || current_user&.ecommerce_seller? %>
             <li>

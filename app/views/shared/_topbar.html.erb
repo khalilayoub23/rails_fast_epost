@@ -2,9 +2,9 @@
   <div class="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
     <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
       <!-- Hamburger Toggle BTN -->
-      <button class="z-99999 block rounded-xl border border-white/10 bg-white/5 p-1.5 shadow-sm lg:hidden hover:bg-white/10"
-              data-action="click->sidebar#toggle">
-        <span class="material-icons text-lg text-white">menu</span>
+      <button class="z-99999 topbar-icon-button lg:hidden"
+          data-action="click->sidebar#toggle">
+        <span class="material-icons text-lg">menu</span>
       </button>
       <!-- Hamburger Toggle BTN -->
       <%= link_to root_path, class: "flex items-center gap-2" do %>
@@ -17,20 +17,25 @@
     <% welcome_name ||= current_user&.email.to_s.split("@").first.to_s.titleize.presence %>
     <% welcome_name ||= current_user&.email %>
 
+    <% motivation_text = t("topbar.motivation", default: "What can we do today?") %>
+    <% motivation_text = motivation_text.to_s.sub(/\?$/, "\u200f?") if rtl? %>
+
     <div class="flex w-full items-center justify-between gap-4">
       <!-- Left: Welcome pill only -->
       <div class="hidden min-w-0 sm:flex">
-        <div class="inline-flex max-w-96 items-center whitespace-normal break-words rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white shadow-card leading-snug">
+        <div class="inline-flex max-w-96 items-center whitespace-normal break-words px-1 py-1 text-sm font-semibold text-white leading-snug">
           <div class="flex flex-col">
-            <div class="text-sm font-semibold text-white"><%= welcome_name %></div>
-            <div class="text-xs font-medium text-slate-300"><%= t("dashboard.welcome", default: "Welcome") %></div>
+            <div class="text-base font-semibold text-white"><%= t("topbar.welcome", default: "Welcome") %>, <%= welcome_name %></div>
+            <div class="text-sm font-medium text-slate-300">
+              <span class="welcome-motivation" dir="<%= rtl? ? 'rtl' : 'ltr' %>"><%= motivation_text %></span>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Center: Search -->
       <div class="flex flex-1 justify-center">
-        <div class="hidden w-full max-w-xl items-center rounded-full border border-white/10 bg-white/5 px-3 py-2 shadow-card sm:flex" data-controller="search">
+        <div class="relative hidden w-full max-w-xl items-center rounded-full border border-white/10 bg-white/5 px-3 py-2 shadow-card sm:flex" data-controller="search">
         <svg class="mr-2 fill-slate-400 hover:fill-yellow-300 cursor-pointer" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-action="click->search#search">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"/>
           <path fill-rule="evenodd" clip-rule="evenodd" d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"/>
@@ -40,33 +45,63 @@
           placeholder="<%= t('topbar.search_placeholder', default: 'Search or type command...') %>" 
           class="w-full bg-transparent text-white placeholder:text-slate-400 focus:outline-none xl:w-125" 
           data-search-target="input"
-          data-action="keydown->search#handleEnter"
+          data-action="input->search#update focus->search#open keydown->search#handleEnter"
         />
         <span class="ml-2 hidden rounded-md border border-white/10 px-1.5 py-0.5 text-xs text-slate-300 sm:block">⌘K</span>
+
+        <div class="absolute left-0 right-0 top-full z-50 mt-2 hidden rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-xl shadow-black/40 backdrop-blur"
+             data-search-target="menu">
+          <div class="flex flex-col gap-1" data-search-target="items">
+            <button type="button" class="hidden rounded-xl px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                    data-search-target="item" data-search-label="<%= t('nav.dashboard', default: 'Dashboard') %>" data-search-url="/" data-action="click->search#navigate">
+              <span class="text-xs text-slate-400">/dashboard</span>
+              <div class="font-semibold"><%= t('nav.dashboard', default: 'Dashboard') %></div>
+            </button>
+            <button type="button" class="hidden rounded-xl px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                    data-search-target="item" data-search-label="<%= t('nav.tasks', default: 'Tasks') %>" data-search-url="/tasks" data-action="click->search#navigate">
+              <span class="text-xs text-slate-400">/tasks</span>
+              <div class="font-semibold"><%= t('nav.tasks', default: 'Tasks') %></div>
+            </button>
+            <button type="button" class="hidden rounded-xl px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                    data-search-target="item" data-search-label="<%= t('nav.customers', default: 'Customers') %>" data-search-url="/customers" data-action="click->search#navigate">
+              <span class="text-xs text-slate-400">/customers</span>
+              <div class="font-semibold"><%= t('nav.customers', default: 'Customers') %></div>
+            </button>
+            <button type="button" class="hidden rounded-xl px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                    data-search-target="item" data-search-label="<%= t('nav.payments', default: 'Payments') %>" data-search-url="/payments" data-action="click->search#navigate">
+              <span class="text-xs text-slate-400">/payments</span>
+              <div class="font-semibold"><%= t('nav.payments', default: 'Payments') %></div>
+            </button>
+            <button type="button" class="hidden rounded-xl px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                    data-search-target="item" data-search-label="<%= t('nav.profile', default: 'Profile') %>" data-search-url="/profile" data-action="click->search#navigate">
+              <span class="text-xs text-slate-400">/profile</span>
+              <div class="font-semibold"><%= t('nav.profile', default: 'Profile') %></div>
+            </button>
+            <button type="button" class="hidden rounded-xl px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                    data-search-target="item" data-search-label="<%= t('nav.settings', default: 'Settings') %>" data-search-url="/settings" data-action="click->search#navigate">
+              <span class="text-xs text-slate-400">/settings</span>
+              <div class="font-semibold"><%= t('nav.settings', default: 'Settings') %></div>
+            </button>
+          </div>
+          <div class="hidden px-3 py-2 text-xs text-slate-400" data-search-target="empty">
+            <%= t('common.no_results', default: 'No matches') %>
+          </div>
+        </div>
         </div>
       </div>
 
       <!-- Right: buttons (dark mode, cart, language, avatar) -->
       <div class="flex items-center justify-end gap-2">
         <button type="button"
-                class="relative inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-yellow-400/60 bg-yellow-400 text-black hover:bg-yellow-300 transition-all"
+          class="topbar-icon-button"
                 title="<%= t('topbar.theme', default: 'Dark mode') %>"
                 data-action="click->ui-prefs#toggleDark">
-          <span class="material-icons text-xl text-black">dark_mode</span>
+           <span class="material-icons text-xl">dark_mode</span>
         </button>
 
-        <% if current_user&.manager? || current_user&.sender_role? || current_user&.lawyer? || current_user&.ecommerce_seller? %>
-          <%= link_to cart_path,
-                title: t('topbar.cart', default: 'Cart'),
-                class: "relative inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-yellow-400/60 bg-yellow-400 text-black hover:bg-yellow-300 transition-all" do %>
-            <span class="material-icons text-xl text-black">shopping_cart</span>
-            <% if cart_item_count.positive? %>
-              <span class="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-black px-1.5 py-0.5 text-[10px] font-bold text-white">
-                <%= cart_item_count %>
-              </span>
-            <% end %>
-          <% end %>
-        <% end %>
+        <div id="cart-indicator">
+          <%= render "shared/cart_indicator" %>
+        </div>
 
         <%= render "shared/locale_switcher" %>
 
@@ -74,51 +109,14 @@
           <%= button_to destroy_user_session_path,
                 method: :delete,
                 form: { class: "hidden sm:block" },
-                class: "inline-flex h-[44px] items-center gap-2 rounded-xl border border-red-400/40 bg-red-500/10 px-3 text-xs font-semibold text-red-200 hover:bg-red-500/20" do %>
-            <span class="material-icons text-base">logout</span>
-            <span><%= t('topbar.logout', default: 'Sign out') %></span>
+                class: "topbar-icon-button" ,
+                title: t('topbar.logout', default: 'Sign out') do %>
+            <span class="material-icons text-xl">logout</span>
+            <span class="sr-only"><%= t('topbar.logout', default: 'Sign out') %></span>
           <% end %>
         <% end %>
 
-        <div class="relative" data-controller="dropdown">
-        <button class="relative inline-flex h-[44px] w-[44px] items-center justify-center rounded-xl border border-yellow-400/60 bg-yellow-400 text-black hover:bg-yellow-300 transition-all" data-action="click->dropdown#toggle" title="<%= t('topbar.user_menu', default: 'User menu') %>">
-          <span class="material-icons text-xl text-black">person</span>
-
-          <span class="pointer-events-none absolute left-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-md bg-black/10 text-black">
-            <span class="material-icons" style="font-size: 14px">logout</span>
-          </span>
-
-          <span class="pointer-events-none absolute -bottom-1 -right-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white">
-            ▾
-          </span>
-        </button>
-
-  <div class="absolute right-0 mt-4 hidden w-62.5 flex-col rounded-xl border border-white/10 bg-slate-950/90 shadow-xl shadow-black/30 backdrop-blur" data-dropdown-target="menu">
-          <ul class="flex flex-col gap-5 border-b border-white/10 px-6 py-7.5">
-            <li>
-              <%= link_to profile_path, class: "flex items-center gap-3.5 text-sm font-medium text-slate-200 duration-300 ease-in-out hover:text-yellow-300 lg:text-base" do %>
-                <span class="material-icons text-lg">person</span>
-                <%= t('topbar.my_profile', default: 'My Profile') %>
-              <% end %>
-            </li>
-            <li>
-              <%= link_to settings_path, class: "flex items-center gap-3.5 text-sm font-medium text-slate-200 duration-300 ease-in-out hover:text-yellow-300 lg:text-base" do %>
-                <span class="material-icons text-lg">settings</span>
-                <%= t('topbar.account_settings', default: 'Account Settings') %>
-              <% end %>
-            </li>
-            <li>
-              <%= button_to destroy_user_session_path,
-                    method: :delete,
-                    form: { class: "w-full text-left" },
-                    class: "flex items-center gap-3.5 text-sm font-medium text-slate-200 duration-300 ease-in-out hover:text-red-300 lg:text-base" do %>
-                <span class="material-icons text-lg">logout</span>
-                <%= t('topbar.logout', default: 'Sign out') %>
-              <% end %>
-            </li>
-          </ul>
-        </div>
-      </div>
+        <%# User menu removed %>
 
       </div>
     </div>
