@@ -32,19 +32,10 @@ export default class extends Controller {
         appendTo: document.body
       })
 
-      // Tag the calendar container so we can style it to match the app layout
+      // Tag the calendar container so we can style it via CSS overrides
       try {
         if (this.fp && this.fp.calendarContainer) {
           this.fp.calendarContainer.classList.add('fastpost-flatpickr')
-          // Inline CSS fallback: set CSS custom properties on the container so
-          // the visual theme applies even if stylesheet load/order is off.
-          try {
-            const c = this.fp.calendarContainer
-            c.style.setProperty('--fp-bg', 'var(--brand-bg, #0f172a)')
-            c.style.setProperty('--fp-border', 'rgba(255,255,255,0.06)')
-            c.style.setProperty('--fp-accent', 'var(--brand-gold, #f59e0b)')
-            c.style.setProperty('--fp-text', 'var(--brand-text-light, #e6eef8)')
-          } catch (e) {}
         }
       } catch (e) {}
 
