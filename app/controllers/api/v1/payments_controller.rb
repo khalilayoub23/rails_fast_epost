@@ -83,9 +83,16 @@ module Api
 
         case provider
         when "local"
+          local_secret = ENV["LOCALPAY_APP_SECRET"].to_s
+          return render json: { error: "Webhook secret not configured" }, status: :forbidden if local_secret.blank?
+
           payment = Gateways::LocalGateway.process_webhook!(payload: payload, headers: headers)
           render json: { ok: true, id: payment&.id }
         when "stripe"
+          # Allow blank webhook secret in non-production (tests/dev) to let gateway
+          # handle verification when appropriate. Only enforce in production.
+          return render json: { error: "Webhook secret not configured" }, status: :forbidden if ENV["STRIPE_WEBHOOK_SECRET"].blank? && Rails.env.production?
+
           payment = Gateways::StripeGateway.process_webhook!(payload: raw, headers: headers)
           render json: { ok: true, id: payment&.id }
         else

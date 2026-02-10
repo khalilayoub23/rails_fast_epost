@@ -59,6 +59,12 @@ class TasksController < ApplicationController
     @payment_details = default_payment_details.merge(payment_form_params.to_h)
     payment = initiate_task_checkout!(@task, @payment_details)
 
+    if (Rails.env.development? || Rails.env.test?) && ENV.fetch("STRIPE_SIMULATE", "false") == "true"
+      payment.update!(gateway_status: "succeeded")
+      task = finalize_task_from_payment(payment)
+      redirect_to task_path(task), notice: t("tasks.published_after_payment", default: "Payment confirmed. Task is now published."), status: :see_other and return
+    end
+
     if payment.payment_url.present?
       redirect_to payment.payment_url, allow_other_host: true, status: :see_other
     elsif payment.gateway_status_succeeded?
@@ -79,6 +85,7 @@ class TasksController < ApplicationController
   def new
     @task = (@customer ? @customer.tasks : Task).new
     authorize @task
+    load_poa_templates
   end
 
   def create
@@ -87,6 +94,7 @@ class TasksController < ApplicationController
       task = scope.new(task_params)
       authorize task
       assign_default_carrier(task)
+      assign_lawyer_from_creator(task)
 
       payment_details = default_payment_details(task).merge(payment_form_params.to_h)
       amount_cents = parse_amount_cents(payment_details["amount"])
@@ -121,6 +129,7 @@ class TasksController < ApplicationController
     @task = scope.new(task_params)
     authorize @task
     assign_default_carrier(@task)
+    assign_lawyer_from_creator(@task)
     @task.created_by = current_user
     # Unpaid tasks should remain postponed until payment completes.
     @task.status = :postponed unless @task.published?
@@ -128,10 +137,30 @@ class TasksController < ApplicationController
 
     if @task.save
       add_task_to_cart_if_applicable(@task)
-      redirect_to task_path(@task), notice: t("tasks.draft_saved", default: "Task saved as a draft. Complete payment to publish it."), status: :see_other
+      @payment_details = default_payment_details
+      @task = (@customer ? @customer.tasks : Task).new
+      @task.customer = @customer if @customer
+      authorize @task
+      notice_message = t("tasks.created_notice", default: "Task created successfully.")
+
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("task-form", partial: "tasks/form", locals: { task: @task }),
+            turbo_stream.replace("cart-indicator", partial: "shared/cart_indicator"),
+            turbo_stream.append("flash-messages", partial: "shared/flash_message",
+                               locals: { type: :success, message: notice_message })
+          ]
+        end
+        format.html do
+          redirect_path = @customer ? new_customer_task_path(@customer) : new_task_path
+          redirect_to redirect_path, notice: notice_message, status: :see_other
+        end
+      end
     else
       log_task_creation_failure(@task)
       flash.now[:alert] = t("tasks.form_error", default: "Please correct the highlighted errors.")
+      load_poa_templates
       render :new, status: :unprocessable_entity
     end
   rescue TaskPaymentError => e
@@ -143,6 +172,9 @@ class TasksController < ApplicationController
   rescue => e
     Rails.logger.error("[Tasks#create] Unexpected error: #{e.message}")
     flash.now[:alert] = t("tasks.general_creation_error", default: "Unable to save the task. Please try again.")
+    @task = (@customer ? @customer.tasks : Task).new(task_params)
+    assign_default_carrier(@task)
+    load_poa_templates
     render :new, status: :internal_server_error
   end
 
@@ -150,9 +182,11 @@ class TasksController < ApplicationController
     @senders = Sender.order(:name)
     @messengers = Messenger.order(:name)
     @carriers = Carrier.order(:name)
+    load_poa_templates
   end
 
   def update
+    load_poa_templates
     respond_with_update(@task, @task.customer, notice: "Task updated.", attributes: task_params) do
       render turbo_stream: [
         turbo_stream.replace(@task, partial: "tasks/task_card", locals: { task: @task }),
@@ -290,7 +324,12 @@ class TasksController < ApplicationController
     permitted = params.require(:task).permit(
       :customer_id, :carrier_id, :sender_id, :messenger_id, :lawyer_id,
       :package_type, :task_type, :start, :target, :failure_code, :delivery_time, :status, :priority, :filled_form_url,
+      :id_number,
+      :collection_amount, :collection_currency,
+      :poa_document_template_id, :poa_enabled,
+      :archive_item_type, :archive_quantity, :archive_duration_days, :archive_from_date, :archive_to_date,
       :pickup_address, :pickup_contact_phone, :pickup_notes, :requested_pickup_time,
+      :case_file_number, :delivery_medium, :power_of_attorney,
       legal_files: []
     )
 
@@ -305,6 +344,12 @@ class TasksController < ApplicationController
     permitted
   end
 
+  def load_poa_templates
+    @poa_templates = DocumentTemplate.active_templates
+                                    .where(category: "Power of Attorney")
+                                    .order(:name)
+  end
+
   def apply_visibility_filter(scope)
     return scope unless current_user&.sender_role?
 
@@ -316,6 +361,13 @@ class TasksController < ApplicationController
     return if task.carrier_id.present?
 
     task.carrier = Carrier.default_system_carrier
+  end
+
+  def assign_lawyer_from_creator(task)
+    return unless current_user&.lawyer?
+    return if task.lawyer_id.present?
+
+    task.lawyer_id = current_user.ensure_lawyer_profile!&.id
   end
 
   def log_task_creation_attempt(task)

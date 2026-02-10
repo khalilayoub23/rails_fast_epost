@@ -8,6 +8,7 @@ module Api
                    request.headers["X-Tiktok-Signature"].presence ||
                    request.headers["Tiktok-Signature"].presence
 
+          return forbidden if secret.blank?
           return forbidden unless verify_hmac_base64!(secret, header)
 
           Integrations::TiktokService.process(json_body, headers: request.headers.to_h, signature_valid: true)

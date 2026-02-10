@@ -5,20 +5,24 @@ class PhonesController < ApplicationController
   before_action :set_phone, only: %i[show edit update destroy]
 
   def index
+    authorize Phone
     @phones = @carrier.phones
     respond_with_index(@phones)
   end
 
   def show
+    authorize @phone
     respond_with_show(@phone)
   end
 
   def new
     @phone = @carrier.phones.new
+    authorize @phone
   end
 
   def create
     @phone = @carrier.phones.new(phone_params)
+    authorize @phone
     respond_with_create(@phone, @carrier, notice: "Phone created.") do
       render turbo_stream: [
         turbo_stream.prepend("phones_list", partial: "phones/phone_card", locals: { phone: @phone, carrier: @carrier }),
@@ -31,6 +35,7 @@ class PhonesController < ApplicationController
   def edit; end
 
   def update
+    authorize @phone
     respond_with_update(@phone, @carrier, notice: "Phone updated.", attributes: phone_params) do
       render turbo_stream: [
         turbo_stream.replace(dom_id(@phone), partial: "phones/phone_card", locals: { phone: @phone, carrier: @carrier }),
@@ -40,6 +45,7 @@ class PhonesController < ApplicationController
   end
 
   def destroy
+    authorize @phone
     respond_with_destroy(@phone, carrier_phones_path(@carrier), notice: "Phone deleted.") do
       render turbo_stream: [
         turbo_stream.remove(dom_id(@phone)),
@@ -52,6 +58,7 @@ class PhonesController < ApplicationController
 
   def set_carrier
     @carrier = Carrier.find(params[:carrier_id])
+    authorize @carrier, :show?
   end
 
   def set_phone

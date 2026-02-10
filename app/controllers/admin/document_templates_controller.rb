@@ -1,4 +1,5 @@
 class Admin::DocumentTemplatesController < ApplicationController
+  before_action :require_admin_or_lawyer!
   before_action :set_document_template, only: [ :show, :edit, :update, :destroy, :download, :preview, :new_generate, :generate ]
 
   # GET /admin/document_templates

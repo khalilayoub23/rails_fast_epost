@@ -1,5 +1,6 @@
 # Admin Lawyers Controller
 class Admin::LawyersController < ApplicationController
+  before_action :require_admin!
   before_action :set_lawyer, only: [ :show, :edit, :update, :destroy, :activate, :deactivate ]
 
   # GET /admin/lawyers

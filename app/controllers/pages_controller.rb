@@ -25,10 +25,10 @@ class PagesController < ApplicationController
     @contact.assign_attributes(contact_inquiry_params)
 
     if @contact.save
-      flash[:notice] = "Thank you! We'll get back to you within 24 hours."
+      flash[:notice] = t("contact_page.flash_success")
       redirect_to pages_contact_path
     else
-      flash.now[:alert] = "Please fix the errors below."
+      flash.now[:alert] = t("contact_page.flash_error")
       render :contact, status: :unprocessable_entity
     end
   end

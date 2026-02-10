@@ -1,5 +1,5 @@
-<div class="p-6">
-  <div class="mb-8">
+<div class="p-6 space-y-6">
+  <div>
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-title-md2 font-bold text-white">Background Jobs</h1>
@@ -9,13 +9,72 @@
     </div>
   </div>
 
+  <% total_jobs = @jobs.values.sum(&:count) %>
+  <% pending_jobs = @jobs.values.flatten.count { |job| job.finished_at.nil? } %>
+  <% completed_jobs = total_jobs - pending_jobs %>
+  <% queue_names = @jobs.keys.sort %>
+
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl shadow-black/30 backdrop-blur">
+      <p class="text-xs uppercase tracking-wide text-slate-300">Total jobs</p>
+      <p class="mt-2 text-3xl font-semibold text-white"><%= total_jobs %></p>
+      <p class="mt-2 text-xs text-slate-400">Across <%= queue_names.size %> queues</p>
+    </div>
+    <div class="rounded-2xl border border-yellow-400/30 bg-yellow-500/10 p-5 shadow-xl shadow-black/30 backdrop-blur">
+      <p class="text-xs uppercase tracking-wide text-yellow-200">Pending</p>
+      <p class="mt-2 text-3xl font-semibold text-yellow-100"><%= pending_jobs %></p>
+      <p class="mt-2 text-xs text-yellow-100/80">Awaiting execution</p>
+    </div>
+    <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-5 shadow-xl shadow-black/30 backdrop-blur">
+      <p class="text-xs uppercase tracking-wide text-emerald-200">Completed</p>
+      <p class="mt-2 text-3xl font-semibold text-emerald-100"><%= completed_jobs %></p>
+      <p class="mt-2 text-xs text-emerald-100/80">Finished jobs</p>
+    </div>
+    <div class="rounded-2xl border border-sky-400/30 bg-sky-500/10 p-5 shadow-xl shadow-black/30 backdrop-blur">
+      <p class="text-xs uppercase tracking-wide text-sky-200">Queues</p>
+      <p class="mt-2 text-3xl font-semibold text-sky-100"><%= queue_names.size %></p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <% queue_names.first(4).each do |queue_name| %>
+          <span class="rounded-full bg-white/10 px-2 py-1 text-[11px] text-slate-200"><%= queue_name %></span>
+        <% end %>
+        <% if queue_names.size > 4 %>
+          <span class="rounded-full bg-white/10 px-2 py-1 text-[11px] text-slate-400">+<%= queue_names.size - 4 %> more</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <% if queue_names.any? %>
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-xl shadow-black/30 backdrop-blur">
+      <p class="text-xs uppercase tracking-wide text-slate-300">Jump to queue</p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <% queue_names.each do |queue_name| %>
+          <a href="#queue-<%= queue_name.parameterize %>" class="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200 hover:bg-white/20">
+            <%= queue_name %>
+          </a>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
   <% @jobs.each do |queue_name, jobs| %>
-    <div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur mb-6">
+    <% queue_pending = jobs.count { |job| job.finished_at.nil? } %>
+    <% queue_completed = jobs.count - queue_pending %>
+    <div id="queue-<%= queue_name.parameterize %>" class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur">
       <div class="px-6 py-4 border-b border-white/10">
-        <h2 class="text-lg font-semibold text-white">
-          Queue: <%= queue_name %>
-          <span class="ml-2 text-sm font-normal text-slate-400">(<%= jobs.count %> jobs)</span>
-        </h2>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 class="text-lg font-semibold text-white">
+              Queue: <%= queue_name %>
+              <span class="ml-2 text-sm font-normal text-slate-400">(<%= jobs.count %> jobs)</span>
+            </h2>
+            <p class="mt-1 text-xs text-slate-400"><%= queue_pending %> pending · <%= queue_completed %> completed</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-300">
+            <span class="rounded-full bg-yellow-500/15 px-2 py-1 text-yellow-200">Pending <%= queue_pending %></span>
+            <span class="rounded-full bg-emerald-500/15 px-2 py-1 text-emerald-200">Completed <%= queue_completed %></span>
+          </div>
+        </div>
       </div>
       
       <div class="overflow-x-auto">
@@ -25,6 +84,7 @@
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">ID</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Class</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Duration</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Created</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Finished</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Actions</th>
@@ -47,6 +107,9 @@
                       Pending
                     </span>
                   <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                  <%= job.finished_at ? distance_of_time_in_words(job.created_at, job.finished_at) : "-" %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                   <%= time_ago_in_words(job.created_at) %> ago

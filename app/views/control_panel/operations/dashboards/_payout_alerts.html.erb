@@ -1,0 +1,20 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold text-white"><%= t("operations.payout_alerts", default: "Payout alerts") %></h2>
+    <span class="text-xs text-slate-400"><%= t("operations.oldest_first", default: "Oldest first") %></span>
+  </div>
+  <ul class="space-y-3">
+    <% payout_alerts.each do |payout| %>
+      <li class="flex items-center justify-between rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3">
+        <div>
+          <p class="text-sm font-semibold text-white">Task <%= payout.task&.barcode || payout.task_id %></p>
+          <p class="text-xs text-amber-100"><%= t("operations.due_at", default: "Due %{date}", date: (payout.due_at ? l(payout.due_at, format: :long) : t("operations.awaiting_date", default: "Awaiting date"))) %></p>
+        </div>
+        <span class="text-sm font-bold text-amber-200"><%= number_to_currency(payout.amount_cents / 100.0, unit: currency) %></span>
+      </li>
+    <% end %>
+    <% if payout_alerts.empty? %>
+      <li class="text-sm text-slate-400"><%= t("operations.no_outstanding_payouts", default: "No outstanding payouts 🎉") %></li>
+    <% end %>
+  </ul>
+</div>

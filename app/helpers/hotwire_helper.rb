@@ -37,6 +37,19 @@ module HotwireHelper
   end
 
   # Notification helpers
+  def normalize_flash_type(type)
+    case type.to_s
+    when "notice", "success"
+      :success
+    when "alert", "error"
+      :alert
+    when "warning"
+      :warning
+    else
+      :info
+    end
+  end
+
   def notification_tag(type, message, **options)
     options[:data] ||= {}
     options[:data][:controller] = "notification"
@@ -61,7 +74,7 @@ module HotwireHelper
   private
 
   def notification_classes(type, additional_classes)
-    base = "flex p-4 mb-4 rounded-lg transition-all duration-300 transform opacity-0 translate-x-full"
+    base = "flex p-4 mb-4 rounded-lg transition-all duration-300"
     type_classes = case type.to_sym
     when :success
       "bg-green-50 dark:bg-green-800 text-green-800 dark:text-green-200"

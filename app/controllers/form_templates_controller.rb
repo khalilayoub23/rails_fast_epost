@@ -4,11 +4,13 @@ class FormTemplatesController < ApplicationController
   before_action :set_form_template, only: %i[show edit update destroy]
 
   def index
-    @form_templates = FormTemplate.all
+    authorize FormTemplate
+    @form_templates = policy_scope(FormTemplate)
     respond_with_index(@form_templates)
   end
 
   def show
+    authorize @form_template
     respond_to do |format|
       format.html
       format.json { render json: @form_template }
@@ -22,10 +24,12 @@ class FormTemplatesController < ApplicationController
 
   def new
     @form_template = FormTemplate.new
+    authorize @form_template
   end
 
   def create
     @form_template = FormTemplate.new(form_template_params)
+    authorize @form_template
     respond_with_create(@form_template, nil, notice: "Form template created.") do
       render turbo_stream: [
         turbo_stream.prepend("form_templates_list", partial: "form_templates/form_template_card", locals: { form_template: @form_template }),
@@ -38,6 +42,7 @@ class FormTemplatesController < ApplicationController
   def edit; end
 
   def update
+    authorize @form_template
     respond_with_update(@form_template, nil, notice: "Form template updated.", attributes: form_template_params) do
       render turbo_stream: [
         turbo_stream.replace(dom_id(@form_template), partial: "form_templates/form_template_card", locals: { form_template: @form_template }),
@@ -47,6 +52,7 @@ class FormTemplatesController < ApplicationController
   end
 
   def destroy
+    authorize @form_template
     respond_with_destroy(@form_template, form_templates_path, notice: "Form template deleted.") do
       render turbo_stream: [
         turbo_stream.remove(dom_id(@form_template)),

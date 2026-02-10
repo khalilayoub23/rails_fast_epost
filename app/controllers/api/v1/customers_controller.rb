@@ -1,18 +1,22 @@
 module Api
   module V1
     class CustomersController < BaseController
+      before_action :authenticate_user!
       before_action :set_customer, only: %i[show update destroy]
 
       def index
-        render json: Customer.all
+        authorize Customer
+        render json: policy_scope(Customer)
       end
 
       def show
+        authorize @customer
         render json: @customer
       end
 
       def create
         customer = Customer.new(customer_params)
+        authorize customer
         if customer.save
           render json: customer, status: :created
         else
@@ -21,6 +25,7 @@ module Api
       end
 
       def update
+        authorize @customer
         if @customer.update(customer_params)
           render json: @customer
         else
@@ -29,6 +34,7 @@ module Api
       end
 
       def destroy
+        authorize @customer
         @customer.destroy
         head :no_content
       end
@@ -36,7 +42,7 @@ module Api
       private
 
       def set_customer
-        @customer = Customer.find(params[:id])
+        @customer = policy_scope(Customer).find(params[:id])
       end
 
       def customer_params

@@ -5,20 +5,24 @@ class RemarksController < ApplicationController
   before_action :set_remark, only: %i[show edit update destroy]
 
   def index
+    authorize Remark
     @remarks = @task.remarks
     respond_with_index(@remarks)
   end
 
   def show
+    authorize @remark
     respond_with_show(@remark)
   end
 
   def new
     @remark = @task.remarks.new
+    authorize @remark
   end
 
   def create
     @remark = @task.remarks.new(remark_params)
+    authorize @remark
     respond_with_create(@remark, @task, notice: "Remark created.") do
       render turbo_stream: [
         turbo_stream.append("remarks_list", partial: "remarks/remark_card", locals: { remark: @remark, task: @task }),
@@ -32,6 +36,7 @@ class RemarksController < ApplicationController
   def edit; end
 
   def update
+    authorize @remark
     respond_with_update(@remark, @task, notice: "Remark updated.", attributes: remark_params) do
       render turbo_stream: [
         turbo_stream.replace(@remark, partial: "remarks/remark_card", locals: { remark: @remark, task: @task }),
@@ -42,6 +47,7 @@ class RemarksController < ApplicationController
   end
 
   def destroy
+    authorize @remark
     respond_with_destroy(@remark, task_remarks_path(@task), notice: "Remark deleted.") do
       render turbo_stream: [
         turbo_stream.remove(@remark),
@@ -55,6 +61,7 @@ class RemarksController < ApplicationController
 
   def set_task
     @task = Task.find(params[:task_id])
+    authorize @task, :show?
   end
 
   def set_remark

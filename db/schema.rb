@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_02_090003) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_07_220000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -581,7 +581,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_02_090003) do
   end
 
   create_table "tasks", force: :cascade do |t|
-    t.bigint "customer_id", null: false
+    t.bigint "customer_id"
     t.bigint "carrier_id", null: false
     t.string "package_type"
     t.string "start"
@@ -615,15 +615,29 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_02_090003) do
     t.boolean "published", default: false, null: false
     t.datetime "published_at"
     t.decimal "distance", precision: 10, scale: 2
-    t.integer "task_type", default: 1, null: false
+    t.string "task_type", default: "court_filings", null: false
+    t.string "case_file_number"
+    t.string "delivery_medium"
+    t.decimal "collection_amount", precision: 10, scale: 2
+    t.string "collection_currency", default: "ILS"
+    t.bigint "poa_document_template_id"
+    t.string "archive_item_type"
+    t.integer "archive_quantity"
+    t.integer "archive_duration_days"
+    t.date "archive_until_date"
+    t.date "archive_from_date"
+    t.date "archive_to_date"
+    t.string "id_number"
     t.index ["barcode"], name: "index_tasks_on_barcode", unique: true
     t.index ["carrier_id"], name: "index_tasks_on_carrier_id"
+    t.index ["collection_amount"], name: "index_tasks_on_collection_amount"
     t.index ["created_at"], name: "index_tasks_on_created_at"
     t.index ["created_by_id"], name: "index_tasks_on_created_by_id"
     t.index ["customer_id"], name: "index_tasks_on_customer_id"
     t.index ["distance"], name: "index_tasks_on_distance"
     t.index ["lawyer_id"], name: "index_tasks_on_lawyer_id"
     t.index ["messenger_id"], name: "index_tasks_on_messenger_id"
+    t.index ["poa_document_template_id"], name: "index_tasks_on_poa_document_template_id"
     t.index ["priority"], name: "index_tasks_on_priority"
     t.index ["published"], name: "index_tasks_on_published"
     t.index ["sender_id"], name: "index_tasks_on_sender_id"
@@ -663,6 +677,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_02_090003) do
     t.string "phone"
     t.text "address"
     t.integer "user_type", null: false, comment: "0=sender,1=lawyer,2=courier,3=recipient"
+    t.string "home_address"
+    t.string "office_address"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -714,6 +730,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_02_090003) do
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "tasks", "carriers", on_delete: :cascade
   add_foreign_key "tasks", "customers", on_delete: :cascade
+  add_foreign_key "tasks", "document_templates", column: "poa_document_template_id"
   add_foreign_key "tasks", "lawyers"
   add_foreign_key "tasks", "messengers"
   add_foreign_key "tasks", "senders"

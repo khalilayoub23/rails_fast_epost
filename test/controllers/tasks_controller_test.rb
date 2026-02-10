@@ -2,11 +2,26 @@ require "test_helper"
 
 class TasksControllerTest < ActionDispatch::IntegrationTest
   include ActionView::RecordIdentifier
+  include ActionDispatch::TestProcess
   setup do
     @user = users(:admin)
     sign_in @user
     @customer = customers(:one)
     @carrier = carriers(:one)
+    @poa_template = document_templates(:prawn_template_one)
+    attach_poa_template_pdf(@poa_template)
+  end
+
+  test "all task types are added to cart" do
+    cart_item_count = -> { CartItem.joins(:cart).where(carts: { user_id: @user.id }).count }
+
+    Task.task_types.keys.each do |task_type|
+      assert_difference("Task.count", 1, "Expected task type #{task_type} to create a task") do
+        assert_difference(cart_item_count, 1, "Expected task type #{task_type} to add to cart") do
+          post tasks_path, params: { task: build_task_params(task_type) }
+        end
+      end
+    end
   end
 
   test "sender can create task which defaults to system carrier" do
@@ -21,6 +36,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
           task: {
             customer_id: @customer.id,
             package_type: "Sender Package",
+            task_type: "inter_office_courier",
             start: "Sender Start",
             target: "Sender Target",
             delivery_time: 2.days.from_now.iso8601
@@ -33,8 +49,8 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_equal Carrier.default_system_carrier.id, task.carrier_id
     assert_not task.published?
     assert_equal other_user.id, task.created_by_id
-    assert_redirected_to task_path(task)
-    assert_match(/draft/i, flash[:notice])
+    assert_redirected_to new_task_path
+    assert_equal I18n.t("tasks.created_notice", default: "Task created successfully."), flash[:notice]
   ensure
     sign_in @user
   end
@@ -44,6 +60,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
       customer: @customer,
       carrier: @carrier,
       package_type: "Legal Docs",
+      task_type: "inter_office_courier",
       start: "Jerusalem",
       target: "Haifa",
       priority: :urgent,
@@ -94,6 +111,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
       customer: @customer,
       carrier: @carrier,
       package_type: "Docs",
+      task_type: "inter_office_courier",
       start: "A",
       target: "B",
       delivery_time: 2.days.from_now,
@@ -124,6 +142,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
       customer: @customer,
       carrier: @carrier,
       package_type: "Express Docs",
+      task_type: "inter_office_courier",
       start: "Tel Aviv",
       target: "Haifa",
       delivery_time: 1.day.from_now,
@@ -156,8 +175,10 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
       "customer_id" => @customer.id,
       "carrier_id" => @carrier.id,
       "package_type" => "Secure Delivery",
+      "task_type" => "inter_office_courier",
       "start" => "Tel Aviv",
-      "target" => "Beer Sheva"
+      "target" => "Beer Sheva",
+      "delivery_time" => 1.day.from_now.iso8601
     }
 
     payment = Payment.create!(
@@ -200,6 +221,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
       customer: @customer,
       carrier: @carrier,
       package_type: "Docs",
+      task_type: "inter_office_courier",
       start: "A",
       target: "B",
       delivery_time: 2.days.from_now,
@@ -241,5 +263,78 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_select "select#payment_service_type option[selected][value='express_delivery']"
   ensure
     payment.destroy if payment.persisted?
+  end
+
+  private
+
+  def attach_poa_template_pdf(template)
+    return if template.pdf_file.attached?
+
+    template.pdf_file.attach(
+      io: file_fixture("proof.txt").open,
+      filename: "template.pdf",
+      content_type: "application/pdf"
+    )
+  end
+
+  def build_task_params(task_type)
+    params = {
+      customer_id: @customer.id,
+      carrier_id: @carrier.id,
+      package_type: "Test Package",
+      pickup_notes: "Test notes"
+    }
+
+    unless %w[archive_services remote_digital_signature].include?(task_type)
+      params[:start] = "Start Location"
+      params[:target] = "Target Location"
+      params[:delivery_time] = 2.days.from_now.iso8601
+    end
+
+    if %w[criminal_file_photocopying traffic_file_photocopying document_retrieval_from_government_agencies].include?(task_type)
+      params[:case_file_number] = "CASE-123"
+      params[:delivery_medium] = "paper"
+    end
+
+    if %w[cash_on_delivery_cod payment_collection].include?(task_type)
+      params[:collection_amount] = "100"
+      params[:collection_currency] = "ILS"
+    end
+
+    if task_type == "archive_services"
+      params[:archive_item_type] = "files"
+      params[:archive_quantity] = "2"
+      params[:archive_from_date] = Date.current
+      params[:archive_to_date] = Date.current + 1.day
+    end
+
+    if task_type == "remote_digital_signature"
+      params[:id_number] = "123456789"
+    end
+
+    if %w[court_filings process_serving document_retrieval_from_government_agencies].include?(task_type)
+      params[:poa_enabled] = "1"
+      params[:poa_document_template_id] = @poa_template.id
+    end
+
+    if %w[
+      court_filings
+      process_serving
+      notarization_and_apostille
+      remote_digital_signature
+      criminal_file_photocopying
+      traffic_file_photocopying
+      enforcement_office_services
+      bailiff_services_coordination
+      land_registry_tabu_services
+      companies_registrar_services
+      filing_to_arbitration_mediation_centers
+      proof_of_delivery_pod
+    ].include?(task_type)
+      params[:legal_files] = [fixture_file_upload("signature.png", "image/png")]
+    end
+
+    params[:task_type] = task_type
+    params
   end
 end

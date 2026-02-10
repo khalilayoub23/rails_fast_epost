@@ -21,107 +21,47 @@
 
 <% currency = "USD" %>
 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-    <p class="text-xs uppercase tracking-wide text-slate-300">Total Shipments</p>
-    <p class="mt-2 text-3xl font-bold text-white"><%= @task_stats[:total] %></p>
-    <p class="text-xs text-slate-400">All time</p>
-  </div>
-  <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 backdrop-blur p-5">
-    <p class="text-xs uppercase tracking-wide text-blue-100">In Transit</p>
-    <p class="mt-2 text-3xl font-bold text-blue-50"><%= @task_stats[:in_transit] %></p>
-    <p class="text-xs text-blue-200/80">Currently moving</p>
-  </div>
-  <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 backdrop-blur p-5">
-    <p class="text-xs uppercase tracking-wide text-emerald-100">Delivered</p>
-    <p class="mt-2 text-3xl font-bold text-emerald-50"><%= @task_stats[:delivered] %></p>
-    <p class="text-xs text-emerald-200/80">Successful drops</p>
-  </div>
-  <div class="rounded-2xl border border-rose-400/30 bg-rose-500/10 backdrop-blur p-5">
-    <p class="text-xs uppercase tracking-wide text-rose-100">Failed</p>
-    <p class="mt-2 text-3xl font-bold text-rose-50"><%= @task_stats[:failed] %></p>
-    <p class="text-xs text-rose-200/80">Requires follow-up</p>
-  </div>
+  <%= render "control_panel/shared/stat_card",
+        label: "Total Shipments",
+        value: @task_stats[:total],
+        subtitle: "All time",
+        value_class: "mt-2 text-3xl font-bold text-white",
+        subtitle_class: "text-xs text-slate-400" %>
+  <%= render "control_panel/shared/stat_card",
+        label: "In Transit",
+        value: @task_stats[:in_transit],
+        subtitle: "Currently moving",
+        container_class: "rounded-2xl border border-blue-400/30 bg-blue-500/10 backdrop-blur p-5",
+        label_class: "text-xs uppercase tracking-wide text-blue-100",
+        value_class: "mt-2 text-3xl font-bold text-blue-50",
+        subtitle_class: "text-xs text-blue-200/80" %>
+  <%= render "control_panel/shared/stat_card",
+        label: "Delivered",
+        value: @task_stats[:delivered],
+        subtitle: "Successful drops",
+        container_class: "rounded-2xl border border-emerald-400/30 bg-emerald-500/10 backdrop-blur p-5",
+        label_class: "text-xs uppercase tracking-wide text-emerald-100",
+        value_class: "mt-2 text-3xl font-bold text-emerald-50",
+        subtitle_class: "text-xs text-emerald-200/80" %>
+  <%= render "control_panel/shared/stat_card",
+        label: "Failed",
+        value: @task_stats[:failed],
+        subtitle: "Requires follow-up",
+        container_class: "rounded-2xl border border-rose-400/30 bg-rose-500/10 backdrop-blur p-5",
+        label_class: "text-xs uppercase tracking-wide text-rose-100",
+        value_class: "mt-2 text-3xl font-bold text-rose-50",
+        subtitle_class: "text-xs text-rose-200/80" %>
 </div>
 
 <div class="grid gap-6 lg:grid-cols-3 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-    <h2 class="text-lg font-semibold text-white">Spend summary</h2>
-    <div class="mt-4 space-y-4">
-      <div>
-        <p class="text-xs text-slate-400">Total</p>
-        <p class="text-2xl font-bold text-white"><%= number_to_currency(@spend_summary[:total] / 100.0, unit: currency) %></p>
-      </div>
-      <div>
-        <p class="text-xs text-slate-400">Captured</p>
-        <p class="text-xl font-semibold text-emerald-200"><%= number_to_currency(@spend_summary[:succeeded] / 100.0, unit: currency) %></p>
-      </div>
-      <div>
-        <p class="text-xs text-slate-400">Open invoices</p>
-        <p class="text-xl font-semibold text-amber-200"><%= number_to_currency(@spend_summary[:pending] / 100.0, unit: currency) %></p>
-      </div>
-    </div>
-    <% if @avg_delivery_hours.present? %>
-      <p class="mt-6 text-sm text-slate-300">Avg. delivery time: <span class="font-semibold"><%= @avg_delivery_hours %>h</span></p>
-    <% end %>
-  </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5 lg:col-span-2">
-    <h2 class="text-lg font-semibold text-white mb-4">Carrier mix</h2>
-    <div class="space-y-3">
-      <% @carrier_mix.each do |row| %>
-        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-2">
-          <p class="font-medium text-white"><%= row[:name] %></p>
-          <span class="text-sm text-slate-300"><%= row[:count] %> shipments</span>
-        </div>
-      <% end %>
-      <% if @carrier_mix.empty? %>
-        <p class="text-sm text-slate-400">No carrier assignments yet.</p>
-      <% end %>
-    </div>
-  </div>
+  <%= render "spend_summary",
+        spend_summary: @spend_summary,
+        currency: currency,
+        avg_delivery_hours: @avg_delivery_hours %>
+  <%= render "carrier_mix", carrier_mix: @carrier_mix %>
 </div>
 
 <div class="grid gap-6 lg:grid-cols-2 mt-6">
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold text-white">Recent activity</h2>
-      <span class="text-xs text-slate-400">Last 10 tasks</span>
-    </div>
-    <div class="space-y-3">
-      <% @recent_tasks.each do |task| %>
-        <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
-          <div class="flex items-center justify-between">
-            <p class="text-sm font-semibold text-white"><%= task.barcode %></p>
-            <span class="text-xs text-slate-400"><%= task.status.humanize %></span>
-          </div>
-          <p class="text-xs text-slate-400">Carrier: <%= task.carrier&.name || 'Pending' %></p>
-          <% if task.updated_at %>
-            <p class="text-xs text-slate-500">Updated <%= l(task.updated_at, format: :short) %></p>
-          <% end %>
-        </div>
-      <% end %>
-      <% if @recent_tasks.empty? %>
-        <p class="text-sm text-slate-400">No shipments yet for this sender.</p>
-      <% end %>
-    </div>
-  </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold text-white">Open issues</h2>
-      <span class="text-xs text-slate-400">Failed / flagged tasks</span>
-    </div>
-    <div class="space-y-3">
-      <% @issue_log.each do |task| %>
-        <div class="rounded-xl border border-rose-500/30 bg-rose-500/5 px-4 py-3">
-          <p class="text-sm font-semibold text-white"><%= task.barcode %></p>
-          <p class="text-xs text-rose-100">Updated <%= l(task.updated_at, format: :short) %></p>
-          <% if task.last_failure_note.present? %>
-            <p class="mt-1 text-xs text-rose-100/80"><%= task.last_failure_note %></p>
-          <% end %>
-        </div>
-      <% end %>
-      <% if @issue_log.empty? %>
-        <p class="text-sm text-slate-400">All shipments are healthy.</p>
-      <% end %>
-    </div>
-  </div>
+  <%= render "recent_activity", recent_tasks: @recent_tasks %>
+  <%= render "open_issues", issue_log: @issue_log %>
 </div>

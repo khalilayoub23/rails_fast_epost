@@ -1,25 +1,26 @@
 <!-- Contact Page -->
+<% content_for :title, t("contact_page.meta_title") %>
 <section class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white py-20">
   <div class="container mx-auto px-4 py-16">
     <div class="max-w-4xl mx-auto">
       <!-- Header -->
       <div class="text-center mb-12">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">
-          Get A <span class="text-yellow-400">Quote</span>
+          <%= t("contact_page.hero_title") %> <span class="text-yellow-400"><%= t("contact_page.hero_title_highlight") %></span>
         </h1>
         <p class="text-xl text-slate-300">
-          Fill out the form below and we'll get back to you within 24 hours
+          <%= t("contact_page.hero_subtitle") %>
         </p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-12">
         <!-- Contact Form -->
         <div class="rounded-3xl p-8 border border-white/10 bg-white/5 shadow-2xl shadow-black/30 backdrop-blur">
-          <h2 class="text-2xl font-bold text-yellow-400 mb-6">Send us a message</h2>
+          <h2 class="text-2xl font-bold text-yellow-400 mb-6"><%= t("contact_page.form_title") %></h2>
           
           <% if @contact.errors.any? %>
             <div class="mb-6 rounded-lg border border-red-500 bg-red-500/10 p-4 text-sm text-red-200">
-              <p class="font-semibold mb-2">Please fix the following:</p>
+              <p class="font-semibold mb-2"><%= t("contact_page.form_error_title") %></p>
               <ul class="list-disc list-inside space-y-1">
                 <% @contact.errors.full_messages.each do |message| %>
                   <li><%= message %></li>
@@ -34,41 +35,41 @@
                         local: true,
                         class: "space-y-4" do |f| %>
             <div>
-              <%= f.label :name, "Full Name", class: "block text-sm font-medium mb-2" %>
-              <%= f.text_field :name, class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400", placeholder: "John Doe", required: true %>
+              <%= f.label :name, t("contact_page.full_name"), class: "block text-sm font-medium mb-2" %>
+              <%= f.text_field :name, class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400", placeholder: t("contact_page.full_name_placeholder"), required: true %>
             </div>
 
             <div>
-              <%= f.label :email, "Email Address", class: "block text-sm font-medium mb-2" %>
-              <%= f.email_field :email, class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400", placeholder: "john@example.com", required: true %>
+              <%= f.label :email, t("contact_page.email"), class: "block text-sm font-medium mb-2" %>
+              <%= f.email_field :email, class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400", placeholder: t("contact_page.email_placeholder"), required: true %>
             </div>
 
             <div>
-              <%= f.label :phone, "Phone Number", class: "block text-sm font-medium mb-2" %>
-              <%= f.telephone_field :phone, class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400", placeholder: "+1 (555) 000-0000" %>
+              <%= f.label :phone, t("contact_page.phone"), class: "block text-sm font-medium mb-2" %>
+              <%= f.telephone_field :phone, class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400", placeholder: t("contact_page.phone_placeholder") %>
             </div>
 
             <div>
-              <%= f.label :service, "Service Type", class: "block text-sm font-medium mb-2" %>
+                <%= f.label :service, t("contact_page.service_type"), class: "block text-sm font-medium mb-2" %>
               <%= f.select :service,
-                  [["Legal Document Delivery", "legal"], ["E-commerce Delivery", "ecommerce"], ["Other", "other"]],
-                  { prompt: "Select a service" },
+                  [[t("contact_page.service_legal"), "legal"], [t("contact_page.service_ecommerce"), "ecommerce"], [t("contact_page.service_other"), "other"]],
+                  { prompt: t("contact_page.service_prompt") },
                   class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white" %>
             </div>
 
             <div>
-              <%= f.label :message, "Message", class: "block text-sm font-medium mb-2" %>
-              <%= f.text_area :message, rows: 4, class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400", placeholder: "Tell us about your delivery needs...", required: true %>
+              <%= f.label :message, t("contact_page.message"), class: "block text-sm font-medium mb-2" %>
+              <%= f.text_area :message, rows: 4, class: "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-yellow-400/30 focus:border-yellow-400 text-white placeholder:text-slate-400", placeholder: t("contact_page.message_placeholder"), required: true %>
             </div>
 
-            <%= f.submit "Send Message", class: "w-full px-8 py-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition shadow-lg cursor-pointer" %>
+            <%= f.submit t("contact_page.submit"), class: "w-full px-8 py-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-300 transition shadow-lg cursor-pointer" %>
           <% end %>
         </div>
 
         <!-- Contact Info -->
         <div class="space-y-8">
           <div class="rounded-3xl p-8 border border-white/10 bg-white/5 shadow-2xl shadow-black/30 backdrop-blur">
-            <h2 class="text-2xl font-bold text-yellow-400 mb-6">Contact Information</h2>
+            <h2 class="text-2xl font-bold text-yellow-400 mb-6"><%= t("contact_page.info_title") %></h2>
             
             <div class="space-y-6">
               <div class="flex items-start space-x-4">
@@ -78,8 +79,8 @@
                   </svg>
                 </div>
                 <div>
-                  <h3 class="font-semibold mb-1">Phone</h3>
-                  <p class="text-slate-300">+13 453 04342</p>
+                  <h3 class="font-semibold mb-1"><%= t("contact_page.phone_label") %></h3>
+                  <p class="text-slate-300"><%= t("contact_phone") %></p>
                 </div>
               </div>
 
@@ -90,8 +91,8 @@
                   </svg>
                 </div>
                 <div>
-                  <h3 class="font-semibold mb-1">Email</h3>
-                  <p class="text-slate-300">email@incontseller.com</p>
+                  <h3 class="font-semibold mb-1"><%= t("contact_page.email_label") %></h3>
+                  <p class="text-slate-300"><%= t("contact_email") %></p>
                 </div>
               </div>
 
@@ -102,9 +103,9 @@
                   </svg>
                 </div>
                 <div>
-                  <h3 class="font-semibold mb-1">Business Hours</h3>
-                  <p class="text-slate-300">Monday - Friday: 8:00 AM - 6:00 PM</p>
-                  <p class="text-slate-300">Saturday: 9:00 AM - 2:00 PM</p>
+                  <h3 class="font-semibold mb-1"><%= t("contact_page.hours_label") %></h3>
+                  <p class="text-slate-300"><%= t("contact_page.hours_weekdays") %></p>
+                  <p class="text-slate-300"><%= t("contact_page.hours_weekend") %></p>
                 </div>
               </div>
             </div>
@@ -112,10 +113,10 @@
 
           <!-- Quick Links -->
           <div class="rounded-3xl p-8 border border-white/10 bg-white/5 shadow-2xl shadow-black/30 backdrop-blur">
-            <h3 class="text-xl font-bold text-yellow-400 mb-4">Quick Actions</h3>
+            <h3 class="text-xl font-bold text-yellow-400 mb-4"><%= t("contact_page.quick_actions") %></h3>
             <div class="space-y-3">
               <%= link_to pages_track_parcel_path, class: "flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors group border border-white/10" do %>
-                <span class="font-medium">Track Your Parcel</span>
+                <span class="font-medium"><%= t("contact_page.track_parcel") %></span>
                 <svg class="w-5 h-5 text-yellow-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -123,14 +124,14 @@
               
               <% if user_signed_in? %>
                 <%= link_to dashboard_path, class: "flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors group border border-white/10" do %>
-                  <span class="font-medium">Go to Dashboard</span>
+                  <span class="font-medium"><%= t("contact_page.go_to_dashboard") %></span>
                   <svg class="w-5 h-5 text-yellow-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                   </svg>
                 <% end %>
               <% else %>
                 <%= link_to new_user_registration_path, class: "flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors group border border-white/10" do %>
-                  <span class="font-medium">Create Account</span>
+                  <span class="font-medium"><%= t("contact_page.create_account") %></span>
                   <svg class="w-5 h-5 text-yellow-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                   </svg>

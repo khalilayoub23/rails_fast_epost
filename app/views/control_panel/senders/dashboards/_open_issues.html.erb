@@ -1,0 +1,20 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-white"><%= t("senders.open_issues", default: "Open issues") %></h2>
+    <span class="text-xs text-slate-400"><%= t("senders.failed_flagged", default: "Failed / flagged tasks") %></span>
+  </div>
+  <div class="space-y-3">
+    <% issue_log.each do |task| %>
+      <div class="rounded-xl border border-rose-500/30 bg-rose-500/5 px-4 py-3">
+        <p class="text-sm font-semibold text-white"><%= task.barcode %></p>
+        <p class="text-xs text-rose-100"><%= t("common.updated_at", default: "Updated %{time}", time: l(task.updated_at, format: :short)) %></p>
+        <% if task.last_failure_note.present? %>
+          <p class="mt-1 text-xs text-rose-100/80"><%= task.last_failure_note %></p>
+        <% end %>
+      </div>
+    <% end %>
+    <% if issue_log.empty? %>
+      <p class="text-sm text-slate-400"><%= t("senders.all_healthy", default: "All shipments are healthy.") %></p>
+    <% end %>
+  </div>
+</div>

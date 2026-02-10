@@ -4,6 +4,7 @@ one:
   customer: one
   carrier: one
   sender: sender_two
+  task_type: delivery_and_pickup
   package_type: 'small'
   start: 'Start Address 1'
   target: 'Target Address 1'
@@ -17,6 +18,7 @@ task_one:
   customer: one
   carrier: one
   sender: sender_one
+  task_type: delivery_and_pickup
   package_type: 'medium'
   start: 'Legal Start Address'
   target: 'Legal Target Address'
@@ -30,6 +32,7 @@ two:
   customer: two
   carrier: two
   sender: sender_three
+  task_type: delivery_and_pickup
   package_type: 'medium'
   start: 'Start Address 2'
   target: 'Target Address 2'
@@ -43,6 +46,7 @@ failed_task:
   customer: one
   carrier: one
   sender: sender_two
+  task_type: delivery_and_pickup
   package_type: 'medium'
   start: 'Start Address 3'
   target: 'Target Address 3'

@@ -1,0 +1,68 @@
+<% target_percent = (target_percent || 0).to_i %>
+<% target_delta_percent = (target_delta_percent || 0).to_i %>
+<% currency_code = currency_code.to_s.presence || ENV.fetch("DEFAULT_CURRENCY", "ILS") %>
+<% monthly_target_cents = monthly_target_cents.to_i %>
+<% month_revenue_cents = month_revenue_cents.to_i %>
+<% today_revenue_cents = today_revenue_cents.to_i %>
+<% radius = 80 %>
+<% circumference = 2 * Math::PI * radius %>
+<% dashoffset = circumference * (1 - (target_percent / 100.0)) %>
+
+<div data-widget-id="target" data-span="<%= span %>" class="<%= span %> <%= card_class %> p-7.5">
+  <div class="mb-4 justify-between gap-4 sm:flex <%= rtl? ? 'flex-row-reverse text-right' : '' %>">
+    <div>
+      <h5 class="text-xl font-semibold text-white">
+        <%= t("dashboard.monthly_target", default: "Monthly Target") %>
+      </h5>
+    </div>
+    <div class="relative z-20 inline-block">
+      <select name="" id="" class="relative z-20 inline-flex appearance-none rounded-lg border border-white/10 bg-white/5 py-1 pl-3 pr-8 text-sm font-medium text-white outline-none transition focus:border-yellow-400">
+        <option value=""><%= t("dashboard.this_month", default: "This Month") %></option>
+        <option value=""><%= t("dashboard.last_month", default: "Last Month") %></option>
+      </select>
+      <span class="absolute right-3 top-1/2 z-10 -translate-y-1/2">
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.47072 1.08816C0.47072 1.02932 0.500141 0.955772 0.54404 0.911882C0.551987 0.903934 0.551987 0.903934 0.559934 0.895887L0.667063 0.789758C0.711953 0.744868 0.785499 0.715446 0.844341 0.715446C0.903183 0.715446 0.976729 0.744868 1.02162 0.789758L5.00007 4.56497L8.97852 0.789758C9.02341 0.744868 9.09696 0.715446 9.1558 0.715446C9.21464 0.715446 9.28819 0.744868 9.33308 0.789758L9.44021 0.895887C9.44816 0.903934 9.44816 0.903934 9.45611 0.911882C9.50001 0.955772 9.52943 1.02932 9.52943 1.08816C9.52943 1.147 9.50001 1.22055 9.45611 1.26444L5.2308 5.36379C5.1859 5.40868 5.11235 5.4381 5.05351 5.4381C4.99467 5.4381 4.92112 5.40868 4.87623 5.36379L0.650904 1.26444C0.607014 1.22055 0.57759 1.147 0.57759 1.08816C0.57759 1.08816 0.552669 1.11308 0.47072 1.08816Z" fill="#9CA3AF"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <p class="font-medium text-slate-400"><%= t("dashboard.monthly_target_description", default: "Target you've set for each month") %></p>
+  </div>
+
+  <div class="mx-auto flex justify-center relative">
+    <svg class="rotate-90 transform" width="200" height="200">
+      <circle cx="100" cy="100" r="80" stroke="#374151" stroke-width="16" fill="transparent"/>
+      <circle cx="100" cy="100" r="80" stroke="#FBBF24" stroke-width="16" fill="transparent" stroke-dasharray="<%= circumference %>" stroke-dashoffset="<%= dashoffset %>" stroke-linecap="round"/>
+    </svg>
+    <div class="absolute inset-0 flex flex-col items-center justify-center">
+      <span class="text-3xl font-bold text-white"><%= number_to_percentage(target_percent, precision: 0) %></span>
+      <% delta_class = target_delta_percent.negative? ? "text-rose-400" : "text-green-400" %>
+      <span class="text-sm font-medium <%= delta_class %>"><%= target_delta_percent.positive? ? "+#{target_delta_percent}" : target_delta_percent %>%</span>
+    </div>
+  </div>
+
+  <div class="mt-7">
+    <p class="mb-3 font-medium text-white">
+      <%= t("dashboard.today_revenue", default: "You earn %{amount} today, it's higher than last month.", amount: format_money_cents(today_revenue_cents, currency: currency_code, precision: 0)) %>
+    </p>
+    <p class="text-sm text-slate-400"><%= t("dashboard.keep_up", default: "Keep up your good work!") %></p>
+  </div>
+
+  <div class="mt-5 grid grid-cols-1 gap-4 border-t border-white/10 pt-5 text-center sm:grid-cols-3">
+    <div>
+      <p class="font-medium text-slate-400 text-sm"><%= t("dashboard.target", default: "Target") %></p>
+      <p class="text-xl font-bold text-yellow-400"><%= format_money_cents(monthly_target_cents, currency: currency_code, precision: 0) %></p>
+    </div>
+    <div>
+      <p class="font-medium text-slate-400 text-sm"><%= t("dashboard.revenue", default: "Revenue") %></p>
+      <p class="text-xl font-bold text-green-400"><%= format_money_cents(month_revenue_cents, currency: currency_code, precision: 0) %></p>
+    </div>
+    <div>
+      <p class="font-medium text-slate-400 text-sm"><%= t("dashboard.today", default: "Today") %></p>
+      <p class="text-xl font-bold text-green-400"><%= format_money_cents(today_revenue_cents, currency: currency_code, precision: 0) %></p>
+    </div>
+  </div>
+</div>

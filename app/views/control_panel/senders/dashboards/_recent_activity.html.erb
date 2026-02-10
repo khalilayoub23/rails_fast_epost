@@ -1,0 +1,23 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-white"><%= t("senders.recent_activity", default: "Recent activity") %></h2>
+    <span class="text-xs text-slate-400"><%= t("senders.last_tasks", default: "Last 10 tasks") %></span>
+  </div>
+  <div class="space-y-3">
+    <% recent_tasks.each do |task| %>
+      <div class="rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-semibold text-white"><%= task.barcode %></p>
+          <span class="text-xs text-slate-400"><%= task.status.humanize %></span>
+        </div>
+        <p class="text-xs text-slate-400"><%= t("tasks.carrier", default: "Carrier") %>: <%= task.carrier&.name || t("tasks.pending", default: "Pending") %></p>
+        <% if task.updated_at %>
+          <p class="text-xs text-slate-500"><%= t("common.updated_at", default: "Updated %{time}", time: l(task.updated_at, format: :short)) %></p>
+        <% end %>
+      </div>
+    <% end %>
+    <% if recent_tasks.empty? %>
+      <p class="text-sm text-slate-400"><%= t("senders.no_shipments", default: "No shipments yet for this sender.") %></p>
+    <% end %>
+  </div>
+</div>

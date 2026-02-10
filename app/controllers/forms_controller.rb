@@ -6,11 +6,13 @@ class FormsController < ApplicationController
   before_action :set_template, only: []
 
   def index
+    authorize Form
     @forms = @customer.forms
     respond_with_index(@forms)
   end
 
   def show
+    authorize @form
     respond_to do |format|
       format.html
       format.json { render json: @form }
@@ -28,10 +30,12 @@ class FormsController < ApplicationController
 
   def new
     @form = @customer.forms.new
+    authorize @form
   end
 
   def create
     @form = @customer.forms.new(form_params)
+    authorize @form
     respond_with_create(@form, @customer, notice: "Form created.") do
       render turbo_stream: [
         turbo_stream.prepend("forms_list", partial: "forms/form_card", locals: { form: @form, customer: @customer }),
@@ -44,6 +48,7 @@ class FormsController < ApplicationController
   def edit; end
 
   def update
+    authorize @form
     respond_with_update(@form, @customer, notice: "Form updated.", attributes: form_params) do
       render turbo_stream: [
         turbo_stream.replace(dom_id(@form), partial: "forms/form_card", locals: { form: @form, customer: @customer }),
@@ -53,6 +58,7 @@ class FormsController < ApplicationController
   end
 
   def destroy
+    authorize @form
     respond_with_destroy(@form, customer_forms_path(@customer), notice: "Form deleted.") do
       render turbo_stream: [
         turbo_stream.remove(dom_id(@form)),
@@ -65,6 +71,7 @@ class FormsController < ApplicationController
 
   def set_customer
     @customer = Customer.find(params[:customer_id])
+    authorize @customer, :show?
   end
 
   def set_form

@@ -116,7 +116,19 @@ class User < ApplicationRecord
   end
 
   def lawyer?
-    role == "lawyer"
+    role == "lawyer" || user_type_lawyer?
+  end
+
+  def ensure_lawyer_profile!
+    return unless lawyer?
+
+    Lawyer.find_or_create_by!(email: email) do |lawyer|
+      lawyer.name = email.to_s.split("@").first.to_s.titleize.presence || "Lawyer"
+      lawyer.phone = "0500000000"
+      lawyer.license_number = "LIC-#{SecureRandom.hex(6).upcase}"
+      lawyer.specialization = :customs
+      lawyer.active = true
+    end
   end
 
   def ecommerce_seller?

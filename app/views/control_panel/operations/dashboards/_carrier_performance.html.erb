@@ -1,0 +1,20 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold text-white"><%= t("operations.carrier_performance", default: "Carrier performance") %></h2>
+    <span class="text-xs text-slate-400"><%= t("operations.top_by_rating", default: "Top 5 by rating") %></span>
+  </div>
+  <ul class="space-y-3">
+    <% carrier_leaderboard.each do |carrier| %>
+      <li class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3">
+        <div>
+          <p class="font-semibold text-white"><%= carrier.name %></p>
+          <p class="text-xs text-slate-400">Ratings: <%= carrier.ratings_count %></p>
+        </div>
+        <span class="text-lg font-bold text-emerald-200"><%= carrier.average_overall_rating.to_f.round(2) %> ★</span>
+      </li>
+    <% end %>
+    <% if carrier_leaderboard.empty? %>
+      <li class="text-sm text-slate-400"><%= t("operations.no_carrier_ratings", default: "No carrier ratings yet.") %></li>
+    <% end %>
+  </ul>
+</div>

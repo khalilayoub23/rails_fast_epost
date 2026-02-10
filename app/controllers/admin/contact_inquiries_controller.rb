@@ -1,4 +1,5 @@
 class Admin::ContactInquiriesController < ApplicationController
+  before_action :require_admin!
   before_action :authenticate_user!
   before_action :set_contact_inquiry, only: [ :show, :update ]
 

@@ -1,22 +1,12 @@
 <% content_for :page_title, t("tasks.new_title", default: "Create Task") %>
 
 <div class="w-full">
-  <div class="mb-6">
-    <%= link_to tasks_path, class: "inline-flex items-center text-base font-semibold text-slate-300 hover:text-yellow-400" do %>
-      <span class="material-icons mr-2 text-lg">arrow_back</span>
-      <%= t("common.back_to_list", default: "Back to tasks") %>
-    <% end %>
-  </div>
-
-  <div class="w-full rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-black/30 backdrop-blur">
-    <div class="border-b border-white/10 px-8 py-7">
-      <h1 class="text-4xl font-bold tracking-tight text-white"><%= t("tasks.new", default: "New Task") %></h1>
-      <p class="mt-2 text-lg text-slate-300">
-        <%= t("tasks.new_description", default: "Fill in the delivery details below to create a new logistics task.") %>
-      </p>
-    </div>
-    <div class="px-8 py-9">
+  <%= render "form_card",
+        title: t("tasks.new", default: "New Task"),
+        description: t("tasks.new_description", default: "Fill in the delivery details below to create a new logistics task."),
+        back_path: tasks_path do %>
+    <div id="task-form">
       <%= render "form", task: @task %>
     </div>
-  </div>
+  <% end %>
 </div>

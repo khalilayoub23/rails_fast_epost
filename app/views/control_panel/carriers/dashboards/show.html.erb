@@ -1,127 +1,44 @@
 <% currency_unit = "USD" %>
 <section class="space-y-8">
   <div class="grid gap-4 md:grid-cols-4">
-    <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
-      <p class="text-xs uppercase tracking-wide text-slate-400">Outstanding payouts</p>
-      <p class="mt-2 text-3xl font-semibold text-yellow-300">
-        <%= number_to_currency(@payout_metrics[:outstanding_amount_cents] / 100.0, unit: currency_unit) %>
-      </p>
-      <p class="text-sm text-slate-400"><%= @payout_metrics[:outstanding_count] %> tasks awaiting payment</p>
-    </div>
-    <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
-      <p class="text-xs uppercase tracking-wide text-slate-400">Cleared payouts</p>
-      <p class="mt-2 text-3xl font-semibold text-emerald-300"><%= number_to_currency(@payout_metrics[:cleared_amount_cents] / 100.0, unit: currency_unit) %></p>
-      <p class="text-sm text-slate-400"><%= @payout_metrics[:cleared_count] %> payouts completed</p>
-    </div>
-    <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
-      <p class="text-xs uppercase tracking-wide text-slate-400">Next payout date</p>
-      <% if @payout_metrics[:next_due_at].present? %>
-        <p class="mt-2 text-3xl font-semibold"><%= l(@payout_metrics[:next_due_at], format: :long) %></p>
-      <% else %>
-        <p class="mt-2 text-3xl font-semibold text-slate-500">TBD</p>
-      <% end %>
-      <p class="text-sm text-slate-400">Earliest due payout</p>
-    </div>
-    <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
-      <p class="text-xs uppercase tracking-wide text-slate-400">Recent payouts</p>
-      <ul class="mt-3 space-y-2 text-sm">
-        <% @recent_payouts.each do |payout| %>
-          <li class="flex items-center justify-between">
-            <span class="text-slate-300">Task <%= payout.task&.barcode %></span>
-            <span class="font-semibold <%= payout.status == "paid" ? 'text-emerald-300' : 'text-yellow-300' %>">
-              <%= number_to_currency(payout.amount_cents / 100.0, unit: currency_unit) %>
-            </span>
-          </li>
-        <% end %>
-        <% if @recent_payouts.empty? %>
-          <li class="text-slate-500">No payout data yet.</li>
-        <% end %>
-      </ul>
-    </div>
+    <%= render "control_panel/shared/stat_card",
+          label: "Outstanding payouts",
+          value: number_to_currency(@payout_metrics[:outstanding_amount_cents] / 100.0, unit: currency_unit),
+          subtitle: "#{@payout_metrics[:outstanding_count]} tasks awaiting payment",
+          container_class: "rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4",
+          label_class: "text-xs uppercase tracking-wide text-slate-400",
+          value_class: "mt-2 text-3xl font-semibold text-yellow-300",
+          subtitle_class: "text-sm text-slate-400" %>
+    <%= render "control_panel/shared/stat_card",
+          label: "Cleared payouts",
+          value: number_to_currency(@payout_metrics[:cleared_amount_cents] / 100.0, unit: currency_unit),
+          subtitle: "#{@payout_metrics[:cleared_count]} payouts completed",
+          container_class: "rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4",
+          label_class: "text-xs uppercase tracking-wide text-slate-400",
+          value_class: "mt-2 text-3xl font-semibold text-emerald-300",
+          subtitle_class: "text-sm text-slate-400" %>
+    <%= render "control_panel/shared/stat_card",
+          label: "Next payout date",
+          value: (@payout_metrics[:next_due_at].present? ? l(@payout_metrics[:next_due_at], format: :long) : "TBD"),
+          subtitle: "Earliest due payout",
+          container_class: "rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4",
+          label_class: "text-xs uppercase tracking-wide text-slate-400",
+          value_class: "mt-2 text-3xl font-semibold #{@payout_metrics[:next_due_at].present? ? 'text-white' : 'text-slate-500'}",
+          subtitle_class: "text-sm text-slate-400" %>
+    <%= render "control_panel/shared/stat_card",
+          label: "Recent payouts",
+          value: (@recent_payouts.first ? number_to_currency(@recent_payouts.first.amount_cents / 100.0, unit: currency_unit) : "No payouts"),
+          subtitle: (@recent_payouts.first ? "Task #{@recent_payouts.first.task&.barcode}" : "No payout data yet."),
+          container_class: "rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4",
+          label_class: "text-xs uppercase tracking-wide text-slate-400",
+          value_class: "mt-2 text-3xl font-semibold text-slate-200",
+          subtitle_class: "text-sm text-slate-400" %>
   </div>
 
-  <div>
-    <div class="flex items-center justify-between mb-3">
-      <h2 class="text-xl font-semibold">Task board</h2>
-      <p class="text-sm text-slate-400">Real-time status by lane. Updating a task changes only the carrier-facing payout context.</p>
-    </div>
-    <div class="grid gap-4 md:grid-cols-4">
-      <% @board_columns.each do |title, tasks| %>
-        <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
-          <div class="border-b border-white/10 px-4 py-3 flex items-center justify-between">
-            <h3 class="text-sm font-semibold text-slate-200"><%= title %></h3>
-            <span class="text-xs text-slate-400"><%= tasks.size %></span>
-          </div>
-          <div class="p-4 space-y-3 max-h-[28rem] overflow-y-auto">
-            <% tasks.each do |task| %>
-              <%= render "control_panel/carriers/tasks/card", task: task %>
-            <% end %>
-            <% if tasks.empty? %>
-              <p class="text-sm text-slate-500">Nothing here right now.</p>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
+  <%= render "task_board", board_columns: @board_columns %>
 
   <div class="grid gap-4 lg:grid-cols-2">
-    <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold">Event log</h2>
-        <%= link_to "View JSON", api_v1_carriers_events_path(format: :json), class: "text-xs underline text-yellow-300" %>
-      </div>
-      <ul class="space-y-3">
-        <% @events.each do |event| %>
-          <li class="border border-white/10 bg-black/20 rounded-xl p-3">
-            <p class="text-sm font-semibold text-slate-200">
-              <%= event.title %>
-              <span class="ml-2 text-xs uppercase tracking-wide text-slate-500"><%= event.event_type %></span>
-            </p>
-            <p class="text-xs text-slate-400">Task <%= event.task&.barcode %> · <%= l(event.occurred_at, format: :short) %></p>
-            <% if event.description.present? %>
-              <p class="mt-1 text-sm text-slate-300"><%= event.description %></p>
-            <% end %>
-          </li>
-        <% end %>
-        <% if @events.empty? %>
-          <li class="text-sm text-slate-500">No tracking events yet.</li>
-        <% end %>
-      </ul>
-    </div>
-    <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold">Payout detail</h2>
-        <%= link_to "All payouts", control_panel_carriers_payouts_path, class: "text-xs underline text-yellow-300" %>
-      </div>
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="text-left text-slate-400">
-            <th class="pb-2">Task</th>
-            <th class="pb-2">Amount</th>
-            <th class="pb-2">Status</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-white/10">
-          <% @recent_payouts.each do |payout| %>
-            <tr>
-              <td class="py-2 text-slate-200"><%= payout.task&.barcode %></td>
-              <td class="py-2 font-semibold"><%= number_to_currency(payout.amount_cents / 100.0) %></td>
-              <td class="py-2">
-                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs <%= payout.status == "paid" ? 'bg-emerald-500/20 text-emerald-200' : 'bg-yellow-500/10 text-yellow-300' %>">
-                  <%= payout.status.humanize %>
-                </span>
-              </td>
-            </tr>
-          <% end %>
-          <% if @recent_payouts.empty? %>
-            <tr>
-              <td colspan="3" class="py-4 text-center text-slate-500">No payout records yet.</td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <p class="mt-4 text-xs text-slate-500">Carrier payouts display the compensation we owe you — separate from what senders paid on checkout.</p>
-    </div>
+    <%= render "event_log", events: @events %>
+    <%= render "payout_detail_table", recent_payouts: @recent_payouts %>
   </div>
 </section>

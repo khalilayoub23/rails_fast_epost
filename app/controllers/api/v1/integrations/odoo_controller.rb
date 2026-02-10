@@ -10,9 +10,8 @@ module Api
           api_key = request.headers["X-Odoo-Api-Key"].presence
           configured_key = ENV["ODOO_API_KEY"]
 
-          if configured_key.present? && api_key != configured_key
-            return forbidden
-          end
+          return forbidden if configured_key.blank?
+          return forbidden unless api_key == configured_key
 
           ::Integrations::OdooService.process(json_body, headers: request.headers.to_h)
           ok

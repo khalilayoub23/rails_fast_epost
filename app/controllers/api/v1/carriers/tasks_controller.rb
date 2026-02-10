@@ -3,12 +3,13 @@ module Api
     module Carriers
       class TasksController < BaseController
         def index
-          tasks = carrier.tasks.order(updated_at: :desc)
+          tasks = policy_scope(Task).where(carrier_id: carrier.id).order(updated_at: :desc)
           render json: tasks.map { |task| task_payload(task) }
         end
 
         def update
-          task = carrier.tasks.find(params[:id])
+          task = policy_scope(Task).where(carrier_id: carrier.id).find(params[:id])
+          authorize task
           next_status = params.require(:task).fetch(:status)
           note = params[:task][:note]
           location = extract_location(params[:task])
@@ -39,7 +40,8 @@ module Api
         end
 
         def door_affix
-          task = carrier.tasks.find(params[:id])
+          task = policy_scope(Task).where(carrier_id: carrier.id).find(params[:id])
+          authorize task
           raise Pundit::NotAuthorizedError, "Door affix not authorized" unless task.door_affix_authorized?
           raise StandardError, "Door affix available only after failed attempts" if task.failed_attempts.to_i < Task::MAX_FAILED_ATTEMPTS
 

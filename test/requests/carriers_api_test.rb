@@ -22,6 +22,7 @@ class CarriersApiTest < ActionDispatch::IntegrationTest
     task = Task.create!(
       customer: customer,
       carrier: @carrier,
+      task_type: "delivery_and_pickup",
       package_type: "parcel",
       start: "Warehouse",
       target: "Destination",

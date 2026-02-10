@@ -27,4 +27,19 @@ class Senders::NotificationPreferencesControllerTest < ActionDispatch::Integrati
 
     assert_redirected_to sender_notification_preferences_path(@sender)
   end
+
+  test "denies access to non manager" do
+    sign_out :user
+    sign_in users(:viewer)
+
+    patch sender_notification_preference_path(@sender, @preference), params: {
+      notification_preference: {
+        enabled: true,
+        quiet_hours_start: nil,
+        quiet_hours_end: nil
+      }
+    }
+
+    assert_redirected_to root_path
+  end
 end

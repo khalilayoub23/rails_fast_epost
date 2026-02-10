@@ -1,0 +1,9 @@
+<% header_class = "mb-6 flex items-center justify-between" %>
+<% header_class += " #{rtl? ? 'flex-row-reverse text-right' : ''}" %>
+
+<div class="<%= header_class %>">
+  <h3 class="text-title-md font-semibold text-white"><%= title %></h3>
+  <% if link_label.present? && link_path.present? %>
+    <%= link_to link_label, link_path, class: "text-sm font-medium text-yellow-300 hover:text-yellow-200 transition-colors" %>
+  <% end %>
+</div>

@@ -1,0 +1,34 @@
+<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold"><%= t("carriers.payout_detail", default: "Payout detail") %></h2>
+    <%= link_to t("carriers.all_payouts", default: "All payouts"), control_panel_carriers_payouts_path, class: "text-xs underline text-yellow-300" %>
+  </div>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-slate-400">
+        <th class="pb-2"><%= t("tasks.task_label", default: "Task") %></th>
+        <th class="pb-2"><%= t("dashboard.amount", default: "Amount") %></th>
+        <th class="pb-2"><%= t("tasks.status", default: "Status") %></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-white/10">
+      <% recent_payouts.each do |payout| %>
+        <tr>
+          <td class="py-2 text-slate-200"><%= payout.task&.barcode %></td>
+          <td class="py-2 font-semibold"><%= number_to_currency(payout.amount_cents / 100.0) %></td>
+          <td class="py-2">
+            <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs <%= payout.status == "paid" ? 'bg-emerald-500/20 text-emerald-200' : 'bg-yellow-500/10 text-yellow-300' %>">
+              <%= payout.status.humanize %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+      <% if recent_payouts.empty? %>
+        <tr>
+          <td colspan="3" class="py-4 text-center text-slate-500"><%= t("carriers.no_payouts", default: "No payout records yet.") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p class="mt-4 text-xs text-slate-500"><%= t("carriers.payouts_note", default: "Carrier payouts display the compensation we owe you — separate from what senders paid on checkout.") %></p>
+</div>

@@ -7,13 +7,13 @@
         <li class="inline-flex items-center">
           <%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
             <span class="material-icons text-sm mr-1">home</span>
-            Home
+            <%= t("nav.home", default: "Home") %>
           <% end %>
         </li>
         <li>
           <div class="flex items-center">
             <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-            <%= link_to "Customers", customers_path, class: "text-slate-300 hover:text-white" %>
+            <%= link_to t("customers.title", default: "Customers"), customers_path, class: "text-slate-300 hover:text-white" %>
           </div>
         </li>
         <li>
@@ -32,15 +32,15 @@
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
-        <div class="text-sm text-slate-300">Email</div>
+        <div class="text-sm text-slate-300"><%= t("customers.email", default: "Email") %></div>
         <div class="text-white"><%= @customer.email %></div>
       </div>
       <div>
-        <div class="text-sm text-slate-300">Category</div>
+        <div class="text-sm text-slate-300"><%= t("customers.category", default: "Category") %></div>
         <div class="text-white capitalize"><%= @customer.category %></div>
       </div>
       <div>
-        <div class="text-sm text-slate-300">Bulk discount</div>
+        <div class="text-sm text-slate-300"><%= t("customers.bulk_discount", default: "Bulk discount") %></div>
         <div class="text-white">
           <% if @customer.bulk_discount.present? %>
             <%= number_to_percentage(@customer.bulk_discount, precision: 2) %>
@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="sm:col-span-2">
-        <div class="text-sm text-slate-300">Address</div>
+        <div class="text-sm text-slate-300"><%= t("customers.address", default: "Address") %></div>
         <div class="text-white"><%= @customer.address %></div>
       </div>
     </div>
@@ -58,18 +58,18 @@
 
   <div class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
     <div class="mb-4 flex items-center justify-between">
-      <h3 class="text-xl font-semibold text-white">Tasks</h3>
-      <%= link_to "View all", customer_tasks_path(@customer), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10" %>
+      <h3 class="text-xl font-semibold text-white"><%= t("customers.tasks", default: "Tasks") %></h3>
+      <%= link_to t("customers.view_all", default: "View all"), customer_tasks_path(@customer), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10" %>
     </div>
     <% if @customer.tasks.any? %>
       <div class="max-w-full overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
             <tr class="bg-white/5 text-left">
-              <th class="min-w-[100px] px-4 py-4 font-semibold text-slate-200">ID</th>
-              <th class="min-w-[140px] px-4 py-4 font-semibold text-slate-200">Status</th>
-              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200">Carrier</th>
-              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200">Created</th>
+              <th class="min-w-[100px] px-4 py-4 font-semibold text-slate-200"><%= t("customers.task_id", default: "ID") %></th>
+              <th class="min-w-[140px] px-4 py-4 font-semibold text-slate-200"><%= t("customers.status", default: "Status") %></th>
+              <th class="min-w-[120px] px-4 py-4 font-semibold text-slate-200"><%= t("customers.carrier", default: "Carrier") %></th>
+              <th class="min-w-[160px] px-4 py-4 font-semibold text-slate-200"><%= t("customers.created", default: "Created") %></th>
               <th class="px-4 py-4 text-right font-semibold text-slate-200"></th>
             </tr>
           </thead>
@@ -81,7 +81,7 @@
                 <td class="px-4 py-4 text-sm text-slate-300">#<%= task.carrier_id %></td>
                 <td class="px-4 py-4 text-sm text-slate-300"><%= l(task.created_at, format: :short) %></td>
                 <td class="px-4 py-4 text-right">
-                  <%= link_to "Open", task_path(task), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10" %>
+                  <%= link_to t("customers.open", default: "Open"), task_path(task), class: "inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/10" %>
                 </td>
               </tr>
             <% end %>
@@ -91,8 +91,8 @@
     <% else %>
       <div class="px-6 py-8 text-center">
         <span class="material-icons text-slate-400 text-5xl mb-3">task</span>
-        <h3 class="text-base font-semibold text-white mb-1">No tasks for this customer</h3>
-        <p class="text-sm text-slate-300">This customer has no tasks yet.</p>
+        <h3 class="text-base font-semibold text-white mb-1"><%= t("customers.no_tasks", default: "No tasks for this customer") %></h3>
+        <p class="text-sm text-slate-300"><%= t("customers.no_tasks_body", default: "This customer has no tasks yet.") %></p>
       </div>
     <% end %>
   </div>

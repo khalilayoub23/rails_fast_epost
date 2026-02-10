@@ -5,7 +5,8 @@ module Api
         def receive
           shared = ENV["WEBSITES_SHARED_SECRET"]
           header = request.headers["X-Website-Secret"].presence || request.headers["X-Websites-Secret"].presence
-          valid = shared.present? ? verify_header_token!(shared, header) : true
+          return forbidden unless shared.present?
+          valid = verify_header_token!(shared, header)
           return forbidden unless valid
 
           Integrations::WebsitesService.process(json_body, headers: request.headers.to_h, signature_valid: valid)

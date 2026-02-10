@@ -27,7 +27,7 @@ Rails.application.routes.draw do
 
   # Root route - public homepage for non-authenticated users
   authenticated :user do
-    root to: "dashboard#index", as: :authenticated_root
+    root to: "pages#home", as: :authenticated_root
   end
 
   root "pages#home"
@@ -65,6 +65,8 @@ Rails.application.routes.draw do
 
   # Dashboard for authenticated users
   get "/dashboard", to: "dashboard#index", as: :dashboard
+
+  resource :profile, only: [ :show, :update ]
 
   get "up" => "rails/health#show", as: :rails_health_check
 

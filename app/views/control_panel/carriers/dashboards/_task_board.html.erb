@@ -1,0 +1,24 @@
+<div>
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="text-xl font-semibold"><%= t("carriers.task_board", default: "Task board") %></h2>
+    <p class="text-sm text-slate-400"><%= t("carriers.task_board_help", default: "Real-time status by lane. Updating a task changes only the carrier-facing payout context.") %></p>
+  </div>
+  <div class="grid gap-4 md:grid-cols-4">
+    <% board_columns.each do |title, tasks| %>
+      <div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
+        <div class="border-b border-white/10 px-4 py-3 flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-slate-200"><%= title %></h3>
+          <span class="text-xs text-slate-400"><%= tasks.size %></span>
+        </div>
+        <div class="p-4 space-y-3 max-h-[28rem] overflow-y-auto">
+          <% tasks.each do |task| %>
+            <%= render "control_panel/carriers/tasks/card", task: task %>
+          <% end %>
+          <% if tasks.empty? %>
+            <p class="text-sm text-slate-500"><%= t("common.empty_state", default: "Nothing here right now.") %></p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

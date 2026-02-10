@@ -1,5 +1,5 @@
 <% value = (local_assigns[:priority].presence || "normal").to_s %>
-<% label = value.humanize %>
+<% label = t("tasks.priority_levels.#{value}", default: value.humanize) %>
 <%
   variant_classes = case value
                     when "express"

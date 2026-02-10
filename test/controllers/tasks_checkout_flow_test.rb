@@ -49,6 +49,8 @@ class TasksCheckoutFlowTest < ActionDispatch::IntegrationTest
       "customer_id" => @customer.id,
       "carrier_id" => @carrier.id,
       "package_type" => "legal_docs",
+      "task_type" => "delivery_and_pickup",
+      "poa_enabled" => false,
       "start" => "HQ",
       "target" => "Court",
       "status" => Task.statuses[:pending],

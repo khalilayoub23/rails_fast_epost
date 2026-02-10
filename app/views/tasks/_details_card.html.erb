@@ -1,0 +1,86 @@
+<div data-controller="task-details" class="rounded-2xl border border-white/10 bg-white/5 px-5 pt-6 pb-2.5 shadow-xl shadow-black/30 backdrop-blur">
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <h2 class="text-xl font-semibold text-white"><%= t("tasks.task_label", default: "Task") %> <%= task.barcode.presence || "##{task.id}" %></h2>
+    <button type="button" class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white hover:bg-white/10" data-action="task-details#toggle">
+      <span class="material-icons text-base" aria-hidden="true" data-task-details-target="icon">unfold_more</span>
+      <span data-task-details-target="label"><%= t("tasks.show_details", default: "Show details") %></span>
+    </button>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <div class="text-sm text-slate-300"><%= t("tasks.status", default: "Status") %></div>
+      <div><%= render "shared/status_badge", status: task.status %></div>
+    </div>
+    <div>
+      <div class="text-sm text-slate-300"><%= t("tasks.priority", default: "Priority") %></div>
+      <div><%= render "shared/priority_badge", priority: task.priority %></div>
+    </div>
+    <div>
+      <div class="text-sm text-slate-300"><%= t("tasks.customer", default: "Customer") %></div>
+      <div class="text-white"><%= task.customer&.name || "-" %></div>
+    </div>
+    <div>
+      <div class="text-sm text-slate-300"><%= t("tasks.carrier", default: "Carrier") %></div>
+      <div class="text-white"><%= task.carrier&.name || (task.carrier_id.present? ? "##{task.carrier_id}" : "-") %></div>
+    </div>
+    <div>
+      <div class="text-sm text-slate-300"><%= t("tasks.created", default: "Created") %></div>
+      <div class="text-white"><%= task.created_at ? l(task.created_at, format: :long) : t("tasks.not_available", default: "N/A") %></div>
+    </div>
+    <div class="sm:col-span-2">
+      <div class="text-sm text-slate-300"><%= t("tasks.barcode", default: "Barcode") %></div>
+      <div class="text-white"><%= task.barcode %></div>
+    </div>
+  </div>
+
+  <div class="mt-4 hidden" data-task-details-target="panel">
+    <div class="border-t border-white/10 pt-4">
+      <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <dt class="text-sm text-slate-300"><%= t("tasks.task_type", default: "Task type") %></dt>
+          <dd class="text-white font-semibold"><%= t("tasks.task_types.#{task.task_type}", default: task.task_type&.humanize || "-") %></dd>
+        </div>
+        <div>
+          <dt class="text-sm text-slate-300"><%= t("tasks.package_type", default: "Package type") %></dt>
+          <dd class="text-white font-semibold"><%= task.package_type.presence || "-" %></dd>
+        </div>
+        <div>
+          <dt class="text-sm text-slate-300"><%= t("tasks.start", default: "Pickup location") %></dt>
+          <dd class="text-white"><%= task.start.presence || t("tasks.not_available", default: "N/A") %></dd>
+        </div>
+        <div>
+          <dt class="text-sm text-slate-300"><%= t("tasks.target", default: "Drop-off location") %></dt>
+          <dd class="text-white"><%= task.target.presence || t("tasks.not_available", default: "N/A") %></dd>
+        </div>
+        <div>
+          <dt class="text-sm text-slate-300"><%= t("tasks.delivery_time", default: "Delivery time") %></dt>
+          <dd class="text-white"><%= task.delivery_time ? l(task.delivery_time, format: :long) : t("tasks.not_available", default: "N/A") %></dd>
+        </div>
+        <div>
+          <dt class="text-sm text-slate-300"><%= t("tasks.distance", default: "Distance") %></dt>
+          <dd class="text-white">
+            <% if task.distance.present? %>
+              <%= "#{number_with_precision(task.distance, precision: 2)} km" %>
+            <% else %>
+              <%= t("tasks.not_available", default: "N/A") %>
+            <% end %>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-sm text-slate-300"><%= t("tasks.published", default: "Published") %></dt>
+          <dd class="text-white"><%= task.published? ? t("common.yes", default: "Yes") : t("common.no", default: "No") %></dd>
+        </div>
+        <div>
+          <dt class="text-sm text-slate-300"><%= t("tasks.failure_code", default: "Failure code") %></dt>
+          <dd class="text-white"><%= task.failure_code_text.presence || task.failure_code&.humanize || "No failure" %></dd>
+        </div>
+        <% if task.pickup_notes.present? %>
+          <div class="sm:col-span-2">
+            <dt class="text-sm text-slate-300"><%= t("tasks.pickup_notes", default: "Pickup notes") %></dt>
+            <dd class="text-white"><%= task.pickup_notes %></dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+</div>

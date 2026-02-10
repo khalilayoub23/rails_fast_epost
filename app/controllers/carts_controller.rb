@@ -7,7 +7,11 @@ class CartsController < ApplicationController
   before_action :set_cart
 
   def show
-    @items = @cart.cart_items.includes(task: %i[customer carrier])
+    cleanup_published_items
+    @items = @cart.cart_items
+                  .joins(:task)
+                  .where(tasks: { published: false })
+                  .includes(task: %i[customer carrier])
   end
 
   def add_item
@@ -173,19 +177,10 @@ class CartsController < ApplicationController
     raw_amount = task_hash["amount"].presence
     return parse_amount_cents(raw_amount) if raw_amount.present?
 
-    default = default_task_amount(task)
-    parse_amount_cents(default)
-  end
-
-  def default_task_amount(task)
     cost = CostCalculator.new(task).total_cost
-    if cost.present? && cost.positive?
-      format("%.2f", cost)
-    else
-      "100.00"
-    end
-  rescue
-    "100.00"
+    return 0 unless cost.present? && cost.positive?
+
+    parse_amount_cents(format("%.2f", cost))
   end
 
   def parse_amount_cents(amount_value)
@@ -193,6 +188,10 @@ class CartsController < ApplicationController
     (amount * 100).to_i
   rescue ArgumentError, TypeError
     0
+  end
+
+  def cleanup_published_items
+    @cart.cart_items.joins(:task).where(tasks: { published: true }).destroy_all
   end
 
   def cart_success_template_url

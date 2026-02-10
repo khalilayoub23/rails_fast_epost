@@ -1,11 +1,6 @@
-<% if notice.present? %>
-  <%= notification_tag(:success, notice, id: "notice-flash") %>
-<% end %>
-
-<% if alert.present? %>
-  <%= notification_tag(:alert, alert, id: "alert-flash") %>
-<% end %>
-
-<div id="flash-messages" class="fixed top-4 right-4 z-9999 space-y-2">
-  <!-- Turbo Stream flash messages will be appended here -->
+<div id="flash-messages" class="fixed top-4 right-4 z-99999 space-y-2 pointer-events-auto">
+  <% flash.each do |type, message| %>
+    <% next if message.blank? %>
+    <%= notification_tag(normalize_flash_type(type), message, id: dom_id_for_flash(type)) %>
+  <% end %>
 </div>

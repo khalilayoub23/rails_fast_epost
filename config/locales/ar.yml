@@ -1,28 +1,44 @@
 # Arabic translations - العربية
 ar:
+  time:
+    formats:
+      table: "%d/%m/%Y %H:%M"
   language_name: "العربية"
   direction: "rtl"
+  ago: "منذ"
 
   # Dashboard
   dashboard:
     total_revenue: "إجمالي الإيرادات"
     total_sales: "إجمالي المبيعات"
     total_payments: "إجمالي المدفوعات"
+    total_tasks: "إجمالي المهام"
+    total_spend: "إجمالي الإنفاق"
     pending_orders: "الطلبات المعلقة"
     total_customers: "إجمالي العملاء"
+    pending_tasks: "معلقة"
+    total_deliveries: "التسليمات"
+    recent_activity: "النشاط الأخير"
     day: "يوم"
     week: "أسبوع"
     month: "شهر"
+    chart_range_label: "آخر 12"
     monthly_target: "الهدف الشهري"
+    target_per_month: "الهدف الذي حددته لكل شهر"
     this_month: "هذا الشهر"
     last_month: "الشهر الماضي"
     monthly_target_description: "الهدف الذي حددته لكل شهر"
     earnings_today: "لقد كسبت %{amount}$ اليوم، وهو أعلى من الشهر الماضي"
+    today_revenue: "لقد كسبت %{amount} اليوم، وهو أعلى من الشهر الماضي"
     keep_up_work: "استمر في العمل الجيد!"
+    keep_up: "استمر في العمل الجيد!"
     target: "الهدف"
     revenue: "الإيرادات"
     today: "اليوم"
+    succeeded_payments: "المدفوعات الناجحة"
+    tasks_created: "المهام التي تم إنشاؤها"
     recent_payments: "المدفوعات الأخيرة"
+    recent_payouts: "الدفعات الأخيرة"
     view_all: "عرض الكل"
     id: "المعرف"
     provider: "المزود"
@@ -33,6 +49,62 @@ ar:
     recent_tasks: "المهام الأخيرة"
     no_customer: "لا يوجد عميل"
     view: "عرض"
+    financials: "الشؤون المالية"
+    operations: "العمليات"
+    task: "المهمة"
+    carrier_label: "الناقل"
+    sender: "المرسل"
+    courier: "الساعي"
+    recipient: "المستلم"
+    logistics: "اللوجستيات"
+    any: "أي"
+    with_task: "مع مهمة"
+    without_task: "بدون مهمة"
+    apply_filters: "تطبيق عوامل التصفية"
+    no_carrier: "بدون ناقل"
+    no_payments: "لا توجد مدفوعات بعد."
+    no_shipments: "لا توجد شحنات بعد."
+    shipment: "شحنة"
+    no_chart_data: "لا توجد بيانات لهذه الفترة بعد."
+    header_title: "لوحة التحكم"
+    header_subtitle: "تتبع العمل والمدفوعات وعمليات التسليم بنظرة واحدة."
+    new_task: "مهمة جديدة"
+    new_delivery: "تسليم جديد"
+    carrier:
+      payments:
+        title: "المدفوعات"
+        subtitle: "نظرة مالية"
+        link_text: "عرض الكل"
+        description: "تتبع الدفعات والأرصدة والمدفوعات القادمة للناقلين."
+        status: "الحالة"
+        next_payment_label: "الدفعة التالية"
+        overdue_label: "متأخرة"
+        overdue_unit: "دفعة"
+      shipments:
+        title: "الشحنات"
+        subtitle: "المسارات النشطة"
+        link_text: "عرض الكل"
+      alerts:
+        title: "التنبيهات"
+        subtitle: "مخاطر تشغيلية"
+        link_text: "عرض الكل"
+        description: "آخر تنبيهات وحوادث الناقلين."
+      support:
+        title: "الدعم"
+        subtitle: "هل تحتاج مساعدة؟"
+        link_text: "تواصل"
+        description: "تواصل مع فريق الدعم الخاص بالناقلين."
+        icon: "support"
+        contact: "دعم الناقلين"
+        hours: "الإثنين-الجمعة، 9 ص–6 م"
+    filters:
+      title: "عوامل التصفية"
+      reset: "إعادة تعيين"
+      payment_status: "حالة الدفع"
+      task_status: "حالة المهمة"
+      delivery_status: "حالة التسليم"
+      all: "الكل"
+      apply: "تطبيق"
 
   # Sidebar
   sidebar:
@@ -40,6 +112,7 @@ ar:
     payments: "المدفوعات"
     customers: "العملاء"
     tasks: "المهام"
+    cart: "السلة"
     court_deliveries: "تسليمات المحكمة"
     carriers: "شركات النقل"
     senders: "المرسلون"
@@ -49,6 +122,9 @@ ar:
     contact_inquiries: "استفسارات الاتصال"
     branding: "العلامة التجارية"
     admin_dashboard: "لوحة تحكم المسؤول"
+    pdf_tools: "أدوات PDF"
+    profile: "الملف الشخصي"
+    settings: "الإعدادات"
 
   document_templates:
     index:
@@ -87,6 +163,7 @@ ar:
     admin: "مسؤول"
     my_profile: "ملفي الشخصي"
     account_settings: "إعدادات الحساب"
+    notice: "نتمنى لك يوم عمل موفق"
 
   # Deliveries
   deliveries:
@@ -136,6 +213,11 @@ ar:
       subtitle: "تحديث التوصيل"
       title: "تعديل %{case_number}"
       description: "تعديل المشاركين أو تحميل PDF محكمة جديد قبل الانتهاء من التوقيعات."
+    upload_pdf_cta: "حمّل ملف PDF للمحكمة"
+    case: "القضية"
+    courier: "الساعي"
+    upload_pdf_heading: "هل تحتاج لإرفاق ملفات PDF للمحكمة؟"
+    upload_pdf_body: "افتح مساحة عمل التوصيل لتحميل ملفات PDF المختومة وإضافة الباركود وتوجيه التواقيع قبل خروج المهمة."
 
   # Landing page
   hero_title_1: "السرعة تلتقي"
@@ -154,6 +236,29 @@ ar:
   service_ecommerce_1: "استلام يومي"
   service_ecommerce_2: "لوجستيات الميل الأخير"
   service_ecommerce_3: "تكامل سلس مع Shopify و VCommerce"
+  stats_deliveries: "عمليات تسليم ناجحة"
+  stats_active: "شحنات نشطة"
+  stats_customers: "عملاء سعداء"
+  stats_carriers: "شركاء التوصيل"
+  features:
+    title: "اعتمادية تقنية"
+    subtitle: "منصة موحدة لكل رحلة"
+    description: "تكامل كامل مع تطبيقاتك وتحديثات فورية ومراقبة ذكية لكل خطوة."
+    legal_compliance: "امتثال قانوني"
+    legal_desc: "شبكة مرخصة تضمن تسليم المستندات الرسمية في الوقت المحدد."
+    real_time: "تتبع في الوقت الفعلي"
+    real_time_desc: "لوحات تحكم تفصيلية مع تنبيهات استباقية للمسؤولين والعملاء."
+    security: "أمان عالي المستوى"
+    security_desc: "تشفير من طرف إلى طرف مع مراقبة تلقائية لمنع الأخطاء البشرية."
+  contact:
+    title: "لنتحدث عن شحنتك القادمة"
+    whatsapp: "تحدث معنا الآن"
+    contact_us: "اتصل بنا"
+    form_title: "احصل على خطة مخصصة"
+    name: "الاسم"
+    email: "البريد الإلكتروني"
+    message: "صف احتياجات الشحن الخاصة بك"
+    submit: "إرسال الطلب"
   flash_titles:
     success: "تم بنجاح"
     alert: "تنبيه"
@@ -184,6 +289,47 @@ ar:
   cookie_message: "نستخدم ملفات تعريف الارتباط لتحسين تجربة المستخدم. يشكل الاستمرار في الاستخدام موافقة على سياسة الخصوصية الخاصة بنا."
   cookie_accept: "أوافق"
   cookie_learn_more: "تعلم المزيد"
+
+  public:
+    meta_title: "فاستي بوست - السرعة تلتقي الثقة"
+    meta_description: "من الملفات القانونية إلى الطلبات عبر الإنترنت — فاستي بوست توصل كل شيء."
+
+  app:
+    meta_title: "Fast Epost"
+
+  contact_page:
+    meta_title: "فاستي بوست - احصل على عرض سعر"
+    hero_title: "احصل على"
+    hero_title_highlight: "عرض سعر"
+    hero_subtitle: "املأ النموذج أدناه وسنعاود الاتصال خلال 24 ساعة"
+    form_title: "أرسل لنا رسالة"
+    form_error_title: "يرجى تصحيح ما يلي:"
+    full_name: "الاسم الكامل"
+    full_name_placeholder: "محمد أحمد"
+    email: "البريد الإلكتروني"
+    email_placeholder: "mohamed@example.com"
+    phone: "رقم الهاتف"
+    phone_placeholder: "+20 10-0000-0000"
+    service_type: "نوع الخدمة"
+    service_legal: "توصيل المستندات القانونية"
+    service_ecommerce: "توصيل التجارة الإلكترونية"
+    service_other: "أخرى"
+    service_prompt: "اختر خدمة"
+    message: "الرسالة"
+    message_placeholder: "أخبرنا عن احتياجات التوصيل لديك..."
+    submit: "إرسال الرسالة"
+    info_title: "معلومات الاتصال"
+    phone_label: "الهاتف"
+    email_label: "البريد الإلكتروني"
+    hours_label: "ساعات العمل"
+    hours_weekdays: "الاثنين - الجمعة: 8:00 ص - 6:00 م"
+    hours_weekend: "السبت: 9:00 ص - 2:00 م"
+    quick_actions: "إجراءات سريعة"
+    track_parcel: "تتبع شحنتك"
+    go_to_dashboard: "اذهب إلى لوحة التحكم"
+    create_account: "إنشاء حساب"
+    flash_success: "شكرًا لك! سنعاود الاتصال خلال 24 ساعة."
+    flash_error: "يرجى تصحيح الأخطاء أدناه."
 
   # Privacy Policy Full - سياسة الخصوصية الكاملة
   privacy_policy:
@@ -248,8 +394,6 @@ ar:
     back_home: "العودة إلى الصفحة الرئيسية"
 
   # Navigation - التنقل
-  
-  # Navigation - التنقل
   nav:
     dashboard: "لوحة التحكم"
     customers: "العملاء"
@@ -275,6 +419,11 @@ ar:
   services:
     title: "خدماتنا"
     subtitle: "حلول توصيل احترافية مصممة خصيصًا لتلبية احتياجات صناعتك"
+    description: "من المستندات القانونية الحساسة إلى تنفيذ سريع للتجارة الإلكترونية — نصمم تجارب توصيل تلائم احتياجات عملك."
+    tech_advantage: "ميزة تقنية"
+    tech_1: "لوحات تحكم آنية وتنبيهات ذكية"
+    tech_2: "تكامل مباشر مع ERP والمتاجر"
+    tech_3: "تحليلات أداء قابلة للتنفيذ"
     legal_title: "توصيل المستندات القانونية"
     legal_description: "معالجة آمنة ومعتمدة للمستندات القانونية الحساسة للوقت مع سلسلة حيازة كاملة."
     legal_feature_1: "معالجة معتمدة لإيداعات المحكمة"
@@ -406,9 +555,6 @@ ar:
     sign_up_now: "سجل الآن"
     payment_checkout_missing: "تعذر بدء دفعة Stripe. يرجى التواصل مع المسؤول."
 
-  deliveries:
-    upload_pdf_cta: "حمّل ملف PDF للمحكمة"
-  
   # Common - عام
   common:
     save: "حفظ"
@@ -423,6 +569,7 @@ ar:
     import: "استيراد"
     back: "رجوع"
     next: "التالي"
+    no_results: "لا توجد نتائج"
     previous: "السابق"
     submit: "إرسال"
     close: "إغلاق"
@@ -433,6 +580,22 @@ ar:
     loading: "جاري التحميل..."
     confirm_delete: "هل أنت متأكد أنك تريد حذف هذا العنصر؟"
     load_more: "تحميل المزيد"
+    back_to_list: "العودة إلى المهام"
+    actions: "الإجراءات"
+    day: "يوم"
+    download: "تحميل"
+    id: "المعرّف"
+    last_month: "الشهر الماضي"
+    last_n: "آخر %{count}"
+    latest_n: "الأحدث %{count}"
+    month: "شهر"
+    tbd: "غير محدد"
+    this_month: "هذا الشهر"
+    unspecified: "غير محدد"
+    updated_at: "تم التحديث %{time}"
+    view_all: "عرض الكل"
+    view_json: "عرض JSON"
+    week: "أسبوع"
     
   # Messages - الرسائل
   messages:
@@ -445,8 +608,89 @@ ar:
   
   # Tasks - المهام
   tasks:
+    form_error: "يرجى تصحيح الأخطاء المميزة."
+    customer: "العميل"
+    select_customer: "اختر العميل"
+    carrier: "الناقل"
+    select_carrier: "اختر الناقل"
+    search_pickup: "ابحث عن موقع الاستلام"
+    search_dropoff: "ابحث عن موقع التسليم"
+    search_pickup_address: "ابحث عن عنوان الاستلام"
+    start: "موقع الاستلام"
+    target: "موقع التسليم"
+    delivery_time: "وقت التسليم"
+    priority: "الأولوية"
+    priority_help: "المهام العاجلة أو السريعة تُظهر تنبيهات في الإشعارات والبريد الإلكتروني."
+    priority_levels:
+      normal: "عادي"
+      urgent: "عاجل"
+      express: "سريع"
+    pickup_notes: "ملاحظات الاستلام"
+    save: "حفظ المهمة"
+    task_type: "نوع المهمة"
+    advanced_details: "تفاصيل متقدمة"
+    default_package_type_lawyer: "مستندات قانونية"
+    legal_documents_title: "المستندات القانونية"
+    legal_documents_help: "قم بتحميل المستندات القانونية أو ملفات المحكمة أو أي ملفات PDF ذات صلة."
+    legal_files: "تحميل الملفات (PDF، صور)"
+    legal_files_help: "اختر ملفًا واحدًا أو أكثر للتحميل (PDF، صور)"
+    upload_files_button: "اختر الملفات"
+    no_files_selected: "لم يتم اختيار ملفات"
+    files_selected: "تم اختيار %{count} ملفًا"
+    copy_details_title: "تفاصيل النسخ"
+    case_file_number: "رقم الملف"
+    delivery_medium: "وسيط التسليم"
+    delivery_medium_options:
+      paper: "ورقي"
+      usb: "USB"
+    power_of_attorney: "وكالة موقعة"
+    power_of_attorney_help: "مطلوب لهذا النوع من المهام."
+    upload_poa_button: "تحميل الوكالة"
+    attached_files: "الملفات المرفقة:"
+    view_file: "عرض"
+    pending_upload: "قيد الرفع"
+    task_types:
+      court_filings: "إيداعات المحكمة"
+      process_serving: "تبليغ الدعاوى"
+      document_retrieval_from_government_agencies: "استرجاع مستندات من الجهات الحكومية"
+      inter_office_courier: "مراسلة بين المكاتب"
+      archive_services: "خدمات الأرشفة"
+      notarization_and_apostille: "توثيق وأبوستيل"
+      criminal_file_photocopying: "تصوير ملفات جنائية"
+      traffic_file_photocopying: "تصوير ملفات مرور"
+      remote_digital_signature: "توقيع رقمي عن بُعد"
+      enforcement_office_services: "خدمات دائرة التنفيذ"
+      pickup_services: "خدمات الاستلام"
+      ecommerce_delivery: "توصيل التجارة الإلكترونية"
+      ecommerce_pickup: "استلام للتجارة الإلكترونية"
+      cash_on_delivery_cod: "الدفع عند الاستلام"
+      delivery_and_pickup: "توصيل واستلام"
+      payment_collection: "تحصيل المدفوعات"
+      bailiff_services_coordination: "تنسيق خدمات المأمور القضائي"
+      land_registry_tabu_services: "خدمات الطابو (السجل العقاري)"
+      companies_registrar_services: "خدمات سجل الشركات"
+      filing_to_arbitration_mediation_centers: "إيداع لدى مراكز التحكيم/الوساطة"
+      same_day_express_delivery: "توصيل سريع في نفس اليوم"
+      warehousing_temporary_storage: "تخزين/مستودعات مؤقتة"
+      proof_of_delivery_pod: "إثبات التسليم (POD)"
     title: "المهام"
     new: "مهمة جديدة"
+    new_title: "إنشاء مهمة"
+    new_description: "املأ تفاصيل التسليم أدناه لإنشاء مهمة لوجستية جديدة."
+    priority_all: "كل الأولويات"
+    search_placeholder: "ابحث عن المهام"
+    all: "كل المهام"
+    for_customer: "مهام %{customer}"
+    for_customer_short: "لـ %{customer}"
+    empty_hint: "ابدأ بإنشاء مهمة جديدة."
+    table:
+      reference: "المرجع"
+      status: "الحالة"
+      priority: "الأولوية"
+      customer: "العميل"
+      carrier: "الناقل"
+      created: "تاريخ الإنشاء"
+      actions: "الإجراءات"
     no_tasks: "لا توجد مهام"
     title_placeholder: "أدخل عنوان المهمة"
     description_placeholder: "أدخل وصف المهمة"
@@ -457,6 +701,34 @@ ar:
     status_updated: "تم تحديث حالة المهمة بنجاح!"
     mark_in_progress: "تحديد قيد التنفيذ"
     payment_checkout_missing: "تعذر بدء دفعة Stripe. يرجى التواصل مع المسؤول."
+    task_label: "المهمة"
+    show_details: "عرض التفاصيل"
+    created: "تم الإنشاء"
+    barcode: "باركود"
+    distance: "المسافة"
+    published: "منشور"
+    uploaded_ago: "تم الرفع قبل %{time}"
+    pending: "قيد الانتظار"
+    unassigned: "غير معين"
+    scheduled: "مجدول %{time}"
+
+  # Cart
+  cart:
+    title: "السلة"
+    subtitle: "اختر المهام غير المدفوعة للدفع. المهام المدفوعة ستبدأ عملية التسليم."
+    empty_title: "سلتك فارغة"
+    empty_body: "أضف المهام غير المدفوعة إلى سلتك ثم ادفع عندما تكون جاهزًا."
+    browse_tasks: "تصفح المهام"
+    currency: "العملة"
+    pay_selected: "ادفع المحدد"
+    select: "اختر"
+    task: "المهمة"
+    customer: "العميل"
+    status: "الحالة"
+    amount: "المبلغ"
+    actions: "الإجراءات"
+    unpaid: "غير مدفوع"
+    remove: "إزالة"
     
   # Customers - العملاء
   customers:
@@ -466,6 +738,28 @@ ar:
     created_successfully: "تم إنشاء العميل بنجاح!"
     updated_successfully: "تم تحديث العميل بنجاح!"
     deleted_successfully: "تم حذف العميل بنجاح!"
+    search_placeholder: "ابحث عن العملاء بالاسم..."
+    name: "الاسم"
+    email: "البريد الإلكتروني"
+    category: "الفئة"
+    tasks: "المهام"
+    actions: "الإجراءات"
+    empty_hint: "ابدأ بإنشاء عميلك الأول."
+    create: "إنشاء عميل"
+    bulk_discount: "خصم الكمية"
+    address: "العنوان"
+    view_all: "عرض الكل"
+    task_id: "المعرف"
+    status: "الحالة"
+    carrier: "الناقل"
+    created: "تاريخ الإنشاء"
+    open: "فتح"
+    no_tasks: "لا توجد مهام لهذا العميل"
+    no_tasks_body: "لا توجد مهام لهذا العميل بعد."
+    view: "عرض"
+    edit: "تعديل"
+    delete: "حذف"
+    confirm_delete: "هل أنت متأكد أنك تريد حذف هذا العميل؟"
     
   # Payments - المدفوعات
   payments:
@@ -475,12 +769,131 @@ ar:
     created: "تم إنشاء الدفعة بنجاح!"
     updated: "تم تحديث الدفعة بنجاح!"
     deleted: "تم حذف الدفعة بنجاح!"
+    all: "جميع المدفوعات"
+    payment_id: "معرف الدفع"
+    provider: "المزود"
+    status: "الحالة"
+    amount: "المبلغ"
+    currency: "العملة"
+    actions: "الإجراءات"
+    payment_number: "دفعة رقم %{id}"
+    category: "الفئة"
+    total_refunded: "إجمالي المسترد (محسوب)"
+    total_refunded_short: "إجمالي المسترد:"
+    stripe_details: "تفاصيل Stripe"
+    stripe_customer: "العميل:"
+    stripe_payment_intent: "نية الدفع:"
+    stripe_checkout_session: "جلسة الدفع:"
+    stripe_charge: "العملية:"
+    stripe_actions: "إجراءات Stripe"
+    refund: "استرداد"
+    capture: "تحصيل"
+    cancel: "إلغاء"
+    sync: "مزامنة"
+    issue_refund: "إصدار استرداد"
+    amount_cents: "المبلغ (بالسنتات)"
+    reason: "السبب"
+    optional: "اختياري"
+    submit_refund: "إرسال الاسترداد"
+
+  # Carriers - شركات النقل
+  carriers:
+    task_board: "Task board"
+    task_board_help: "Real-time status by lane. Updating a task changes only the carrier-facing payout context."
+    event_log: "Event log"
+    no_events: "No tracking events yet."
+    payout_detail: "Payout detail"
+    all_payouts: "All payouts"
+    no_payouts: "No payout records yet."
+    payouts_note: "Carrier payouts display the compensation we owe you — separate from what senders paid on checkout."
+
+  # Senders - المرسلون
+  senders:
+    spend_summary: "Spend summary"
+    open_invoices: "Open invoices"
+    avg_delivery_time: "Avg. delivery time: %{hours}h"
+    carrier_mix: "Carrier mix"
+    shipments_count: "%{count} shipments"
+    no_carrier_assignments: "No carrier assignments yet."
+    recent_activity: "Recent activity"
+    last_tasks: "Last 10 tasks"
+    no_shipments: "No shipments yet for this sender."
+    open_issues: "Open issues"
+    failed_flagged: "Failed / flagged tasks"
+    all_healthy: "All shipments are healthy."
+
+  # Sellers - البائعون
+  sellers:
+    sla_breaches: "SLA breaches"
+    late_failed_shipments: "Late / failed shipments"
+    no_sla_breaches: "No SLA breaches 🎯"
+    top_package_types: "Top package types"
+    no_package_mix: "No package mix data."
+    orders_count: "%{count} orders"
+    recent_orders: "Recent orders"
+    no_orders: "No orders yet."
+
+  # Operations - العمليات
+  operations:
+    carrier_performance: "Carrier performance"
+    top_by_rating: "Top 5 by rating"
+    no_carrier_ratings: "No carrier ratings yet."
+    payout_alerts: "Payout alerts"
+    oldest_first: "Oldest first"
+    due_at: "Due %{date}"
+    awaiting_date: "Awaiting date"
+    no_outstanding_payouts: "No outstanding payouts 🎉"
+    late_shipments: "Late-stage shipments"
+    escalate_before_sla: "Escalate before SLA breach"
+    eta: "ETA %{time}"
+    no_delays: "No delayed shipments on deck."
+    incident_feed: "Incident feed"
+    latest_events: "Latest tracking events"
+    no_incidents: "No incidents reported."
+
+  # Settings - الإعدادات (actions)
+  settings:
+    title: "الإعدادات"
+    header: "إعدادات التطبيق"
+    system_configuration: "تهيئة النظام"
+    coming_soon: "لوحة الإعدادات ستتوفر قريبًا."
+    created: "تم إنشاء المستند بنجاح!"
+    updated: "تم تحديث المستند بنجاح!"
+    deleted: "تم حذف المستند بنجاح!"
+    stripe_charge: "العملية:"
+    stripe_actions: "إجراءات Stripe"
+    refund: "استرداد"
+    capture: "تحصيل"
+    cancel: "إلغاء"
+    sync: "مزامنة"
+    issue_refund: "إصدار استرداد"
+    amount_cents: "المبلغ (بالسنتات)"
+    reason: "السبب"
+    optional: "اختياري"
+    submit_refund: "إرسال الاسترداد"
     
   # Documents - المستندات
   documents:
     title: "المستندات"
     new: "مستند جديد"
     no_documents: "لا توجد مستندات"
+    created: "تم إنشاء المستند بنجاح!"
+    updated: "تم تحديث المستند بنجاح!"
+    deleted: "تم حذف المستند بنجاح!"
+
+  # Profile
+  profile:
+    title: "الملف الشخصي"
+    header: "ملف المستخدم"
+    management_title: "إدارة الملف الشخصي"
+    coming_soon: "ميزات الملف الشخصي ستتوفر قريبًا."
+
+  # Settings
+  settings:
+    title: "الإعدادات"
+    header: "إعدادات التطبيق"
+    system_configuration: "تهيئة النظام"
+    coming_soon: "لوحة الإعدادات ستتوفر قريبًا."
     created: "تم إنشاء المستند بنجاح!"
     updated: "تم تحديث المستند بنجاح!"
     deleted: "تم حذف المستند بنجاح!"

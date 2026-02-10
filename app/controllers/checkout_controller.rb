@@ -102,6 +102,8 @@ class CheckoutController < ApplicationController
     Task.create!(
       customer: customer,
       carrier: default_carrier,
+      task_type: "delivery_and_pickup",
+      poa_enabled: false,
       package_type: checkout_params[:service_type].presence || "general_service",
       start: "Online checkout",
       target: checkout_params[:service_description].presence || "Fast Epost service",

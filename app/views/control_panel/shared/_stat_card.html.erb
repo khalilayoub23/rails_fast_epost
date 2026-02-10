@@ -1,0 +1,15 @@
+<% label = local_assigns.fetch(:label) %>
+<% value = local_assigns.fetch(:value) %>
+<% subtitle = local_assigns.fetch(:subtitle, nil) %>
+<% container_class = local_assigns.fetch(:container_class, "rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5") %>
+<% label_class = local_assigns.fetch(:label_class, "text-xs font-semibold uppercase tracking-wide text-slate-300") %>
+<% value_class = local_assigns.fetch(:value_class, "mt-2 text-4xl font-bold text-white") %>
+<% subtitle_class = local_assigns.fetch(:subtitle_class, "text-sm text-slate-400") %>
+
+<div class="<%= container_class %>">
+  <p class="<%= label_class %>"><%= label %></p>
+  <p class="<%= value_class %>"><%= value %></p>
+  <% if subtitle.present? %>
+    <p class="<%= subtitle_class %>"><%= subtitle %></p>
+  <% end %>
+</div>

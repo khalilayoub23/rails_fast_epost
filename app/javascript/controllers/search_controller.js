@@ -1,12 +1,56 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input"]
+  static targets = ["input", "menu", "item", "empty"]
 
   connect() {
     // Listen for Command+K or Ctrl+K
     this.boundKeydown = this.handleKeydown.bind(this)
     document.addEventListener('keydown', this.boundKeydown)
+  }
+
+  open() {
+    if (!this.hasMenuTarget || !this.hasInputTarget) return
+    if (this.inputTarget.value.trim().length > 0) {
+      this.menuTarget.classList.remove("hidden")
+    }
+  }
+
+  update() {
+    if (!this.hasMenuTarget || !this.hasItemTarget || !this.hasInputTarget) return
+
+    const query = this.inputTarget.value.trim().toLowerCase()
+    if (query.length === 0) {
+      this.menuTarget.classList.add("hidden")
+      if (this.hasEmptyTarget) this.emptyTarget.classList.add("hidden")
+      this.itemTargets.forEach((item) => item.classList.add("hidden"))
+      return
+    }
+
+    let matches = 0
+    this.itemTargets.forEach((item) => {
+      const label = item.dataset.searchLabel?.toLowerCase() || ""
+      const url = item.dataset.searchUrl?.toLowerCase() || ""
+      const match = label.includes(query) || url.includes(query) || url.replace("/", "").includes(query)
+      if (match) {
+        item.classList.remove("hidden")
+        matches += 1
+      } else {
+        item.classList.add("hidden")
+      }
+    })
+
+    if (this.hasEmptyTarget) {
+      this.emptyTarget.classList.toggle("hidden", matches > 0)
+    }
+    this.menuTarget.classList.remove("hidden")
+  }
+
+  navigate(event) {
+    const url = event.currentTarget.dataset.searchUrl
+    if (url) {
+      window.location.href = url
+    }
   }
 
   disconnect() {
@@ -35,10 +79,7 @@ export default class extends Controller {
     
     const query = this.inputTarget.value.trim()
     
-    if (query.length === 0) {
-      alert('Please enter a search term')
-      return
-    }
+    if (query.length === 0) return
 
     // Handle different search commands
     if (query.startsWith('/')) {

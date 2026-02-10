@@ -12,11 +12,19 @@
     </div>
   <% end %>
 
-  <%= form_with model: customer, data: { turbo_frame: "_top" }, class: "space-y-6" do |f| %>
+  <% return_to = params[:return_to].presence %>
+  <%= form_with model: customer, data: { turbo: false }, class: "space-y-6" do |f| %>
+    <% if return_to %>
+      <%= hidden_field_tag :return_to, return_to %>
+    <% end %>
     <div class="grid gap-6 md:grid-cols-3">
       <div>
-        <%= f.label :name, class: "mb-2 block text-sm font-semibold text-slate-200" %>
-        <%= f.text_field :name, class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0" %>
+        <%= f.label :first_name, t("customers.form.first_name", default: "First name"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
+        <%= f.text_field :first_name, class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0" %>
+      </div>
+      <div>
+        <%= f.label :last_name, t("customers.form.last_name", default: "Last name"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
+        <%= f.text_field :last_name, class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0" %>
       </div>
       <div>
         <%= f.label :category, class: "mb-2 block text-sm font-semibold text-slate-200" %>
@@ -25,6 +33,9 @@
               { include_blank: t("customers.form.category_placeholder", default: "Select category") },
               class: "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-yellow-400 focus:ring-0" %>
       </div>
+    </div>
+
+    <% if current_user&.admin? %>
       <div>
         <%= f.label :bulk_discount, t("customers.form.bulk_discount", default: "Bulk discount (%)"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
         <%= f.number_field :bulk_discount,
@@ -34,7 +45,7 @@
               placeholder: t("customers.form.bulk_discount_placeholder", default: "e.g., 12.5") %>
         <p class="mt-1 text-xs text-slate-400"><%= t("customers.form.bulk_discount_help", default: "Admin-only discount applied for volume orders.") %></p>
       </div>
-    </div>
+    <% end %>
 
     <div class="grid gap-6 md:grid-cols-2">
       <div>

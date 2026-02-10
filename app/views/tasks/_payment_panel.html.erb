@@ -1,4 +1,4 @@
-<%= form_with url: publish_task_path(task), method: :post, data: { turbo: false, turbo_frame: "_top" }, html: { target: "_blank" }, class: "mt-10 space-y-6 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur" do %>
+<%= form_with url: publish_task_path(task), method: :post, data: { turbo: false, turbo_frame: "_top" }, class: "mt-10 space-y-6 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur" do %>
   <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
     <div>
       <h2 class="text-xl font-semibold text-white"><%= t("tasks.payment_section_title", default: "Checkout & Payment") %></h2>

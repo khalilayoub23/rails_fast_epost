@@ -3,7 +3,8 @@ module Api
     module Carriers
       class EventsController < BaseController
         def index
-          events = TrackingEvent
+          authorize TrackingEvent
+          events = policy_scope(TrackingEvent)
             .joins(:task)
             .where(tasks: { carrier_id: carrier.id })
             .order(occurred_at: :desc)

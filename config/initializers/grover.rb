@@ -17,7 +17,9 @@ Grover.configure do |config|
       width: 1280,
       height: 720
     },
+    timeout: 60_000,
     launchOptions: {
+      executablePath: ENV.fetch("CHROME_BIN", "/usr/bin/chromium-browser"),
       args: [ "--no-sandbox", "--disable-dev-shm-usage", "--disable-web-security" ],
       dumpio: false
     }

@@ -3,6 +3,7 @@ require "securerandom"
 
 class Api::V1::CarriersSmokeTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in users(:admin)
     @carrier = Carrier.create!(
       name: "API Carrier #{SecureRandom.hex(2)}",
       email: "carrier-api-#{SecureRandom.hex(2)}@example.com",
@@ -21,6 +22,7 @@ class Api::V1::CarriersSmokeTest < ActionDispatch::IntegrationTest
     task = Task.create!(
       customer: customer,
       carrier: @carrier,
+      task_type: "delivery_and_pickup",
       package_type: "parcel",
       start: "Origin",
       target: "Destination",

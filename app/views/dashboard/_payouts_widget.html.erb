@@ -1,0 +1,29 @@
+<div class="<%= card_class %> px-5 pt-6 pb-2.5 sm:px-7.5">
+  <%= render "dashboard/widget_header",
+        title: t("dashboard.recent_payouts", default: "Payouts"),
+        link_label: t("dashboard.view_all", default: "View all"),
+        link_path: control_panel_carriers_payouts_path %>
+
+  <div class="max-w-full overflow-x-auto rounded-xl border border-white/10">
+    <table class="w-full table-auto">
+      <thead>
+        <tr class="bg-slate-900/60 text-left border-b border-white/10">
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.id", default: "ID") %></th>
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.status", default: "Status") %></th>
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("dashboard.amount", default: "Amount") %></th>
+          <th class="px-4 py-4 font-medium text-slate-200"><%= t("tasks.created", default: "Created") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Array(recent_payouts).each do |payout| %>
+          <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+            <td class="px-4 py-4 text-sm font-medium text-white">#<%= payout.id %></td>
+            <td class="px-4 py-4 text-sm text-slate-300"><%= payout.status %></td>
+            <td class="px-4 py-4 text-sm text-slate-300"><%= format_money_cents(payout.amount_cents, currency: payout.currency.presence || currency_code, precision: 0) %></td>
+            <td class="px-4 py-4 text-sm text-slate-300"><%= l(payout.created_at, format: :short) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

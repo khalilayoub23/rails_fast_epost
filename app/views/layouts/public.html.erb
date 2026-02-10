@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title><%= content_for(:title) || "Fastepost - Speed Meets Trust" %></title>
-    <meta name="description" content="From legal filings to online orders — Fastepost delivers it all.">
+    <title><%= content_for(:title) || t("public.meta_title") %></title>
+    <meta name="description" content="<%= t("public.meta_description") %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     

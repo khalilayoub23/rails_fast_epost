@@ -108,6 +108,7 @@ class CarrierRatingTest < ActiveSupport::TestCase
       customer: customer,
       carrier: carrier,
       package_type: "parcel",
+      task_type: "delivery_and_pickup",
       start: "Origin",
       target: "Destination",
       status: status,

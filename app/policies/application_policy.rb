@@ -42,6 +42,10 @@ class ApplicationPolicy
     user&.manager?
   end
 
+  def lawyer?
+    user&.lawyer?
+  end
+
   def support_agent?
     user&.support_agent?
   end

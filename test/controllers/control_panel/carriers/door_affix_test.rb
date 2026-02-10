@@ -7,6 +7,7 @@ class ControlPanel::Carriers::DoorAffixTest < ActionDispatch::IntegrationTest
     @task = Task.create!(
       customer: customers(:one),
       carrier: carriers(:one),
+      task_type: "delivery_and_pickup",
       package_type: "box",
       start: "A",
       target: "B",

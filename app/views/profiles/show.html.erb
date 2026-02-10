@@ -1,4 +1,9 @@
-<% content_for :page_title, "Profile" %>
+<% content_for :page_title, t("profile.title", default: "Profile") %>
+
+<% edit_section = params[:edit] %>
+<% user_name = current_user.full_name.presence || current_user.email %>
+<% user_role = current_user.role.to_s.humanize %>
+<% user_location = current_user.address.presence || current_user.home_address.presence || current_user.office_address.presence || "-" %>
 
 <div class="space-y-6">
   <div class="flex items-center justify-between">
@@ -8,13 +13,13 @@
           <li class="inline-flex items-center">
             <%= link_to root_path, class: "text-slate-300 hover:text-white" do %>
               <span class="material-icons text-sm mr-1">home</span>
-              Home
+              <%= t("nav.home", default: "Home") %>
             <% end %>
           </li>
           <li>
             <div class="flex items-center">
               <span class="material-icons text-sm text-slate-500 mx-1">chevron_right</span>
-              <span class="text-white font-medium">Profile</span>
+              <span class="text-white font-medium"><%= t("profile.title", default: "Profile") %></span>
             </div>
           </li>
         </ol>
@@ -22,14 +27,135 @@
     </div>
   </div>
 
-  <div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur">
-    <div class="px-6 py-4 border-b border-white/10">
-      <h2 class="text-xl font-semibold text-white">User Profile</h2>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/30 backdrop-blur">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white/10 text-yellow-300">
+          <span class="material-icons text-3xl">person</span>
+        </div>
+        <div>
+          <h2 class="text-xl font-semibold text-white"><%= user_name %></h2>
+          <p class="text-sm text-slate-300"><%= user_role %></p>
+          <p class="text-xs text-slate-400"><%= user_location %></p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <%= link_to profile_path(edit: "personal"), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 text-slate-200 hover:border-yellow-400 hover:text-yellow-300", title: t("profile.edit", default: "Edit") do %>
+          <span class="material-icons text-base">edit</span>
+        <% end %>
+      </div>
     </div>
-    <div class="px-6 py-8 text-center">
-      <span class="material-icons text-slate-400 text-5xl mb-3">account_circle</span>
-      <h3 class="text-base font-semibold text-white mb-1">Profile Management</h3>
-      <p class="text-sm text-slate-300">User profile features coming soon.</p>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur">
+    <div class="flex items-center justify-between border-b border-white/10 px-6 py-4">
+      <h3 class="text-lg font-semibold text-white"><%= t("profile.personal_info", default: "Personal information") %></h3>
+      <%= link_to profile_path(edit: "personal"), class: "inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200 hover:border-yellow-400 hover:text-yellow-300" do %>
+        <span class="material-icons text-sm">edit</span>
+        <%= t("profile.edit", default: "Edit") %>
+      <% end %>
+    </div>
+    <div class="px-6 py-5">
+      <div class="grid gap-6 md:grid-cols-2">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-slate-400"><%= t("profile.full_name", default: "Full name") %></p>
+          <p class="mt-1 text-sm font-semibold text-white"><%= user_name %></p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-slate-400"><%= t("profile.role", default: "Role") %></p>
+          <p class="mt-1 text-sm font-semibold text-white"><%= user_role %></p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-slate-400"><%= t("profile.email", default: "Email") %></p>
+          <p class="mt-1 text-sm font-semibold text-white"><%= current_user.email %></p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-slate-400"><%= t("profile.phone", default: "Phone") %></p>
+          <p class="mt-1 text-sm font-semibold text-white"><%= current_user.phone.presence || "-" %></p>
+        </div>
+      </div>
+
+      <% if edit_section == "personal" %>
+        <div class="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
+          <%= form_with model: current_user, url: profile_path, method: :patch, class: "space-y-4" do |f| %>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <%= f.label :full_name, t("profile.full_name", default: "Full name"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
+                <%= f.text_field :full_name, class: "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+              </div>
+              <div>
+                <%= f.label :phone, t("profile.phone", default: "Phone"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
+                <%= f.telephone_field :phone, class: "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+              </div>
+            </div>
+            <div>
+              <%= f.label :address, t("profile.primary_address", default: "Primary address"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
+              <%= f.text_field :address, class: "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+            </div>
+            <div class="flex items-center gap-3">
+              <%= f.submit t("profile.save", default: "Save"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-5 py-2 text-sm font-semibold text-black hover:bg-yellow-300" %>
+              <%= link_to t("profile.cancel", default: "Cancel"), profile_path, class: "inline-flex items-center rounded-lg border border-white/10 px-5 py-2 text-sm font-semibold text-slate-200 hover:border-yellow-400 hover:text-yellow-300" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 backdrop-blur">
+    <div class="flex items-center justify-between border-b border-white/10 px-6 py-4">
+      <h3 class="text-lg font-semibold text-white"><%= t("profile.address_title", default: "Address") %></h3>
+      <%= link_to profile_path(edit: "address"), class: "inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200 hover:border-yellow-400 hover:text-yellow-300" do %>
+        <span class="material-icons text-sm">edit</span>
+        <%= t("profile.edit", default: "Edit") %>
+      <% end %>
+    </div>
+    <div class="px-6 py-5">
+      <div class="grid gap-6 md:grid-cols-2">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-slate-400"><%= t("profile.primary_address", default: "Primary address") %></p>
+          <p class="mt-1 text-sm font-semibold text-white"><%= current_user.address.presence || "-" %></p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-slate-400"><%= t("profile.home_address", default: "Home address") %></p>
+          <p class="mt-1 text-sm font-semibold text-white"><%= current_user.home_address.presence || "-" %></p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-slate-400"><%= t("profile.office_address", default: "Office address") %></p>
+          <p class="mt-1 text-sm font-semibold text-white"><%= current_user.office_address.presence || "-" %></p>
+        </div>
+      </div>
+
+      <% if edit_section == "address" %>
+        <div class="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
+          <%= form_with model: current_user, url: profile_path, method: :patch, class: "space-y-4" do |f| %>
+            <div>
+              <%= f.label :address, t("profile.primary_address", default: "Primary address"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
+              <%= f.text_field :address, class: "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <%= f.label :home_address, t("profile.home_address", default: "Home address"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
+                <%= f.text_field :home_address,
+                      placeholder: t("profile.search_home_address", default: "Search home address"),
+                      data: { autocomplete_placeholder: t("profile.search_home_address", default: "Search home address") },
+                      class: "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+              </div>
+              <div>
+                <%= f.label :office_address, t("profile.office_address", default: "Office address"), class: "mb-2 block text-sm font-semibold text-slate-200" %>
+                <%= f.text_field :office_address,
+                      placeholder: t("profile.search_office_address", default: "Search office address"),
+                      data: { autocomplete_placeholder: t("profile.search_office_address", default: "Search office address") },
+                      class: "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <%= f.submit t("profile.save", default: "Save"), class: "inline-flex items-center rounded-lg bg-yellow-400 px-5 py-2 text-sm font-semibold text-black hover:bg-yellow-300" %>
+              <%= link_to t("profile.cancel", default: "Cancel"), profile_path, class: "inline-flex items-center rounded-lg border border-white/10 px-5 py-2 text-sm font-semibold text-slate-200 hover:border-yellow-400 hover:text-yellow-300" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

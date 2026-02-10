@@ -36,8 +36,14 @@ function initGeocoder({ inputId, containerId, placeholder }) {
 }
 
 function initAll() {
-  initGeocoder({ inputId: "task_start", containerId: "start-geocoder", placeholder: "Search pickup" })
-  initGeocoder({ inputId: "task_target", containerId: "target-geocoder", placeholder: "Search drop-off" })
+  const startInput = document.getElementById("task_start")
+  const targetInput = document.getElementById("task_target")
+
+  const startPlaceholder = startInput?.dataset?.autocompletePlaceholder || startInput?.placeholder || "Search pickup"
+  const targetPlaceholder = targetInput?.dataset?.autocompletePlaceholder || targetInput?.placeholder || "Search drop-off"
+
+  initGeocoder({ inputId: "task_start", containerId: "start-geocoder", placeholder: startPlaceholder })
+  initGeocoder({ inputId: "task_target", containerId: "target-geocoder", placeholder: targetPlaceholder })
 }
 
 document.addEventListener("turbo:load", initAll)

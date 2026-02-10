@@ -4,33 +4,44 @@ class CustomersController < ApplicationController
   before_action :set_customer, only: %i[show edit update destroy]
 
   def index
-    @customers = Customer.all
+    authorize Customer
+    @customers = policy_scope(Customer)
     respond_with_index(@customers)
   end
 
   def show
+    authorize @customer
     respond_with_show(@customer)
   end
 
   def new
     @customer = Customer.new
+    authorize @customer
+    session[:customer_return_to] = params[:return_to] if params[:return_to].present?
   end
 
   def create
     @customer = Customer.new(customer_params)
-    respond_with_create(@customer, nil, notice: "Customer created.") do
-      render turbo_stream: [
-        turbo_stream.prepend("customers_list", partial: "customers/customer_card", locals: { customer: @customer }),
-        turbo_stream.update("customer_form", partial: "customers/form", locals: { customer: Customer.new }),
-        turbo_stream.append("flash-messages", partial: "shared/flash_message",
-                           locals: { type: :success, message: t("customers.created_successfully") })
-      ]
+    authorize @customer
+    return_to = params[:return_to].presence || session.delete(:customer_return_to)
+
+    if @customer.save
+      respond_to do |format|
+        format.html { redirect_to(return_to || @customer, notice: t("customers.created_successfully", default: "Customer created.")) }
+        format.json { render json: @customer, status: :created }
+      end
+    else
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: { errors: @customer.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
   def edit; end
 
   def update
+    authorize @customer
     respond_with_update(@customer, nil, notice: "Customer updated.", attributes: customer_params) do
       render turbo_stream: [
         turbo_stream.replace(@customer, partial: "customers/customer_card", locals: { customer: @customer }),
@@ -41,6 +52,7 @@ class CustomersController < ApplicationController
   end
 
   def destroy
+    authorize @customer
     respond_with_destroy(@customer, customers_path, notice: "Customer deleted.") do
       render turbo_stream: [
         turbo_stream.remove(@customer),
@@ -51,6 +63,7 @@ class CustomersController < ApplicationController
   end
 
   def search
+    authorize Customer
     @customers = if params[:q].present?
       Customer.where("name ILIKE ?", "%#{params[:q]}%").limit(10)
     else
@@ -78,6 +91,6 @@ class CustomersController < ApplicationController
   end
 
   def customer_params
-    params.require(:customer).permit(:name, :category, :address, :email, :bulk_discount, phones: [])
+    params.require(:customer).permit(:name, :first_name, :last_name, :category, :address, :email, :bulk_discount, phones: [])
   end
 end

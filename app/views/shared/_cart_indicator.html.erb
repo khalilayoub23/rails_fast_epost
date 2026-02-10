@@ -1,0 +1,12 @@
+<% if current_user&.manager? || current_user&.sender_role? || current_user&.lawyer? || current_user&.ecommerce_seller? %>
+  <%= link_to cart_path,
+        title: t('topbar.cart', default: 'Cart'),
+        class: "topbar-icon-button relative" do %>
+    <span class="material-icons text-xl">shopping_cart</span>
+    <% if cart_item_count.positive? %>
+      <span class="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-black px-1.5 py-0.5 text-[10px] font-bold text-white">
+        <%= cart_item_count %>
+      </span>
+    <% end %>
+  <% end %>
+<% end %>

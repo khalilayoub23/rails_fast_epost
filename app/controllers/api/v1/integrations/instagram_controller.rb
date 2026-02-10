@@ -4,6 +4,8 @@ module Api
       class InstagramController < BaseWebhookController
         def verify
           token = ENV["META_VERIFY_TOKEN"]
+          return forbidden if token.blank?
+
           if params["hub.mode"] == "subscribe" && params["hub.verify_token"] == token
             render plain: params["hub.challenge"], status: :ok
           else
@@ -13,6 +15,7 @@ module Api
 
         def receive
           secret = ENV["META_APP_SECRET"]
+          return forbidden if secret.blank?
           return forbidden unless verify_meta_signature!(secret)
 
           Integrations::InstagramService.process(json_body, headers: request.headers.to_h, signature_valid: true)
