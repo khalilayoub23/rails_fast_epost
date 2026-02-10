@@ -1,9 +1,14 @@
 <% content_for :page_title, t("tasks.new_title", default: "Create Task") %>
 
 <div class="w-full">
+    <% new_desc = t('tasks.new_description', default: 'Fill in the delivery details below to create a new logistics task.') %>
+    <% required_template = t('tasks.required_fields_note', default: 'Fields marked with %{asterisk} are required.') %>
+    <% parts = required_template.split('%{asterisk}', 2) %>
+    <% required_html = safe_join([ERB::Util.html_escape(parts[0] || ''), content_tag(:span, '*', class: 'text-yellow-300 font-semibold text-base align-middle ml-1', 'aria-hidden': 'true'), ERB::Util.html_escape(parts[1] || '')]) %>
+    <% description_html = safe_join([ERB::Util.html_escape(new_desc), ' ', required_html]) %>
     <%= render "form_card",
       title: t("tasks.new", default: "New Task"),
-      description: "#{t('tasks.new_description', default: 'Fill in the delivery details below to create a new logistics task.')} #{t('tasks.required_fields_note', default: 'Fields marked with * are required.')}",
+      description: description_html,
       back_path: tasks_path do %>
     <div id="task-form">
       <%= render "form", task: @task %>
