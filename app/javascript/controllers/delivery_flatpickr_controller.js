@@ -27,7 +27,9 @@ export default class extends Controller {
         dateFormat: "Y-m-d H:i",
         allowInput: true,
         onChange: this.onChange.bind(this),
-        onClose: this.onClose.bind(this)
+        onClose: this.onClose.bind(this),
+        // Append calendar to body to avoid clipping by overflow:hidden parents
+        appendTo: document.body
       })
 
       // Tag the calendar container so we can style it to match the app layout
