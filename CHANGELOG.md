@@ -132,3 +132,18 @@
 - All changes maintain backward compatibility
 - Database migration required: `bin/rails db:migrate`
 - Models now fully match the provided database schema diagram
+
+## [2026-02-10] - i18n, tests, and task/checkout hardening
+
+### Added
+- Arabic translations: added missing `payments.*` and `settings.*` keys to `config/locales/ar.yml` to satisfy i18n parity tests.
+- Integration test covering task -> cart -> payment flow (`test/integration/tasks_cycle_flow_test.rb`).
+
+### Changed
+- Removed a test-time global monkeypatch that injected implicit `Task` defaults; updated fixtures and tests to set `task_type` and `poa_enabled` explicitly.
+- Hardened checkout/task materialization in `app/controllers/checkout_controller.rb` to provide safe defaults during checkout.
+- Minor policy/view/controller fixes to avoid NoMethodError and make tests deterministic.
+
+### Notes
+- Full test suite passes locally: `363 tests, 1248 assertions, 0 failures` (run on 2026-02-10).
+- Please review Arabic translations for accuracy (placeholders were used where Arabic wording was not provided).
