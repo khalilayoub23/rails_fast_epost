@@ -144,16 +144,13 @@ class TasksController < ApplicationController
       notice_message = t("tasks.created_notice", default: "Task created successfully.")
 
       respond_to do |format|
+        redirect_path = @customer ? customer_tasks_path(@customer) : tasks_path
+
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace("task-form", partial: "tasks/form", locals: { task: @task }),
-            turbo_stream.replace("cart-indicator", partial: "shared/cart_indicator"),
-            turbo_stream.append("flash-messages", partial: "shared/flash_message",
-                               locals: { type: :success, message: notice_message })
-          ]
+          redirect_to redirect_path, notice: notice_message, status: :see_other
         end
+
         format.html do
-          redirect_path = @customer ? new_customer_task_path(@customer) : new_task_path
           redirect_to redirect_path, notice: notice_message, status: :see_other
         end
       end
