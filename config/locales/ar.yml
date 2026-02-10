@@ -795,6 +795,10 @@ ar:
     reason: "السبب"
     optional: "اختياري"
     submit_refund: "إرسال الاسترداد"
+    
+  # Tasks
+  tasks:
+    required_fields_note: "الحقول الموسومة بـ * هي حقول إلزامية."
 
   # Carriers - شركات النقل
   carriers:

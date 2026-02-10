@@ -67,6 +67,7 @@ he:
     header_subtitle: "עקבו אחרי עבודה, תשלומים ומשלוחים במבט אחד."
     new_task: "משימה חדשה"
     new_delivery: "משלוח חדש"
+      required_fields_note: "שדות המסומנים ב-* הם שדות חובה."
     filters:
       title: "מסננים"
       reset: "איפוס"

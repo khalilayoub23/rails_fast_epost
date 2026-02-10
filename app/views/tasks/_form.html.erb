@@ -26,7 +26,7 @@
     <%= f.hidden_field :package_type, value: (task.package_type.presence || t("tasks.default_package_type_lawyer", default: "Legal Documents")) %>
 
     <div>
-      <%= f.label :task_type, safe_join([t("tasks.task_type", default: "Task Type"), content_tag(:span, "*", class: "text-rose-300 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+      <%= f.label :task_type, safe_join([t("tasks.task_type", default: "Task Type"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
       <%= f.select :task_type,
             Task.task_types.keys.map { |type| [t("tasks.task_types.#{type}", default: type.humanize), type] },
             {},
@@ -77,11 +77,11 @@
       <h3 class="text-lg font-semibold text-white"><%= t("tasks.copy_details_title", default: "Copy details") %></h3>
       <div class="mt-4 grid gap-6 md:grid-cols-2">
         <div>
-          <%= f.label :case_file_number, safe_join([t("tasks.case_file_number", default: "Case file number"), content_tag(:span, "*", class: "text-rose-300 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+          <%= f.label :case_file_number, safe_join([t("tasks.case_file_number", default: "Case file number"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
           <%= f.text_field :case_file_number, class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400", data: { required_when_visible: true } %>
         </div>
         <div>
-              <%= f.label :delivery_medium, safe_join([t("tasks.delivery_medium", default: "Delivery medium"), content_tag(:span, "*", class: "text-rose-300 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+              <%= f.label :delivery_medium, safe_join([t("tasks.delivery_medium", default: "Delivery medium"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
               <%= f.select :delivery_medium,
                 [[t("tasks.delivery_medium_options.paper", default: "Paper"), "paper"],
                  [t("tasks.delivery_medium_options.usb", default: "USB"), "usb"]],
@@ -148,13 +148,13 @@
 
       <div class="mt-5 grid gap-6 md:grid-cols-2">
         <div>
-              <%= f.label :collection_amount, safe_join([t("tasks.collection_amount", default: "Amount"), content_tag(:span, "*", class: "text-rose-300 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+              <%= f.label :collection_amount, safe_join([t("tasks.collection_amount", default: "Amount"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
               <%= f.number_field :collection_amount, step: 0.01, min: 0,
                 class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400",
                 data: { required_when_visible: true } %>
         </div>
         <div>
-              <%= f.label :collection_currency, safe_join([t("tasks.collection_currency", default: "Currency"), content_tag(:span, "*", class: "text-rose-300 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+              <%= f.label :collection_currency, safe_join([t("tasks.collection_currency", default: "Currency"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
               <%= f.select :collection_currency,
                 [["ILS", "ILS"], ["USD", "USD"], ["EUR", "EUR"], ["SEK", "SEK"]],
                 { include_blank: true },
@@ -295,7 +295,7 @@
 
         <div data-task-type-form-target="section"
           data-task-types="court_filings,process_serving,document_retrieval_from_government_agencies,inter_office_courier,notarization_and_apostille,criminal_file_photocopying,traffic_file_photocopying,enforcement_office_services,pickup_services,ecommerce_delivery,ecommerce_pickup,cash_on_delivery_cod,delivery_and_pickup,payment_collection,bailiff_services_coordination,land_registry_tabu_services,companies_registrar_services,filing_to_arbitration_mediation_centers,same_day_express_delivery,warehousing_temporary_storage,proof_of_delivery_pod">
-      <%= f.label :delivery_time, safe_join([t("tasks.delivery_time", default: "Delivery time"), content_tag(:span, "*", class: "text-rose-300 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+      <%= f.label :delivery_time, safe_join([t("tasks.delivery_time", default: "Delivery time"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
       <%= f.datetime_field :delivery_time,
         data: { priority_auto_target: "deliveryTime", action: "input->priority-auto#update change->priority-auto#update", required_when_visible: true },
         class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
