@@ -163,6 +163,7 @@ ar:
     admin: "مسؤول"
     my_profile: "ملفي الشخصي"
     account_settings: "إعدادات الحساب"
+    notice: "نتمنى لك يوم عمل موفق"
 
   # Deliveries
   deliveries:
@@ -580,6 +581,21 @@ ar:
     confirm_delete: "هل أنت متأكد أنك تريد حذف هذا العنصر؟"
     load_more: "تحميل المزيد"
     back_to_list: "العودة إلى المهام"
+    actions: "الإجراءات"
+    day: "يوم"
+    download: "تحميل"
+    id: "المعرّف"
+    last_month: "الشهر الماضي"
+    last_n: "آخر %{count}"
+    latest_n: "الأحدث %{count}"
+    month: "شهر"
+    tbd: "غير محدد"
+    this_month: "هذا الشهر"
+    unspecified: "غير محدد"
+    updated_at: "تم التحديث %{time}"
+    view_all: "عرض الكل"
+    view_json: "عرض JSON"
+    week: "أسبوع"
     
   # Messages - الرسائل
   messages:
@@ -685,6 +701,16 @@ ar:
     status_updated: "تم تحديث حالة المهمة بنجاح!"
     mark_in_progress: "تحديد قيد التنفيذ"
     payment_checkout_missing: "تعذر بدء دفعة Stripe. يرجى التواصل مع المسؤول."
+    task_label: "المهمة"
+    show_details: "عرض التفاصيل"
+    created: "تم الإنشاء"
+    barcode: "باركود"
+    distance: "المسافة"
+    published: "منشور"
+    uploaded_ago: "تم الرفع قبل %{time}"
+    pending: "قيد الانتظار"
+    unassigned: "غير معين"
+    scheduled: "مجدول %{time}"
 
   # Cart
   cart:
@@ -769,6 +795,82 @@ ar:
     reason: "السبب"
     optional: "اختياري"
     submit_refund: "إرسال الاسترداد"
+
+  # Carriers - شركات النقل
+  carriers:
+    task_board: "Task board"
+    task_board_help: "Real-time status by lane. Updating a task changes only the carrier-facing payout context."
+    event_log: "Event log"
+    no_events: "No tracking events yet."
+    payout_detail: "Payout detail"
+    all_payouts: "All payouts"
+    no_payouts: "No payout records yet."
+    payouts_note: "Carrier payouts display the compensation we owe you — separate from what senders paid on checkout."
+
+  # Senders - المرسلون
+  senders:
+    spend_summary: "Spend summary"
+    open_invoices: "Open invoices"
+    avg_delivery_time: "Avg. delivery time: %{hours}h"
+    carrier_mix: "Carrier mix"
+    shipments_count: "%{count} shipments"
+    no_carrier_assignments: "No carrier assignments yet."
+    recent_activity: "Recent activity"
+    last_tasks: "Last 10 tasks"
+    no_shipments: "No shipments yet for this sender."
+    open_issues: "Open issues"
+    failed_flagged: "Failed / flagged tasks"
+    all_healthy: "All shipments are healthy."
+
+  # Sellers - البائعون
+  sellers:
+    sla_breaches: "SLA breaches"
+    late_failed_shipments: "Late / failed shipments"
+    no_sla_breaches: "No SLA breaches 🎯"
+    top_package_types: "Top package types"
+    no_package_mix: "No package mix data."
+    orders_count: "%{count} orders"
+    recent_orders: "Recent orders"
+    no_orders: "No orders yet."
+
+  # Operations - العمليات
+  operations:
+    carrier_performance: "Carrier performance"
+    top_by_rating: "Top 5 by rating"
+    no_carrier_ratings: "No carrier ratings yet."
+    payout_alerts: "Payout alerts"
+    oldest_first: "Oldest first"
+    due_at: "Due %{date}"
+    awaiting_date: "Awaiting date"
+    no_outstanding_payouts: "No outstanding payouts 🎉"
+    late_shipments: "Late-stage shipments"
+    escalate_before_sla: "Escalate before SLA breach"
+    eta: "ETA %{time}"
+    no_delays: "No delayed shipments on deck."
+    incident_feed: "Incident feed"
+    latest_events: "Latest tracking events"
+    no_incidents: "No incidents reported."
+
+  # Settings - الإعدادات (actions)
+  settings:
+    title: "الإعدادات"
+    header: "إعدادات التطبيق"
+    system_configuration: "تهيئة النظام"
+    coming_soon: "لوحة الإعدادات ستتوفر قريبًا."
+    created: "تم إنشاء المستند بنجاح!"
+    updated: "تم تحديث المستند بنجاح!"
+    deleted: "تم حذف المستند بنجاح!"
+    stripe_charge: "العملية:"
+    stripe_actions: "إجراءات Stripe"
+    refund: "استرداد"
+    capture: "تحصيل"
+    cancel: "إلغاء"
+    sync: "مزامنة"
+    issue_refund: "إصدار استرداد"
+    amount_cents: "المبلغ (بالسنتات)"
+    reason: "السبب"
+    optional: "اختياري"
+    submit_refund: "إرسال الاسترداد"
     
   # Documents - المستندات
   documents:
@@ -792,6 +894,9 @@ ar:
     header: "إعدادات التطبيق"
     system_configuration: "تهيئة النظام"
     coming_soon: "لوحة الإعدادات ستتوفر قريبًا."
+    created: "تم إنشاء المستند بنجاح!"
+    updated: "تم تحديث المستند بنجاح!"
+    deleted: "تم حذف المستند بنجاح!"
     
   # Forms - النماذج
   forms:

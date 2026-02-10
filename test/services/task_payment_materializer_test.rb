@@ -14,7 +14,9 @@ class TaskPaymentMaterializerTest < ActiveSupport::TestCase
       "priority" => "express",
       "pickup_address" => "123 Main",
       "pickup_contact_phone" => "+972-555-0000",
-      "delivery_time" => 1.day.from_now.iso8601
+      "delivery_time" => 1.day.from_now.iso8601,
+      "task_type" => "delivery_and_pickup",
+      "poa_enabled" => false
     }
   end
 

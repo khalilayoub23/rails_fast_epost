@@ -90,6 +90,7 @@ class PaymentsUiTest < ApplicationSystemTestCase
       customer: customer,
       carrier: carrier,
       sender: sender,
+      task_type: "delivery_and_pickup",
       package_type: "parcel",
       start: "Origin",
       target: "Destination",

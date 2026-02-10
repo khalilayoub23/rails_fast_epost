@@ -5,6 +5,7 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.new(
       customer: customers(:one),
       carrier: carriers(:one),
+      task_type: "delivery_and_pickup",
       package_type: "box",
       start: "Location A",
       target: "Location B",
@@ -28,6 +29,7 @@ class TaskTest < ActiveSupport::TestCase
 
   test "allows blank filled_form_url but validates format when present" do
     task = Task.new(
+      task_type: "delivery_and_pickup",
       customer: customers(:one),
       carrier: carriers(:one),
       package_type: "box",
@@ -50,6 +52,7 @@ class TaskTest < ActiveSupport::TestCase
     task1 = Task.create!(
       customer: customers(:one),
       carrier: carriers(:one),
+      task_type: "delivery_and_pickup",
       package_type: "box",
       start: "A",
       target: "B",
@@ -59,6 +62,7 @@ class TaskTest < ActiveSupport::TestCase
     )
 
     task2 = Task.new(
+      task_type: "delivery_and_pickup",
       customer: customers(:one),
       carrier: carriers(:one),
       package_type: "box",
@@ -103,6 +107,7 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.create!(
       customer: customers(:one),
       carrier: carriers(:one),
+      task_type: "delivery_and_pickup",
       package_type: "box",
       start: "A",
       target: "B",
@@ -122,6 +127,7 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.create!(
       customer: customers(:one),
       carrier: carriers(:one),
+      task_type: "delivery_and_pickup",
       package_type: "box",
       start: "A",
       target: "B",
@@ -140,6 +146,7 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.create!(
       customer: customers(:one),
       carrier: carriers(:one),
+      task_type: "delivery_and_pickup",
       package_type: "box",
       start: "HQ",
       target: "Court",
@@ -159,6 +166,7 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.create!(
       customer: customers(:one),
       carrier: carriers(:one),
+      task_type: "delivery_and_pickup",
       package_type: "box",
       start: "HQ",
       target: "Court",

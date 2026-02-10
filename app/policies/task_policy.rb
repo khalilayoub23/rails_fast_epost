@@ -47,8 +47,9 @@ class TaskPolicy < ApplicationPolicy
         lawyer_id = user.ensure_lawyer_profile!&.id
         lawyer_id ? scope.where(lawyer_id: lawyer_id) : scope.none
       else
-        # Senders and ecommerce sellers see their own tasks (by sender_id or created_by)
-        scope.where(sender_id: user.id).or(scope.where(created_by_id: user.id))
+        # Publicly published tasks should be visible to all users, plus any tasks
+        # they created or own as a sender.
+        scope.where(published: true).or(scope.where(sender_id: user.id).or(scope.where(created_by_id: user.id)))
       end
     end
   end

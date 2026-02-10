@@ -12,6 +12,7 @@ class TasksPublicationVisibilityTest < ActionDispatch::IntegrationTest
     draft = Task.create!(
       customer: @customer,
       carrier: @carrier,
+      task_type: "delivery_and_pickup",
       package_type: "Draft Parcel",
       start: "A",
       target: "B",
@@ -23,6 +24,7 @@ class TasksPublicationVisibilityTest < ActionDispatch::IntegrationTest
     published = Task.create!(
       customer: @customer,
       carrier: @carrier,
+      task_type: "delivery_and_pickup",
       package_type: "Published Parcel",
       start: "P",
       target: "Q",

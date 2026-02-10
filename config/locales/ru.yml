@@ -163,6 +163,7 @@ ru:
     admin: "Админ"
     my_profile: "Мой профиль"
     account_settings: "Настройки аккаунта"
+    notice: "Хорошего рабочего дня"
 
   # Deliveries
   deliveries:
@@ -779,6 +780,9 @@ ru:
     header: "Настройки приложения"
     system_configuration: "Конфигурация системы"
     coming_soon: "Раздел настроек скоро появится."
+    created: "Документ успешно создан!"
+    updated: "Документ успешно обновлён!"
+    deleted: "Документ успешно удалён!"
     
   # Forms - Формы
   forms:

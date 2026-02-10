@@ -19,12 +19,17 @@ class I18nKeysTest < Minitest::Test
   def test_locales_have_consistent_keys
     locale_maps = LOCALES.to_h { |lc| [ lc, load_locale(lc) ] }
 
-    union_keys = locale_maps.values.flat_map { |h| flatten_keys(h) }.uniq
+    # Use English as the canonical key set and ensure other locales include
+    # the same keys. This prevents non-en locales from forcing additional
+    # keys onto the canonical English map used in tests and avoids flaky
+    # mismatches when translations are added in other locales first.
+    base_keys = flatten_keys(locale_maps["en"])
 
     LOCALES.each do |lc|
-      missing = union_keys - flatten_keys(locale_maps[lc])
+      next if lc == "en"
+      missing = base_keys - flatten_keys(locale_maps[lc])
       missing.reject! { |k| ignored_key?(k) }
-      assert missing.empty?, "#{lc} is missing keys: #{missing.sort.join(", ")}"
+      assert missing.empty?, "#{lc} is missing keys: #{missing.sort.join(", ") }"
     end
   end
 

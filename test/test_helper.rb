@@ -1,4 +1,6 @@
 ENV["RAILS_ENV"] ||= "test"
+# Ensure Stripe webhook secret is present as early as possible so initializers and parallel test workers inherit it
+ENV['STRIPE_WEBHOOK_SECRET'] ||= 'whsec_test'
 require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/mock"
@@ -180,3 +182,7 @@ ActiveSupport::TestCase.include(DeliveryTestHelper)
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 end
+
+# Removed test-only monkeypatches: prefer explicit fixtures/tests that set
+# `task_type` and required attributes. If needed, add narrow, per-test helpers
+# instead of global overrides to avoid masking real validation issues.

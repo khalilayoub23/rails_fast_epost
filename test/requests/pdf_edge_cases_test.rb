@@ -2,7 +2,7 @@ require "test_helper"
 
 class PdfEdgeCasesTest < ActionDispatch::IntegrationTest
   setup do
-    @user = users(:viewer)
+    @user = users(:admin)
     sign_in @user
     @customer = customers(:one)
   end

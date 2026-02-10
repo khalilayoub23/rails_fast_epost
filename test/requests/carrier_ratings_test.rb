@@ -14,12 +14,19 @@ class CarrierRatingsTest < ActionDispatch::IntegrationTest
     @created_users = []
     @created_ratings = []
 
-    @user = create_user!
+    @user = User.create!(
+      email: "api-admin-#{SecureRandom.hex(2)}@example.com",
+      password: "password123",
+      role: "admin",
+      user_type: :sender
+    )
+    @created_users << @user
     sign_in @user, scope: :user
 
     @carrier = create_carrier!
     @customer = create_customer!
-    @task = create_task!(carrier: @carrier, customer: @customer, status: :delivered)
+    @sender = create_sender!
+    @task = create_task!(carrier: @carrier, customer: @customer, sender: @sender, status: :delivered)
   end
 
   teardown do
@@ -113,10 +120,12 @@ class CarrierRatingsTest < ActionDispatch::IntegrationTest
     customer
   end
 
-  def create_task!(carrier:, customer:, status: :delivered)
+  def create_task!(carrier:, customer:, sender: nil, status: :delivered)
     task = Task.create!(
       customer: customer,
       carrier: carrier,
+      sender: sender || @sender,
+      task_type: "delivery_and_pickup",
       package_type: "parcel",
       start: "Origin",
       target: "Destination",
@@ -127,5 +136,16 @@ class CarrierRatingsTest < ActionDispatch::IntegrationTest
     )
     @created_tasks << task
     task
+  end
+
+  def create_sender!
+    sender = Sender.create!(
+      name: "Sender #{SecureRandom.hex(2)}",
+      email: "sender-#{SecureRandom.hex(2)}@example.com",
+      phone: "+15550001000",
+      address: "1 Sender Lane",
+      sender_type: :individual
+    )
+    sender
   end
 end
