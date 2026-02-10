@@ -123,3 +123,23 @@
 .fastpost-flatpickr.flatpickr-calendar {
   overflow: visible !important;
 }
+
+/* Force fixed positioning as a robust fallback so the calendar cannot be clipped
+   by overflow:hidden ancestors. This anchors it to the viewport; coordinates
+   are conservative so it appears near the top-left where inputs are located.
+   If you prefer a different placement we can compute coordinates via JS (CSP
+   may block inline style updates). */
+.fastpost-flatpickr.flatpickr-calendar {
+  position: fixed !important;
+  top: 120px !important;
+  left: 48px !important;
+  z-index: 99999 !important;
+}
+
+@media (max-width: 800px) {
+  .fastpost-flatpickr.flatpickr-calendar {
+    left: 12px !important;
+    right: 12px !important;
+    max-width: calc(100% - 24px) !important;
+  }
+}
