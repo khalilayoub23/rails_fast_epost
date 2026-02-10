@@ -108,3 +108,18 @@
 .fastpost-flatpickr.flatpickr-calendar.open {
   max-width: 360px;
 }
+
+/* Ensure the full day grid (including the last row) is visible and not clipped */
+.fastpost-flatpickr .flatpickr-days {
+  min-height: 260px !important;
+}
+
+.fastpost-flatpickr .flatpickr-inner,
+.fastpost-flatpickr .flatpickr-days,
+.fastpost-flatpickr .flatpickr-weekdays {
+  box-sizing: border-box !important;
+}
+
+.fastpost-flatpickr.flatpickr-calendar {
+  overflow: visible !important;
+}
