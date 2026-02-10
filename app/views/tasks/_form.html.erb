@@ -26,7 +26,7 @@
     <%= f.hidden_field :package_type, value: (task.package_type.presence || t("tasks.default_package_type_lawyer", default: "Legal Documents")) %>
 
     <div>
-      <%= f.label :task_type, t("tasks.task_type", default: "Task Type"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+      <%= f.label :task_type, (t("tasks.task_type", default: "Task Type") + content_tag(:span, "*", class: "text-rose-300 ml-1")), class: "mb-2 block text-lg font-semibold text-slate-200" %>
       <%= f.select :task_type,
             Task.task_types.keys.map { |type| [t("tasks.task_types.#{type}", default: type.humanize), type] },
             {},
@@ -77,16 +77,17 @@
       <h3 class="text-lg font-semibold text-white"><%= t("tasks.copy_details_title", default: "Copy details") %></h3>
       <div class="mt-4 grid gap-6 md:grid-cols-2">
         <div>
-          <%= f.label :case_file_number, t("tasks.case_file_number", default: "Case file number"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
-          <%= f.text_field :case_file_number, class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+          <%= f.label :case_file_number, (t("tasks.case_file_number", default: "Case file number") + content_tag(:span, "*", class: "text-rose-300 ml-1")), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+          <%= f.text_field :case_file_number, class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400", data: { required_when_visible: true } %>
         </div>
         <div>
-          <%= f.label :delivery_medium, t("tasks.delivery_medium", default: "Delivery medium"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
-          <%= f.select :delivery_medium,
+              <%= f.label :delivery_medium, (t("tasks.delivery_medium", default: "Delivery medium") + content_tag(:span, "*", class: "text-rose-300 ml-1")), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+              <%= f.select :delivery_medium,
                 [[t("tasks.delivery_medium_options.paper", default: "Paper"), "paper"],
                  [t("tasks.delivery_medium_options.usb", default: "USB"), "usb"]],
                 { include_blank: true },
-                class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+                class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400",
+                data: { required_when_visible: true } %>
         </div>
       </div>
     </div>
@@ -147,16 +148,18 @@
 
       <div class="mt-5 grid gap-6 md:grid-cols-2">
         <div>
-          <%= f.label :collection_amount, t("tasks.collection_amount", default: "Amount"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
-          <%= f.number_field :collection_amount, step: 0.01, min: 0,
-                class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+              <%= f.label :collection_amount, (t("tasks.collection_amount", default: "Amount") + content_tag(:span, "*", class: "text-rose-300 ml-1")), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+              <%= f.number_field :collection_amount, step: 0.01, min: 0,
+                class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400",
+                data: { required_when_visible: true } %>
         </div>
         <div>
-          <%= f.label :collection_currency, t("tasks.collection_currency", default: "Currency"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
-          <%= f.select :collection_currency,
+              <%= f.label :collection_currency, (t("tasks.collection_currency", default: "Currency") + content_tag(:span, "*", class: "text-rose-300 ml-1")), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+              <%= f.select :collection_currency,
                 [["ILS", "ILS"], ["USD", "USD"], ["EUR", "EUR"], ["SEK", "SEK"]],
                 { include_blank: true },
-                class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+                class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400",
+                data: { required_when_visible: true } %>
         </div>
       </div>
     </div>
@@ -258,7 +261,7 @@
         </div>
         <%= f.text_field :start,
               placeholder: t("tasks.search_pickup", default: "Search pickup"),
-            data: { address_shortcuts_target: "pickupInput", autocomplete_placeholder: t("tasks.search_pickup", default: "Search pickup") },
+            data: { address_shortcuts_target: "pickupInput", autocomplete_placeholder: t("tasks.search_pickup", default: "Search pickup"), required_when_visible: true },
               class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 focus:outline-none" %>
       </div>
       <div data-task-type-form-target="section"
@@ -284,18 +287,18 @@
             </button>
           </div>
         </div>
-        <%= f.text_field :target,              placeholder: t("tasks.search_dropoff", default: "Search drop-off"),
-              data: { address_shortcuts_target: "dropoffInput", autocomplete_placeholder: t("tasks.search_dropoff", default: "Search drop-off") },
-              class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 focus:outline-none" %>
+          <%= f.text_field :target,              placeholder: t("tasks.search_dropoff", default: "Search drop-off"),
+            data: { address_shortcuts_target: "dropoffInput", autocomplete_placeholder: t("tasks.search_dropoff", default: "Search drop-off"), required_when_visible: true },
+            class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white placeholder:text-slate-400 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/30 focus:outline-none" %>
       </div>
     </div>
 
         <div data-task-type-form-target="section"
           data-task-types="court_filings,process_serving,document_retrieval_from_government_agencies,inter_office_courier,notarization_and_apostille,criminal_file_photocopying,traffic_file_photocopying,enforcement_office_services,pickup_services,ecommerce_delivery,ecommerce_pickup,cash_on_delivery_cod,delivery_and_pickup,payment_collection,bailiff_services_coordination,land_registry_tabu_services,companies_registrar_services,filing_to_arbitration_mediation_centers,same_day_express_delivery,warehousing_temporary_storage,proof_of_delivery_pod">
-      <%= f.label :delivery_time, t("tasks.delivery_time", default: "Delivery time"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
+      <%= f.label :delivery_time, (t("tasks.delivery_time", default: "Delivery time") + content_tag(:span, "*", class: "text-rose-300 ml-1")), class: "mb-2 block text-lg font-semibold text-slate-200" %>
       <%= f.datetime_field :delivery_time,
-            data: { priority_auto_target: "deliveryTime", action: "input->priority-auto#update change->priority-auto#update" },
-            class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+        data: { priority_auto_target: "deliveryTime", action: "input->priority-auto#update change->priority-auto#update", required_when_visible: true },
+        class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
     </div>
 
         <div data-task-type-form-target="section"

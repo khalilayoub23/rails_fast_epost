@@ -49,7 +49,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_equal Carrier.default_system_carrier.id, task.carrier_id
     assert_not task.published?
     assert_equal other_user.id, task.created_by_id
-    assert_redirected_to new_task_path
+    assert_redirected_to tasks_path
     assert_equal I18n.t("tasks.created_notice", default: "Task created successfully."), flash[:notice]
   ensure
     sign_in @user

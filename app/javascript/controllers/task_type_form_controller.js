@@ -13,11 +13,27 @@ export default class extends Controller {
       const types = (section.dataset.taskTypes || "").split(",").map((value) => value.trim()).filter(Boolean)
       if (types.length === 0) return
 
-      if (types.includes(type)) {
+      const show = types.includes(type)
+      if (show) {
         section.classList.remove("hidden")
       } else {
         section.classList.add("hidden")
       }
+
+      // Toggle required attributes for inputs that are conditionally required
+      const controls = section.querySelectorAll('input[data-required-when-visible], select[data-required-when-visible], textarea[data-required-when-visible]')
+      controls.forEach((control) => {
+        if (show) {
+          control.setAttribute('required', 'true')
+          control.setAttribute('aria-required', 'true')
+          control.removeAttribute('disabled')
+        } else {
+          control.removeAttribute('required')
+          control.removeAttribute('aria-required')
+          // keep fields disabled when hidden to avoid browser blocking submission
+          control.setAttribute('disabled', 'true')
+        }
+      })
     })
   }
 }
