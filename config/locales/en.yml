@@ -681,6 +681,7 @@ en:
     new: "New Task"
     new_title: "Create Task"
     new_description: "Fill in the delivery details below to create a new logistics task."
+    required_fields_note: "Fields marked with * are required."
     priority_all: "All priorities"
     search_placeholder: "Search tasks"
     all: "All Tasks"
