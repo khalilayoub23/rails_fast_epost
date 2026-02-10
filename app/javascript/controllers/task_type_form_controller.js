@@ -16,6 +16,15 @@ export default class extends Controller {
       const show = types.includes(type)
       if (show) {
         section.classList.remove("hidden")
+        // Notify any delivery-flatpickr controllers inside the section to refresh
+        try {
+          const targets = section.querySelectorAll('[data-controller]')
+          targets.forEach((el) => {
+            if ((el.dataset.controller || '').includes('delivery-flatpickr')) {
+              try { el.dispatchEvent(new CustomEvent('delivery-flatpickr:refresh')) } catch (e) {}
+            }
+          })
+        } catch (e) {}
       } else {
         section.classList.add("hidden")
       }

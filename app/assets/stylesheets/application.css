@@ -13,6 +13,7 @@
 @import "design-system/mobile.css";
 @import "design-system/logo.css";
 @import "sidebar_overrides.css";
+@import "flatpickr_overrides.css";
 
 /* Fast Epost Landing System (scoped to public layout) */
 body.public-layout {
@@ -699,6 +700,23 @@ html.dark .brand-logo--dark { display: inline-block; }
    .brand-logo-img { filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
    html.dark .brand-logo-img { filter: brightness(1.05) contrast(1.05); }
 */
+
+/* (removed: pressable pickup icon helper — reverted to original design)
+   If needed later, we can reintroduce a focused implementation for pressable icons.
+*/
+
+/* Address shortcut selected state */
+.address-shortcut.selected {
+  background: var(--meta-6) !important;
+  border-color: var(--meta-6) !important;
+  color: #0f172a !important;
+}
+.address-shortcut.selected .material-icons {
+  color: #0f172a !important;
+}
+.address-shortcut {
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
 
 /* Global dark-mode mappings to support existing utility usage */
 html.dark .bg-white { background-color: var(--boxdark) !important; }

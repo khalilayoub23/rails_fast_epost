@@ -1,30 +1,27 @@
 <% align_class = rtl? ? "text-right" : "text-left" %>
 <% row_class = rtl? ? "flex-row-reverse" : "" %>
-<div class="hidden rounded-xl border border-white/10 bg-white/5 p-6 <%= align_class %>"
+<div class="hidden"
   data-task-type-form-target="section"
   data-task-types="court_filings,process_serving,notarization_and_apostille,criminal_file_photocopying,traffic_file_photocopying,enforcement_office_services,bailiff_services_coordination,land_registry_tabu_services,companies_registrar_services,filing_to_arbitration_mediation_centers,proof_of_delivery_pod">
   <h3 class="text-xl font-semibold text-white"><%= t("tasks.legal_documents_title", default: "Legal Documents") %></h3>
-  <p class="mt-2 text-lg text-slate-300"><%= t("tasks.legal_documents_help", default: "Upload legal documents, court filings, or any related PDFs.") %></p>
 
-  <div class="mt-5 space-y-4">
+  <div class="rounded-xl border border-white/10 bg-white/5 p-6 <%= align_class %>">
+    <div class="mt-12 space-y-12">
     <div>
       <%= f.label :legal_files, t("tasks.legal_files", default: "Upload Files (PDF, Images)"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
       <%= f.file_field :legal_files,
-            multiple: true,
-            accept: "application/pdf,image/*",
-            class: "block w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-base text-slate-200 file:mr-4 file:rounded-lg file:border-0 file:bg-yellow-400 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:bg-yellow-300" %>
-      <p class="mt-2 text-base text-slate-400"><%= t("tasks.legal_files_help", default: "Select one or more files to upload (PDFs, images)") %></p>
+        multiple: true,
+        accept: "application/pdf,image/*",
+        class: "block w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-base text-slate-200 file:mr-4 file:rounded-lg file:border-0 file:bg-yellow-400 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:bg-yellow-300" %>
     </div>
 
-        <div class="hidden rounded-lg border border-white/10 bg-white/5 p-4"
+        <div class="hidden rounded-lg border border-white/10 bg-white/5 p-4 mt-12"
           data-controller="poa-toggle"
-          data-poa-toggle-filename-value="<%= @poa_templates&.first&.name.to_s %>"
           data-task-type-form-target="section"
           data-task-types="criminal_file_photocopying,traffic_file_photocopying,document_retrieval_from_government_agencies,court_filings,process_serving,filing_to_arbitration_mediation_centers,notarization_and_apostille">
       <div class="flex items-center justify-between gap-3 <%= row_class %>">
         <div class="flex items-center gap-3 <%= rtl? ? 'flex-row-reverse text-right' : '' %>">
-          <span class="text-sm font-semibold text-slate-200"><%= t("tasks.power_of_attorney", default: "Power of Attorney Template") %></span>
-          <span class="text-sm text-slate-300" data-poa-toggle-target="filename"></span>
+          <span class="text-sm font-semibold text-slate-200"><%= t("tasks.power_of_attorney", default: "Power of Attorney") %></span>
         </div>
         <div class="flex items-center gap-3 <%= rtl? ? 'flex-row-reverse' : '' %>">
           <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-300" data-poa-toggle-target="status"></span>

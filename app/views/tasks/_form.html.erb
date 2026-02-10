@@ -135,7 +135,18 @@
 
         <div>
           <%= f.label :requested_pickup_time, t("tasks.requested_pickup_time", default: "Requested pickup time"), class: "mb-2 block text-lg font-semibold text-slate-200" %>
-          <%= f.datetime_field :requested_pickup_time, class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+          <div data-controller="delivery-flatpickr" class="relative">
+            <%= text_field_tag "requested_pickup_time_picker",
+              (task.requested_pickup_time.present? ? task.requested_pickup_time.strftime("%Y-%m-%d %H:%M") : nil),
+              data: { "delivery-flatpickr-target" => "input" },
+              class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 pr-12 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+
+            <button type="button" aria-label="Open calendar" data-action="click->delivery-flatpickr#open" class="absolute right-3 top-1/2 -translate-y-1/2 transform text-slate-300 hover:text-yellow-300">
+              <span class="material-icons">calendar_month</span>
+            </button>
+
+            <%= f.hidden_field :requested_pickup_time, data: { "delivery-flatpickr-target" => "hidden" }, required: false %>
+          </div>
         </div>
       </div>
     </div>
@@ -239,22 +250,22 @@
       <div data-task-type-form-target="section"
            data-task-types="<%= delivery_location_types %>">
         <div class="mb-2 flex items-center justify-between gap-3 <%= rtl? ? 'flex-row-reverse' : '' %>">
-          <%= f.label :start, t("tasks.start", default: "Pickup location"), class: "text-lg font-semibold text-slate-200" %>
+          <%= f.label :start, safe_join([t("tasks.start", default: "Pickup location"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "text-lg font-semibold text-slate-200" %>
           <div class="flex items-center gap-2 <%= rtl? ? 'flex-row-reverse' : '' %>">
-            <button type="button"
+                <button type="button"
                     title="<%= t("tasks.home_address", default: "Home") %>"
                     data-action="click->address-shortcuts#fill"
                     data-address-shortcuts-field-param="pickup"
                     data-address-shortcuts-type-param="home"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-yellow-400 hover:text-yellow-300">
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-yellow-400 hover:text-yellow-300 address-shortcut">
               <span class="material-icons text-base">home</span>
             </button>
-            <button type="button"
+                <button type="button"
                     title="<%= t("tasks.office_address", default: "Office") %>"
                     data-action="click->address-shortcuts#fill"
                     data-address-shortcuts-field-param="pickup"
                     data-address-shortcuts-type-param="office"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-yellow-400 hover:text-yellow-300">
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-yellow-400 hover:text-yellow-300 address-shortcut">
               <span class="material-icons text-base">business</span>
             </button>
           </div>
@@ -267,22 +278,22 @@
       <div data-task-type-form-target="section"
          data-task-types="court_filings,process_serving,document_retrieval_from_government_agencies,inter_office_courier,notarization_and_apostille,criminal_file_photocopying,traffic_file_photocopying,enforcement_office_services,pickup_services,ecommerce_delivery,ecommerce_pickup,cash_on_delivery_cod,delivery_and_pickup,payment_collection,bailiff_services_coordination,land_registry_tabu_services,companies_registrar_services,filing_to_arbitration_mediation_centers,same_day_express_delivery,warehousing_temporary_storage,proof_of_delivery_pod">
         <div class="mb-2 flex items-center justify-between gap-3 <%= rtl? ? 'flex-row-reverse' : '' %>">
-          <%= f.label :target, t("tasks.target", default: "Drop-off location"), class: "text-lg font-semibold text-slate-200" %>
+          <%= f.label :target, safe_join([t("tasks.target", default: "Drop-off location"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "text-lg font-semibold text-slate-200" %>
           <div class="flex items-center gap-2 <%= rtl? ? 'flex-row-reverse' : '' %>">
-            <button type="button"
+                <button type="button"
                     title="<%= t("tasks.home_address", default: "Home") %>"
                     data-action="click->address-shortcuts#fill"
                     data-address-shortcuts-field-param="dropoff"
                     data-address-shortcuts-type-param="home"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-yellow-400 hover:text-yellow-300">
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-yellow-400 hover:text-yellow-300 address-shortcut">
               <span class="material-icons text-base">home</span>
             </button>
-            <button type="button"
+                <button type="button"
                     title="<%= t("tasks.office_address", default: "Office") %>"
                     data-action="click->address-shortcuts#fill"
                     data-address-shortcuts-field-param="dropoff"
                     data-address-shortcuts-type-param="office"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-yellow-400 hover:text-yellow-300">
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-yellow-400 hover:text-yellow-300 address-shortcut">
               <span class="material-icons text-base">business</span>
             </button>
           </div>
@@ -296,9 +307,18 @@
         <div data-task-type-form-target="section"
           data-task-types="court_filings,process_serving,document_retrieval_from_government_agencies,inter_office_courier,notarization_and_apostille,criminal_file_photocopying,traffic_file_photocopying,enforcement_office_services,pickup_services,ecommerce_delivery,ecommerce_pickup,cash_on_delivery_cod,delivery_and_pickup,payment_collection,bailiff_services_coordination,land_registry_tabu_services,companies_registrar_services,filing_to_arbitration_mediation_centers,same_day_express_delivery,warehousing_temporary_storage,proof_of_delivery_pod">
       <%= f.label :delivery_time, safe_join([t("tasks.delivery_time", default: "Delivery time"), content_tag(:span, "*", class: "text-yellow-400 ml-1")]), class: "mb-2 block text-lg font-semibold text-slate-200" %>
-      <%= f.datetime_field :delivery_time,
-        data: { priority_auto_target: "deliveryTime", action: "input->priority-auto#update change->priority-auto#update", required_when_visible: true },
-        class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+      <div data-controller="delivery-flatpickr" class="relative">
+        <%= text_field_tag "delivery_time_picker",
+          (task.delivery_time.present? ? task.delivery_time.strftime("%Y-%m-%d %H:%M") : nil),
+          data: { "delivery-flatpickr-target" => "input" },
+          class: "w-full rounded-lg border border-white/10 bg-white/5 py-4 px-4 pr-12 text-lg text-white focus:border-yellow-400 focus:ring-yellow-400" %>
+
+        <button type="button" aria-label="Open calendar" data-action="click->delivery-flatpickr#open" class="absolute right-3 top-1/2 -translate-y-1/2 transform text-slate-300 hover:text-yellow-300">
+          <span class="material-icons">calendar_month</span>
+        </button>
+
+        <%= f.hidden_field :delivery_time, data: { "delivery-flatpickr-target" => "hidden", priority_auto_target: "deliveryTime" }, required: false %>
+      </div>
     </div>
 
         <div data-task-type-form-target="section"

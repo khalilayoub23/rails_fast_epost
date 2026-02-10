@@ -1,0 +1,101 @@
+/* Flatpickr overrides matching provided screenshot: white calendar with blue accent */
+.fastpost-flatpickr {
+  --fp-bg: #ffffff;
+  --fp-border: rgba(0,0,0,0.08);
+  --fp-accent: #2b9bf3; /* blue selected */
+  --fp-text: #0f172a; /* dark text */
+  --fp-muted: #94a3b8;
+}
+
+.fastpost-flatpickr.flatpickr-calendar {
+  background: var(--fp-bg) !important;
+  color: var(--fp-text) !important;
+  border: 1px solid var(--fp-border) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 20px rgba(2,6,23,0.12) !important;
+  padding: 8px !important;
+}
+
+.fastpost-flatpickr .flatpickr-months {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+}
+
+.fastpost-flatpickr .flatpickr-current-month {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fp-text) !important;
+}
+
+.fastpost-flatpickr .flatpickr-prev-month,
+.fastpost-flatpickr .flatpickr-next-month {
+  color: var(--fp-text) !important;
+  padding: 6px;
+}
+
+.fastpost-flatpickr .flatpickr-weekdays {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.fastpost-flatpickr .flatpickr-weekday {
+  color: #8b98a8 !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fastpost-flatpickr .flatpickr-day {
+  color: var(--fp-text) !important;
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  border-radius: 50% !important;
+  margin: 3px !important;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.fastpost-flatpickr .flatpickr-day:hover {
+  background: rgba(43,155,243,0.08) !important;
+}
+
+.fastpost-flatpickr .flatpickr-day.today {
+  box-shadow: inset 0 0 0 1px rgba(43,155,243,0.12);
+}
+
+.fastpost-flatpickr .flatpickr-day.selected,
+.fastpost-flatpickr .flatpickr-day.startRange,
+.fastpost-flatpickr .flatpickr-day.endRange {
+  background: var(--fp-accent) !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+}
+
+.fastpost-flatpickr .flatpickr-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.fastpost-flatpickr .flatpickr-time input {
+  color: var(--fp-text) !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 6px 8px !important;
+  border-radius: 4px !important;
+  font-weight: 600;
+}
+
+.fastpost-flatpickr .flatpickr-am-pm {
+  color: var(--fp-text) !important;
+}
+
+.fastpost-flatpickr .flatpickr-input {
+  background: transparent;
+}
+
+.fastpost-flatpickr.flatpickr-calendar.open {
+  max-width: 260px;
+}

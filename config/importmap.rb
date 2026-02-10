@@ -13,3 +13,6 @@ pin "google_autocomplete", to: "google_autocomplete.js"
 
 # Advanced features
 pin "sortablejs" # @1.15.6
+
+# flatpickr for datetime picker UI
+pin "flatpickr", to: "https://ga.jspm.io/npm:flatpickr@4.6.13/dist/esm/index.js"
