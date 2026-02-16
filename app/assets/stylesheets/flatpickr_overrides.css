@@ -124,17 +124,26 @@
   overflow: visible !important;
 }
 
-/* Force fixed positioning as a robust fallback so the calendar cannot be clipped
-   by overflow:hidden ancestors. This anchors it to the viewport; coordinates
-   are conservative so it appears near the top-left where inputs are located.
-   If you prefer a different placement we can compute coordinates via JS (CSP
-   may block inline style updates). */
+
+/* Position the calendar absolutely near the input (appendTo: document.body
+   is used), so the calendar will avoid clipping but still appear next to the
+   triggering field. Fixed positioning caused layout issues with the time
+   picker in some RTL/dashboard layouts, so prefer absolute and let flatpickr
+   compute coordinates. */
 .fastpost-flatpickr.flatpickr-calendar {
-  position: fixed !important;
-  top: 120px !important;
-  left: 48px !important;
+  position: absolute !important;
   z-index: 99999 !important;
 }
+
+/* Prevent inner clipping of time-picker column or day grid */
+.fastpost-flatpickr .flatpickr-inner,
+.fastpost-flatpickr .flatpickr-days,
+.fastpost-flatpickr .flatpickr-weekdays {
+  overflow: visible !important;
+}
+
+/* No forced min-width or time-column reservation here — keep calendar layout
+   intact and rely on precise positioning to avoid clipping. */
 
 @media (max-width: 800px) {
   .fastpost-flatpickr.flatpickr-calendar {

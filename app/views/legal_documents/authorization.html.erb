@@ -15,14 +15,14 @@
   </style>
 </head>
 <body>
-  <div class="row" style="align-items: center; justify-content: space-between;">
+  <div class="row items-center justify-between">
     <div>
       <h1>Authorization to Act on Behalf of Client</h1>
       <p class="small">Case: <strong><%= delivery.case_number %></strong></p>
     </div>
     <div class="qr">
       <% if qr_code_data_uri.present? %>
-        <img src="<%= qr_code_data_uri %>" alt="QR Verification" style="width:120px;height:120px;" />
+        <img src="<%= qr_code_data_uri %>" alt="QR Verification" class="qr-image" />
         <div class="small">Scan to verify authorization</div>
       <% end %>
     </div>

@@ -13,7 +13,7 @@
   </div>
 
   <div class="mt-6 h-3 w-full overflow-hidden rounded-full bg-white/10">
-    <div class="h-full rounded-full bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500" style="width: <%= progress[:percentage] %>%"></div>
+    <div class="h-full rounded-full bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500 <%= "progress-w-#{progress[:percentage].to_i}" %>"></div>
   </div>
 
   <div class="mt-6 grid gap-4 md:grid-cols-3">

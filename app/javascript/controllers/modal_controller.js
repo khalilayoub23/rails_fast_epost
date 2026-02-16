@@ -18,12 +18,12 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("keydown", this.escapeHandler)
-    document.body.style.overflow = ""
+    document.body.classList.remove("no-scroll")
   }
 
   open() {
     this.element.classList.remove("hidden")
-    document.body.style.overflow = "hidden"
+    document.body.classList.add("no-scroll")
     document.addEventListener("keydown", this.escapeHandler)
 
     // Animate in
@@ -60,7 +60,7 @@ export default class extends Controller {
     // Remove after animation
     setTimeout(() => {
       this.element.classList.add("hidden")
-      document.body.style.overflow = ""
+      document.body.classList.remove("no-scroll")
       document.removeEventListener("keydown", this.escapeHandler)
 
       // Dispatch event

@@ -1,56 +1,10 @@
-<footer style="padding: 2rem 0; background-color: #111827; border-top: 1px solid #374151; width: 100vw; left: 0; position: relative; box-sizing: border-box;">
+<footer class="site-footer">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
-  <style>
-    .fastepost-brand {
-      font-family: 'Kaushan Script', cursive !important;
-      font-style: normal !important;
-      font-weight: 400 !important;
-    }
-    .footer-bar {
-      width: 100vw;
-      max-width: 100vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-sizing: border-box;
-      position: relative;
-      left: 0;
-      padding: 0 1.5rem;
-    }
-    .footer-left {
-      color: #9CA3AF;
-      font-size: 1rem;
-      white-space: nowrap;
-      text-align: left;
-    }
-    .footer-right {
-      color: #FBBF24;
-      font-size: 1.25rem;
-      white-space: nowrap;
-      text-align: right;
-    }
-    @media (max-width: 640px) {
-      .footer-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 0 0.5rem;
-      }
-      .footer-left, .footer-right {
-        text-align: left;
-        font-size: 1rem;
-        margin-bottom: 0.25rem;
-      }
-      .footer-right {
-        color: #FBBF24;
-        font-size: 1.1rem;
-      }
-    }
-  </style>
   <div class="footer-bar">
     <div class="footer-left">
-      <%= link_to "#terms", style: "color: #9CA3AF; text-decoration: none;" do %>
+      <%= link_to "#terms", class: "footer-link" do %>
         <span><%= t("footer_terms") %></span>
       <% end %>
     </div>
