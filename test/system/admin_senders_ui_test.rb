@@ -3,28 +3,6 @@ require "securerandom"
 
 class AdminSendersUiTest < ApplicationSystemTestCase
   setup do
-    ActiveRecord::Base.connection.disable_referential_integrity do
-      CarrierMembership.delete_all
-      AuditLog.delete_all
-      Cart.delete_all
-      Delivery.delete_all
-      SignatureEvent.delete_all
-
-      TrackingEvent.delete_all
-      Remark.delete_all
-      ProofUpload.delete_all
-      Form.delete_all
-      CostCalc.delete_all
-      CarrierPayout.delete_all
-      CarrierRating.delete_all
-      CartItem.delete_all
-      PaymentsTask.delete_all
-      Payment.delete_all
-      Task.delete_all
-      Sender.delete_all
-      User.delete_all
-    end
-
     @admin = User.create!(
       email: "admin-#{SecureRandom.hex(4)}@example.com",
       password: "password",

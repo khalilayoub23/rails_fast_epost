@@ -3,7 +3,6 @@ require "securerandom"
 
 class PaymentsUiTest < ApplicationSystemTestCase
   setup do
-    cleanup_records
     build_payment_fixture
   end
 
@@ -30,23 +29,10 @@ class PaymentsUiTest < ApplicationSystemTestCase
     visit new_payment_path
 
     assert_current_path root_path
-    assert_selector "#alert-flash", visible: :all
+    assert_text I18n.t("messages.unauthorized", default: "You are not authorized to perform this action.")
   end
 
   private
-
-  def cleanup_records
-    Payment.delete_all
-    ProofUpload.delete_all
-    CarrierPayout.delete_all
-    Task.delete_all
-    CarrierMembership.delete_all
-    Messenger.delete_all
-    Carrier.delete_all
-    Sender.delete_all
-    Customer.delete_all
-    User.delete_all
-  end
 
   def build_payment_fixture
     @manager = User.create!(

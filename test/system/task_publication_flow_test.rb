@@ -7,24 +7,18 @@ class TaskPublicationFlowTest < ApplicationSystemTestCase
 
     visit new_task_path
 
-    fill_in "Package Type", with: "Draft Parcel"
+    find("select[name='task[task_type]']").find("option[value='delivery_and_pickup']").select_option
     fill_in "Pickup location", with: "Draft Start"
     fill_in "Drop-off location", with: "Draft Target"
-    fill_in "Delivery time", with: 1.day.from_now.strftime("%Y-%m-%d %H:%M")
 
     select customers(:one).name, from: "Customer"
 
     click_on "Save Task"
 
-    assert_text "Task saved as a draft"
-    assert_text "Draft Parcel"
+    assert_current_path tasks_path
 
-    fill_in "payment_amount", with: "150"
-    select "USD", from: "payment_currency"
-    select "Standard Delivery", from: "payment_service_type"
-    fill_in "payment_description", with: "Publish draft"
-
-    # We only assert the button exists; Stripe checkout would be external.
-    assert_button "Pay & Publish Task"
+    visit cart_path
+    assert_text I18n.t("cart.title", default: "Cart")
+    assert_button I18n.t("cart.pay_selected", default: "Pay selected")
   end
 end

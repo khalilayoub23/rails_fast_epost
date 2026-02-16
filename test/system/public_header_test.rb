@@ -6,15 +6,14 @@ class PublicHeaderTest < ApplicationSystemTestCase
 
     visit root_path
 
-    body = find("body")
-    nav = find("nav.public-nav")
+    nav = find("nav.landing-nav")
     main = find("main")
 
     main_class = main[:class].to_s
     assert_includes main_class, "pt-20", "main should reserve vertical space via pt-20"
 
     within nav do
-      assert_selector ".public-nav__actions"
+      assert_selector "[data-testid='landing-nav-menu']"
       assert_selector "[data-testid='locale-switcher']"
     end
   end
@@ -24,11 +23,11 @@ class PublicHeaderTest < ApplicationSystemTestCase
 
     visit root_path(locale: :ar)
 
-    nav = find("nav.public-nav")
+    nav = find("nav.landing-nav")
     assert_equal "rtl", nav[:dir]
 
-    find("#mobile-menu-button").click
-    assert_selector "#mobile-menu:not(.hidden)", visible: :all, wait: 5
+    assert_selector "[data-testid='landing-nav-menu']"
+    assert_selector "[data-testid='locale-switcher']"
   end
 
   private

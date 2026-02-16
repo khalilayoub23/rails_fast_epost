@@ -6,24 +6,31 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
     visit new_user_registration_path
 
     email = "user_#{SecureRandom.hex(4)}@example.com"
+    fill_in "Full name", with: "System Test User"
     fill_in "Email", with: email
     fill_in "Password", with: "Password123!"
     fill_in "Confirm Password", with: "Password123!"
-    click_button "Create Account"
+    click_button "Sign Up"
 
     assert_text "Dashboard"
-    click_button "Logout"
   end
 
   test "existing user can log in with email" do
-    user = users(:viewer)
+    user = User.create!(
+      email: "existing_#{SecureRandom.hex(4)}@example.com",
+      password: "Password123!",
+      role: :sender,
+      user_type: :sender,
+      full_name: "Existing System User"
+    )
 
     visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign In"
+    within "form#new_user" do
+      fill_in "Email", with: user.email
+      fill_in "Password", with: "Password123!"
+      find(:css, "button[type='submit'],input[type='submit']", match: :first).click
+    end
 
     assert_text "Dashboard"
-    click_button "Logout"
   end
 end

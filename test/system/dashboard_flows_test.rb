@@ -7,7 +7,7 @@ class DashboardFlowsTest < ApplicationSystemTestCase
 
     assert_selector "#dashboard_kpis .group", minimum: 4
     assert_selector "h3", text: I18n.t("dashboard.recent_payments", default: "Payments")
-    assert_selector "form[action='#{dashboard_path}'][method='get'] select[name='payment_filter[status]']"
+    assert_no_selector "form[action='#{dashboard_path}'][method='get'] select[name='payment_filter[status]']"
     assert_selector "h3", text: I18n.t("dashboard.recent_tasks", default: "Tasks")
     assert_selector "h3", text: I18n.t("deliveries.index.title", default: "Deliveries")
   end
@@ -17,8 +17,8 @@ class DashboardFlowsTest < ApplicationSystemTestCase
     visit dashboard_path
 
     assert_selector "#dashboard_kpis .group", minimum: 4
-    assert_selector "form[action='#{dashboard_path}'][method='get'] select[name='task_filter[status]']"
-    assert_selector "form[action='#{dashboard_path}'][method='get'] select[name='delivery_filter[status]']"
+    assert_no_selector "form[action='#{dashboard_path}'][method='get'] select[name='task_filter[status]']"
+    assert_no_selector "form[action='#{dashboard_path}'][method='get'] select[name='delivery_filter[status]']"
     assert_selector "h3", text: I18n.t("dashboard.recent_tasks", default: "Tasks")
   end
 

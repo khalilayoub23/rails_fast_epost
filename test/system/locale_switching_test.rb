@@ -53,12 +53,14 @@ class LocaleSwitchingTest < ApplicationSystemTestCase
   test "locale switcher shows all language options" do
     visit root_path(locale: :en)
 
-    within "[data-controller='dropdown'][data-dropdown-hover-value='true']" do
-      find("button[data-action*='dropdown#toggle']", match: :first).click
+    within "[data-testid='locale-switcher']" do
+      find("button[aria-label='Language']").click
 
-      %w[en he ar ru].each do |locale|
-        assert_selector "a[href*='locale=#{locale}']", visible: :all
-      end
+      assert_selector "a[role='menuitem']", minimum: 4, visible: :all
+      assert_text "English"
+      assert_text "עברית"
+      assert_text "العربية"
+      assert_text "Русский"
     end
   end
 

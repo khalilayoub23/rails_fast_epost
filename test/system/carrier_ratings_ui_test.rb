@@ -3,9 +3,6 @@ require "securerandom"
 
 class CarrierRatingsUiTest < ApplicationSystemTestCase
   setup do
-    CarrierMembership.delete_all
-    ProofUpload.delete_all
-    User.delete_all
     @admin = User.create!(
       email: "admin-#{SecureRandom.hex(4)}@example.com",
       password: "password",
@@ -88,14 +85,11 @@ class CarrierRatingsUiTest < ApplicationSystemTestCase
     assert_selector "tbody tr", minimum: 2
   end
 
-  test "carriers index shows empty state when there are no carriers" do
-    purge_carrier_dependencies
-    assert_equal 0, Carrier.count
-
+  test "carriers index shows empty state for unmatched search" do
     authenticate_as(@admin)
-    visit carriers_path
+    visit carriers_path(q: SecureRandom.hex(12))
 
-    assert_text "No carriers have been added yet."
+    assert_text "No matches"
   end
 
   private
@@ -152,17 +146,5 @@ class CarrierRatingsUiTest < ApplicationSystemTestCase
 
   def formatted_score(value)
     format("%.2f", value.to_f)
-  end
-
-  def purge_carrier_dependencies
-    CarrierRating.delete_all
-    CarrierPayout.delete_all
-    Task.delete_all
-    Document.delete_all
-    FormTemplate.delete_all
-    Phone.delete_all
-    Preference.delete_all
-    Messenger.update_all(carrier_id: nil)
-    Carrier.delete_all
   end
 end

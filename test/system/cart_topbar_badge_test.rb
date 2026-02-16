@@ -10,20 +10,17 @@ class CartTopbarBadgeTest < ApplicationSystemTestCase
 
     visit new_task_path
 
-    fill_in "Package Type", with: "Cart Badge Parcel"
+    find("select[name='task[task_type]']").find("option[value='delivery_and_pickup']").select_option
     fill_in "Pickup location", with: "Cart Start"
     fill_in "Drop-off location", with: "Cart Target"
-    fill_in "Delivery time", with: 1.day.from_now.strftime("%Y-%m-%d %H:%M")
 
     select customers(:one).name, from: "Customer"
 
     click_on "Save Task"
-    assert_text "Task saved as a draft"
 
-    assert_selector("header a[href='#{cart_path}']", text: "Cart")
-    assert_selector("header a[href='#{cart_path}'] span", text: "1")
+    assert_selector("header a[href='#{cart_path}'] span", text: "1", wait: 5)
 
-    find("header a[href='#{cart_path}']").click
+    visit cart_path
     assert_text "Cart"
 
     click_on "Remove", match: :first

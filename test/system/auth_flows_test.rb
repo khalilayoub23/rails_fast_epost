@@ -3,9 +3,8 @@ require "securerandom"
 
 class AuthFlowsTest < ApplicationSystemTestCase
   def setup
-    User.destroy_all
-    @viewer = User.create!(email: "viewer@example.com", password: "password", role: "sender", user_type: :sender)
-    @admin = User.create!(email: "admin@example.com", password: "password", role: "admin")
+    @viewer = User.create!(email: "viewer-#{SecureRandom.hex(4)}@example.com", password: "password", role: "sender", user_type: :sender)
+    @admin = User.create!(email: "admin-#{SecureRandom.hex(4)}@example.com", password: "password", role: "admin")
   end
 
   test "viewer lands on dashboard after email login" do
@@ -68,7 +67,4 @@ class AuthFlowsTest < ApplicationSystemTestCase
   def submit_devise_form
     find(:css, "button[type='submit'],input[type='submit']", match: :first).click
   end
-
-  def setup_fixtures(*); end
-  def teardown_fixtures(*); end
 end
