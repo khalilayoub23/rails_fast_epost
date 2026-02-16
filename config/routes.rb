@@ -269,6 +269,5 @@ Rails.application.routes.draw do
   end
 
   # User Profile and Settings
-  resource :profile, only: [ :show ]
   resources :settings, only: [ :index ]
 end

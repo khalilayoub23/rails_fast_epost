@@ -331,7 +331,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
       filing_to_arbitration_mediation_centers
       proof_of_delivery_pod
     ].include?(task_type)
-      params[:legal_files] = [fixture_file_upload("signature.png", "image/png")]
+      params[:legal_files] = [ fixture_file_upload("signature.png", "image/png") ]
     end
 
     params[:task_type] = task_type

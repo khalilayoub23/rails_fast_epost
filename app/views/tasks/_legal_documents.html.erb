@@ -28,7 +28,7 @@
           <label class="relative inline-flex items-center cursor-pointer">
             <span class="sr-only"><%= t("tasks.power_of_attorney", default: "Power of Attorney (signed)") %></span>
             <%= check_box_tag "poa_enabled", "1",
-                  %w[court_filings process_serving document_retrieval_from_government_agencies].include?(task.task_type),
+              Task::POA_MANDATORY_TASK_TYPES.include?(task.task_type),
                   class: "sr-only",
                   data: { poa_toggle_target: "toggle", action: "change->poa-toggle#toggle" } %>
             <span class="h-6 w-11 rounded-full border border-white/10 bg-white/5 shadow-inner transition-colors"></span>

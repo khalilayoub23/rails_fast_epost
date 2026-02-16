@@ -55,4 +55,50 @@ class TaskPaymentMaterializerTest < ActiveSupport::TestCase
       TaskPaymentMaterializer.new(payment: payment).call
     end
   end
+
+  test "attaches payment to existing task when task_id metadata is present" do
+    task = Task.create!(
+      customer: @customer,
+      carrier: @carrier,
+      task_type: "delivery_and_pickup",
+      package_type: "Docs",
+      start: "Jerusalem",
+      target: "Haifa",
+      delivery_time: 1.day.from_now,
+      status: :postponed,
+      barcode: "MAT-EXISTING-1"
+    )
+
+    payment = Payment.create!(
+      provider: "stripe",
+      amount_cents: 1500,
+      currency: "USD",
+      payable: @customer,
+      category: :service_fee,
+      payment_type: :per_task,
+      metadata: { "task_id" => task.id }
+    )
+
+    materialized = TaskPaymentMaterializer.new(payment: payment).call
+
+    assert_equal task.id, materialized.id
+    assert_equal task.id, payment.reload.task_id
+    assert materialized.published?
+  end
+
+  test "normalizes status enum names from snapshot" do
+    snapshot = @snapshot.merge("status" => "in_transit")
+    payment = Payment.create!(
+      provider: "stripe",
+      amount_cents: 1500,
+      currency: "USD",
+      payable: @customer,
+      category: :service_fee,
+      payment_type: :per_task,
+      metadata: { "task_snapshot" => snapshot }
+    )
+
+    task = TaskPaymentMaterializer.new(payment: payment).call
+    assert_equal "in_transit", task.status
+  end
 end

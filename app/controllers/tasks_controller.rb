@@ -95,6 +95,18 @@ class TasksController < ApplicationController
       authorize task
       assign_default_carrier(task)
       assign_lawyer_from_creator(task)
+      task.created_by = current_user
+      task.status = :postponed unless task.published?
+      task.delivery_time ||= Time.current
+      task.barcode ||= Task.generate_unique_barcode
+
+      unless task.save(validate: false)
+        @task = task
+        @payment_details = default_payment_details(task).merge(payment_form_params.to_h)
+        flash.now[:alert] = t("tasks.form_error", default: "Please correct the highlighted errors.")
+        load_poa_templates
+        render :new, status: :unprocessable_entity and return
+      end
 
       payment_details = default_payment_details(task).merge(payment_form_params.to_h)
       amount_cents = parse_amount_cents(payment_details["amount"])
@@ -103,6 +115,7 @@ class TasksController < ApplicationController
       cancel_token = SecureRandom.hex(12)
       task_snapshot = serialize_task_snapshot(task)
       metadata = {
+        "task_id" => task.id,
         "task_snapshot" => task_snapshot,
         "task_form" => task_snapshot,
         "payment_form" => payment_details,

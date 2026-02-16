@@ -56,6 +56,12 @@ class Task < ApplicationRecord
     filing_to_arbitration_mediation_centers
   ].freeze
 
+  POA_MANDATORY_TASK_TYPES = %w[
+    court_filings
+    process_serving
+    document_retrieval_from_government_agencies
+  ].freeze
+
   FILE_UPLOAD_REQUIRED_TYPES = %w[
     court_filings
     process_serving
@@ -248,7 +254,7 @@ class Task < ApplicationRecord
   end
 
   def poa_mandatory_enabled
-    return unless %w[court_filings process_serving document_retrieval_from_government_agencies].include?(task_type)
+    return unless POA_MANDATORY_TASK_TYPES.include?(task_type)
     return if poa_enabled?
 
     errors.add(:poa_enabled, :blank)

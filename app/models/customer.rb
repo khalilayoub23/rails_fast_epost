@@ -55,7 +55,7 @@ class Customer < ApplicationRecord
   private
 
   def compose_name_from_parts
-    parts = [@first_name, @last_name].map { |part| part.to_s.strip }.reject(&:empty?)
+    parts = [ @first_name, @last_name ].map { |part| part.to_s.strip }.reject(&:empty?)
     return if parts.empty?
 
     self.name = parts.join(" ")
