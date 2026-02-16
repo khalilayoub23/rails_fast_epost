@@ -25,7 +25,8 @@
   <div class="border-b border-white/10 <%= header_padding %>">
     <h1 class="text-4xl font-bold tracking-tight text-white"><%= title %></h1>
     <% if description.present? %>
-      <p class="mt-2 text-lg text-slate-300"><%= description.respond_to?(:html_safe) ? description.html_safe : description %></p>
+      <% safe_description = description.is_a?(ActiveSupport::SafeBuffer) || (description.respond_to?(:html_safe?) && description.html_safe?) %>
+      <p class="mt-2 text-lg text-slate-300"><%= safe_description ? description : description.to_s %></p>
     <% end %>
   </div>
   <div class="<%= body_padding %>">

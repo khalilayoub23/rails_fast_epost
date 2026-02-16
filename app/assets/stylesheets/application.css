@@ -1033,11 +1033,14 @@ select option:disabled {
 /* Legal document utilities (PDF/print friendly) */
 .legal-justify { margin-top: 15px; text-align: justify; }
 .legal-center { text-align: center; margin-bottom: 30px; }
+.legal-my-20 { margin: 20px 0; }
 .mb-60 { margin-bottom: 60px; }
 .mt-10 { margin-top: 10px; }
 .mt-40 { margin-top: 40px; }
 .mt-60 { margin-top: 60px; }
 .signature-line--center { max-width: 400px; margin: 0 auto; }
+
+.logo-svg { display: block; }
 
 /* QR image sizing used in authorization documents */
 .qr-image { width: 120px; height: 120px; display: block; }

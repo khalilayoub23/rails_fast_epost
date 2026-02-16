@@ -28,9 +28,9 @@
   <%# Load Tailwind first, then fonts, then conditionally RTL support, then our application overrides and icons (order matters) %>
   <% unless Rails.env.test? %>
     <% if rtl? %>
-      <%= stylesheet_link_tag "tailwind", "fonts", "rtl", "application", "flatpickr_overrides", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
+      <%= stylesheet_link_tag "tailwind", "fonts", "rtl", "application", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
     <% else %>
-      <%= stylesheet_link_tag "tailwind", "fonts", "application", "flatpickr_overrides", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
+      <%= stylesheet_link_tag "tailwind", "fonts", "application", "dashboard-theme", "material-icons", "data-turbo-track": "reload" %>
     <% end %>
     <%= javascript_importmap_tags %>
   <% end %>
