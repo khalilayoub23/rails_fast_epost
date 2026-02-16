@@ -1,5 +1,5 @@
 name: Setup Rails environment
-description: Checkout repository, install optional apt packages, and configure Ruby with Bundler cache.
+description: Install optional apt packages and configure Ruby with Bundler cache.
 
 inputs:
   apt-packages:
@@ -10,9 +10,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
     - name: Install apt packages
       if: ${{ inputs.apt-packages != '' }}
       shell: bash

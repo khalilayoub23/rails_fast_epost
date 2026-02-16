@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Rails
         uses: ./.github/actions/setup-rails
         with:
@@ -22,6 +25,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Rails
         uses: ./.github/actions/setup-rails
         with:
@@ -33,6 +39,9 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Rails
         uses: ./.github/actions/setup-rails
         with:
@@ -61,6 +70,9 @@ jobs:
       #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Rails
         uses: ./.github/actions/setup-rails
         with:
@@ -87,6 +99,9 @@ jobs:
         options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Rails
         uses: ./.github/actions/setup-rails
         with:
@@ -129,6 +144,9 @@ jobs:
     name: Dependency audit
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Rails
         uses: ./.github/actions/setup-rails
         with:
