@@ -795,6 +795,20 @@ ar:
     reason: "السبب"
     optional: "اختياري"
     submit_refund: "إرسال الاسترداد"
+    
+  # Tasks
+  tasks:
+    task_label: "المهمة"
+    show_details: "عرض التفاصيل"
+    created: "تم الإنشاء"
+    barcode: "باركود"
+    distance: "المسافة"
+    published: "منشور"
+    uploaded_ago: "تم الرفع قبل %{time}"
+    pending: "قيد الانتظار"
+    unassigned: "غير معين"
+    scheduled: "مجدول %{time}"
+    required_fields_note: "الحقول الإلزامية موسومة بـ %{asterisk}."
 
   # Carriers - شركات النقل
   carriers:

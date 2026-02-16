@@ -1,6 +1,6 @@
 ENV["RAILS_ENV"] ||= "test"
 # Ensure Stripe webhook secret is present as early as possible so initializers and parallel test workers inherit it
-ENV['STRIPE_WEBHOOK_SECRET'] ||= 'whsec_test'
+ENV["STRIPE_WEBHOOK_SECRET"] ||= "whsec_test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/mock"

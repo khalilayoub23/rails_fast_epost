@@ -31,7 +31,27 @@ class TaskPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.present? && (admin? || manager?)
+    return false unless user.present?
+
+    # Admins and managers can always destroy
+    return true if admin? || manager?
+
+    # Allow lawyers to delete tasks they created, but only when the task
+    # is currently in their cart and not assigned to a carrier/messenger
+    if user.lawyer?
+      # ensure the task was created by this user
+      return false unless record.created_by_id == user.id
+
+      # if task is assigned to carrier/messenger or already in transit, disallow
+      return false if record.messenger_id.present? || record.carrier_id.present? || record.status == "in_transit"
+
+      # check cart membership without creating a cart unnecessarily
+      cart = Cart.find_by(user: user)
+      return false unless cart
+      return cart.tasks.where(id: record.id).exists?
+    end
+
+    false
   end
 
   class Scope < Scope

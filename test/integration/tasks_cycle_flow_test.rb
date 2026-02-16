@@ -37,7 +37,7 @@ class TasksCycleFlowTest < ActionDispatch::IntegrationTest
     # ensure cart has 3 items listed
     get cart_path
     assert_response :success
-    assert_select 'table tbody tr', 3
+    assert_select "table tbody tr", 3
 
     # Simulate a successful payment for the first two tasks
     payment = Payment.create!(
@@ -47,11 +47,11 @@ class TasksCycleFlowTest < ActionDispatch::IntegrationTest
       payment_type: :lump_sum,
       amount_cents: 2000,
       currency: "ILS",
-      metadata: { "task_ids" => [tasks[0].id, tasks[1].id] },
+      metadata: { "task_ids" => [ tasks[0].id, tasks[1].id ] },
       gateway_status: :succeeded,
       checkout_session_id: "cs_paid"
     )
-    payment.tasks << [tasks[0], tasks[1]]
+    payment.tasks << [ tasks[0], tasks[1] ]
 
     # Call the cart success endpoint to materialize the paid tasks
     get "/cart/success", params: { session_id: "cs_paid" }
@@ -61,7 +61,7 @@ class TasksCycleFlowTest < ActionDispatch::IntegrationTest
     # After payment the cart should have 1 remaining item
     get cart_path
     assert_response :success
-    assert_select 'table tbody tr', 1
+    assert_select "table tbody tr", 1
 
     # Paid tasks should be published, the leftover should remain draft
     assert tasks[0].reload.published?

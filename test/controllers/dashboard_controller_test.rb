@@ -10,7 +10,8 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     get dashboard_path
     assert_response :success
 
-    assert_select "form[action='#{dashboard_path}'] select[name='payment_filter[status]']"
-    assert_select "form[action='#{dashboard_path}'] select[name='task_filter[status]']"
+    # Filters were removed from the dashboard UI — ensure they're not present
+    assert_select "form[action='#{dashboard_path}'] select[name='payment_filter[status]']", 0
+    assert_select "form[action='#{dashboard_path}'] select[name='task_filter[status]']", 0
   end
 end

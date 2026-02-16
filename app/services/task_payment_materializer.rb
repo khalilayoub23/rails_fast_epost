@@ -64,11 +64,25 @@ class TaskPaymentMaterializer
       attrs[field] = attrs[field].presence&.to_i if attrs.key?(field)
     end
 
-    %w[failure_code status].each do |enum_field|
-      attrs[enum_field] = attrs[enum_field].presence&.to_i if attrs.key?(enum_field)
+    if attrs.key?("failure_code")
+      attrs["failure_code"] = normalize_enum_value(attrs["failure_code"], Task.failure_codes)
+    end
+
+    if attrs.key?("status")
+      attrs["status"] = normalize_enum_value(attrs["status"], Task.statuses)
     end
 
     attrs
+  end
+
+  def normalize_enum_value(value, mapping)
+    return nil if value.nil?
+    return value if value.is_a?(Integer)
+
+    key = value.to_s
+    return mapping[key] if mapping.key?(key)
+
+    Integer(key, exception: false)
   end
 
   def parse_time(value)

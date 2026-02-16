@@ -16,8 +16,8 @@
   </div>
   
   <!-- Center - Logo -->
-  <div class="brand-bar-center">
-    <%= render 'shared/logo', size: 'sm', text: true %>
+    <div class="brand-bar-center">
+    <%= render 'shared/logo', size: 'md', text: true %>
   </div>
   
   <!-- Right side - User menu or actions -->
@@ -25,8 +25,8 @@
     <% if user_signed_in? %>
       <%= link_to notifications_path, class: "btn btn-ghost btn-icon" do %>
         <span class="material-icons">notifications</span>
-        <% if @unread_notifications_count && @unread_notifications_count > 0 %>
-          <span class="badge badge-error" style="position: absolute; top: 8px; right: 8px; min-width: 18px; height: 18px; padding: 0 4px; font-size: 10px;">
+          <% if @unread_notifications_count && @unread_notifications_count > 0 %>
+          <span class="badge badge-error floating-badge">
             <%= @unread_notifications_count %>
           </span>
         <% end %>

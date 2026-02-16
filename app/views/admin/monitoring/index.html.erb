@@ -97,8 +97,10 @@
           </div>
           <div class="flex items-center">
             <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:pending] %></span>
+            <% total_tasks = @stats[:tasks][:total].to_i %>
+            <% pending_pct = total_tasks.zero? ? 0 : ((@stats[:tasks][:pending].to_f / total_tasks) * 100).round.clamp(0, 100) %>
             <div class="w-32 bg-white/10 rounded-full h-2">
-              <div class="bg-yellow-400 h-2 rounded-full" style="width: <%= (@stats[:tasks][:pending].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
+              <div class="bg-yellow-400 h-2 rounded-full <%= "progress-w-#{pending_pct}" %>"></div>
             </div>
           </div>
         </div>
@@ -110,8 +112,9 @@
           </div>
           <div class="flex items-center">
             <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:in_transit] %></span>
+            <% in_transit_pct = total_tasks.zero? ? 0 : ((@stats[:tasks][:in_transit].to_f / total_tasks) * 100).round.clamp(0, 100) %>
             <div class="w-32 bg-white/10 rounded-full h-2">
-              <div class="bg-blue-500 h-2 rounded-full" style="width: <%= (@stats[:tasks][:in_transit].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
+              <div class="bg-blue-500 h-2 rounded-full <%= "progress-w-#{in_transit_pct}" %>"></div>
             </div>
           </div>
         </div>
@@ -123,8 +126,9 @@
           </div>
           <div class="flex items-center">
             <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:delivered] %></span>
+            <% delivered_pct = total_tasks.zero? ? 0 : ((@stats[:tasks][:delivered].to_f / total_tasks) * 100).round.clamp(0, 100) %>
             <div class="w-32 bg-white/10 rounded-full h-2">
-              <div class="bg-green-500 h-2 rounded-full" style="width: <%= (@stats[:tasks][:delivered].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
+              <div class="bg-green-500 h-2 rounded-full <%= "progress-w-#{delivered_pct}" %>"></div>
             </div>
           </div>
         </div>
@@ -136,8 +140,9 @@
           </div>
           <div class="flex items-center">
             <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:failed] %></span>
+            <% failed_pct = total_tasks.zero? ? 0 : ((@stats[:tasks][:failed].to_f / total_tasks) * 100).round.clamp(0, 100) %>
             <div class="w-32 bg-white/10 rounded-full h-2">
-              <div class="bg-red-500 h-2 rounded-full" style="width: <%= (@stats[:tasks][:failed].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
+              <div class="bg-red-500 h-2 rounded-full <%= "progress-w-#{failed_pct}" %>"></div>
             </div>
           </div>
         </div>
@@ -149,8 +154,9 @@
           </div>
           <div class="flex items-center">
             <span class="text-sm font-semibold text-white mr-2"><%= @stats[:tasks][:returned] %></span>
+            <% returned_pct = total_tasks.zero? ? 0 : ((@stats[:tasks][:returned].to_f / total_tasks) * 100).round.clamp(0, 100) %>
             <div class="w-32 bg-white/10 rounded-full h-2">
-              <div class="bg-orange-500 h-2 rounded-full" style="width: <%= (@stats[:tasks][:returned].to_f / @stats[:tasks][:total] * 100).round %>%"></div>
+              <div class="bg-orange-500 h-2 rounded-full <%= "progress-w-#{returned_pct}" %>"></div>
             </div>
           </div>
         </div>

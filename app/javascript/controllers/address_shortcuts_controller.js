@@ -19,5 +19,16 @@ export default class extends Controller {
     target.value = address
     target.dispatchEvent(new Event("input", { bubbles: true }))
     target.dispatchEvent(new Event("change", { bubbles: true }))
+    // Visual selection: mark the clicked shortcut as selected and clear siblings
+    try {
+      const container = event.currentTarget.closest('[data-controller="address-shortcuts"]') || this.element
+      const buttons = container.querySelectorAll('button[data-address-shortcuts-field-param="' + field + '"]')
+      buttons.forEach(btn => btn.classList.remove('selected'))
+      if (event.currentTarget && event.currentTarget.classList) {
+        event.currentTarget.classList.add('selected')
+      }
+    } catch (e) {
+      // ignore DOM errors
+    }
   }
 }

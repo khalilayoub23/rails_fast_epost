@@ -71,7 +71,7 @@
                 <td class="px-4 py-4 align-top">
                   <div class="flex flex-col gap-2">
                     <div class="h-2 w-32 overflow-hidden rounded-full bg-white/10">
-                      <div class="h-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-500" style="width: <%= progress[:percentage] %>%"></div>
+                      <div class="h-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 <%= "progress-w-#{progress[:percentage].to_i}" %>"></div>
                     </div>
                     <p class="text-xs text-slate-400">
                       <%= progress[:completed] %> / <%= progress[:total] %> required

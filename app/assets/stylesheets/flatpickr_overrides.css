@@ -1,0 +1,154 @@
+/* Dark dashboard-style flatpickr overrides: navy background, gold accent, roomy spacing */
+.fastpost-flatpickr {
+  --fp-bg: var(--brand-bg, #0f172a);
+  --fp-border: rgba(255,255,255,0.06);
+  --fp-accent: var(--brand-gold, #f59e0b);
+  --fp-text: var(--brand-text-light, #e6eef8);
+  --fp-muted: #94a3b8;
+}
+
+.fastpost-flatpickr.flatpickr-calendar {
+  background: var(--fp-bg) !important;
+  color: var(--fp-text) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 18px 40px rgba(2,6,23,0.6) !important;
+  padding: 10px !important;
+}
+
+.fastpost-flatpickr .flatpickr-months {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+}
+
+.fastpost-flatpickr .flatpickr-current-month {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fp-text) !important;
+}
+
+.fastpost-flatpickr .flatpickr-prev-month,
+.fastpost-flatpickr .flatpickr-next-month {
+  color: var(--fp-text) !important;
+}
+
+.fastpost-flatpickr .flatpickr-weekdays {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.fastpost-flatpickr .flatpickr-weekday {
+  color: var(--fp-muted) !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fastpost-flatpickr .flatpickr-day {
+  color: var(--fp-text) !important;
+  width: 38px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  border-radius: 8px !important;
+  margin: 4px !important;
+  background: transparent !important;
+  transition: background 0.12s ease, color 0.12s ease;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+}
+
+.fastpost-flatpickr .flatpickr-day:hover {
+  background: rgba(245,158,11,0.08) !important;
+}
+
+.fastpost-flatpickr .flatpickr-day.today {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.fastpost-flatpickr .flatpickr-day.selected,
+.fastpost-flatpickr .flatpickr-day.startRange,
+.fastpost-flatpickr .flatpickr-day.endRange {
+  background: var(--fp-accent) !important;
+  color: #111 !important;
+  border-radius: 10px !important;
+}
+
+.fastpost-flatpickr .flatpickr-time {
+  margin-top: 10px;
+}
+
+.fastpost-flatpickr .flatpickr-time input {
+  color: var(--fp-text) !important;
+  background: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+  padding: 6px 8px !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.fastpost-flatpickr .flatpickr-time .flatpickr-time-separator {
+  display: inline-block !important;
+  padding: 0 6px !important;
+  color: var(--fp-text) !important;
+}
+
+.fastpost-flatpickr .flatpickr-prev-month,
+.fastpost-flatpickr .flatpickr-next-month {
+  color: var(--fp-text) !important;
+}
+
+.fastpost-flatpickr .flatpickr-input {
+  background: transparent;
+}
+
+.fastpost-flatpickr.flatpickr-calendar.open {
+  max-width: 360px;
+}
+
+/* Ensure the full day grid (including the last row) is visible and not clipped */
+.fastpost-flatpickr .flatpickr-days {
+  min-height: 260px !important;
+}
+
+.fastpost-flatpickr .flatpickr-inner,
+.fastpost-flatpickr .flatpickr-days,
+.fastpost-flatpickr .flatpickr-weekdays {
+  box-sizing: border-box !important;
+}
+
+.fastpost-flatpickr.flatpickr-calendar {
+  overflow: visible !important;
+}
+
+
+/* Position the calendar absolutely near the input (appendTo: document.body
+   is used), so the calendar will avoid clipping but still appear next to the
+   triggering field. Fixed positioning caused layout issues with the time
+   picker in some RTL/dashboard layouts, so prefer absolute and let flatpickr
+   compute coordinates. */
+.fastpost-flatpickr.flatpickr-calendar {
+  position: absolute !important;
+  z-index: 99999 !important;
+}
+
+/* Prevent inner clipping of time-picker column or day grid */
+.fastpost-flatpickr .flatpickr-inner,
+.fastpost-flatpickr .flatpickr-days,
+.fastpost-flatpickr .flatpickr-weekdays {
+  overflow: visible !important;
+}
+
+/* No forced min-width or time-column reservation here — keep calendar layout
+   intact and rely on precise positioning to avoid clipping. */
+
+@media (max-width: 800px) {
+  .fastpost-flatpickr.flatpickr-calendar {
+    left: 12px !important;
+    right: 12px !important;
+    max-width: calc(100% - 24px) !important;
+  }
+}

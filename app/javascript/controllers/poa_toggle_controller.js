@@ -37,13 +37,18 @@ export default class extends Controller {
   updateKnob(enabled) {
     const knob = this.element.querySelector("span.pointer-events-none")
     const isRtl = document.documentElement.dir === "rtl"
-    if (knob) {
-      if (isRtl) {
-        knob.style.transform = enabled ? "translateX(-1.25rem)" : "translateX(-0.25rem)"
-      } else {
-        knob.style.transform = enabled ? "translateX(1.25rem)" : "translateX(0.25rem)"
-      }
+    if (!knob) return
+
+    // Use class toggles instead of inline styles (CSP-safe)
+    if (enabled) {
+      knob.classList.remove("poa-knob-left")
+      knob.classList.add("poa-knob-right")
+    } else {
+      knob.classList.remove("poa-knob-right")
+      knob.classList.add("poa-knob-left")
     }
+
+    // RTL adjustments via CSS selectors will handle direction-specific transforms
   }
 
   updateStatus(enabled) {

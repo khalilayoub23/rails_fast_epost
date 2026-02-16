@@ -46,18 +46,18 @@
       <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div class="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-4">
           <span class="text-xs uppercase tracking-[0.2em] text-slate-400"><%= t('admin.branding.light', default: 'Light') %></span>
-          <div class="flex h-20 w-full items-center justify-center rounded-lg bg-white/95">
-            <img src="/logo.svg" alt="Light logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
-            <img src="/logo.png" alt="Light logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
-            <img src="/logo.jpg" alt="Light logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
+          <div class="flex h-20 w-full items-center justify-center rounded-lg bg-white/95" data-controller="image-fallback">
+            <img src="/logo.svg" alt="Light logo" class="max-h-16 max-w-full">
+            <img src="/logo.png" alt="Light logo" class="max-h-16 max-w-full">
+            <img src="/logo.jpg" alt="Light logo" class="max-h-16 max-w-full">
           </div>
         </div>
         <div class="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-4">
           <span class="text-xs uppercase tracking-[0.2em] text-slate-400"><%= t('admin.branding.dark', default: 'Dark') %></span>
-          <div class="flex h-20 w-full items-center justify-center rounded-lg bg-slate-900">
-            <img src="/logo-dark.svg" alt="Dark logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
-            <img src="/logo-dark.png" alt="Dark logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
-            <img src="/logo-dark.jpg" alt="Dark logo" class="max-h-16 max-w-full" onerror="this.style.display='none'">
+          <div class="flex h-20 w-full items-center justify-center rounded-lg bg-slate-900" data-controller="image-fallback">
+            <img src="/logo-dark.svg" alt="Dark logo" class="max-h-16 max-w-full">
+            <img src="/logo-dark.png" alt="Dark logo" class="max-h-16 max-w-full">
+            <img src="/logo-dark.jpg" alt="Dark logo" class="max-h-16 max-w-full">
           </div>
         </div>
       </div>
