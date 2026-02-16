@@ -10,14 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Rails
+        uses: ./.github/actions/setup-rails
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          apt-packages: build-essential git libpq-dev pkg-config
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager --no-exit-on-warn --no-exit-on-error
@@ -26,14 +22,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Rails
+        uses: ./.github/actions/setup-rails
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          apt-packages: build-essential git libpq-dev pkg-config
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: bin/importmap audit
@@ -41,14 +33,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Rails
+        uses: ./.github/actions/setup-rails
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          apt-packages: build-essential git libpq-dev pkg-config
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
@@ -73,17 +61,10 @@ jobs:
       #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Rails
+        uses: ./.github/actions/setup-rails
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          apt-packages: build-essential git libpq-dev pkg-config
 
       - name: Run unit/integration tests
         env:
@@ -106,22 +87,20 @@ jobs:
         options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config google-chrome-stable
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Rails
+        uses: ./.github/actions/setup-rails
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          apt-packages: build-essential git libpq-dev pkg-config
+
+      - name: Set up Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
 
       - name: Run system tests
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          GOOGLE_CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
         run: bin/rails db:test:prepare test:system
 
       - name: Keep screenshots from failed system tests
@@ -150,14 +129,10 @@ jobs:
     name: Dependency audit
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Rails
+        uses: ./.github/actions/setup-rails
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          apt-packages: build-essential git libpq-dev pkg-config
 
       - name: Install bundler-audit
         run: gem install bundler-audit
