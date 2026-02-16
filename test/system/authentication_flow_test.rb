@@ -6,11 +6,13 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
     visit new_user_registration_path
 
     email = "user_#{SecureRandom.hex(4)}@example.com"
-    fill_in "Full name", with: "System Test User"
-    fill_in "Email", with: email
-    fill_in "Password", with: "Password123!"
-    fill_in "Confirm Password", with: "Password123!"
-    click_button "Sign Up"
+    within "form#new_user" do
+      fill_in "Full name", with: "System Test User"
+      fill_in "Email", with: email
+      fill_in "Password", with: "Password123!"
+      fill_in "Confirm Password", with: "Password123!"
+      find(:css, "button[type='submit'],input[type='submit']", match: :first).click
+    end
 
     assert_text "Dashboard"
   end
