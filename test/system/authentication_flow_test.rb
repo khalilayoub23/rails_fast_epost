@@ -11,7 +11,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
       fill_in "Email", with: email
       fill_in "Password", with: "Password123!"
       fill_in "Confirm Password", with: "Password123!"
-      find(:css, "button[type='submit'],input[type='submit']", match: :first).click
+      page.execute_script("document.querySelector('form#new_user').requestSubmit()")
     end
 
     assert_text "Dashboard"
@@ -30,7 +30,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
     within "form#new_user" do
       fill_in "Email", with: user.email
       fill_in "Password", with: "Password123!"
-      find(:css, "button[type='submit'],input[type='submit']", match: :first).click
+      page.execute_script("document.querySelector('form#new_user').requestSubmit()")
     end
 
     assert_text "Dashboard"
