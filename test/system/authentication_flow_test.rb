@@ -11,7 +11,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
       fill_in "Email", with: email
       fill_in "Password", with: "Password123!"
       fill_in "Confirm Password", with: "Password123!"
-      page.execute_script("document.querySelector('form#new_user').requestSubmit()")
+      submit_form_with_request_submit("form#new_user")
     end
 
     assert_text "Dashboard"
@@ -30,7 +30,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
     within "form#new_user" do
       fill_in "Email", with: user.email
       fill_in "Password", with: "Password123!"
-      page.execute_script("document.querySelector('form#new_user').requestSubmit()")
+      submit_form_with_request_submit("form#new_user")
     end
 
     assert_text "Dashboard"

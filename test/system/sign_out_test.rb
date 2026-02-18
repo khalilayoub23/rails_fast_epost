@@ -8,12 +8,12 @@ class SignOutTest < ApplicationSystemTestCase
     within "form#new_user" do
       fill_in "user_email", with: user.email
       fill_in "user_password", with: "password"
-      find(:css, "button[type='submit'],input[type='submit']", match: :first).click
+      click_with_retry(:css, "button[type='submit'],input[type='submit']", match: :first)
     end
 
     assert_text "Dashboard"
 
-    find("button", text: /logout/i, match: :first).click
+    click_with_retry(:css, "button, a", text: /logout/i, match: :first)
 
     assert_current_path new_user_session_path
     assert_text "Sign in to your account"

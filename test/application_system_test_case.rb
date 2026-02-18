@@ -47,6 +47,22 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     login_as(user, scope: scope)
   end
 
+  def submit_form_with_request_submit(selector)
+    page.execute_script("document.querySelector(#{selector.to_json}).requestSubmit()")
+  end
+
+  def click_with_retry(locator_type, locator, **options)
+    attempts = 0
+
+    begin
+      find(locator_type, locator, **options).click
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnknownError
+      attempts += 1
+      retry if attempts < 3
+      raise
+    end
+  end
+
   class << self
     private
 
