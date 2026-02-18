@@ -16,14 +16,14 @@ class CartTopbarBadgeTest < ApplicationSystemTestCase
 
     select customers(:one).name, from: "Customer"
 
-    click_on "Save Task"
+    click_with_retry(:button, "Save Task")
 
     assert_selector("header a[href='#{cart_path}'] span", text: "1", wait: 5)
 
     visit cart_path
     assert_text "Cart"
 
-    click_on "Remove", match: :first
+    click_with_retry(:link_or_button, "Remove", match: :first)
     assert_text "Your cart is empty"
     assert_no_selector("header a[href='#{cart_path}'] span", text: "1", wait: 5)
   end
