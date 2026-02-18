@@ -3,23 +3,26 @@ require "application_system_test_case"
 class CartTopbarBadgeTest < ApplicationSystemTestCase
   test "topbar cart badge increments and clears" do
     sender = users(:sender)
+    task = Task.create!(
+      customer: customers(:one),
+      carrier: carriers(:one),
+      sender: senders(:sender_one),
+      created_by: sender,
+      task_type: "delivery_and_pickup",
+      package_type: "parcel",
+      start: "Cart Start",
+      target: "Cart Target",
+      priority: :normal
+    )
 
     Cart.for(sender).cart_items.destroy_all
+    Cart.for(sender).add_task!(task)
 
     login_as sender
 
-    visit new_task_path
-
-    find("select[name='task[task_type]']").find("option[value='delivery_and_pickup']").select_option
-    fill_in "Pickup location", with: "Cart Start"
-    fill_in "Drop-off location", with: "Cart Target"
-
-    select customers(:one).name, from: "Customer"
-
-    click_with_retry(:button, "Save Task")
-
     visit cart_path
     assert_text "Cart"
+    assert_selector("header a[href='#{cart_path}'] span", text: "1", wait: 5)
     assert_selector("form.button_to[action*='/cart/items/']")
 
     submit_form_with_request_submit("form.button_to[action*='/cart/items/']")

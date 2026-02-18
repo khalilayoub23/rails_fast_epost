@@ -10,6 +10,8 @@ class Cart < ApplicationRecord
 
   def add_task!(task)
     cart_items.find_or_create_by!(task: task)
+  rescue ActiveRecord::RecordNotUnique
+    cart_items.find_by(task: task)
   end
 
   def remove_task!(task)

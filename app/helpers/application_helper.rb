@@ -114,7 +114,10 @@ module ApplicationHelper
     allowed = user.manager? || user.sender_role? || user.lawyer? || user.ecommerce_seller?
     return 0 unless allowed
 
-    CartItem.joins(:cart).where(carts: { user_id: user.id }).count
+    CartItem
+      .joins(:cart, :task)
+      .where(carts: { user_id: user.id }, tasks: { published: false })
+      .count
   end
 
   private
