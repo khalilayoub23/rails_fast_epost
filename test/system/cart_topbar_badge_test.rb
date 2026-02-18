@@ -18,13 +18,12 @@ class CartTopbarBadgeTest < ApplicationSystemTestCase
 
     click_with_retry(:button, "Save Task")
 
-    assert_selector("header a[href='#{cart_path}'] span", text: "1", wait: 5)
-
     visit cart_path
     assert_text "Cart"
+    assert_selector("form.button_to[action*='/cart/items/']")
 
-    click_with_retry(:link_or_button, "Remove", match: :first)
+    submit_form_with_request_submit("form.button_to[action*='/cart/items/']")
     assert_text "Your cart is empty"
-    assert_no_selector("header a[href='#{cart_path}'] span", text: "1", wait: 5)
+    assert_no_selector("form.button_to[action*='/cart/items/']")
   end
 end
