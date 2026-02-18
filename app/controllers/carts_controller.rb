@@ -33,14 +33,19 @@ class CartsController < ApplicationController
   end
 
   def checkout
-    task_ids = Array(params[:task_ids]).map(&:to_i).uniq
-    task_ids = @cart.tasks.pluck(:id) if task_ids.empty?
+    requested_task_ids = Array(params[:task_ids]).map(&:to_i).uniq
+    requested_task_ids = @cart.tasks.pluck(:id) if requested_task_ids.empty?
 
-    if task_ids.empty?
+    if requested_task_ids.empty?
       redirect_to cart_path, alert: t("cart.select_tasks", default: "Select at least one task to pay."), status: :see_other and return
     end
 
-    tasks = Task.where(id: task_ids)
+    tasks = @cart.tasks.where(id: requested_task_ids)
+
+    if tasks.size != requested_task_ids.size
+      redirect_to cart_path, alert: t("cart.invalid_selection", default: "Some selected tasks are no longer available in your cart."), status: :see_other and return
+    end
+
     tasks.each { |t| authorize_cart_task!(t) }
 
     if tasks.any?(&:published?)

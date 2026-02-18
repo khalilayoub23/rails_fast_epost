@@ -68,4 +68,30 @@ class TasksCycleFlowTest < ActionDispatch::IntegrationTest
     assert tasks[1].reload.published?
     assert_not tasks[2].reload.published?
   end
+
+  test "checkout rejects task ids that are not in cart" do
+    post tasks_path, params: {
+      task: {
+        customer_id: @customer.id,
+        carrier_id: @carrier.id,
+        package_type: "documents",
+        start: "Origin",
+        target: "Destination",
+        delivery_time: 1.day.from_now.iso8601,
+        status: :pending,
+        task_type: "delivery_and_pickup"
+      }
+    }
+    task = Task.order(:created_at).last
+    post add_item_cart_path, params: { task_id: task.id }
+
+    assert_no_difference -> { Payment.count } do
+      post checkout_cart_path, params: { task_ids: [ task.id, task.id + 999_999 ] }
+    end
+    assert_redirected_to cart_path
+
+    follow_redirect!
+    assert_response :success
+    assert_select "table tbody tr", 1
+  end
 end
