@@ -6,6 +6,8 @@ class Cart < ApplicationRecord
 
   def self.for(user)
     find_or_create_by!(user: user)
+  rescue ActiveRecord::RecordNotUnique
+    find_by!(user: user)
   end
 
   def add_task!(task)
