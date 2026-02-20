@@ -100,9 +100,7 @@ module Gateways
         type = event["type"].to_s
         data_object = event.dig("data", "object") || {}
 
-        # Derive our external_id mapping: prefer payment_intent/checkout_session id
-        external_id = data_object["payment_intent"].presence || data_object["id"].presence
-        payment = Payment.find_by(provider: PROVIDER, external_id: external_id)
+        payment = resolve_payment_from_event(data_object: data_object, event_type: type)
 
         if payment
           updates = {}
@@ -254,15 +252,22 @@ module Gateways
       def verify_stripe_signature!(secret:, signature_header:, payload:)
         elements = signature_header.split(",")
         ts = elements.find { |e| e.start_with?("t=") }&.split("=", 2)&.last
-        v1 = elements.find { |e| e.start_with?("v1=") }&.split("=", 2)&.last
-        raise "Invalid Stripe signature header" if ts.blank? || v1.blank?
+        signatures = elements.filter_map { |e| e.start_with?("v1=") ? e.split("=", 2).last : nil }
+        raise "Invalid Stripe signature header" if ts.blank? || signatures.blank?
+
+        timestamp = Integer(ts)
+        tolerance = 300
+        raise "Expired Stripe signature" if (Time.now.to_i - timestamp).abs > tolerance
 
         signed_payload = "t=#{ts}.#{payload}"
         computed = OpenSSL::HMAC.hexdigest("SHA256", secret, signed_payload)
-        unless ActiveSupport::SecurityUtils.secure_compare(computed, v1)
+        matched = signatures.any? { |sig| ActiveSupport::SecurityUtils.secure_compare(computed, sig) }
+        unless matched
           raise "Invalid Stripe signature"
         end
         true
+      rescue ArgumentError
+        raise "Invalid Stripe signature header"
       end
 
       private
@@ -315,6 +320,31 @@ module Gateways
 
       def app_base_url
         ENV["APP_BASE_URL"].presence || "http://localhost:3000"
+      end
+
+      def resolve_payment_from_event(data_object:, event_type:)
+        payment_intent_id = data_object["payment_intent"].presence
+        checkout_session_id = if event_type.start_with?("checkout.session")
+                                data_object["id"].presence
+        else
+                                data_object["checkout_session"].presence
+        end
+
+        charge_id = case data_object["object"]
+        when "charge"
+                      data_object["id"].presence
+        when "refund"
+                      data_object["charge"].presence
+        else
+                      data_object["charge"].presence
+        end
+
+        external_ids = [ payment_intent_id, checkout_session_id, data_object["id"].presence ].compact.uniq
+        payment = Payment.where(provider: PROVIDER, external_id: external_ids).first if external_ids.any?
+        payment ||= Payment.find_by(provider: PROVIDER, checkout_session_id: checkout_session_id) if checkout_session_id.present?
+        payment ||= Payment.find_by(provider: PROVIDER, payment_intent_id: payment_intent_id) if payment_intent_id.present?
+        payment ||= Payment.find_by(provider: PROVIDER, charge_id: charge_id) if charge_id.present?
+        payment
       end
     end
   end

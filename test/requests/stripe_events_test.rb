@@ -174,4 +174,31 @@ class StripeEventsTest < ActionDispatch::IntegrationTest
     payment = Payment.find_by(provider: "stripe", external_id: "cs_async_success")
     assert_equal "succeeded", payment.gateway_status
   end
+
+  test "checkout.session.completed resolves payment by session id when payment_intent is present" do
+    post "/api/v1/payments", params: {
+      provider: "stripe",
+      amount_cents: 5200,
+      currency: "USD",
+      task_id: @task.id,
+      payable_type: "Customer",
+      payable_id: @customer.id,
+      metadata: { checkout_session_id: "cs_lookup_1" }
+    }
+    assert_response :created
+
+    event = {
+      id: "evt_lookup",
+      type: "checkout.session.completed",
+      data: { object: { id: "cs_lookup_1", payment_intent: "pi_lookup_1" } }
+    }.to_json
+
+    header = sign_stripe(event)
+    post "/api/v1/payments/stripe/webhook", headers: { "Stripe-Signature" => header, "CONTENT_TYPE" => "application/json" }, params: event
+    assert_response :success
+
+    payment = Payment.find_by(provider: "stripe", external_id: "cs_lookup_1")
+    assert_equal "succeeded", payment.gateway_status
+    assert_equal "pi_lookup_1", payment.payment_intent_id
+  end
 end
