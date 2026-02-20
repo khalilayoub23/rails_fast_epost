@@ -2,6 +2,8 @@ require "bigdecimal"
 require "securerandom"
 
 class CartsController < ApplicationController
+  ALLOWED_CURRENCIES = %w[USD EUR ILS].freeze
+
   before_action :authenticate_user!
   before_action :require_cart_owner!
   before_action :set_cart
@@ -52,7 +54,10 @@ class CartsController < ApplicationController
       redirect_to cart_path, alert: t("cart.contains_paid", default: "Cart contains tasks that are already paid/published."), status: :see_other and return
     end
 
-    currency = params[:currency].to_s.presence || "ILS"
+    currency = params[:currency].to_s.upcase.presence || "ILS"
+    unless ALLOWED_CURRENCIES.include?(currency)
+      redirect_to cart_path, alert: t("cart.invalid_currency", default: "Please select a supported currency."), status: :see_other and return
+    end
 
     per_task_amounts = extract_amounts_param
     line_items = []
@@ -128,6 +133,10 @@ class CartsController < ApplicationController
 
     if payment.gateway_status_succeeded?
       tasks = CartPaymentMaterializer.new(payment: payment).call
+      if tasks.blank?
+        redirect_to cart_path, alert: t("cart.payment_not_ready", default: "Payment confirmed, but tasks are not ready yet. Please contact support."), status: :see_other and return
+      end
+
       @cart.cart_items.where(task_id: tasks.map(&:id)).destroy_all
       redirect_to cart_path, notice: t("cart.payment_success", default: "Payment confirmed. Tasks are now active."), status: :see_other
     else
@@ -143,9 +152,11 @@ class CartsController < ApplicationController
       redirect_to cart_path, alert: t("cart.payment_cancel_unknown", default: "Payment session not found."), status: :see_other and return
     end
 
-    if payment.payable_type == "User" && payment.payable_id == current_user.id
-      payment.update!(gateway_status: "canceled") unless payment.gateway_status_succeeded?
+    unless payment.payable_type == "User" && payment.payable_id == current_user.id
+      redirect_to cart_path, alert: t("cart.unauthorized", default: "You are not authorized to view this payment."), status: :see_other and return
     end
+
+    payment.update!(gateway_status: "canceled") unless payment.gateway_status_succeeded?
 
     redirect_to cart_path, alert: t("cart.payment_canceled", default: "Payment canceled."), status: :see_other
   end
