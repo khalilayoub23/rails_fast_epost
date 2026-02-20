@@ -143,11 +143,18 @@ module Api
         shared_secret = ENV["LOCALPAY_APP_SECRET"].to_s
         header_secret = request.headers["X-Internal-Api-Secret"].to_s.presence || request.headers["X-Localpay-Secret"].to_s.presence
 
-        if shared_secret.present? && header_secret.present? && ActiveSupport::SecurityUtils.secure_compare(shared_secret, header_secret)
+        if secret_matches?(shared_secret, header_secret)
           return
         end
 
         render json: { error: "Unauthorized" }, status: :forbidden
+      end
+
+      def secret_matches?(expected, provided)
+        return false if expected.blank? || provided.blank?
+        return false unless expected.bytesize == provided.bytesize
+
+        ActiveSupport::SecurityUtils.secure_compare(expected, provided)
       end
     end
   end

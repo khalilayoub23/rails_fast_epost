@@ -18,8 +18,8 @@ module Api
                 status_label: task.status&.titleize,
                 package_type: task.package_type,
                 delivery_time: task.delivery_time,
-                pickup_address: format_address(task.pickup_address),
-                delivery_address: format_address(task.delivery_address),
+                pickup_address: format_address(task.pickup_address.presence || task.start),
+                delivery_address: format_address(task.target),
                 carrier: {
                   id: task.carrier_id,
                   name: task.carrier&.name
@@ -50,20 +50,45 @@ module Api
           expected = ENV["PUBLIC_TRACKING_API_KEY"].to_s
           provided = request.headers["X-Public-Api-Key"].to_s
 
-          return if expected.present? && ActiveSupport::SecurityUtils.secure_compare(expected, provided)
+          return if token_matches?(expected, provided)
 
           render json: { success: false, error: "Unauthorized" }, status: :forbidden
+        end
+
+        def token_matches?(expected, provided)
+          return false if expected.blank? || provided.blank?
+          return false unless expected.bytesize == provided.bytesize
+
+          ActiveSupport::SecurityUtils.secure_compare(expected, provided)
         end
 
         def format_address(address)
           return nil if address.blank?
 
+          if address.is_a?(String)
+            return {
+              street: address,
+              city: nil,
+              state: nil,
+              country: nil,
+              postal_code: nil
+            }
+          end
+
+          if address.respond_to?(:to_unsafe_h)
+            address = address.to_unsafe_h
+          elsif address.respond_to?(:to_h)
+            address = address.to_h
+          end
+
+          return nil unless address.is_a?(Hash)
+
           {
-            street: address["street"],
-            city: address["city"],
-            state: address["state"],
-            country: address["country"],
-            postal_code: address["postal_code"]
+            street: address["street"] || address[:street],
+            city: address["city"] || address[:city],
+            state: address["state"] || address[:state],
+            country: address["country"] || address[:country],
+            postal_code: address["postal_code"] || address[:postal_code]
           }
         end
       end

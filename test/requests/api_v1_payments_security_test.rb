@@ -29,6 +29,11 @@ class ApiV1PaymentsSecurityTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "refund endpoint rejects wrong-length shared secret safely" do
+    post "/api/v1/payments/#{@payment.id}/refund", headers: { "X-Internal-Api-Secret" => "x" }
+    assert_response :forbidden
+  end
+
   test "create rejects unsupported currency" do
     post "/api/v1/payments", params: {
       provider: "local",
