@@ -5,7 +5,7 @@ module Api
         def receive
           secret = ENV["TELEGRAM_SECRET_TOKEN"]
           provided = request.headers["X-Telegram-Bot-Api-Secret-Token"]
-          return forbidden unless secret.present? && ActiveSupport::SecurityUtils.secure_compare(secret, provided.to_s)
+          return forbidden unless verify_header_token!(secret, provided)
 
           Integrations::TelegramService.process(json_body, headers: request.headers.to_h, signature_valid: true)
           ok

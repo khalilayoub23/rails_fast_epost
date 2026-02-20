@@ -11,7 +11,7 @@ module Api
           configured_key = ENV["ODOO_API_KEY"]
 
           return forbidden if configured_key.blank?
-          return forbidden unless api_key == configured_key
+          return forbidden unless verify_header_token!(configured_key, api_key)
 
           ::Integrations::OdooService.process(json_body, headers: request.headers.to_h)
           ok

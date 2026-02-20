@@ -27,7 +27,12 @@ module Api
         end
 
         def secure_compare(a, b)
-          ActiveSupport::SecurityUtils.secure_compare(a.to_s, b.to_s)
+          left = a.to_s
+          right = b.to_s
+          return false if left.blank? || right.blank?
+          return false unless left.bytesize == right.bytesize
+
+          ActiveSupport::SecurityUtils.secure_compare(left, right)
         end
 
         # Meta (Facebook/Instagram/WhatsApp) signature verification

@@ -6,7 +6,7 @@ module Api
           token = ENV["META_VERIFY_TOKEN"]
           return forbidden if token.blank?
 
-          if params["hub.mode"] == "subscribe" && params["hub.verify_token"] == token
+          if params["hub.mode"] == "subscribe" && verify_header_token!(token, params["hub.verify_token"])
             render plain: params["hub.challenge"], status: :ok
           else
             forbidden
