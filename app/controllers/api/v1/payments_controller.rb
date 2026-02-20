@@ -1,15 +1,25 @@
 module Api
   module V1
     class PaymentsController < ApplicationController
+      ALLOWED_PROVIDERS = %w[local stripe].freeze
+      ALLOWED_CURRENCIES = %w[USD EUR ILS].freeze
+
       protect_from_forgery with: :null_session
       skip_before_action :verify_authenticity_token
       skip_before_action :authenticate_user!
+      before_action :authenticate_payment_management!, only: %i[refund capture cancel sync]
 
       # POST /api/v1/payments
       def create
         provider = params[:provider].to_s.presence || "local"
+        return render json: { error: "Unsupported provider" }, status: :unprocessable_entity unless ALLOWED_PROVIDERS.include?(provider)
+
         amount_cents = params[:amount_cents].to_i
-        currency = params[:currency].to_s.presence || "USD"
+        return render json: { error: "Amount must be greater than zero" }, status: :unprocessable_entity if amount_cents <= 0
+
+        currency = params[:currency].to_s.upcase.presence || "USD"
+        return render json: { error: "Unsupported currency" }, status: :unprocessable_entity unless ALLOWED_CURRENCIES.include?(currency)
+
         task = Task.find_by(id: params[:task_id])
         payable = find_payable
         metadata = params[:metadata].is_a?(ActionController::Parameters) ? params[:metadata].to_unsafe_h : (params[:metadata] || {})
@@ -73,13 +83,15 @@ module Api
       # POST /api/v1/payments/:provider/webhook
       def webhook
         provider = params[:provider]
+        return render json: { error: "Unsupported provider" }, status: :unprocessable_entity unless ALLOWED_PROVIDERS.include?(provider)
+
         raw = request.raw_post.to_s
         # Normalize headers for gateways: rack prefixes custom headers with HTTP_
         headers = request.headers.to_h
         headers["X-Signature"] ||= headers["HTTP_X_SIGNATURE"]
         headers["Stripe-Signature"] ||= headers["HTTP_STRIPE_SIGNATURE"]
         headers["__raw_body__"] = raw
-        payload = JSON.parse(raw) rescue {}
+        payload = JSON.parse(raw)
 
         case provider
         when "local"
@@ -98,6 +110,8 @@ module Api
         else
           render json: { error: "Unsupported provider" }, status: :unprocessable_entity
         end
+      rescue JSON::ParserError
+        render json: { error: "Invalid JSON payload" }, status: :bad_request
       end
 
       private
@@ -121,6 +135,19 @@ module Api
         return nil if v.size > 100
         return nil unless v.match?(/\A[A-Za-z][A-Za-z0-9_]*(::[A-Za-z][A-Za-z0-9_]*)*\z/)
         v
+      end
+
+      def authenticate_payment_management!
+        return if current_user&.admin? || current_user&.manager? || current_user&.support_agent?
+
+        shared_secret = ENV["LOCALPAY_APP_SECRET"].to_s
+        header_secret = request.headers["X-Internal-Api-Secret"].to_s.presence || request.headers["X-Localpay-Secret"].to_s.presence
+
+        if shared_secret.present? && header_secret.present? && ActiveSupport::SecurityUtils.secure_compare(shared_secret, header_secret)
+          return
+        end
+
+        render json: { error: "Unauthorized" }, status: :forbidden
       end
     end
   end
