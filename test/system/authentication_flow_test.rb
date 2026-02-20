@@ -14,7 +14,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
       submit_form_with_request_submit("form#new_user")
     end
 
-    assert_text "Dashboard"
+    assert_current_path dashboard_path, ignore_query: true, wait: 10
   end
 
   test "existing user can log in with email" do
@@ -33,6 +33,6 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
       submit_form_with_request_submit("form#new_user")
     end
 
-    assert_text "Dashboard"
+    assert_current_path dashboard_path, ignore_query: true, wait: 10
   end
 end
