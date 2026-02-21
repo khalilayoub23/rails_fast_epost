@@ -2,6 +2,8 @@ require "bigdecimal"
 require "securerandom"
 
 class CheckoutController < ApplicationController
+  ALLOWED_CURRENCIES = %w[USD EUR ILS].freeze
+
   skip_before_action :authenticate_user!
   layout "public"
 
@@ -11,9 +13,15 @@ class CheckoutController < ApplicationController
   def create
     ensure_stripe_ready!
     amount_cents = parse_amount_cents
+    currency = checkout_currency
 
     if amount_cents <= 0
       flash[:alert] = "Amount must be greater than zero."
+      redirect_to new_checkout_path and return
+    end
+
+    unless ALLOWED_CURRENCIES.include?(currency)
+      flash[:alert] = "Unsupported currency."
       redirect_to new_checkout_path and return
     end
 
@@ -29,7 +37,7 @@ class CheckoutController < ApplicationController
 
     payment = Gateways::StripeGateway.create_payment!(
       amount_cents: amount_cents,
-      currency: checkout_currency,
+      currency: currency,
       task: task,
       payable: customer,
       metadata: metadata
@@ -74,7 +82,7 @@ class CheckoutController < ApplicationController
   end
 
   def checkout_currency
-    checkout_params[:currency].presence || "USD"
+    checkout_params[:currency].to_s.upcase.presence || "USD"
   end
 
   def ensure_stripe_ready!

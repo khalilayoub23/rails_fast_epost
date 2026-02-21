@@ -55,4 +55,40 @@ class CheckoutControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_checkout_path
     assert_match "Amount must be greater than zero", flash[:alert]
   end
+
+  test "rejects unsupported currency" do
+    post checkout_path, params: {
+      amount: "25",
+      currency: "BTC",
+      service_type: "standard",
+      name: "Crypto Buyer",
+      email: "crypto@example.com",
+      phone: "+155555503",
+      service_description: "Test"
+    }
+
+    assert_redirected_to new_checkout_path
+    assert_match "Unsupported currency", flash[:alert]
+  end
+
+  test "normalizes lowercase currency for gateway" do
+    session_struct = Struct.new(:id, :url, :payment_intent)
+    session = session_struct.new("cs_test_currency", "https://checkout.stripe.com/pay/currency", "pi_test_currency")
+    captured_payload = nil
+
+    Stripe::Checkout::Session.stub(:create, ->(payload) { captured_payload = payload; session }) do
+      post checkout_path, params: {
+        amount: "10",
+        currency: "usd",
+        service_type: "standard",
+        name: "Lowercase Currency",
+        email: "currency@example.com",
+        phone: "+155555504",
+        service_description: "Test"
+      }
+    end
+
+    assert_redirected_to "https://checkout.stripe.com/pay/currency"
+    assert_equal "USD", captured_payload.dig(:line_items, 0, :price_data, :currency)
+  end
 end
