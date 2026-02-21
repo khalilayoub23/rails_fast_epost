@@ -10,7 +10,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <meta name="turbo-visit-control" content="reload">
+    <% if turbo_native_app? %>
+      <meta name="turbo-visit-control" content="reload">
+    <% end %>
 
     <%= yield :head %>
 

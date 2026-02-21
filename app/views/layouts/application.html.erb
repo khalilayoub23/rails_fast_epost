@@ -10,8 +10,10 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     
-    <%# Turbo Native bridge %>
-    <meta name="turbo-visit-control" content="reload">
+    <%# Turbo Native bridge: force reload only for native shell, keep fast Turbo visits on web %>
+    <% if turbo_native_app? %>
+      <meta name="turbo-visit-control" content="reload">
+    <% end %>
     <%= tag.meta name: "google-maps-key", content: ENV.fetch("GOOGLE_MAPS_API_KEY", "") %>
 
     <%= yield :head %>
