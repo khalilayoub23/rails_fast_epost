@@ -48,11 +48,16 @@ class LegalFormAutomationServiceTest < ActiveSupport::TestCase
     assert_equal "Updated Target Address", @form.data["delivery_target"]
   end
 
-  test "returns nil when task missing lawyer" do
+  test "still creates form when task missing lawyer" do
     @task.update!(lawyer: nil)
 
-    assert_no_difference([ "Form.count", "FormTemplate.count" ]) do
-      assert_nil LegalFormAutomationService.call(task: @task, payment: @payment)
-    end
+    before_count = Form.count
+    @form = LegalFormAutomationService.call(task: @task, payment: @payment)
+
+    assert_not_nil @form
+    assert @form.persisted?
+    assert_operator Form.count, :>=, before_count
+    assert_nil @form.data["lawyer_name"]
+    assert_nil @form.data["lawyer_email"]
   end
 end

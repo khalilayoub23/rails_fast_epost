@@ -182,6 +182,14 @@ class DocumentTemplateTest < ActiveSupport::TestCase
     assert_not @template.ready_for_use?
   end
 
+  test "ready_for_use? should return true for hybrid template with content" do
+    @template.template_type = :hybrid
+    @template.content = "# Hybrid\n\nInvoice {{invoice_number}}"
+    @template.save!
+
+    assert @template.ready_for_use?
+  end
+
   # Category Constants Tests
   test "CATEGORIES should include common document types" do
     assert_includes DocumentTemplate::CATEGORIES, "Customs Declaration"

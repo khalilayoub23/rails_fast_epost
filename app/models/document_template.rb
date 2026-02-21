@@ -77,7 +77,11 @@ class DocumentTemplate < ApplicationRecord
 
   # Check if template is ready for use
   def ready_for_use?
-    active? && ((prawn_template? && content.present?) || (fillable_form? && pdf_file.attached?))
+    active? && (
+      (prawn_template? && content.present?) ||
+      (fillable_form? && pdf_file.attached?) ||
+      (hybrid? && (content.present? || pdf_file.attached?))
+    )
   end
 
   # Get file size in human-readable format

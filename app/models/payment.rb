@@ -35,6 +35,7 @@ class Payment < ApplicationRecord
   after_update_commit :broadcast_updated
   after_destroy_commit :broadcast_destroyed
   after_commit :generate_legal_forms_if_needed, if: :legal_form_trigger?
+  after_commit :sync_task_pdf_packet_if_needed, if: :task_pdf_trigger?, on: [ :create, :update ]
   after_commit :sync_carrier_payout_if_needed, if: :carrier_payable?, on: [ :create, :update ]
   after_destroy_commit :sync_carrier_payout_if_needed, if: :carrier_payable?
 
@@ -48,6 +49,16 @@ class Payment < ApplicationRecord
     LegalFormAutomationService.call(task: task, payment: self)
   rescue => e
     Rails.logger.error("[Payment #{id}] Failed to automate legal forms: #{e.message}")
+  end
+
+  def task_pdf_trigger?
+    task.present? && saved_change_to_gateway_status? && gateway_status == "succeeded"
+  end
+
+  def sync_task_pdf_packet_if_needed
+    TaskPdfPacketService.call(task: task, payment: self, trigger: :payment_succeeded)
+  rescue => e
+    Rails.logger.error("[Payment #{id}] Failed to sync task PDF packet: #{e.message}")
   end
 
   def broadcast_created

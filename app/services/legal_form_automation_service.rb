@@ -32,7 +32,7 @@ class LegalFormAutomationService
   end
 
   def call
-    return unless task&.customer && task&.carrier && task&.lawyer
+    return unless task&.customer && task&.carrier
 
     template = ensure_template!
     form = task.forms.find_or_initialize_by(form_template: template)
@@ -93,7 +93,7 @@ class LegalFormAutomationService
       "payment_reference" => payment_reference,
       "payment_amount_cents" => payment&.amount_cents,
       "generated_at" => Time.current.iso8601
-    }.compact
+    }
   end
 
   def carrier_signature_value

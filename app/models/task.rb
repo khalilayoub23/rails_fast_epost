@@ -153,6 +153,7 @@ class Task < ApplicationRecord
   before_validation :attach_poa_from_template
   after_commit :calculate_route_distance, on: :create
   after_commit :mirror_power_of_attorney_to_legal_files
+  after_commit :sync_lifecycle_pdf_documents, on: [ :create, :update ]
 
   # Generate a display title for the task
   def title
@@ -521,5 +522,21 @@ class Task < ApplicationRecord
 
   def broadcast_destroyed
     broadcast_remove_to "tasks", target: ActionView::RecordIdentifier.dom_id(self)
+  end
+
+  def sync_lifecycle_pdf_documents
+    trigger = if previous_changes.key?("id")
+      :created
+    elsif previous_changes.key?("status")
+      status
+    else
+      nil
+    end
+
+    return if trigger.blank?
+
+    TaskPdfPacketService.call(task: self, trigger: trigger)
+  rescue => e
+    Rails.logger.error("[Task #{id}] Failed to sync lifecycle PDFs: #{e.message}")
   end
 end
