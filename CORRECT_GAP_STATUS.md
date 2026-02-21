@@ -1,5 +1,15 @@
 # 📋 CORRECT GAP STATUS - THE TRUTH
 
+> ## 2026-02-21 Update
+>
+> This document reflects an older point-in-time snapshot and is kept for history.
+>
+> Current canonical references:
+> - `GAPS_STATUS_2026_02_21.md` (current six-gap status)
+> - `HARDENING_RESCAN_2026_02_21.md` (current hardening backlog across routes/controllers/services)
+>
+> Do **not** use the percentages in this file as current project status.
+
 ## What I Actually Did vs What the 6 Gaps Are
 
 ### THE 6 ORIGINAL GAPS (from GAP_ANALYSIS_FASTEPOST_PLATFORM.md):
