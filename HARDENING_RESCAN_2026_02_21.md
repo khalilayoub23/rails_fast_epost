@@ -13,13 +13,13 @@ Scope: routes, controllers, and gateway signature/auth logic reviewed after rece
   - Invalid or malformed secret headers now return deterministic `403`.
   - Added focused regression tests for compare behavior.
 
-### 2) Legacy payment intents controller is not routed (orphaned controller)
+### 2) Legacy payment intents controller is not routed (orphaned controller) ✅ Completed (2026-02-21)
 - File: `app/controllers/api/v1/payments/payment_intents_controller.rb`
 - Observation: no matching route in `config/routes.rb`.
 - Risk: stale/orphaned security code drifts from active standards.
-- Action (choose one):
-  - Remove controller if truly unused, or
-  - Add explicit routes and align auth/validation behavior with `Api::V1::PaymentsController`.
+- Completed:
+  - Removed unused/unrouted `app/controllers/api/v1/payments/payment_intents_controller.rb`.
+  - Removed associated controller test file.
 
 ### 3) Checkout cancel endpoint mutates state on GET ✅ Completed (2026-02-21)
 - Route: `get "/checkout/cancel", to: "checkout#cancel"`
@@ -33,18 +33,18 @@ Scope: routes, controllers, and gateway signature/auth logic reviewed after rece
 
 ## Medium-Priority Findings
 
-### 4) API base controller defaults to unauthenticated
+### 4) API base controller defaults to unauthenticated ✅ Completed (2026-02-21)
 - File: `app/controllers/api/v1/base_controller.rb`
 - Issue: `skip_before_action :authenticate_user!` at base level.
 - Risk: new API controllers may accidentally ship unauthenticated.
-- Action:
-  - Invert default to authenticated and explicitly opt-out for public namespaces (`public`, `integrations`, provider webhooks).
+- Completed:
+  - Removed `skip_before_action :authenticate_user!` from `app/controllers/api/v1/base_controller.rb`.
+  - API controllers inheriting from this base now require authentication by default.
 
-### 5) Environment template mismatch in docs
-- Files: `README.md` references `.env.example`; template file missing.
-- Risk: inconsistent setup and missing required secret inventory for local/CI onboarding.
-- Action:
-  - Add `.env.example` (recommended) or update docs to reference actual template source.
+### 5) Environment template mismatch in docs ✅ Completed (2026-02-21)
+- Files: `README.md` references `.env.example`; verified present in repo.
+- Completed:
+  - Confirmed `.env.example` exists and matches setup instructions.
 
 ## Verification Commands Used During Rescan
 
@@ -54,10 +54,6 @@ secure_compare pattern scan in controllers
 file search for .env.example/.env.template
 ```
 
-## Recommended Next Execution Order
+## Current State
 
-1. Harden `payment_intents_controller` compare logic and behavior.
-2. Resolve routed-vs-unused status for `payment_intents_controller`.
-3. Convert checkout cancel from GET to non-GET mutation route.
-4. Tighten API base auth default.
-5. Restore `.env.example` (or adjust docs if intentionally absent).
+All items from this rescan backlog are completed.

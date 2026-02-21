@@ -263,8 +263,6 @@ Public/Webhook endpoints hardened:
   - Local: `LOCALPAY_APP_SECRET` with `X-Localpay-Secret` header
   - Stripe: `STRIPE_WEBHOOK_SECRET` configured
   - See [app/controllers/api/v1/payments_controller.rb](app/controllers/api/v1/payments_controller.rb)
-- Payment intents webhook now requires `LOCALPAY_APP_SECRET` with `X-Localpay-Secret` header:
-  - [app/controllers/api/v1/payments/payment_intents_controller.rb](app/controllers/api/v1/payments/payment_intents_controller.rb)
 - Meta webhooks (Facebook/Instagram/WhatsApp) now require `META_VERIFY_TOKEN` for verify and `META_APP_SECRET` for POST signatures:
   - [app/controllers/api/v1/integrations/facebook_controller.rb](app/controllers/api/v1/integrations/facebook_controller.rb)
   - [app/controllers/api/v1/integrations/instagram_controller.rb](app/controllers/api/v1/integrations/instagram_controller.rb)

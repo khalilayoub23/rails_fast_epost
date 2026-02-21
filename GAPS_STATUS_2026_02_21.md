@@ -11,14 +11,13 @@ This is the maintained source of truth for the original 6-gap plan from `GAP_ANA
 | 3 | Legal Document Templates | ✅ Complete | `DocumentTemplate` model + admin management present. |
 | 4 | Unified Notification Service | ✅ Complete | `NotificationService` + notification events/mailer integration present. |
 | 5 | Client-Specific File Storage | ✅ Complete | Active Storage-backed document flows present on task/legal/proof models. |
-| 6 | Environment Configuration Template | ⚠️ Follow-up needed | `README.md` references `.env.example`, but file is currently missing in repo. |
+| 6 | Environment Configuration Template | ✅ Complete | `.env.example` exists in repo and aligns with setup docs. |
 
 ## Effective Progress
 
 - Functional gap closure: **6/6 implemented in product capabilities**
-- Documentation/config artifact closure: **5.5/6 complete** until `.env.example` (or equivalent template) is restored
+- Documentation/config artifact closure: **6/6 complete**
 
 ## Immediate Follow-up
 
-1. Add `.env.example` template (or update setup docs to point to the actual config template path).
-2. Keep this file as the canonical status source to avoid conflicting historical snapshots.
+1. Keep this file as the canonical status source to avoid conflicting historical snapshots.

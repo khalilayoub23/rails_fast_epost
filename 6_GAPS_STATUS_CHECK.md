@@ -10,9 +10,9 @@
 > - Gap 3 (Legal Document Templates): ✅ Complete
 > - Gap 4 (Unified Notification Service): ✅ Complete
 > - Gap 5 (Client-Specific File Storage): ✅ Complete (implemented via task/customer document flows and Active Storage-backed document models)
-> - Gap 6 (Environment Configuration Template): ⚠️ Documentation mismatch remains (`README.md` references `.env.example`, but `.env.example` is currently missing in repo)
+> - Gap 6 (Environment Configuration Template): ✅ Complete (`.env.example` verified in repo)
 >
-> **Effective closure status:** 5.5 / 6 complete, with one documentation/config template follow-up.
+> **Effective closure status:** 6 / 6 complete.
 >
 > See `GAPS_STATUS_2026_02_21.md` for the maintained source of truth and `HARDENING_RESCAN_2026_02_21.md` for security hardening backlog.
 

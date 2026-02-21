@@ -2,6 +2,7 @@ module Api
   module V1
     module Public
       class TrackingController < Api::V1::BaseController
+        skip_before_action :authenticate_user!
         before_action :require_public_tracking_key!
 
         # GET /api/v1/public/track/:barcode
