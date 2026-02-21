@@ -39,6 +39,7 @@ class CheckoutControllerTest < ActionDispatch::IntegrationTest
     assert_equal "stripe", payment.provider
     assert_equal "checkout-user@example.com", payment.metadata["customer_email"]
     assert_equal "cs_test_public", payment.checkout_session_id
+    assert_includes captured_payload[:success_url], "token="
     assert_includes captured_payload[:cancel_url], "token="
   end
 
@@ -90,5 +91,63 @@ class CheckoutControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to "https://checkout.stripe.com/pay/currency"
     assert_equal "USD", captured_payload.dig(:line_items, 0, :price_data, :currency)
+  end
+
+  test "success page only loads payment details with valid token" do
+    session_struct = Struct.new(:id, :url, :payment_intent)
+    session = session_struct.new("cs_test_success_token", "https://checkout.stripe.com/pay/success", "pi_test_success_token")
+
+    Stripe::Checkout::Session.stub(:create, ->(_payload) { session }) do
+      post checkout_path, params: {
+        amount: "15",
+        currency: "USD",
+        service_type: "standard",
+        name: "Success Token",
+        email: "success-token@example.com",
+        phone: "+155555505",
+        service_description: "Token test"
+      }
+    end
+
+    payment = Payment.order(:created_at).last
+    get checkout_success_path, params: { session_id: payment.checkout_session_id }
+    assert_response :success
+    assert_no_match "Reference", response.body
+
+    get checkout_success_path, params: { session_id: payment.checkout_session_id, token: payment.metadata["success_token"] }
+    assert_response :success
+    assert_match "Reference", response.body
+  end
+
+  test "cancel requires valid token" do
+    session_struct = Struct.new(:id, :url, :payment_intent)
+    session = session_struct.new("cs_test_cancel_token", "https://checkout.stripe.com/pay/cancel", "pi_test_cancel_token")
+
+    Stripe::Checkout::Session.stub(:create, ->(_payload) { session }) do
+      post checkout_path, params: {
+        amount: "20",
+        currency: "USD",
+        service_type: "standard",
+        name: "Cancel Token",
+        email: "cancel-token@example.com",
+        phone: "+155555506",
+        service_description: "Cancel test"
+      }
+    end
+
+    payment = Payment.order(:created_at).last
+    payment.update!(gateway_status: "pending")
+
+    get checkout_cancel_path, params: { session_id: payment.checkout_session_id }
+    assert_response :success
+    assert_equal "pending", payment.reload.gateway_status
+
+    get checkout_cancel_path, params: { token: "wrong-token" }
+    assert_response :success
+    assert_equal "pending", payment.reload.gateway_status
+
+    get checkout_cancel_path, params: { token: payment.metadata["cancel_token"] }
+    assert_response :success
+    assert_equal "canceled", payment.reload.gateway_status
   end
 end
