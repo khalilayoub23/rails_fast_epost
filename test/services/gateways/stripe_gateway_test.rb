@@ -65,5 +65,21 @@ module Gateways
         assert_equal "cs_manual_1", payment.metadata["checkout_session_id"]
       end
     end
+
+    test "rejects wrong-length webhook signature without raising compare errors" do
+      timestamp = Time.now.to_i
+      header = "t=#{timestamp},v1=short"
+
+      error = assert_raises(RuntimeError) do
+        Gateways::StripeGateway.send(
+          :verify_stripe_signature!,
+          secret: "whsec_test",
+          signature_header: header,
+          payload: "{\"type\":\"checkout.session.completed\"}"
+        )
+      end
+
+      assert_equal "Invalid Stripe signature", error.message
+    end
   end
 end

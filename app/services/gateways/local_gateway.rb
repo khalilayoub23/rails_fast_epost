@@ -28,7 +28,7 @@ module Gateways
 
       if secret.present? && signature.present? && raw.present?
         computed = Base64.strict_encode64(OpenSSL::HMAC.digest("SHA256", secret, raw))
-        raise "Invalid signature" unless ActiveSupport::SecurityUtils.secure_compare(computed, signature)
+        raise "Invalid signature" unless secure_token_match?(computed, signature)
       end
 
       external_id = payload["external_id"].presence || payload["id"].presence
@@ -42,5 +42,15 @@ module Gateways
       end
       payment
     end
+
+    def self.secure_token_match?(expected, provided)
+      left = expected.to_s
+      right = provided.to_s
+      return false if left.blank? || right.blank?
+      return false unless left.bytesize == right.bytesize
+
+      ActiveSupport::SecurityUtils.secure_compare(left, right)
+    end
+    private_class_method :secure_token_match?
   end
 end

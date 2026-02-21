@@ -261,13 +261,22 @@ module Gateways
 
         signed_payload = "t=#{ts}.#{payload}"
         computed = OpenSSL::HMAC.hexdigest("SHA256", secret, signed_payload)
-        matched = signatures.any? { |sig| ActiveSupport::SecurityUtils.secure_compare(computed, sig) }
+        matched = signatures.any? { |sig| signature_matches?(computed, sig) }
         unless matched
           raise "Invalid Stripe signature"
         end
         true
       rescue ArgumentError
         raise "Invalid Stripe signature header"
+      end
+
+      def signature_matches?(expected, provided)
+        left = expected.to_s
+        right = provided.to_s
+        return false if left.blank? || right.blank?
+        return false unless left.bytesize == right.bytesize
+
+        ActiveSupport::SecurityUtils.secure_compare(left, right)
       end
 
       private
