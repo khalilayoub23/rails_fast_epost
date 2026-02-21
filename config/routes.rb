@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   post "/checkout", to: "checkout#create", as: :checkout
   get "/checkout/success", to: "checkout#success", as: :checkout_success
   get "/checkout/cancel", to: "checkout#cancel", as: :checkout_cancel
+  post "/checkout/cancel/confirm", to: "checkout#confirm_cancel", as: :checkout_confirm_cancel
 
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"

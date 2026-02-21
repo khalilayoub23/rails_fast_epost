@@ -65,9 +65,15 @@ class CheckoutController < ApplicationController
   def cancel
     @session_id = params[:session_id]
     @payment = find_cancel_payment(token: params[:token])
+  end
+
+  def confirm_cancel
+    @payment = find_cancel_payment(token: params[:token])
     if @payment.present? && @payment.gateway_status != "succeeded"
       @payment.update!(gateway_status: "canceled")
     end
+
+    redirect_to checkout_cancel_path(token: params[:token], session_id: params[:session_id])
   end
 
   private

@@ -119,7 +119,7 @@ class CheckoutControllerTest < ActionDispatch::IntegrationTest
     assert_match "Reference", response.body
   end
 
-  test "cancel requires valid token" do
+  test "cancel requires valid token and POST confirmation" do
     session_struct = Struct.new(:id, :url, :payment_intent)
     session = session_struct.new("cs_test_cancel_token", "https://checkout.stripe.com/pay/cancel", "pi_test_cancel_token")
 
@@ -148,6 +148,14 @@ class CheckoutControllerTest < ActionDispatch::IntegrationTest
 
     get checkout_cancel_path, params: { token: payment.metadata["cancel_token"] }
     assert_response :success
+    assert_equal "pending", payment.reload.gateway_status
+
+    post checkout_confirm_cancel_path, params: { token: "wrong-token", session_id: payment.checkout_session_id }
+    assert_redirected_to checkout_cancel_path(token: "wrong-token", session_id: payment.checkout_session_id)
+    assert_equal "pending", payment.reload.gateway_status
+
+    post checkout_confirm_cancel_path, params: { token: payment.metadata["cancel_token"], session_id: payment.checkout_session_id }
+    assert_redirected_to checkout_cancel_path(token: payment.metadata["cancel_token"], session_id: payment.checkout_session_id)
     assert_equal "canceled", payment.reload.gateway_status
   end
 end

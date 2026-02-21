@@ -21,14 +21,15 @@ Scope: routes, controllers, and gateway signature/auth logic reviewed after rece
   - Remove controller if truly unused, or
   - Add explicit routes and align auth/validation behavior with `Api::V1::PaymentsController`.
 
-### 3) Checkout cancel endpoint mutates state on GET
+### 3) Checkout cancel endpoint mutates state on GET ✅ Completed (2026-02-21)
 - Route: `get "/checkout/cancel", to: "checkout#cancel"`
 - Files: `config/routes.rb`, `app/controllers/checkout_controller.rb`
 - Issue: cancellation side-effect is performed via GET.
 - Risk: accidental activation via prefetch/crawlers or token leakage scenarios.
-- Action:
-  - Prefer POST/DELETE for state change.
-  - Keep token verification, and add replay/expiry guard for cancel token where practical.
+- Completed:
+  - `GET /checkout/cancel` is now read-only.
+  - Added `POST /checkout/cancel/confirm` for state mutation.
+  - Token verification is preserved for cancellation.
 
 ## Medium-Priority Findings
 

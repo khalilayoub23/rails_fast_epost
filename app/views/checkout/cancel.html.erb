@@ -20,6 +20,18 @@
             <span class="uppercase tracking-wide"><%= @payment.gateway_status %></span>
           </div>
         </div>
+
+        <% if @payment.gateway_status != "succeeded" && @payment.gateway_status != "canceled" %>
+          <div class="mt-6">
+            <%= button_to "Confirm cancellation", checkout_confirm_cancel_path,
+                method: :post,
+                params: {
+                  token: params[:token],
+                  session_id: params[:session_id]
+                },
+                class: "inline-flex items-center justify-center px-6 py-3 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-400 transition" %>
+          </div>
+        <% end %>
       <% elsif @session_id.present? %>
         <p class="text-slate-300 mb-8">Stripe session <code class="bg-black/40 px-2 py-1 rounded">
           <%= @session_id %>
