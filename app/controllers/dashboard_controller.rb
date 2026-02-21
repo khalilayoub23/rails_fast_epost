@@ -189,15 +189,16 @@ class DashboardController < ApplicationController
       0
     end
 
+    succeeded_payments = payments_scope.where(gateway_status: :succeeded)
     @chart_series_a_by_period = {
-      "day" => last_12_day_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).sum(:amount_cents).to_f / 100.0 },
-      "week" => last_12_week_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).sum(:amount_cents).to_f / 100.0 },
-      "month" => last_12_month_buckets { |range| payments_scope.where(gateway_status: :succeeded, created_at: range).sum(:amount_cents).to_f / 100.0 }
+      "day" => payment_amount_series_for_period(succeeded_payments, :day),
+      "week" => payment_amount_series_for_period(succeeded_payments, :week),
+      "month" => payment_amount_series_for_period(succeeded_payments, :month)
     }
     @chart_series_b_by_period = {
-      "day" => last_12_day_buckets { |range| tasks_scope.where(created_at: range).count },
-      "week" => last_12_week_buckets { |range| tasks_scope.where(created_at: range).count },
-      "month" => last_12_month_buckets { |range| tasks_scope.where(created_at: range).count }
+      "day" => task_count_series_for_period(tasks_scope, :day),
+      "week" => task_count_series_for_period(tasks_scope, :week),
+      "month" => task_count_series_for_period(tasks_scope, :month)
     }
 
     @chart_labels_by_period = {
@@ -215,6 +216,91 @@ class DashboardController < ApplicationController
     starts.map do |start_time|
       end_time = start_time.end_of_day
       yield(start_time..end_time)
+    end
+  end
+
+  def payment_amount_series_for_period(scope, period)
+    starts = bucket_starts(period)
+    return [] if starts.empty?
+
+    grouped = grouped_amounts_by_period(scope, period, starts.first, starts.last)
+    starts.map { |start_time| grouped[start_time.to_date].to_f / 100.0 }
+  end
+
+  def task_count_series_for_period(scope, period)
+    starts = bucket_starts(period)
+    return [] if starts.empty?
+
+    grouped = grouped_counts_by_period(scope, period, starts.first, starts.last)
+    starts.map { |start_time| grouped[start_time.to_date].to_i }
+  end
+
+  def bucket_starts(period)
+    now = Time.zone.now
+
+    case period
+    when :day
+      11.downto(0).map { |i| (now.to_date - i.days).beginning_of_day.in_time_zone }
+    when :week
+      11.downto(0).map { |i| (now.beginning_of_week - i.weeks).beginning_of_week }
+    when :month
+      11.downto(0).map { |i| (now.beginning_of_month - i.months).beginning_of_month }
+    else
+      []
+    end
+  end
+
+  def grouped_amounts_by_period(scope, period, first_start, last_start)
+    relation = scope.where(created_at: first_start..period_end(period, last_start))
+    timestamp_column = "#{scope.klass.table_name}.created_at"
+    grouped = relation.group(Arel.sql(group_expression(period, timestamp_column))).sum(:amount_cents)
+    normalize_grouped_result(grouped)
+  end
+
+  def grouped_counts_by_period(scope, period, first_start, last_start)
+    relation = scope.where(created_at: first_start..period_end(period, last_start))
+    timestamp_column = "#{scope.klass.table_name}.created_at"
+    grouped = relation.group(Arel.sql(group_expression(period, timestamp_column))).count
+    normalize_grouped_result(grouped)
+  end
+
+  def period_end(period, start_time)
+    case period
+    when :day
+      start_time.end_of_day
+    when :week
+      start_time.end_of_week
+    when :month
+      start_time.end_of_month
+    else
+      start_time
+    end
+  end
+
+  def group_expression(period, timestamp_column)
+    case period
+    when :day
+      "DATE(#{timestamp_column})"
+    when :week
+      "DATE_TRUNC('week', #{timestamp_column})"
+    when :month
+      "DATE_TRUNC('month', #{timestamp_column})"
+    else
+      "DATE(#{timestamp_column})"
+    end
+  end
+
+  def normalize_grouped_result(grouped_hash)
+    grouped_hash.each_with_object(Hash.new(0)) do |(key, value), normalized|
+      date_key = case key
+      when Date
+                   key
+      when Time, DateTime, ActiveSupport::TimeWithZone
+                   key.to_date
+      else
+                   Date.parse(key.to_s)
+      end
+      normalized[date_key] = value.to_i
     end
   end
 
