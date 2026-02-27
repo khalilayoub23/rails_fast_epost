@@ -215,6 +215,63 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_select "turbo-frame##{dom_id(express)}", count: 0
   end
 
+  test "GET /tasks.json returns suggestions for numeric task id search" do
+    task = tasks(:one)
+
+    get tasks_path(format: :json), params: { search: task.id.to_s }
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    assert payload.any? { |entry| entry["id"] == task.id }
+  end
+
+  test "GET /tasks.json returns task suggestion fields" do
+    task = tasks(:one)
+
+    get tasks_path(format: :json), params: { search: task.barcode }
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    hit = payload.find { |entry| entry["id"] == task.id }
+
+    assert_not_nil hit
+    assert_equal task.barcode, hit["barcode"]
+    assert_equal task_path(task), hit["url"]
+  end
+
+  test "GET /tasks.json returns suggestions for customer name search" do
+    customer = Customer.create!(
+      name: "njod ayoub",
+      phones: [ "050-1111111" ],
+      category: 1,
+      address: "Test Address",
+      email: "njod-test@example.com"
+    )
+
+    task = Task.create!(
+      customer: customer,
+      carrier: @carrier,
+      package_type: "Legal Packet",
+      task_type: "delivery_and_pickup",
+      start: "A",
+      target: "B",
+      status: :pending,
+      delivery_time: 1.day.from_now,
+      priority: :normal,
+      published: true,
+      created_by: @user
+    )
+
+    get tasks_path(format: :json), params: { search: "njod" }
+
+    assert_response :success
+    payload = JSON.parse(response.body)
+    hit = payload.find { |entry| entry["id"] == task.id }
+
+    assert_not_nil hit
+    assert_equal "njod ayoub", hit["customer_name"]
+  end
+
   test "GET /tasks/payment/cancel re-renders show with payment form for draft" do
     token = "cancel123"
     draft = Task.create!(

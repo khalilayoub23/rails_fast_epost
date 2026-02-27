@@ -56,7 +56,7 @@ class Payment < ApplicationRecord
   end
 
   def sync_task_pdf_packet_if_needed
-    TaskPdfPacketService.call(task: task, payment: self, trigger: :payment_succeeded)
+    TaskPdfPacketJob.perform_later(task_id: task.id, payment_id: id, trigger: :payment_succeeded)
   rescue => e
     Rails.logger.error("[Payment #{id}] Failed to sync task PDF packet: #{e.message}")
   end

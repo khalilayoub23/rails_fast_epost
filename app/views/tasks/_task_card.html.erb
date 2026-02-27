@@ -1,7 +1,7 @@
 <%= turbo_frame_tag task do %>
   <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
     <td class="px-4 py-4 text-center">
-      <%= link_to task_path(task), class: "text-sm font-semibold text-yellow-300 hover:underline" do %>
+      <%= link_to task_path(task), data: { turbo_frame: "_top" }, class: "text-sm font-semibold text-yellow-300 hover:underline" do %>
         <%= task.barcode.presence || "##{task.id}" %>
       <% end %>
 
@@ -50,13 +50,14 @@
         <% end %>
         
         <%= link_to task_path(task),
+            data: { turbo_frame: "_top" },
             class: "text-primary hover:text-primary/80",
             title: t('common.view') do %>
           <span class="material-icons text-xl">visibility</span>
         <% end %>
         
         <%= link_to edit_task_path(task),
-            data: { turbo_frame: dom_id(task) },
+            data: { turbo_frame: "_top" },
             class: "text-warning hover:text-warning/80",
             title: t('common.edit') do %>
           <span class="material-icons text-xl">edit</span>
@@ -64,7 +65,7 @@
         
         <%= button_to task_path(task),
             method: :delete,
-            form: { data: { turbo_confirm: t('common.confirm_delete') } },
+            form: { data: { turbo_confirm: t('common.confirm_delete'), turbo_frame: "_top" } },
             class: "text-danger hover:text-danger/80",
             title: t('common.delete') do %>
           <span class="material-icons text-xl">delete</span>

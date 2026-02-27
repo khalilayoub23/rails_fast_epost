@@ -1,5 +1,6 @@
 class DashboardController < ApplicationController
   before_action :authenticate_user!
+  before_action :disable_dashboard_cache, only: :index
 
   def index
     if current_user.admin?
@@ -17,6 +18,12 @@ class DashboardController < ApplicationController
   end
 
   private
+
+  def disable_dashboard_cache
+    response.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+    response.set_header("Pragma", "no-cache")
+    response.set_header("Turbo-Cache-Control", "no-cache")
+  end
 
   def load_admin_data
     @dashboard_view = "admin"

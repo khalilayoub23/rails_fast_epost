@@ -19,9 +19,14 @@ class TasksController < ApplicationController
     # Handle search
     if params[:search].present?
       search_term = "%#{params[:search]}%"
-      base_scope = base_scope.where(
-        "barcode ILIKE ? OR package_type ILIKE ? OR start ILIKE ? OR target ILIKE ?",
-        search_term, search_term, search_term, search_term
+      base_scope = base_scope.left_outer_joins(:customer).where(
+        "tasks.id::text ILIKE ? OR tasks.barcode ILIKE ? OR tasks.package_type ILIKE ? OR tasks.start ILIKE ? OR tasks.target ILIKE ? OR customers.name ILIKE ?",
+        search_term,
+        search_term,
+        search_term,
+        search_term,
+        search_term,
+        search_term
       )
     end
 
@@ -33,6 +38,23 @@ class TasksController < ApplicationController
     end
 
     @tasks = apply_visibility_filter(base_scope)
+
+    if request.format.json?
+      suggestions = @tasks.includes(:customer).order(created_at: :desc).limit(8)
+      render json: suggestions.map { |task|
+        {
+          id: task.id,
+          barcode: task.barcode,
+          status: task.status,
+          priority: task.priority,
+          package_type: task.package_type,
+          customer_name: task.customer&.name,
+          url: task_path(task)
+        }
+      }
+      return
+    end
+
     respond_with_index(@tasks)
   end
 

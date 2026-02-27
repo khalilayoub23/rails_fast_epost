@@ -1,6 +1,7 @@
 require "test_helper"
 
 class AuthorizationPdfServiceTest < ActiveSupport::TestCase
+  
   test "generates authorization pdf with qr" do
     delivery = build_delivery!(case_number: "CASE-AUTH-001")
 

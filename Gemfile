@@ -23,9 +23,6 @@ gem "stripe"
 # Tailwind CSS with no Node runtime (Rails integration)
 gem "tailwindcss-rails"
 
-# PDF generation
-gem "prawn"
-
 # PDF with form fields (AcroForms) and advanced operations
 gem "hexapdf"
 

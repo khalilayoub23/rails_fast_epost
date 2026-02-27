@@ -18,16 +18,16 @@ module Pdf
         end
       end
 
+      deterministic = ENV["PDF_DETERMINISTIC"].to_s == "1"
       io = StringIO.new
-      if ENV["PDF_DETERMINISTIC"].to_s == "1"
-        target.config["document.id_seed"] = "fixed-seed-merge"
+      if deterministic
         info = target.trailer.info
         info[:Producer] = "FastEpost"
         info[:Creator] = "FastEpost"
-        info[:CreationDate] = Time.at(0)
-        info[:ModDate] = Time.at(0)
+        info[:CreationDate] = "D:19700101000000Z"
+        info[:ModDate] = "D:19700101000000Z"
       end
-      target.write(io)
+      target.write(io, update_fields: !deterministic)
       io.string
     end
 
@@ -45,16 +45,16 @@ module Pdf
         canvas.text(text.to_s, at: at)
       end
 
+      deterministic = ENV["PDF_DETERMINISTIC"].to_s == "1"
       io_out = StringIO.new
-      if ENV["PDF_DETERMINISTIC"].to_s == "1"
-        doc.config["document.id_seed"] = "fixed-seed-stamp"
+      if deterministic
         info = doc.trailer.info
         info[:Producer] = "FastEpost"
         info[:Creator] = "FastEpost"
-        info[:CreationDate] = Time.at(0)
-        info[:ModDate] = Time.at(0)
+        info[:CreationDate] = "D:19700101000000Z"
+        info[:ModDate] = "D:19700101000000Z"
       end
-      doc.write(io_out)
+      doc.write(io_out, update_fields: !deterministic)
       io_out.string
     end
 

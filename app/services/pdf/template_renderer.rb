@@ -34,26 +34,16 @@ module Pdf
       # Set fixed metadata timestamps if deterministic
       if deterministic
         info = doc.trailer.info
-        info.set(:Producer, "FastEpost")
-        info.set(:Creator, "FastEpost")
-        info.set(:CreationDate, Time.at(0))
-        info.set(:ModDate, Time.at(0))
+        info[:Producer] = "FastEpost"
+        info[:Creator] = "FastEpost"
+        info[:CreationDate] = "D:19700101000000Z"
+        info[:ModDate] = "D:19700101000000Z"
       end
 
-      doc.write(io)
+      doc.write(io, update_fields: !deterministic)
       io.string
-    rescue NameError
-      # Fallback to Prawn in case hexapdf isn't loaded (shouldn't happen if gem installed)
-      pdf = Prawn::Document.new
-      pdf.text(title, size: 16)
-      fields.each do |f|
-        name = f["name"].to_s
-        value = data[name].to_s
-        pdf.text("#{name}: #{value}")
-      end
-      pdf.render
     end
-  end
+
     class << self
       private
 
@@ -68,4 +58,5 @@ module Pdf
         ].freeze
       end
     end
+  end
 end

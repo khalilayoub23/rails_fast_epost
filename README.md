@@ -179,6 +179,7 @@ A modern, full-featured postal and courier management system built with Rails 8,
   - **Email:** `SMTP_ADDRESS`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD` drive Action Mailer/NotificationService delivery.
   - **SMS:** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` enable SmsDelivery so NotificationService can text carriers/customers and power the dashboard preference UI options.
   - **Payments:** `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`, and `LOCALPAY_APP_SECRET` are required for checkout flows and webhook verification.
+  - **PDF (RTL/Hebrew):** set `PDF_OVERLAY_FONT_PATH` to a Hebrew-capable TTF (for example Noto Sans Hebrew). In production, `PDF_ENFORCE_HEBREW_FONT=true` (default) fails app boot if active RTL templates exist and no font is found.
   - **CRM + Integrations:** `ODOO_API_KEY`, `ODOO_URL`, `HUBSPOT_APP_SECRET`, `WEBSITES_SHARED_SECRET`, `META_VERIFY_TOKEN`, `META_APP_SECRET`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_SECRET_TOKEN`, `TIKTOK_APP_SECRET` secure the webhook controllers.
   - **Demo accounts:** `DEFAULT_*` values seed local admin/manager/viewer logins when `DefaultAccountsProvisioner` runs in development.
 
@@ -399,6 +400,12 @@ kamal app logs
 - **Background Jobs**: Solid Queue
 - **WebSockets**: Solid Cable
 - **Caching**: Solid Cache
+- **PDF Guard**: `config/initializers/pdf_hebrew_font_guard.rb` prevents production boot when RTL templates are active without a Hebrew-capable overlay font.
+
+For PDF overlays, place a Hebrew font in one of these locations (or set `PDF_OVERLAY_FONT_PATH`):
+- `app/assets/fonts/NotoSansHebrew-Regular.ttf`
+- `vendor/fonts/NotoSansHebrew-Regular.ttf`
+- `/usr/share/fonts/truetype/noto/NotoSansHebrew-Regular.ttf`
 
 ## 📊 Database Schema
 

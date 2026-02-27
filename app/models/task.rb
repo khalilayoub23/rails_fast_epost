@@ -527,6 +527,8 @@ class Task < ApplicationRecord
   def sync_lifecycle_pdf_documents
     trigger = if previous_changes.key?("id")
       :created
+    elsif previous_changes.key?("filled_form_url")
+      :filled
     elsif previous_changes.key?("status")
       status
     else
@@ -535,7 +537,7 @@ class Task < ApplicationRecord
 
     return if trigger.blank?
 
-    TaskPdfPacketService.call(task: self, trigger: trigger)
+    TaskPdfPacketJob.perform_later(task_id: id, trigger: trigger)
   rescue => e
     Rails.logger.error("[Task #{id}] Failed to sync lifecycle PDFs: #{e.message}")
   end

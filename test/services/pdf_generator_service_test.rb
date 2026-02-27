@@ -1,4 +1,8 @@
 require "test_helper"
+require "base64"
+require "stringio"
+require "tempfile"
+require "hexapdf"
 
 class PdfGeneratorServiceTest < ActiveSupport::TestCase
   def setup
@@ -126,5 +130,54 @@ class PdfGeneratorServiceTest < ActiveSupport::TestCase
     pdf_string = PdfGeneratorService.generate_simple_document("Title", [ { body: "Just body text" } ])
     assert_not_nil pdf_string
     assert pdf_string.start_with?("%PDF")
+  end
+
+  test "fill_form_pdf supports mapped overlays and signature image" do
+    base_pdf = HexaPDF::Document.new
+    base_pdf.pages.add
+    temp_pdf = Tempfile.new([ "base-template", ".pdf" ])
+    base_pdf.write(temp_pdf.path)
+    temp_pdf.rewind
+
+    template = DocumentTemplate.create!(
+      name: "Overlay Fillable Template",
+      template_type: :fillable_form,
+      category: "Other",
+      active: true,
+      variables: {
+        "customer_name" => {
+          "type" => "string",
+          "pdf" => { "page" => 1, "x" => 60, "y" => 740, "font_size" => 11 }
+        },
+        "sender_signature" => {
+          "type" => "signature",
+          "pdf" => { "page" => 1, "x" => 60, "y" => 700, "width" => 120, "height" => 36 }
+        }
+      }
+    )
+
+    template.pdf_file.attach(
+      io: File.open(temp_pdf.path, "rb"),
+      filename: "overlay-base.pdf",
+      content_type: "application/pdf"
+    )
+
+    tiny_png = Base64.decode64("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AApMBgN7fD2wAAAAASUVORK5CYII=")
+    signature_data_url = "data:image/png;base64,#{Base64.strict_encode64(tiny_png)}"
+
+    pdf_string = PdfGeneratorService.fill_form_pdf(
+      template,
+      {
+        "customer_name" => "שלום לקוח",
+        "sender_signature" => signature_data_url
+      }
+    )
+
+    assert_not_nil pdf_string
+    assert pdf_string.start_with?("%PDF")
+    assert pdf_string.length > 500
+  ensure
+    temp_pdf&.close
+    temp_pdf&.unlink
   end
 end
